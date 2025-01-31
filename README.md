@@ -1,7 +1,7 @@
 ## ACADAMe - Personalized AI-Powered Education Platform
 
 
-![image1](https://github.com/VSI0N/ACADEMe/assets/101629997/a0181a0f-a692-431e-81dd-5742c999c904)
+![image1](https://raw.githubusercontent.com/VSION/ACADEMe/main/assets/academe_logo-github.png)
 
 ## Introduction
 
@@ -30,8 +30,36 @@ ACADEMe is an innovative AI-powered education platform that addresses the challe
 
 To run ACADEMe locally, follow these steps:
 
-1. Clone the repository: `git clone https://github.com/your-username/ACADEMe.git`
-2. Install dependencies: `npm install`
-3. Start the development server: `npm start`
+### Prerequisites
+
+- Ensure you have [Flutter](https://flutter.dev/docs/get-started/install) installed.
+- Verify your Flutter installation by running:
+```bash
+flutter doctor
+```
+### Steps
+1. Clone the repository:
+```bash
+git clone https://github.com/VSION/ACADEMe.git
+cd ACADEMe
+```
+2. Install dependencies:
+```bash
+flutter pub get
+```
+3. Start an emulator or connect a physical device:
+- Open Android Studio or use the command line.
+- To list available emulators, use:
+```bash
+flutter emulators
+```
+- To start an emulator manually, run:
+```bash
+flutter emulators --launch <emulator_id>
+```
+4. Run the application:
+```bash
+flutter run
+```
 
 
