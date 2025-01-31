@@ -1,7 +1,8 @@
 ## ACADAMe - Personalized AI-Powered Education Platform
 
 
-![image1](https://raw.githubusercontent.com/VSION/ACADEMe/main/assets/academe_logo-github.png)
+![ACADEMe Logo](https://raw.githubusercontent.com/VSION/ACADEMe/main/assets/academe/academe_logo-github.png)
+
 
 ## Introduction
 
