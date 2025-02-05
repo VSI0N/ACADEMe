@@ -1,4 +1,7 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'dart:io';
+import 'home/pages/home_view.dart';
 import 'introduction_page.dart';
 
 import 'academe_theme.dart';
@@ -8,6 +11,21 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
+
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    print("✅ Firebase Initialized Successfully");
+  } catch (e) {
+    print("❌ Firebase Initialization Error: $e");
+  }
+
   await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown
@@ -37,6 +55,9 @@ class MyApp extends StatelessWidget {
         platform: TargetPlatform.iOS,
       ),
       home: AcademeScreen(),
+      routes: {
+        '/home': (context) => HomeScreen(),
+      },
     );
   }
 }
