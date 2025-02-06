@@ -16,6 +16,7 @@ class _LogInViewState extends State<LogInView> {
   final _passwordController = TextEditingController();
   bool _agreeToTerms = false;
   bool _isPasswordVisible = false;
+  bool _isGoogleLoading = false;
 
   Future<void> _submitForm() async {
     if (_formKey.currentState!.validate() && _agreeToTerms) {
@@ -37,6 +38,25 @@ class _LogInViewState extends State<LogInView> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please agree to the terms and conditions')),
+      );
+    }
+  }
+
+  Future<void> _signInWithGoogle() async {
+    setState(() => _isGoogleLoading = true);
+
+    final (user, errorMessage) = await AuthService().signInWithGoogle();
+
+    setState(() => _isGoogleLoading = false);
+
+    if (user != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Signed in with Google successfully!')),
+      );
+      Navigator.pushReplacementNamed(context, '/home');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage ?? 'Google Sign-In failed. Please try again')),
       );
     }
   }
@@ -264,6 +284,28 @@ class _LogInViewState extends State<LogInView> {
                               ),
                             ),
                           ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 30),
+                            child: SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton.icon(
+                                onPressed: _isGoogleLoading ? null : _signInWithGoogle,
+                                icon: _isGoogleLoading
+                                    ? CircularProgressIndicator(color: Colors.white)
+                                    : Image.asset('assets/icons/google_icon.png', height: 24),
+                                label: Text('Sign in with Google'),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  foregroundColor: Colors.black,
+                                  elevation: 2,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 16), // Adds spacing before the "Log In" button
                         ],
                       ),
                     ),
