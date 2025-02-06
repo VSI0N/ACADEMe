@@ -3,7 +3,10 @@ import '../components/course_info_screen.dart';
 import '../components/popular_course_list_view.dart';
 import '../../main.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // Add this import for Firebase Auth
+import 'package:google_sign_in/google_sign_in.dart'; // Add this import for Google Sign-In
 import '../../academe_theme.dart';
+import 'package:ACADEMe/started/pages/auth_service.dart'; // Import the AuthService class
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -151,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Container(
         decoration: BoxDecoration(
             color:
-                isSelected ? AcademeTheme.nearlyBlue : AcademeTheme.nearlyWhite,
+            isSelected ? AcademeTheme.nearlyBlue : AcademeTheme.nearlyWhite,
             borderRadius: const BorderRadius.all(Radius.circular(24.0)),
             border: Border.all(color: AcademeTheme.nearlyBlue)),
         child: Material(
@@ -296,7 +299,18 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(
             width: 60,
             height: 60,
-            child: Image.asset('assets/design_course/userImage.png'),
+            child: GestureDetector(
+              onTap: () async {
+                // Sign out when tapped
+                await AuthService().signOut();
+                Navigator.pushReplacementNamed(context, '/login');  // Go to the login screen
+              },
+              child: Icon(
+                Icons.exit_to_app, // Sign-out icon
+                size: 30,
+                color: AcademeTheme.darkerText,
+              ),
+            ),
           )
         ],
       ),
