@@ -7,14 +7,14 @@ class CenterNextButton extends StatelessWidget {
   final VoidCallback onNextClick;
   const CenterNextButton(
       {super.key,
-      required this.animationController,
-      required this.onNextClick});
+        required this.animationController,
+        required this.onNextClick});
 
   @override
   Widget build(BuildContext context) {
     final topMoveAnimation =
-        Tween<Offset>(begin: Offset(0, 5), end: Offset(0, 0))
-            .animate(CurvedAnimation(
+    Tween<Offset>(begin: Offset(0, 5), end: Offset(0, 0))
+        .animate(CurvedAnimation(
       parent: animationController,
       curve: Interval(
         0.0,
@@ -23,7 +23,7 @@ class CenterNextButton extends StatelessWidget {
       ),
     ));
     final signUpMoveAnimation =
-        Tween<double>(begin: 0, end: 1.0).animate(CurvedAnimation(
+    Tween<double>(begin: 0, end: 1.0).animate(CurvedAnimation(
       parent: animationController,
       curve: Interval(
         0.6,
@@ -32,8 +32,8 @@ class CenterNextButton extends StatelessWidget {
       ),
     ));
     final loginTextMoveAnimation =
-        Tween<Offset>(begin: Offset(0, 3), end: Offset(0, 0))
-            .animate(CurvedAnimation(
+    Tween<Offset>(begin: Offset(0, 3), end: Offset(0, 0))
+        .animate(CurvedAnimation(
       parent: animationController,
       curve: Interval(
         0.6,
@@ -44,7 +44,7 @@ class CenterNextButton extends StatelessWidget {
 
     return Padding(
       padding:
-          EdgeInsets.only(bottom: 16 + MediaQuery.of(context).padding.bottom),
+      EdgeInsets.only(bottom: 16 + MediaQuery.of(context).padding.bottom),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -55,7 +55,7 @@ class CenterNextButton extends StatelessWidget {
               animation: animationController,
               builder: (context, child) => AnimatedOpacity(
                 opacity: animationController.value >= 0.2 &&
-                        animationController.value <= 0.6
+                    animationController.value <= 0.6
                     ? 1
                     : 0,
                 duration: Duration(milliseconds: 80),
@@ -67,104 +67,91 @@ class CenterNextButton extends StatelessWidget {
             position: topMoveAnimation,
             child: AnimatedBuilder(
               animation: animationController,
-              builder: (context, child) => Padding(
-                padding: EdgeInsets.only(
-                    bottom: 38 - (38 * signUpMoveAnimation.value)),
-                child: Container(
-                  height: 58,
-                  width: 58 + (250 * signUpMoveAnimation.value), //
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(
-                        8 + 32 * (1 - signUpMoveAnimation.value)),
-                    color: Color.fromRGBO(254, 223, 0, 1.000),
-                  ),
-                  child: PageTransitionSwitcher(
-                    duration: Duration(milliseconds: 80),
-                    reverse: signUpMoveAnimation.value < 0.7,
-                    transitionBuilder: (
-                      Widget child,
-                      Animation<double> animation,
-                      Animation<double> secondaryAnimation,
-                    ) {
-                      return SharedAxisTransition(
-                        fillColor: Colors.transparent,
-                        animation: animation,
-                        secondaryAnimation: secondaryAnimation,
-                        transitionType: SharedAxisTransitionType.vertical,
-                        child: child,
-                      );
-                    },
-                    child: signUpMoveAnimation.value > 0.7
-                        ? InkWell(
-                            key: ValueKey('Sign Up button'),
-                            onTap: onNextClick,
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 14.0, right: 14.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Sign Up',
-                                    style: TextStyle(
-                                      color: Color.fromRGBO(0, 0, 0, 1),
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  Icon(Icons.arrow_forward_rounded,
-                                      color: Color.fromRGBO(0, 0, 0, 1)),
-                                ],
-                              ),
-                            ),
-                          )
-                        : InkWell(
-                            key: ValueKey('next button'),
-                            onTap: onNextClick,
-                            child: Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: Icon(Icons.arrow_forward_ios_rounded,
-                                  color: Color.fromRGBO(0, 0, 0, 1)),
-                            ),
+              builder: (context, child) {
+                double shrinkFactor = 1 - signUpMoveAnimation.value; // Shrink effect
+
+                return Padding(
+                  padding: EdgeInsets.only(bottom: 38 * shrinkFactor), // Adjust bottom padding
+                  child: Container(
+                    height: 58 * shrinkFactor, // Shrink height smoothly
+                    width: 58 * shrinkFactor,  // Shrink width smoothly
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8 + 32 * shrinkFactor), // Maintain roundness
+                      color: Color.fromRGBO(254, 223, 0, shrinkFactor), // Gradual fade-out
+                    ),
+                    child: Opacity(
+                      opacity: shrinkFactor, // Fade out as it shrinks
+                      child: PageTransitionSwitcher(
+                        duration: Duration(milliseconds: 80),
+                        reverse: signUpMoveAnimation.value < 0.7,
+                        transitionBuilder: (
+                            Widget child,
+                            Animation<double> animation,
+                            Animation<double> secondaryAnimation,
+                            ) {
+                          return SharedAxisTransition(
+                            fillColor: Colors.transparent,
+                            animation: animation,
+                            secondaryAnimation: secondaryAnimation,
+                            transitionType: SharedAxisTransitionType.vertical,
+                            child: child,
+                          );
+                        },
+                        child: shrinkFactor > 0.2 // Hide content completely when almost gone
+                            ? InkWell(
+                          key: ValueKey('next button'),
+                          onTap: onNextClick,
+                          child: Padding(
+                            padding: EdgeInsets.all(16.0 * shrinkFactor), // Shrinking padding
+                            child: Icon(Icons.arrow_forward_ios_rounded,
+                                color: Color.fromRGBO(0, 0, 0, shrinkFactor)),
                           ),
+                        )
+                            : SizedBox(), // Empty widget when fully shrunk
+                      ),
+                    ),
                   ),
-                ),
-              ),
+                );
+              },
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 8),
-            child: SlideTransition(
-              position: loginTextMoveAnimation,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Already have an account? ',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => LogInView(
-                                  animationController: animationController)));
-                    },
-                    child: Text(
-                      'Login',
+            child: AnimatedOpacity(
+              opacity: animationController.value >= 0.7 ? 0 : 1, // ✅ Instantly hide
+              duration: Duration(milliseconds: 0), // ✅ No delay
+              child: SlideTransition(
+                position: loginTextMoveAnimation,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '',
                       style: TextStyle(
-                        color: Color(0xff132137),
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                        color: Colors.transparent,
+                        fontSize: 14,
+                        fontWeight: FontWeight.normal,
                       ),
                     ),
-                  ),
-                ],
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LogInView(
+                                    animationController: animationController)));
+                      },
+                      child: Text(
+                        '',
+                        style: TextStyle(
+                          color: Colors.transparent,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
