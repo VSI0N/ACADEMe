@@ -146,8 +146,8 @@ class _SignUpViewState extends State<SignUpView> {
                     height: 50,
                   ),
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.6,
-                    margin: EdgeInsets.symmetric(horizontal: 30),
+                    height: MediaQuery.of(context).size.height * 0.75,
+                    margin: EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
                         color: AcademeTheme.white,
                         boxShadow: [
