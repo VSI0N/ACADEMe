@@ -2,8 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'dart:io';
 import 'home/pages/home_view.dart';
-import 'introduction_page.dart';
-
+import 'started/pages/auth_wrapper.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import './started/pages/auth_service.dart';
 import 'academe_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,11 +12,6 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Initialize Firebase
-  // await Firebase.initializeApp(
-  //   options: DefaultFirebaseOptions.currentPlatform,
-  // );
 
   try {
     await Firebase.initializeApp(
@@ -54,7 +50,7 @@ class MyApp extends StatelessWidget {
         textTheme: AcademeTheme.textTheme,
         platform: TargetPlatform.iOS,
       ),
-      home: AcademeScreen(),
+      home: AuthWrapper(),
       routes: {
         '/home': (context) => HomeScreen(),
       },
