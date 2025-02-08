@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../academe_theme.dart';
+import '../home/pages/my_courses.dart';
 import '../home/pages/home_view.dart';
-import '../started/pages/homePage.dart';
-import '../started/pages/profile.dart';
-import '../started/pages/mycommunity.dart';
+import '../home/pages/profile.dart';
+import '../home/pages/my_community.dart';
 
 class BottomNav extends StatefulWidget {
   const BottomNav({super.key});

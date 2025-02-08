@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
-
+import 'package:ACADEMe/home/auth/auth_service.dart';
 import '../../academe_theme.dart';
+import 'package:ACADEMe/introduction_page.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
+  @override
+  _ProfilePageState createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,6 +97,7 @@ class ProfilePage extends StatelessWidget {
                     _ProfileOption(
                       icon: Icons.settings,
                       text: 'Settings',
+                      iconColor: Colors.blue,
                       onTap: () {
                         print('Settings tapped');
                         // Navigate to Settings page
@@ -99,6 +106,7 @@ class ProfilePage extends StatelessWidget {
                     _ProfileOption(
                       icon: Icons.credit_card,
                       text: 'Billing Details',
+                      iconColor: Colors.blue,
                       onTap: () {
                         print('Billing Details tapped');
                         // Navigate to Billing Details page
@@ -107,35 +115,50 @@ class ProfilePage extends StatelessWidget {
                     _ProfileOption(
                       icon: Icons.people,
                       text: 'User Management',
+                      iconColor: Colors.blue,
                       onTap: () {
                         print('User Management tapped');
-                        // Navigate to User Management page
                       },
                     ),
                     _ProfileOption(
                       icon: Icons.info,
                       text: 'Information',
+                      iconColor: Colors.blue,
                       onTap: () {
                         print('Information tapped');
-                        // Navigate to Information page
+                      },
+                    ),
+                    _ProfileOption(
+                      icon: Icons.card_giftcard,
+                      text: 'Redeem Points',
+                      iconColor: Colors.blue,
+                      onTap: () {
+                        print('Redeem points tapped');
+                        // Handle redeem points logic
                       },
                     ),
                     _ProfileOption(
                       icon: Icons.logout,
                       text: 'Logout',
                       iconColor: Colors.red,
-                      onTap: () {
-                        print('Logout tapped');
-                        // Handle logout logic
-                      },
-                    ),
-                    _ProfileOption(
-                      icon: Icons.logout,
-                      text: 'Logout',
-                      iconColor: Colors.red,
-                      onTap: () {
-                        print('Logout tapped');
-                        // Handle logout logic
+                      onTap: () async {
+                        try {
+                          await AuthService().signOut();
+                          print('✅ User signed out successfully');
+
+                          // Ensure UI updates instantly
+                          await Future.delayed(Duration.zero);
+
+                          if (mounted) {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (context) => const AcademeScreen()), // Login screen
+                                  (route) => false, // Remove all previous routes
+                            );
+                          }
+                        } catch (e) {
+                          print('❌ Error during logout: $e');
+                        }
                       },
                     ),
                   ],
