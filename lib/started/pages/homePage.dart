@@ -154,10 +154,10 @@ class HomePage extends StatelessWidget {
                     ),
                     trailing: Icon(Icons.arrow_forward_ios),
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => SignUpView()),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => SignUpView()),
+                      // );
                     },
                   ),
                 ),
