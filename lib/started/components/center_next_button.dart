@@ -138,8 +138,7 @@ class CenterNextButton extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => LogInView(
-                                    animationController: animationController)));
+                                builder: (context) => LogInView()));
                       },
                       child: Text(
                         '',

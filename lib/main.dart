@@ -1,3 +1,5 @@
+import 'package:ACADEMe/introduction_page.dart';
+import 'package:ACADEMe/utils/bottomNav.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'dart:io';
@@ -37,7 +39,7 @@ class MyApp extends StatelessWidget {
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
       statusBarBrightness:
-          !kIsWeb && Platform.isAndroid ? Brightness.dark : Brightness.light,
+      !kIsWeb && Platform.isAndroid ? Brightness.dark : Brightness.light,
       systemNavigationBarColor: Colors.white,
       systemNavigationBarDividerColor: Colors.transparent,
       systemNavigationBarIconBrightness: Brightness.dark,
@@ -52,7 +54,7 @@ class MyApp extends StatelessWidget {
       ),
       home: AuthWrapper(),
       routes: {
-        '/home': (context) => HomeScreen(),
+        '/home': (context) => BottomNav(),
       },
     );
   }

@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'auth_service.dart';
 
 class LogInView extends StatefulWidget {
-  final AnimationController animationController;
-  const LogInView({super.key, required this.animationController});
+  const LogInView({super.key});
 
   @override
   State<LogInView> createState() => _LogInViewState();
@@ -63,55 +62,7 @@ class _LogInViewState extends State<LogInView> {
 
   @override
   Widget build(BuildContext context) {
-    final firstHalfAnimation =
-    Tween<Offset>(begin: Offset(1, 0), end: Offset(0, 0)).animate(
-      CurvedAnimation(
-        parent: widget.animationController,
-        curve: Interval(
-          0.6,
-          0.8,
-          curve: Curves.fastOutSlowIn,
-        ),
-      ),
-    );
-    final secondHalfAnimation =
-    Tween<Offset>(begin: Offset(0, 0), end: Offset(-1, 0)).animate(
-      CurvedAnimation(
-        parent: widget.animationController,
-        curve: Interval(
-          0.8,
-          1.0,
-          curve: Curves.fastOutSlowIn,
-        ),
-      ),
-    );
-
-    final welcomeFirstHalfAnimation =
-    Tween<Offset>(begin: Offset(2, 0), end: Offset(0, 0))
-        .animate(CurvedAnimation(
-      parent: widget.animationController,
-      curve: Interval(
-        0.6,
-        0.8,
-        curve: Curves.fastOutSlowIn,
-      ),
-    ));
-
-    final welcomeImageAnimation =
-    Tween<Offset>(begin: Offset(4, 0), end: Offset(0, 0))
-        .animate(CurvedAnimation(
-      parent: widget.animationController,
-      curve: Interval(
-        0.6,
-        0.8,
-        curve: Curves.fastOutSlowIn,
-      ),
-    ));
-    return SlideTransition(
-      position: firstHalfAnimation,
-      child: SlideTransition(
-        position: secondHalfAnimation,
-        child: Scaffold(
+    return Scaffold(
           backgroundColor: Colors.white,
           body: SingleChildScrollView(
             child: Form(
@@ -122,9 +73,7 @@ class _LogInViewState extends State<LogInView> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SlideTransition(
-                      position: welcomeImageAnimation,
-                      child: Center(
+                    Center(
                         child: Container(
                           constraints: BoxConstraints(
                               maxWidth: 400, maxHeight: 400),
@@ -134,7 +83,6 @@ class _LogInViewState extends State<LogInView> {
                           ),
                         ),
                       ),
-                    ),
                     SizedBox(height: 50),
                     Container(
                       height: MediaQuery.of(context).size.height * 0.75,
@@ -151,9 +99,7 @@ class _LogInViewState extends State<LogInView> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SlideTransition(
-                            position: welcomeFirstHalfAnimation,
-                            child: Align(
+                          Align(
                               alignment: Alignment.topLeft,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -184,7 +130,6 @@ class _LogInViewState extends State<LogInView> {
                                 ],
                               ),
                             ),
-                          ),
                           SizedBox(height: 50),
                           Padding(
                             padding: EdgeInsets.only(left: 30,
@@ -314,8 +259,6 @@ class _LogInViewState extends State<LogInView> {
               ),
             ),
           ),
-        ),
-      ),
     );
   }
 }

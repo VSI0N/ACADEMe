@@ -7,6 +7,8 @@ class AcademeTheme {
   static const Color white = Color.fromARGB(255, 255, 255, 255);
   static const Color background = Color.fromARGB(255, 255, 255, 255);
   static const Color nearlyDarkBlue = Color.fromARGB(255, 0, 0, 0);
+  static const Color appColor = Color(0xFF502af5);
+
 
   static const Color nearlyBlue = Color.fromARGB(188,92,57,246);
   static const Color nearlyBlack = Color(0xFF213333);
