@@ -1,6 +1,6 @@
 import '../../academe_theme.dart';
 import 'package:flutter/material.dart';
-import 'auth_service.dart';
+import 'package:ACADEMe/home/auth/auth_service.dart';
 
 class LogInView extends StatefulWidget {
   const LogInView({super.key});
