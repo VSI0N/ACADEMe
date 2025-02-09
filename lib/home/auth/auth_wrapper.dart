@@ -1,4 +1,4 @@
-import 'package:ACADEMe/utils/bottomNav.dart';
+import 'package:ACADEMe/home/pages/bottomNav.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ACADEMe/introduction_page.dart';

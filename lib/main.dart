@@ -1,5 +1,5 @@
 import 'package:ACADEMe/introduction_page.dart';
-import 'package:ACADEMe/utils/bottomNav.dart';
+import 'package:ACADEMe/home/pages/bottomNav.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'dart:io';

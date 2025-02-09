@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../academe_theme.dart';
-import '../home/pages/my_courses.dart';
-import '../home/pages/home_view.dart';
-import '../home/pages/profile.dart';
-import '../home/pages/my_community.dart';
+import '../../academe_theme.dart';
+import 'package:ACADEMe/home/pages/my_courses.dart';
+import 'package:ACADEMe/home/pages/home_view.dart';
+import 'package:ACADEMe/home/pages/profile.dart';
+import 'package:ACADEMe/home/pages/my_community.dart';
 
 class BottomNav extends StatefulWidget {
   const BottomNav({super.key});
@@ -63,12 +63,8 @@ class _BottomNavState extends State<BottomNav> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Image.asset(
-              'assets/academe/course.png',  // Replace with your image path
-              width: 24,  // Adjust size as needed
-              height: 24,
-            ),
-            label: 'My Course',
+            icon: Icon(Icons.school, size: 25.0),
+            label: 'My Courses',
           ),
 
           const BottomNavigationBarItem(

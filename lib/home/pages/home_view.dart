@@ -1,4 +1,3 @@
-import 'package:ACADEMe/started/pages/signup_view.dart';
 import 'package:flutter/material.dart';
 import '../../academe_theme.dart';
 
@@ -135,6 +134,7 @@ class HomePage extends StatelessWidget {
 
               // ASKMe Section
               Card(
+                color: Colors.grey[300],
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12.0),
                 ),
@@ -143,7 +143,7 @@ class HomePage extends StatelessWidget {
                   width: double.infinity,
                   child: ListTile(
                     leading: Image.asset(
-                      "assets/images/supportIcon.png",
+                      "assets/icons/ASKMe.png",
                       width: 50,
                       height: 50,
                       fit: BoxFit.cover, // Adjust as needed
