@@ -4,6 +4,9 @@ import '../components/popular_course_list_view.dart';
 import '../../main.dart';
 import 'package:flutter/material.dart';
 import '../../academe_theme.dart';
+import 'package:ACADEMe/home/components/ASKMe_button.dart';
+
+import 'ASKMe.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,42 +20,51 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AcademeTheme.nearlyWhite,
-      child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(80), // Custom height for AppBar
-          child: AppBar(
-            backgroundColor: AcademeTheme.appColor,
-            automaticallyImplyLeading: false,
-            elevation: 0,
-            // flexibleSpace: getAppBarUI(), // Custom AppBar UI
+    return ASKMeButton(
+        showFAB: true,
+        onFABPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ASKMe()),
+          );
+      },
+      child: Container(
+        color: AcademeTheme.nearlyWhite,
+        child: Scaffold(
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(80), // Custom height for AppBar
+            child: AppBar(
+              backgroundColor: AcademeTheme.appColor,
+              automaticallyImplyLeading: false,
+              elevation: 0,
+              // flexibleSpace: getAppBarUI(), // Custom AppBar UI
+            ),
           ),
-        ),
-        backgroundColor: Colors.transparent,
-        body: Column(
-          children: <Widget>[
-            // SizedBox(
-            //   height: MediaQuery.of(context).padding.top,
-            // ),
-            // getAppBarUI(),
-            Expanded(
-              child: SingleChildScrollView(
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height,
-                  child: Column(
-                    children: <Widget>[
-                      getSearchBarUI(),
-                      getCategoryUI(),
-                      Flexible(
-                        child: getPopularCourseUI(),
-                      ),
-                    ],
+          backgroundColor: Colors.transparent,
+          body: Column(
+            children: <Widget>[
+              // SizedBox(
+              //   height: MediaQuery.of(context).padding.top,
+              // ),
+              // getAppBarUI(),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height,
+                    child: Column(
+                      children: <Widget>[
+                        getSearchBarUI(),
+                        getCategoryUI(),
+                        Flexible(
+                          child: getPopularCourseUI(),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
