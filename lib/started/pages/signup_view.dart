@@ -1,6 +1,8 @@
+import 'package:ACADEMe/started/pages/login_view.dart';
+
 import '../../academe_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:ACADEMe/home/auth/auth_service.dart';
+import '../../home/auth/auth_service.dart';
 
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});
@@ -75,222 +77,262 @@ class _SignUpViewState extends State<SignUpView> {
     return  Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 200, top: 80),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                      child: Container(
-                        constraints:
-                        BoxConstraints(maxWidth: 400, maxHeight: 400),
-                        child: Image.asset(
-                          'assets/academe/academe_logo.png',
-                          fit: BoxFit.contain,
-                        ),
+        child: Form(
+          key: _formKey,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 100, top: 80),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    constraints:
+                    BoxConstraints(maxWidth: 250, maxHeight: 300),
+                    child: Image.asset(
+                      'assets/academe/study_image.png',
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding:
+                            const EdgeInsets.only(left: 30, right: 30),
+                            child: Text(
+                              "Create Your "
+                                  "Account",
+                              style: TextStyle(
+                                fontSize: 39.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  SizedBox(
-                    height: 50,
-                  ),
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.75,
-                    margin: EdgeInsets.symmetric(horizontal: 10),
-                    decoration: BoxDecoration(
-                        color: AcademeTheme.white,
-                        boxShadow: [
-                          BoxShadow(
-                              offset: Offset(1, 1),
-                              color: Colors.grey,
-                              blurRadius: 10)
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 30, right: 30),
+                      child: TextFormField(
+                        controller: _usernameController,
+                        decoration: InputDecoration(
+                            filled: true,
+                            fillColor: AcademeTheme.notWhite,
+                            labelText: "Username",
+                            hintText: "Enter a username",
+                            prefixIcon: Icon(Icons.person)),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a username';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 30, right: 30, top: 16),
+                      child: TextFormField(
+                        controller: _emailController,
+                        decoration: InputDecoration(
+                            filled: true,
+                            fillColor: AcademeTheme.notWhite,
+                            labelText: "Email",
+                            hintText: "Enter your email",
+                            prefixIcon: Icon(Icons.email)),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter an email';
+                          }
+                          if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                              .hasMatch(value)) {
+                            return 'Enter a valid email';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 30, right: 30, top: 16),
+                      child: TextFormField(
+                        controller: _passwordController,
+                        obscureText: !_isPasswordVisible,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: AcademeTheme.notWhite,
+                          labelText: "Password",
+                          hintText: "Enter your password",
+                          prefixIcon: Icon(Icons.lock),
+                          suffixIcon: IconButton(
+                            icon: Icon(_isPasswordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off),
+                            onPressed: () {
+                              setState(() {
+                                _isPasswordVisible = !_isPasswordVisible;
+                              });
+                            },
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a password';
+                          }
+                          if (value.length < 6) {
+                            return 'Password must be at least 6 characters';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    SizedBox(height: 4,),
+                    Padding(
+                      padding: EdgeInsets.only(left: 20, right: 40),
+                      child: Row(
+                        children: [
+                          Checkbox(
+                            value: _agreeToTerms,
+                            onChanged: (value) {
+                              setState(() {
+                                _agreeToTerms = value ?? false;
+                              });
+                            },
+                          ),
+                          Text(
+                            "I agree to terms and conditions",
+                            style: TextStyle(fontSize: 14),
+                          ),
                         ],
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Align(
-                            alignment: Alignment.topLeft,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding:
-                                  const EdgeInsets.only(left: 30, right: 30),
-                                  child: Text(
-                                    "Welcome",
-                                    style: TextStyle(
-                                      fontSize: 35.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                  const EdgeInsets.only(left: 30, right: 30),
-                                  child: Text(
-                                    "Create an Account",
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      color: Color(0xFF808080),
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                      ),
+                    ),
+                    SizedBox(height: 4,),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 35),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: _isLoading ? null : _submitForm,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.yellow[600], // Change button color
+                            minimumSize: Size(double.infinity, 50), // Adjust button size
                           ),
-                        SizedBox(
-                          height: 50,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 30, right: 30),
-                          child: TextFormField(
-                            controller: _usernameController,
-                            decoration: InputDecoration(
-                                filled: true,
-                                fillColor: AcademeTheme.notWhite,
-                                labelText: "Username",
-                                hintText: "Enter a username",
-                                prefixIcon: Icon(Icons.person)),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter a username';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 30, right: 30, top: 16),
-                          child: TextFormField(
-                            controller: _emailController,
-                            decoration: InputDecoration(
-                                filled: true,
-                                fillColor: AcademeTheme.notWhite,
-                                labelText: "Email",
-                                hintText: "Enter your email",
-                                prefixIcon: Icon(Icons.email)),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter an email';
-                              }
-                              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                                  .hasMatch(value)) {
-                                return 'Enter a valid email';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 30, right: 30, top: 16),
-                          child: TextFormField(
-                            controller: _passwordController,
-                            obscureText: !_isPasswordVisible,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: AcademeTheme.notWhite,
-                              labelText: "Password",
-                              hintText: "Enter your password",
-                              prefixIcon: Icon(Icons.lock),
-                              suffixIcon: IconButton(
-                                icon: Icon(_isPasswordVisible
-                                    ? Icons.visibility
-                                    : Icons.visibility_off),
-                                onPressed: () {
-                                  setState(() {
-                                    _isPasswordVisible = !_isPasswordVisible;
-                                  });
-                                },
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter a password';
-                              }
-                              if (value.length < 6) {
-                                return 'Password must be at least 6 characters';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: TextButton(
-                                onPressed: () {},
-                                child: Text(
-                                  'Forgot Password?',
-                                  style: TextStyle(),
-                                )),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 20, right: 40),
-                          child: Row(
+                          child: _isLoading
+                              ? CircularProgressIndicator(color: Colors.white)
+                              : Row(
+                            mainAxisAlignment: MainAxisAlignment.center, // Center the content
                             children: [
-                              Checkbox(
-                                value: _agreeToTerms,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _agreeToTerms = value ?? false;
-                                  });
-                                },
+                              Image.asset(
+                                'assets/icons/house_door.png', // Replace with your image path
+                                height: 24, // Adjust size
+                                width: 24,
                               ),
+                              SizedBox(width: 10), // Space between icon and text
                               Text(
-                                "I agree to terms and conditions",
-                                style: TextStyle(fontSize: 14),
+                                'Sign Up',
+                                style: TextStyle(
+                                  fontSize: 18, // Adjust font size
+                                  fontWeight: FontWeight.w400, // Change font weight
+                                  color: Colors.black, // Text color
+                                ),
                               ),
                             ],
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 30),
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: _isLoading ? null : _submitForm,
-                              child: _isLoading
-                                  ? CircularProgressIndicator(color: Colors.white)
-                                  : Text('Sign Up'),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'OR',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black54,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    //
+                    // SizedBox(height: 2),
+
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 35),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          onPressed: _isGoogleLoading ? null : _signInWithGoogle,
+                          icon: _isGoogleLoading
+                              ? CircularProgressIndicator(color: Colors.white)
+                              : Padding(
+                            padding: EdgeInsets.only(right: 7), // Adjust spacing
+                            child: Image.asset('assets/icons/google_icon.png', height: 22),
+                          ),
+                          label: Text(
+                            'Continue with Google',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.black,
+                            elevation: 2,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 30),
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton.icon(
-                              onPressed: _isGoogleLoading ? null : _signInWithGoogle,
-                              icon: _isGoogleLoading
-                                  ? CircularProgressIndicator(color: Colors.white)
-                                  : Image.asset('assets/icons/google_icon.png', height: 24),
-                              label: Text('Sign in with Google'),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                foregroundColor: Colors.black,
-                                elevation: 2,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                              ),
+                      ),
+                    ),
+
+                    SizedBox(height: 30,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Already have an account?",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black54,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: (
+                              ) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => LogInView()),
+                            );
+                          },
+                          child: Text(
+                            "Login",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: AcademeTheme.appColor, // Change color for emphasis
                             ),
                           ),
                         ),
-                        SizedBox(height: 16), // Adds spacing before the "Sign Up" button
                       ],
                     ),
-                  ),
-                ],
-              ),
+                    SizedBox(height: 16), // Adds spacing before the "Sign Up" button
+                  ],
+                ),
+              ],
             ),
           ),
         ),
+      ),
     );
   }
 }
+
+
+
