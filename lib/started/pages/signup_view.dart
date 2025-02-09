@@ -240,7 +240,7 @@ class _SignUpViewState extends State<SignUpView> {
                                 'Sign Up',
                                 style: TextStyle(
                                   fontSize: 18, // Adjust font size
-                                  fontWeight: FontWeight.w400, // Change font weight
+                                  fontWeight: FontWeight.w500, // Change font weight
                                   color: Colors.black, // Text color
                                 ),
                               ),
@@ -277,7 +277,7 @@ class _SignUpViewState extends State<SignUpView> {
                             'Continue with Google',
                             style: TextStyle(
                               fontSize: 18,
-                              fontWeight: FontWeight.w400,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                           style: ElevatedButton.styleFrom(

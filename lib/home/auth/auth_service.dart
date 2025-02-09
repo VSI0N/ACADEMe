@@ -103,6 +103,16 @@ class AuthService {
     }
   }
 
+  Future<void> sendPasswordResetEmail(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      print("✅ Password reset email sent to $email");
+    } catch (e) {
+      print("❌ Error: $e");
+      throw e;
+    }
+  }
+
   /// Sign out user (works for both email/password and Google sign-in)
   Future<void> signOut() async {
     await _auth.signOut();

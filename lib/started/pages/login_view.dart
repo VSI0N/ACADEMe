@@ -4,6 +4,8 @@ import '../../academe_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:ACADEMe/home/auth/auth_service.dart';
 
+import '../../home/pages/forgot_password.dart';
+
 class LogInView extends StatefulWidget {
   const LogInView({super.key});
 
@@ -214,7 +216,12 @@ class _LogInViewState extends State<LogInView> {
                         child: Align(
                           alignment: Alignment.centerRight,
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const ForgotPasswordPage()),
+                              );
+                            },
                             child: Text(
                               'Forgot Password?',
                               style: TextStyle(
@@ -254,7 +261,7 @@ class _LogInViewState extends State<LogInView> {
                                   'Log in',
                                   style: TextStyle(
                                     fontSize: 18, // Font size
-                                    fontWeight: FontWeight.w400, // Font weight
+                                    fontWeight: FontWeight.w500, // Font weight
                                     color: Colors.black, // Text color
                                   ),
                                 ),
@@ -288,7 +295,7 @@ class _LogInViewState extends State<LogInView> {
                               'Continue with Google',
                               style: TextStyle(
                                 fontSize: 18,
-                                fontWeight: FontWeight.w400,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                             style: ElevatedButton.styleFrom(
