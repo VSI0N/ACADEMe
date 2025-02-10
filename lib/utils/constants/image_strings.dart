@@ -7,6 +7,11 @@ class AImages {
 
   // Get Started
   static const String getStarted = "assets/study_image.png";
+  static const String user = "assets/design_course/userImage.png";
+  static const String QnA_user = "assets/images/userImage.png";
+  static const String product_design = "assets/design_course/product_design.png";
+  static const String app_color_schemes = "assets/design_course/app_color_schemes.png";
+  static const String UI_design = "assets/design_course/UI_design.png";
 
   // Social Logos
 

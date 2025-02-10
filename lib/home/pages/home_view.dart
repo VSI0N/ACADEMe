@@ -3,6 +3,8 @@ import 'package:ACADEMe/home/pages/ASKMe.dart';
 import '../../academe_theme.dart';
 import 'package:ACADEMe/home/components/ASKMe_button.dart';
 
+import '../courses/linear_algebra/Linear_algebra.dar.dart';
+
 class HomePage extends StatelessWidget {
   final VoidCallback onProfileTap;
   final VoidCallback onAskMeTap;
@@ -191,11 +193,23 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 16),
-                learningCard("Linear Algebra", 4, 9, 34, Colors.pink[100]!),
+                learningCard(
+                    "Linear Algebra", 4, 9, 34, Colors.pink[100]!, (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LinearAlgebraScreen()),
+                  );
+                }
+                ),
                 const SizedBox(height: 12),
-                learningCard("Atoms & Molecules", 7, 13, 65, Colors.blue[100]!),
-                const SizedBox(height: 12),
-                learningCard("Motion", 4, 11, 22, Colors.pink[100]!),
+                learningCard(
+                    "Atoms & Molecules", 7, 13, 65, Colors.blue[100]!, (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LinearAlgebraScreen()),
+                  );
+                }
+                ),
               ],
             ),
           ),
@@ -226,7 +240,7 @@ class HomePage extends StatelessWidget {
   }
 
   static Widget learningCard(
-      String title, int completed, int total, int percentage, Color color) {
+      String title, int completed, int total, int percentage, Color color, VoidCallback onTap) {
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
@@ -242,8 +256,7 @@ class HomePage extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 20),
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
                 const SizedBox(height: 15),
                 Text("$completed/$total"),
@@ -256,8 +269,17 @@ class HomePage extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(width: 16),
-          Text("$percentage%"),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              IconButton(
+                  icon: Icon(Icons.arrow_forward_ios, color: Colors.grey[600]),
+                  onPressed: onTap
+              ),
+              const SizedBox(height: 16),
+              Text("$percentage%"),
+            ],
+          )
         ],
       ),
     );
@@ -266,7 +288,7 @@ class HomePage extends StatelessWidget {
 
 Widget getAppBarUI(VoidCallback onProfileTap) {
   return Padding(
-    padding: const EdgeInsets.only(top: 55.0, left: 18, right: 18),
+    padding: const EdgeInsets.only(top: 38.0, left: 18, right: 18,bottom: 5),
     child: Row(
       children: <Widget>[
         Expanded(
@@ -283,7 +305,6 @@ Widget getAppBarUI(VoidCallback onProfileTap) {
                   color: Colors.white,
                 ),
               ),
-              SizedBox(height: 1),
               Text(
                 'Sun, Feb 25',
                 style: TextStyle(
