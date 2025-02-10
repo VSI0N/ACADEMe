@@ -20,13 +20,22 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       color: AcademeTheme.nearlyWhite,
       child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(80), // Custom height for AppBar
+          child: AppBar(
+            backgroundColor: Colors.deepPurple[300],
+            automaticallyImplyLeading: false,
+            elevation: 0,
+            flexibleSpace: getAppBarUI(), // Custom AppBar UI
+          ),
+        ),
         backgroundColor: Colors.transparent,
         body: Column(
           children: <Widget>[
-            SizedBox(
-              height: MediaQuery.of(context).padding.top,
-            ),
-            getAppBarUI(),
+            // SizedBox(
+            //   height: MediaQuery.of(context).padding.top,
+            // ),
+            // getAppBarUI(),
             Expanded(
               child: SingleChildScrollView(
                 child: SizedBox(

@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_app/started/widgets/bottomNav.dart';
 import 'firebase_options.dart';
 import 'dart:io';
 import 'home/pages/home_view.dart';
@@ -54,9 +55,15 @@ class MyApp extends StatelessWidget {
         textTheme: AcademeTheme.textTheme,
         platform: TargetPlatform.iOS,
       ),
-      home: AcademeScreen(),
+      home: PopScope(
+        canPop: false,
+        child: AcademeScreen(),
+      ),
       routes: {
-        '/home': (context) => HomeScreen(),
+        '/home': (context) => PopScope(
+          canPop: false,
+          child: BottomNav(),
+        ),
       },
     );
   }
