@@ -31,51 +31,50 @@ class _ProfilePageState extends State<ProfilePage> {
           centerTitle: true,
         ),
       ),
-      body: Column(
-        children: [
-          const SizedBox(height: 20),
-          const CircleAvatar(
-            radius: 70,
-            backgroundImage: AssetImage('assets/design_course/userImage.png'),
-          ),
-          const SizedBox(height: 10),
-          const Text(
-            'Rahul Sharma',
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(height: 15),
+            const CircleAvatar(
+              radius:50,
+              backgroundImage: AssetImage('assets/design_course/userImage.png'),
             ),
-          ),
-          const Text(
-            'rahulSharma23@gmail.com',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey,
-            ),
-          ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.yellow,
-              foregroundColor: Colors.black,
-              padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
-              ),
-            ),
-            child: const Text(
-              'Edit Profile',
+            const SizedBox(height: 10),
+            const Text(
+              'Rahul Sharma',
               style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
               ),
             ),
-          ),
-          const SizedBox(height: 30),
-          SizedBox(
-            height: 400,
-            child: Padding(
+            const Text(
+              'rahulSharma23@gmail.com',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey,
+              ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.yellow,
+                foregroundColor: Colors.black,
+                padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
+              child: const Text(
+                'Edit Profile',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            const SizedBox(height: 30),
+            Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),
               child: Container(
                 decoration: BoxDecoration(
@@ -93,6 +92,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: ListView(
                   padding: const EdgeInsets.all(10),
                   shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(), // Prevent ListView from scrolling separately
                   children: [
                     _ProfileOption(
                       icon: Icons.settings,
@@ -100,7 +100,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       iconColor: Colors.blue,
                       onTap: () {
                         print('Settings tapped');
-                        // Navigate to Settings page
                       },
                     ),
                     _ProfileOption(
@@ -109,7 +108,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       iconColor: Colors.blue,
                       onTap: () {
                         print('Billing Details tapped');
-                        // Navigate to Billing Details page
                       },
                     ),
                     _ProfileOption(
@@ -134,7 +132,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       iconColor: Colors.blue,
                       onTap: () {
                         print('Redeem points tapped');
-                        // Handle redeem points logic
                       },
                     ),
                     _ProfileOption(
@@ -152,8 +149,8 @@ class _ProfilePageState extends State<ProfilePage> {
                           if (mounted) {
                             Navigator.pushAndRemoveUntil(
                               context,
-                              MaterialPageRoute(builder: (context) => const AcademeScreen()), // Login screen
-                                  (route) => false, // Remove all previous routes
+                              MaterialPageRoute(builder: (context) => const AcademeScreen()),
+                                  (route) => false,
                             );
                           }
                         } catch (e) {
@@ -165,8 +162,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
             ),
-          ),
-        ],
+            const SizedBox(height: 30),
+          ],
+        ),
       ),
     );
   }
