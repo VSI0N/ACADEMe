@@ -27,7 +27,7 @@ class HomePage extends StatelessWidget {
       },
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(80),
+          preferredSize: const Size.fromHeight(70),
           child: AppBar(
             backgroundColor: AcademeTheme.appColor,
             automaticallyImplyLeading: false,
@@ -59,7 +59,7 @@ class HomePage extends StatelessWidget {
 
                 // Progress Section
                 Container(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(20.0),
                   decoration: BoxDecoration(
                     color: AcademeTheme.appColor,
                     borderRadius: BorderRadius.circular(12.0),
@@ -72,19 +72,19 @@ class HomePage extends StatelessWidget {
                         children: [
                           const Text(
                             "This Week",
-                            style: TextStyle(color: Colors.white, fontSize: 18),
+                            style: TextStyle(color: Colors.white, fontSize: 14),
                           ),
                           const Text(
                             "Progress",
                             style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 37,
+                                fontSize: 32,
                                 fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 36),
                           Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 6),
+                                horizontal: 12, vertical: 6),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(20.0),
@@ -96,7 +96,7 @@ class HomePage extends StatelessWidget {
                                   "420 🔥",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 20,
+                                    fontSize: 16,
                                   ),
                                 ),
                                 const SizedBox(width: 8),
@@ -146,7 +146,7 @@ class HomePage extends StatelessWidget {
 
                 // ASKMe Section
                 Card(
-                  color: Colors.grey[300],
+                  color: Colors.grey[200],
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0),
                   ),
@@ -163,7 +163,7 @@ class HomePage extends StatelessWidget {
                       title: const Text(
                         "ASKMe is ready to assist you!",
                         style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 23),
+                            fontWeight: FontWeight.bold, fontSize: 21),
                       ),
                       trailing: Icon(Icons.arrow_forward_ios),
                       onTap: () {
@@ -184,7 +184,7 @@ class HomePage extends StatelessWidget {
                     Text(
                       "Continue Learning",
                       style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 22),
+                          fontWeight: FontWeight.bold, fontSize: 20),
                     ),
                     Text(
                       "See All",
@@ -204,6 +204,15 @@ class HomePage extends StatelessWidget {
                 const SizedBox(height: 12),
                 learningCard(
                     "Atoms & Molecules", 7, 13, 65, Colors.blue[100]!, (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LinearAlgebraScreen()),
+                  );
+                }
+                ),
+                const SizedBox(height: 12),
+                learningCard(
+                    "Atoms & Molecules", 7, 13, 65, Colors.green[100]!, (){
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => LinearAlgebraScreen()),
@@ -301,7 +310,7 @@ Widget getAppBarUI(VoidCallback onProfileTap) {
                 'Hello Alex',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 22,
+                  fontSize: 20,
                   color: Colors.white,
                 ),
               ),
@@ -309,7 +318,7 @@ Widget getAppBarUI(VoidCallback onProfileTap) {
                 'Sun, Feb 25',
                 style: TextStyle(
                   fontWeight: FontWeight.w400,
-                  fontSize: 14,
+                  fontSize: 12,
                   color: Colors.white,
                 ),
               ),
@@ -319,7 +328,7 @@ Widget getAppBarUI(VoidCallback onProfileTap) {
         GestureDetector(
           onTap: onProfileTap,
           child: SizedBox(
-            width: 60,
+            width: 50,
             height: 60,
             child: Image.asset('assets/design_course/userImage.png'),
           ),
