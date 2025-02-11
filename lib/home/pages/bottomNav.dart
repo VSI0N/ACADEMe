@@ -1,9 +1,9 @@
+import 'package:ACADEMe/home/pages/profile.dart';
 import 'package:flutter/material.dart';
 import '../../academe_theme.dart';
-import 'package:ACADEMe/home/pages/my_courses.dart';
-import 'package:ACADEMe/home/pages/home_view.dart';
-import 'package:ACADEMe/home/pages/profile.dart';
-import 'package:ACADEMe/home/pages/my_community.dart';
+import 'home_view.dart';
+import 'my_community.dart';
+import 'my_courses.dart';
 
 class BottomNav extends StatefulWidget {
   const BottomNav({super.key});
@@ -54,19 +54,24 @@ class _BottomNavState extends State<BottomNav> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex, // Highlight the selected icon
         onTap: _onItemTapped, // Handle taps
-        selectedItemColor: AcademeTheme.appColor, // Active tab color
-        unselectedItemColor: Colors.grey, // Inactive tab color
+        selectedItemColor: AcademeTheme.appColor.withOpacity(0.9), // Active icon tint
+        unselectedItemColor: Colors.grey, // Inactive icon color
         showUnselectedLabels: true, // Show labels for all tabs
+        backgroundColor: Colors.white, // White background
+        type: BottomNavigationBarType.fixed, // Prevents icon resizing
         items: [
           const BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.school, size: 25.0),
-            label: 'My Courses',
+            icon: Image.asset(
+              'assets/academe/course.png', // Replace with your image path
+              width: 24, // Fixed size
+              height: 24,
+            ),
+            label: 'My Course',
           ),
-
           const BottomNavigationBarItem(
             icon: Icon(Icons.groups),
             label: 'My Community',

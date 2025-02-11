@@ -44,6 +44,7 @@ dependencies:
   firebase_storage: ^12.4.1
   firebase_analytics: ^11.4.1
   google_sign_in: ^6.2.2
+  video_player: ^2.9.2
 
 
 dev_dependencies:

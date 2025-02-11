@@ -198,7 +198,7 @@ class CategoryView extends StatelessWidget {
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.only(
-                                                bottom: 16, right: 16),
+                                                bottom: 5, right: 16),
                                             child: Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment
@@ -229,7 +229,7 @@ class CategoryView extends StatelessWidget {
                                                   child: Padding(
                                                     padding:
                                                         const EdgeInsets.all(
-                                                            4.0),
+                                                            1.0),
                                                     child: Icon(
                                                       Icons.add,
                                                       color: AcademeTheme
