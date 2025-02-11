@@ -1,4 +1,4 @@
-import 'package:ACADEMe/introduction_page.dart';
+import 'package:ACADEMe/started/pages/animated_splash.dart';
 import 'package:ACADEMe/home/pages/bottomNav.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
       statusBarBrightness:
-      !kIsWeb && Platform.isAndroid ? Brightness.dark : Brightness.light,
+          !kIsWeb && Platform.isAndroid ? Brightness.dark : Brightness.light,
       systemNavigationBarColor: Colors.white,
       systemNavigationBarDividerColor: Colors.transparent,
       systemNavigationBarIconBrightness: Brightness.dark,
@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
         textTheme: AcademeTheme.textTheme,
         platform: TargetPlatform.iOS,
       ),
-      home: AuthWrapper(),
+      home: AnimatedSplashScreen(),
       routes: {
         '/home': (context) => BottomNav(),
       },
