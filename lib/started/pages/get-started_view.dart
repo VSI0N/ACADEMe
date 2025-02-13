@@ -1,3 +1,4 @@
+import 'package:ACADEMe/started/pages/login_view.dart';
 import 'package:ACADEMe/started/pages/signup_view.dart';
 import 'package:flutter/material.dart';
 import '../../academe_theme.dart';
@@ -141,7 +142,7 @@ class _GetStartedViewState extends State<GetStartedView>
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => SignUpView()),
+                                builder: (context) => LogInView()),
                           );
                         },
                         child: Container(

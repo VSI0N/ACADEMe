@@ -67,7 +67,7 @@ class _LinearAlgebraScreenState extends State<LinearAlgebraScreen>
         children: [
           // Scrollable Content
           Padding(
-            padding: EdgeInsets.only(top: 230), // Offset for fixed video section
+            padding: EdgeInsets.only(top: 220), // Offset for fixed video section
             child: NestedScrollView(
               controller: _scrollController,
               headerSliverBuilder: (context, innerBoxIsScrolled) {
@@ -81,19 +81,19 @@ class _LinearAlgebraScreenState extends State<LinearAlgebraScreen>
                           // Mathematics Linear Algebra Section
                           Text(
                             "Mathematics: Linear Algebra",
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(height: 8),
                           Row(
                             children: [
-                              Icon(Icons.star, color: Colors.amber, size: 16),
+                              Icon(Icons.star, color: Colors.amber, size: 14),
                               Text(" 4.5 (1233) ",
-                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
                               Text("• 9 lessons",
-                                  style: TextStyle(fontSize: 14, color: Colors.grey)),
+                                  style: TextStyle(fontSize: 12, color: Colors.grey)),
                             ],
                           ),
-                          SizedBox(height: 8),
+                          SizedBox(height: 4),
                           Divider(color: Colors.black, thickness: 0.2),
                           SizedBox(height: 5),
                           // Your Progress Section
@@ -109,7 +109,7 @@ class _LinearAlgebraScreenState extends State<LinearAlgebraScreen>
                               minHeight: 10,
                             ),
                           ),
-                          SizedBox(height: 15),
+                          SizedBox(height: 5),
                           Divider(color: Colors.black, thickness: 0.2),
                         ],
                       ),
@@ -125,7 +125,7 @@ class _LinearAlgebraScreenState extends State<LinearAlgebraScreen>
                         labelColor: AcademeTheme.appColor,
                         unselectedLabelColor: Colors.black,
                         indicatorColor: AcademeTheme.appColor,
-                        labelStyle: TextStyle(fontSize: 18),
+                        labelStyle: TextStyle(fontSize: 16),
                         tabs: [
                           Tab(text: "OVERVIEW"),
                           Tab(text: "LESSONS"),
@@ -150,7 +150,7 @@ class _LinearAlgebraScreenState extends State<LinearAlgebraScreen>
           // Fixed Video Section
           Container(
             width: double.infinity,
-            height: 230,
+            height: 220,
             decoration: BoxDecoration(color: Colors.purple[100]),
             child: Stack(
               children: [

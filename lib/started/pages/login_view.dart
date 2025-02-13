@@ -65,290 +65,233 @@ class _LogInViewState extends State<LogInView> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 200, top: 80),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Container(
-                    constraints: BoxConstraints(
-                        maxWidth: 400, maxHeight: 400),
-                    child: Image.asset(
-                      'assets/academe/academe_logo.png',
-                      fit: BoxFit.contain,
-                    ),
+      resizeToAvoidBottomInset: false,
+      body: Stack(
+          children: [
+      Positioned.fill(
+      child:LayoutBuilder(
+        builder: (context, constraints) {
+          return Container(
+            padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+            constraints: BoxConstraints(maxWidth: 500),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(height: screenHeight * 0.0),
+                  Image.asset(
+                    'assets/academe/academe_logo.png',
+                    height: constraints.maxHeight * 0.23,
                   ),
-                ),
-                SizedBox(height: 50),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.63,
-                  margin: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-                  decoration: BoxDecoration(
+                  // SizedBox(height: screenHeight * 0.001),
+                  Container(
+                    padding: EdgeInsets.all(screenWidth * 0.05),
+                    decoration: BoxDecoration(
                       color: AcademeTheme.white,
                       boxShadow: [
                         BoxShadow(
-                            offset: Offset(1, 1),
-                            color: Colors.grey,
-                            blurRadius: 10)
+                          offset: Offset(1, 1),
+                          color: Colors.grey,
+                          blurRadius: 10,
+                        )
                       ],
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 30, right: 30),
-                              child: Text(
-                                "Hello",
-                                style: TextStyle(
-                                  fontSize: 35.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Hello", style: TextStyle(fontSize: screenWidth * 0.08, fontWeight: FontWeight.bold)),
+                          Text("Welcome back", style: TextStyle(fontSize: screenWidth * 0.047, color: Colors.grey, fontWeight: FontWeight.bold)),
+                          SizedBox(height: screenHeight * 0.02),
+                          Text("Email", style: TextStyle(fontSize: screenWidth * 0.043, color: Colors.black54, fontWeight: FontWeight.w700)),
+                          TextFormField(
+                            controller: _emailController,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: AcademeTheme.notWhite,
+                              hintText: "Enter your email",
+                              prefixIcon: Icon(Icons.email),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 30, right: 30),
-                              child: Text(
-                                "Welcome back",
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                  color: Color(0xFF808080),
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 50),
-                      Padding(
-                        padding: EdgeInsets.only(left: 30, right: 30, top: 16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start, // Align children to the start (left side)
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 4.0), // Adds space between text and text field
-                              child: Text(
-                                "Email", // Add the text you want
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.black54, // Adjust color as needed
-                                  fontWeight: FontWeight.w700, // Adjust weight as needed
-                                ),
-                              ),
-                            ),
-                            TextFormField(
-                              controller: _emailController,
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: AcademeTheme.notWhite,
-                                labelText: "Email",
-                                hintText: "Enter your email",
-                                prefixIcon: Icon(Icons.email),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter an email';
-                                }
-                                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                                  return 'Enter a valid email';
-                                }
-                                return null;
-                              },
-                            ),
-                            SizedBox(height: 16),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 4.0), // Adds space between text and text field
-                              child: Text(
-                                "Password", // Add the text you want
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.black54, // Adjust color as needed
-                                  fontWeight: FontWeight.w700, // Adjust weight as needed
-                                ),
-                              ),
-                            ),
-                            TextFormField(
-                              controller: _passwordController,
-                              obscureText: !_isPasswordVisible,
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: AcademeTheme.notWhite,
-                                labelText: "Password",
-                                hintText: "Enter your password",
-                                prefixIcon: Icon(Icons.lock),
-                                suffixIcon: IconButton(
-                                  icon: Icon(_isPasswordVisible
-                                      ? Icons.visibility
-                                      : Icons.visibility_off),
-                                  onPressed: () {
-                                    setState(() {
-                                      _isPasswordVisible = !_isPasswordVisible;
-                                    });
-                                  },
-                                ),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter a password';
-                                }
-                                return null;
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => const ForgotPasswordPage()),
-                              );
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter an email';
+                              }
+                              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                                return 'Enter a valid email';
+                              }
+                              return null;
                             },
-                            child: Text(
-                              'Forgot Password?',
-                              style: TextStyle(
-                                color: AcademeTheme.appColor, // Change this to your desired color
-                                fontWeight: FontWeight.w500, // Optional: Make it bold
-                                fontSize: 14, // Optional: Adjust font size
-                              ),
-                            ),
                           ),
-                        ),
-                      ),
-
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 35),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: _submitForm,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.yellow[600], // Button background color
-                              minimumSize: Size(double.infinity, 42), // Set the height of the button
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30), // Rounded corners
+                          SizedBox(height: screenHeight * 0.02),
+                          Text("Password", style: TextStyle(fontSize: screenWidth * 0.043, color: Colors.black54, fontWeight: FontWeight.w700)),
+                          TextFormField(
+                            controller: _passwordController,
+                            obscureText: !_isPasswordVisible,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: AcademeTheme.notWhite,
+                              hintText: "Enter your password",
+                              prefixIcon: Icon(Icons.lock),
+                              suffixIcon: IconButton(
+                                icon: Icon(_isPasswordVisible ? Icons.visibility : Icons.visibility_off),
+                                onPressed: () {
+                                  setState(() {
+                                    _isPasswordVisible = !_isPasswordVisible;
+                                  });
+                                },
                               ),
-                              elevation: 0, // Removes shadow
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center, // Centers the content
-                              children: [
-                                Image.asset(
-                                  'assets/icons/house_door.png', // Replace with your image path
-                                  height: 24, // Adjust the size of the image
-                                  width: 24, // Adjust the size of the image
-                                ),
-                                SizedBox(width: 10), // Adds space between the image and the text
-                                Text(
-                                  'Log in',
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter a password';
+                              }
+                              return null;
+                            },
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 1.0),
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const ForgotPasswordPage()),
+                                  );
+                                },
+                                child: Text(
+                                  'Forgot Password?',
                                   style: TextStyle(
-                                    fontSize: 18, // Font size
-                                    fontWeight: FontWeight.w500, // Font weight
-                                    color: Colors.black, // Text color
+                                    color: AcademeTheme.appColor, // Change this to your desired color
+                                    fontWeight: FontWeight.w500, // Optional: Make it bold
+                                    fontSize: 14, // Optional: Adjust font size
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 6,),
-                      Text(
-                        'OR',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black54,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 35),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton.icon(
-                            onPressed: _isGoogleLoading ? null : _signInWithGoogle,
-                            icon: _isGoogleLoading
-                                ? CircularProgressIndicator(color: Colors.white)
-                                : Padding(
-                              padding: EdgeInsets.only(right: 7), // Adjust spacing
-                              child: Image.asset('assets/icons/google_icon.png', height: 22),
-                            ),
-                            label: Text(
-                              'Continue with Google',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              foregroundColor: Colors.black,
-                              elevation: 2,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-
-                      SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Don't have an account?",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black54,
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: (
-                                ) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => SignUpView()),
-                              );
-                            },
-                            child: Text(
-                              "Signup",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: AcademeTheme.appColor, // Change color for emphasis
+                          SizedBox(height: screenHeight * 0.01),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 1),
+                            child: SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: _submitForm,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.yellow[600], // Button background color
+                                  minimumSize: Size(double.infinity, 42), // Set the height of the button
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30), // Rounded corners
+                                  ),
+                                  elevation: 0, // Removes shadow
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center, // Centers the content
+                                  children: [
+                                    Image.asset(
+                                      'assets/icons/house_door.png', // Replace with your image path
+                                      height: 24, // Adjust the size of the image
+                                      width: 24, // Adjust the size of the image
+                                    ),
+                                    SizedBox(width: 10), // Adds space between the image and the text
+                                    Text(
+                                      'Log in',
+                                      style: TextStyle(
+                                        fontSize: screenWidth * 0.045, // Font size
+                                        fontWeight: FontWeight.w500, // Font weight
+                                        color: Colors.black, // Text color
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
+                          ),
+                          SizedBox(height: screenHeight * 0.01),
+                          Row(mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("OR", style: TextStyle(fontSize: screenWidth * 0.04, fontWeight: FontWeight.w600, color: Colors.black54)),
+                            ],),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 1),
+                            child: SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton.icon(
+                                onPressed: _isGoogleLoading ? null : _signInWithGoogle,
+                                icon: _isGoogleLoading
+                                    ? CircularProgressIndicator(color: Colors.white)
+                                    : Padding(
+                                  padding: EdgeInsets.only(right: 7), // Adjust spacing
+                                  child: Image.asset('assets/icons/google_icon.png', height: 22),
+                                ),
+                                label: Text(
+                                  'Continue with Google',
+                                  style: TextStyle(
+                                    fontSize: screenWidth * 0.045,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  foregroundColor: Colors.black,
+                                  elevation: 2,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: screenHeight * 0.04),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Don't have an account?",
+                                style: TextStyle(
+                                  fontSize: screenWidth * 0.038,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: (
+                                    ) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => SignUpView()),
+                                  );
+                                },
+                                child: Text(
+                                  "Signup",
+                                  style: TextStyle(
+                                    fontSize: screenWidth * 0.038,
+                                    fontWeight: FontWeight.w500,
+                                    color: AcademeTheme.appColor, // Change color for emphasis
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
-                      ),// Adds spacing before the "Log In" button
-                    ],
+                      ),
+                    ),
                   ),
-                ),
-                SizedBox(height: 25),
-              ],
+                ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
+    )
+    ]
+      )
     );
   }
 }
