@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
+import 'dart:async';
 
 class ASKMe extends StatefulWidget {
   @override
@@ -19,6 +20,29 @@ class _ASKMeState extends State<ASKMe> {
   final TextEditingController _textController = TextEditingController();
   final AudioRecorder _audioRecorder = AudioRecorder();
   bool _isRecording = false;
+
+  String searchQuery = "";
+  List<Map<String, String>> languages = [
+    {'name': 'English', 'code': 'en'},
+    {'name': 'Spanish', 'code': 'es'},
+    {'name': 'French', 'code': 'fr'},
+    {'name': 'German', 'code': 'de'},
+    {'name': 'Hindi', 'code': 'hi'},
+    {'name': 'Chinese', 'code': 'zh'},
+    {'name': 'Japanese', 'code': 'ja'},
+    {'name': 'Bengali', 'code': 'bn'},
+  ];
+
+  List<Map<String, String>> _getFilteredLanguages() {
+    if (searchQuery.isEmpty) {
+      return languages; // If search query is empty, show all languages
+    } else {
+      return languages
+          .where((language) =>
+          language['name']!.toLowerCase().contains(searchQuery.toLowerCase()))
+          .toList(); // Filter the languages based on the search query
+    }
+  }
 
   @override
   void dispose() {
@@ -241,24 +265,45 @@ class _ASKMeState extends State<ASKMe> {
     showModalBottomSheet(
       context: this.context,
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (BuildContext modalContext) {
         return Padding(
           padding: EdgeInsets.all(20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text("Select Output Language",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Text(
+                "Select Output Language",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
               Divider(),
-              _languageTile("English", "en", modalContext),
-              _languageTile("Spanish", "es", modalContext),
-              _languageTile("French", "fr", modalContext),
-              _languageTile("German", "de", modalContext),
-              _languageTile("Hindi", "hi", modalContext),
-              _languageTile("Chinese", "zh", modalContext),
-              _languageTile("Japanese", "ja", modalContext),
-              _languageTile("Bengali", "bn", modalContext),
+              // Search bar with live filtering
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Search Languages',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.search),
+                ),
+                onChanged: (query) {
+                  setState(() {
+                    searchQuery = query; // Update the search query immediately
+                  });
+                },
+              ),
+              SizedBox(height: 10),
+              // Scrollable list of filtered languages
+              Expanded(
+                child: ListView(
+                  children: _getFilteredLanguages().map((language) {
+                    return _languageTile(
+                      language['name'] ?? '',  // Default to empty if null
+                      language['code'] ?? '',  // Default to empty if null
+                      modalContext,
+                    );
+                  }).toList(),
+                ),
+              ),
             ],
           ),
         );
@@ -420,8 +465,7 @@ class _ASKMeState extends State<ASKMe> {
     );
   }
 
-  Widget _languageTile(String language, String code,
-      BuildContext modalContext) {
+  Widget _languageTile(String language, String code, BuildContext modalContext) {
     return ListTile(
       title: Text(language),
       trailing: selectedLanguage == code
