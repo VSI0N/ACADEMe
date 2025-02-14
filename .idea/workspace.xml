@@ -5,7 +5,234 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="305d9e88-f8ff-4439-948e-53cd16caa2bc" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/macos/Flutter/GeneratedPluginRegistrant.swift" beforeDir="false" afterPath="$PROJECT_DIR$/macos/Flutter/GeneratedPluginRegistrant.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/.idea/ACADEMe.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/.idea/caches/deviceStreaming.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/.idea/libraries/Dart_Packages.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/ACADEMe.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/.idea/libraries/Dart_SDK.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.metadata" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/.metadata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/LICENSE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/analysis_options.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/analysis_options.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/google-services.json" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/google-services.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/debug/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/src/debug/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/com/example/flutter_app/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/src/main/kotlin/com/example/flutter_app/MainActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/drawable-v21/launch_background.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/src/main/res/drawable-v21/launch_background.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/drawable/launch_background.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/src/main/res/drawable/launch_background.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-hdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/src/main/res/mipmap-hdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-mdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/src/main/res/mipmap-mdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/src/main/res/mipmap-xhdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/values-night/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/src/main/res/values-night/styles.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/src/main/res/values/styles.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/profile/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/src/profile/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/gradle.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/academe/academe_logo-github.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/academe/academe_logo-github.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/academe/academe_logo-modified.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/academe/academe_logo-modified.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/academe/academe_logo.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/academe/academe_logo.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/academe/bulb_logo.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/academe/bulb_logo.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/academe/course.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/academe/course.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/academe/progress_logo.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/academe/progress_logo.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/academe/robot_logo.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/academe/robot_logo.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/academe/study_image.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/academe/study_image.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/design_course/UI_design.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/design_course/UI_design.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/design_course/app_color_schemes.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/design_course/app_color_schemes.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/design_course/interFace1.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/design_course/interFace1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/design_course/interFace2.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/design_course/interFace2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/design_course/interFace3.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/design_course/interFace3.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/design_course/interFace4.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/design_course/interFace4.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/design_course/product_design.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/design_course/product_design.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/design_course/userImage.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/design_course/userImage.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/design_course/webInterFace.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/design_course/webInterFace.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/fonts/Poppins-Regular.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/fonts/Poppins-Regular.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/fonts/Roboto-Bold.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/fonts/Roboto-Bold.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/fonts/Roboto-Medium.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/fonts/Roboto-Medium.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/fonts/Roboto-Regular.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/fonts/Roboto-Regular.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/fonts/WorkSans-Bold.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/fonts/WorkSans-Bold.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/fonts/WorkSans-Medium.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/fonts/WorkSans-Medium.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/fonts/WorkSans-Regular.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/fonts/WorkSans-Regular.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/fonts/WorkSans-SemiBold.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/fonts/WorkSans-SemiBold.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/hotel/hotel_1.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/hotel/hotel_1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/hotel/hotel_2.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/hotel/hotel_2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/hotel/hotel_3.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/hotel/hotel_3.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/hotel/hotel_4.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/hotel/hotel_4.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/hotel/hotel_5.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/hotel/hotel_5.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/hotel/hotel_booking.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/hotel/hotel_booking.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/icons/ASKMe.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/icons/ASKMe.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/icons/ASKMe_dark.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/icons/ASKMe_dark.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/icons/google_icon.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/icons/google_icon.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/icons/house_door.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/icons/house_door.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/images/AI.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/images/AI.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/images/feedbackImage.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/images/feedbackImage.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/images/helpImage.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/images/helpImage.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/images/inviteImage.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/images/inviteImage.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/images/supportIcon.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/images/supportIcon.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/images/userImage.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/images/userImage.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/firebase.json" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/firebase.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Flutter/AppFrameworkInfo.plist" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Flutter/AppFrameworkInfo.plist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Flutter/Debug.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Flutter/Debug.xcconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Flutter/Release.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Flutter/Release.xcconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner.xcodeproj/project.xcworkspace/contents.xcworkspacedata" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner.xcodeproj/project.xcworkspace/contents.xcworkspacedata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner.xcworkspace/contents.xcworkspacedata" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner.xcworkspace/contents.xcworkspacedata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner/AppDelegate.swift" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/AppDelegate.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@1x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@1x.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@2x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@2x.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@3x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@3x.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@1x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@1x.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@2x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@2x.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@3x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@3x.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@1x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@1x.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@2x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@2x.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@3x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@3x.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@2x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@2x.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@3x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@3x.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@1x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@1x.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@2x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@2x.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-83.5x83.5@2x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-83.5x83.5@2x.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@2x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@2x.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@3x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@3x.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner/Base.lproj/LaunchScreen.storyboard" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Base.lproj/LaunchScreen.storyboard" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner/Base.lproj/Main.storyboard" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Base.lproj/Main.storyboard" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner/Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Info.plist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner/Runner-Bridging-Header.h" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Runner-Bridging-Header.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/RunnerTests/RunnerTests.swift" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/RunnerTests/RunnerTests.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/academe_theme.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/academe_theme.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/firebase_options.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/firebase_options.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/home/auth/auth_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/auth/auth_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/home/auth/auth_wrapper.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/auth/auth_wrapper.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/home/components/ASKMe_button.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/components/ASKMe_button.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/home/components/category_list_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/components/category_list_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/home/components/course_info_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/components/course_info_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/home/components/popular_course_list_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/components/popular_course_list_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/home/courses/linear_algebra/Linear_algebra.dar.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/courses/linear_algebra/Linear_algebra.dar.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/home/courses/linear_algebra/Q&amp;A.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/courses/linear_algebra/Q&amp;A.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/home/courses/linear_algebra/lessons.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/courses/linear_algebra/lessons.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/home/courses/linear_algebra/overview.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/courses/linear_algebra/overview.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/home/models/category.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/models/category.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/home/pages/ASKMe.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/ASKMe.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/home/pages/bottomNav.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/bottomNav.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/home/pages/edit_profile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/edit_profile.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/home/pages/forgot_password.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/forgot_password.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/home/pages/home_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/home_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/home/pages/my_community.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/my_community.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/home/pages/my_courses.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/my_courses.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/home/pages/profile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/profile.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/introduction_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/introduction_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/started/pages/animated_splash.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/animated_splash.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/started/pages/get-started_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/get-started_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/started/pages/login_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/login_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/started/pages/signup_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/signup_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils/constants/colors.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/utils/constants/colors.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils/constants/image_strings.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/utils/constants/image_strings.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils/constants/text_strings.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/utils/constants/text_strings.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils/theme/custom_themes/appbar_theme.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/utils/theme/custom_themes/appbar_theme.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils/theme/custom_themes/bottom_sheet_theme.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/utils/theme/custom_themes/bottom_sheet_theme.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils/theme/custom_themes/checkbox_theme.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/utils/theme/custom_themes/checkbox_theme.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils/theme/custom_themes/chip_theme.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/utils/theme/custom_themes/chip_theme.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils/theme/custom_themes/course_theme.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/utils/theme/custom_themes/course_theme.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils/theme/custom_themes/elevated_button_theme.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/utils/theme/custom_themes/elevated_button_theme.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils/theme/custom_themes/outlined_button_theme.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/utils/theme/custom_themes/outlined_button_theme.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils/theme/custom_themes/text_field_theme.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/utils/theme/custom_themes/text_field_theme.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils/theme/custom_themes/text_theme.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/utils/theme/custom_themes/text_theme.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils/theme/theme.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/utils/theme/theme.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils/validators/validation.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/utils/validators/validation.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/linux/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/linux/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/linux/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/linux/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/linux/flutter/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/linux/flutter/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/linux/flutter/generated_plugin_registrant.cc" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/linux/flutter/generated_plugin_registrant.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/linux/flutter/generated_plugin_registrant.h" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/linux/flutter/generated_plugin_registrant.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/linux/flutter/generated_plugins.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/linux/flutter/generated_plugins.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/linux/runner/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/linux/runner/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/linux/runner/main.cc" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/linux/runner/main.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/linux/runner/my_application.cc" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/linux/runner/my_application.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/linux/runner/my_application.h" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/linux/runner/my_application.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/Flutter/Flutter-Debug.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Flutter/Flutter-Debug.xcconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/Flutter/Flutter-Release.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Flutter/Flutter-Release.xcconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/Flutter/GeneratedPluginRegistrant.swift" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Flutter/GeneratedPluginRegistrant.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/Runner.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/Runner.xcworkspace/contents.xcworkspacedata" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner.xcworkspace/contents.xcworkspacedata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/Runner/AppDelegate.swift" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/AppDelegate.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_1024.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_1024.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_128.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_128.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_16.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_16.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_256.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_256.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_32.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_32.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_512.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_512.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_64.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_64.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/Runner/Base.lproj/MainMenu.xib" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/Base.lproj/MainMenu.xib" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/Runner/Configs/AppInfo.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/Configs/AppInfo.xcconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/Runner/Configs/Debug.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/Configs/Debug.xcconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/Runner/Configs/Release.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/Configs/Release.xcconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/Runner/Configs/Warnings.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/Configs/Warnings.xcconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/Runner/DebugProfile.entitlements" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/DebugProfile.entitlements" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/Runner/Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/Info.plist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/Runner/MainFlutterWindow.swift" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/MainFlutterWindow.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/Runner/Release.entitlements" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/Release.entitlements" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/RunnerTests/RunnerTests.swift" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/RunnerTests/RunnerTests.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/widget_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/test/widget_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/favicon.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/web/favicon.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/icons/Icon-192.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/web/icons/Icon-192.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/icons/Icon-512.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/web/icons/Icon-512.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/icons/Icon-maskable-192.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/web/icons/Icon-maskable-192.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/icons/Icon-maskable-512.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/web/icons/Icon-maskable-512.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/web/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/web/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/windows/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/windows/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/windows/flutter/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/flutter/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/windows/flutter/generated_plugin_registrant.cc" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/flutter/generated_plugin_registrant.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/windows/flutter/generated_plugin_registrant.h" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/flutter/generated_plugin_registrant.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/windows/flutter/generated_plugins.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/flutter/generated_plugins.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/windows/runner/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/runner/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/windows/runner/Runner.rc" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/runner/Runner.rc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/windows/runner/flutter_window.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/runner/flutter_window.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/windows/runner/flutter_window.h" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/runner/flutter_window.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/windows/runner/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/runner/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/windows/runner/resource.h" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/runner/resource.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/windows/runner/resources/app_icon.ico" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/runner/resources/app_icon.ico" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/windows/runner/runner.exe.manifest" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/runner/runner.exe.manifest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/windows/runner/utils.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/runner/utils.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/windows/runner/utils.h" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/runner/utils.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/windows/runner/win32_window.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/runner/win32_window.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/windows/runner/win32_window.h" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/runner/win32_window.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,23 +266,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Flutter.main.dart.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "cf.first.check.clang-format": "false",
-    "cidr.known.project.marker": "true",
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "fixAlignment",
-    "io.flutter.reload.alreadyRun": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Clone/ACADEMe/assets/design_course",
-    "settings.editor.selected.configurable": "experimental",
-    "show.migrate.to.gradle.popup": "false"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+    &quot;Flutter.main.dart.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;io.flutter.reload.alreadyRun&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Clone/ACADEMe/assets/design_course&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;experimental&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Clone\ACADEMe\assets\design_course" />
@@ -72,7 +303,7 @@
   </component>
   <component name="RunManager">
     <configuration name="main.dart" type="FlutterRunConfigurationType" factoryName="Flutter">
-      <option name="filePath" value="$PROJECT_DIR$/lib/main.dart" />
+      <option name="filePath" value="$PROJECT_DIR$/ACADEMe-frontend/lib/main.dart" />
       <method v="2" />
     </configuration>
   </component>
