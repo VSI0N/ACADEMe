@@ -5,234 +5,959 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="305d9e88-f8ff-4439-948e-53cd16caa2bc" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/.idea/ACADEMe.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/.idea/caches/deviceStreaming.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/.idea/libraries/Dart_Packages.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/ACADEMe.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/.idea/libraries/Dart_SDK.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/arm64-v8a/.cmake/api/v1/query/client-agp/cache-v2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/arm64-v8a/.cmake/api/v1/query/client-agp/cmakeFiles-v1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/arm64-v8a/.cmake/api/v1/query/client-agp/codemodel-v2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/arm64-v8a/.cmake/api/v1/reply/cache-v2-bf514bf28d7e400c1d10.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/arm64-v8a/.cmake/api/v1/reply/cmakeFiles-v1-21365e523b33afb2f26d.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/arm64-v8a/.cmake/api/v1/reply/codemodel-v2-db62918d4bcfd4ae3e33.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/arm64-v8a/.cmake/api/v1/reply/directory-.-Debug-f5ebdc15457944623624.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/arm64-v8a/.cmake/api/v1/reply/index-2025-02-14T15-12-53-0310.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/arm64-v8a/CMakeCache.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/arm64-v8a/CMakeFiles/3.22.1/CMakeCCompiler.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/arm64-v8a/CMakeFiles/3.22.1/CMakeCXXCompiler.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/arm64-v8a/CMakeFiles/3.22.1/CMakeDetermineCompilerABI_C.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/arm64-v8a/CMakeFiles/3.22.1/CMakeDetermineCompilerABI_CXX.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/arm64-v8a/CMakeFiles/3.22.1/CMakeSystem.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/arm64-v8a/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/arm64-v8a/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/arm64-v8a/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/arm64-v8a/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/arm64-v8a/CMakeFiles/TargetDirectories.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/arm64-v8a/CMakeFiles/cmake.check_cache" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/arm64-v8a/CMakeFiles/rules.ninja" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/arm64-v8a/additional_project_files.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/arm64-v8a/android_gradle_build.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/arm64-v8a/android_gradle_build_mini.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/arm64-v8a/build.ninja" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/arm64-v8a/build_file_index.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/arm64-v8a/cmake_install.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/arm64-v8a/configure_fingerprint.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/arm64-v8a/metadata_generation_command.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/arm64-v8a/prefab_config.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/arm64-v8a/symbol_folder_index.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/armeabi-v7a/.cmake/api/v1/query/client-agp/cache-v2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/armeabi-v7a/.cmake/api/v1/query/client-agp/cmakeFiles-v1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/armeabi-v7a/.cmake/api/v1/query/client-agp/codemodel-v2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/armeabi-v7a/.cmake/api/v1/reply/cache-v2-1564154145489110e285.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/armeabi-v7a/.cmake/api/v1/reply/cmakeFiles-v1-a9cb4899f6b3b7052b2a.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/armeabi-v7a/.cmake/api/v1/reply/codemodel-v2-7d1340def90a53e2b17b.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/armeabi-v7a/.cmake/api/v1/reply/directory-.-Debug-f5ebdc15457944623624.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/armeabi-v7a/.cmake/api/v1/reply/index-2025-02-14T15-12-54-0271.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/armeabi-v7a/CMakeCache.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/armeabi-v7a/CMakeFiles/3.22.1/CMakeCCompiler.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/armeabi-v7a/CMakeFiles/3.22.1/CMakeCXXCompiler.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/armeabi-v7a/CMakeFiles/3.22.1/CMakeDetermineCompilerABI_C.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/armeabi-v7a/CMakeFiles/3.22.1/CMakeDetermineCompilerABI_CXX.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/armeabi-v7a/CMakeFiles/3.22.1/CMakeSystem.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/armeabi-v7a/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/armeabi-v7a/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/armeabi-v7a/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/armeabi-v7a/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/armeabi-v7a/CMakeFiles/TargetDirectories.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/armeabi-v7a/CMakeFiles/cmake.check_cache" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/armeabi-v7a/CMakeFiles/rules.ninja" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/armeabi-v7a/additional_project_files.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/armeabi-v7a/android_gradle_build.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/armeabi-v7a/android_gradle_build_mini.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/armeabi-v7a/build.ninja" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/armeabi-v7a/build_file_index.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/armeabi-v7a/cmake_install.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/armeabi-v7a/configure_fingerprint.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/armeabi-v7a/metadata_generation_command.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/armeabi-v7a/prefab_config.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/armeabi-v7a/symbol_folder_index.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/hash_key.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86/.cmake/api/v1/query/client-agp/cache-v2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86/.cmake/api/v1/query/client-agp/cmakeFiles-v1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86/.cmake/api/v1/query/client-agp/codemodel-v2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86/.cmake/api/v1/reply/cache-v2-52d255a9c9fa2b3f6eec.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86/.cmake/api/v1/reply/cmakeFiles-v1-643cfd5a75d24000f823.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86/.cmake/api/v1/reply/codemodel-v2-d8ddcfc3ea04852ccdc2.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86/.cmake/api/v1/reply/directory-.-Debug-f5ebdc15457944623624.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86/.cmake/api/v1/reply/index-2025-02-14T15-12-54-0669.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86/CMakeCache.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86/CMakeFiles/3.22.1/CMakeCCompiler.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86/CMakeFiles/3.22.1/CMakeCXXCompiler.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86/CMakeFiles/3.22.1/CMakeDetermineCompilerABI_C.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86/CMakeFiles/3.22.1/CMakeDetermineCompilerABI_CXX.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86/CMakeFiles/3.22.1/CMakeSystem.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86/CMakeFiles/TargetDirectories.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86/CMakeFiles/cmake.check_cache" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86/CMakeFiles/rules.ninja" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86/additional_project_files.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86/android_gradle_build.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86/android_gradle_build_mini.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86/build.ninja" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86/build_file_index.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86/cmake_install.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86/configure_fingerprint.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86/metadata_generation_command.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86/prefab_config.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86/symbol_folder_index.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86_64/.cmake/api/v1/query/client-agp/cache-v2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86_64/.cmake/api/v1/query/client-agp/cmakeFiles-v1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86_64/.cmake/api/v1/query/client-agp/codemodel-v2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86_64/.cmake/api/v1/reply/cache-v2-3d93656c54ff84217e20.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86_64/.cmake/api/v1/reply/cmakeFiles-v1-a5ae5fe3cb760d6eb368.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86_64/.cmake/api/v1/reply/codemodel-v2-0ed86361820b3666715c.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86_64/.cmake/api/v1/reply/directory-.-Debug-f5ebdc15457944623624.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86_64/.cmake/api/v1/reply/index-2025-02-14T15-12-55-0112.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86_64/CMakeCache.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86_64/CMakeFiles/3.22.1/CMakeCCompiler.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86_64/CMakeFiles/3.22.1/CMakeCXXCompiler.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86_64/CMakeFiles/3.22.1/CMakeDetermineCompilerABI_C.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86_64/CMakeFiles/3.22.1/CMakeDetermineCompilerABI_CXX.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86_64/CMakeFiles/3.22.1/CMakeSystem.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86_64/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86_64/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86_64/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86_64/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86_64/CMakeFiles/TargetDirectories.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86_64/CMakeFiles/cmake.check_cache" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86_64/CMakeFiles/rules.ninja" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86_64/additional_project_files.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86_64/android_gradle_build.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86_64/android_gradle_build_mini.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86_64/build.ninja" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86_64/build_file_index.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86_64/cmake_install.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86_64/configure_fingerprint.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86_64/metadata_generation_command.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86_64/prefab_config.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/198701e1/x86_64/symbol_folder_index.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/arm64-v8a/.cmake/api/v1/query/client-agp/cache-v2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/arm64-v8a/.cmake/api/v1/query/client-agp/cmakeFiles-v1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/arm64-v8a/.cmake/api/v1/query/client-agp/codemodel-v2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/arm64-v8a/.cmake/api/v1/reply/cache-v2-2052d572e32deba615c9.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/arm64-v8a/.cmake/api/v1/reply/cmakeFiles-v1-1c5dfe358dcda86129a7.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/arm64-v8a/.cmake/api/v1/reply/codemodel-v2-f49a9c7c5933cc243bf7.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/arm64-v8a/.cmake/api/v1/reply/directory-.-RelWithDebInfo-f5ebdc15457944623624.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/arm64-v8a/.cmake/api/v1/reply/index-2025-02-14T15-28-26-0271.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/arm64-v8a/CMakeCache.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/arm64-v8a/CMakeFiles/3.22.1/CMakeCCompiler.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/arm64-v8a/CMakeFiles/3.22.1/CMakeCXXCompiler.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/arm64-v8a/CMakeFiles/3.22.1/CMakeDetermineCompilerABI_C.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/arm64-v8a/CMakeFiles/3.22.1/CMakeDetermineCompilerABI_CXX.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/arm64-v8a/CMakeFiles/3.22.1/CMakeSystem.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/arm64-v8a/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/arm64-v8a/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/arm64-v8a/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/arm64-v8a/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/arm64-v8a/CMakeFiles/TargetDirectories.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/arm64-v8a/CMakeFiles/cmake.check_cache" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/arm64-v8a/CMakeFiles/rules.ninja" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/arm64-v8a/additional_project_files.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/arm64-v8a/android_gradle_build.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/arm64-v8a/android_gradle_build_mini.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/arm64-v8a/build.ninja" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/arm64-v8a/build_file_index.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/arm64-v8a/cmake_install.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/arm64-v8a/configure_fingerprint.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/arm64-v8a/metadata_generation_command.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/arm64-v8a/prefab_config.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/arm64-v8a/symbol_folder_index.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/armeabi-v7a/.cmake/api/v1/query/client-agp/cache-v2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/armeabi-v7a/.cmake/api/v1/query/client-agp/cmakeFiles-v1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/armeabi-v7a/.cmake/api/v1/query/client-agp/codemodel-v2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/armeabi-v7a/.cmake/api/v1/reply/cache-v2-3bcd93513e306521cc8e.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/armeabi-v7a/.cmake/api/v1/reply/cmakeFiles-v1-c7af11e9b97b81443478.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/armeabi-v7a/.cmake/api/v1/reply/codemodel-v2-cde11262c304d4abcd7a.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/armeabi-v7a/.cmake/api/v1/reply/directory-.-RelWithDebInfo-f5ebdc15457944623624.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/armeabi-v7a/.cmake/api/v1/reply/index-2025-02-14T15-28-26-0862.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/armeabi-v7a/CMakeCache.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/armeabi-v7a/CMakeFiles/3.22.1/CMakeCCompiler.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/armeabi-v7a/CMakeFiles/3.22.1/CMakeCXXCompiler.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/armeabi-v7a/CMakeFiles/3.22.1/CMakeDetermineCompilerABI_C.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/armeabi-v7a/CMakeFiles/3.22.1/CMakeDetermineCompilerABI_CXX.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/armeabi-v7a/CMakeFiles/3.22.1/CMakeSystem.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/armeabi-v7a/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/armeabi-v7a/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/armeabi-v7a/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/armeabi-v7a/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/armeabi-v7a/CMakeFiles/TargetDirectories.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/armeabi-v7a/CMakeFiles/cmake.check_cache" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/armeabi-v7a/CMakeFiles/rules.ninja" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/armeabi-v7a/additional_project_files.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/armeabi-v7a/android_gradle_build.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/armeabi-v7a/android_gradle_build_mini.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/armeabi-v7a/build.ninja" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/armeabi-v7a/build_file_index.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/armeabi-v7a/cmake_install.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/armeabi-v7a/configure_fingerprint.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/armeabi-v7a/metadata_generation_command.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/armeabi-v7a/prefab_config.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/armeabi-v7a/symbol_folder_index.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/hash_key.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86/.cmake/api/v1/query/client-agp/cache-v2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86/.cmake/api/v1/query/client-agp/cmakeFiles-v1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86/.cmake/api/v1/query/client-agp/codemodel-v2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86/.cmake/api/v1/reply/cache-v2-b77d128b3af095819c68.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86/.cmake/api/v1/reply/cmakeFiles-v1-53d3b9903254fb99caee.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86/.cmake/api/v1/reply/codemodel-v2-16daac58ae035006dd6d.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86/.cmake/api/v1/reply/directory-.-RelWithDebInfo-f5ebdc15457944623624.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86/.cmake/api/v1/reply/index-2025-02-14T15-28-27-0468.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86/CMakeCache.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86/CMakeFiles/3.22.1/CMakeCCompiler.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86/CMakeFiles/3.22.1/CMakeCXXCompiler.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86/CMakeFiles/3.22.1/CMakeDetermineCompilerABI_C.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86/CMakeFiles/3.22.1/CMakeDetermineCompilerABI_CXX.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86/CMakeFiles/3.22.1/CMakeSystem.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86/CMakeFiles/TargetDirectories.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86/CMakeFiles/cmake.check_cache" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86/CMakeFiles/rules.ninja" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86/additional_project_files.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86/android_gradle_build.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86/android_gradle_build_mini.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86/build.ninja" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86/build_file_index.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86/cmake_install.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86/configure_fingerprint.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86/metadata_generation_command.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86/prefab_config.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86/symbol_folder_index.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86_64/.cmake/api/v1/query/client-agp/cache-v2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86_64/.cmake/api/v1/query/client-agp/cmakeFiles-v1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86_64/.cmake/api/v1/query/client-agp/codemodel-v2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86_64/.cmake/api/v1/reply/cache-v2-b6b3ab318dbf8e81d11d.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86_64/.cmake/api/v1/reply/cmakeFiles-v1-2a0de6ae8917c4130aa2.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86_64/.cmake/api/v1/reply/codemodel-v2-f52007093bfbe247a1b7.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86_64/.cmake/api/v1/reply/directory-.-RelWithDebInfo-f5ebdc15457944623624.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86_64/.cmake/api/v1/reply/index-2025-02-14T15-28-27-0905.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86_64/CMakeCache.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86_64/CMakeFiles/3.22.1/CMakeCCompiler.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86_64/CMakeFiles/3.22.1/CMakeCXXCompiler.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86_64/CMakeFiles/3.22.1/CMakeDetermineCompilerABI_C.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86_64/CMakeFiles/3.22.1/CMakeDetermineCompilerABI_CXX.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86_64/CMakeFiles/3.22.1/CMakeSystem.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86_64/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86_64/CMakeFiles/3.22.1/CompilerIdC/CMakeCCompilerId.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86_64/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86_64/CMakeFiles/3.22.1/CompilerIdCXX/CMakeCXXCompilerId.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86_64/CMakeFiles/TargetDirectories.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86_64/CMakeFiles/cmake.check_cache" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86_64/CMakeFiles/rules.ninja" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86_64/additional_project_files.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86_64/android_gradle_build.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86_64/android_gradle_build_mini.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86_64/build.ninja" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86_64/build_file_index.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86_64/cmake_install.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86_64/configure_fingerprint.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86_64/metadata_generation_command.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86_64/prefab_config.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/RelWithDebInfo/6w1h2u35/x86_64/symbol_folder_index.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/design_course/art_design.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/design_course/typography.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/course_view.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/file_view.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/course.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/bin/Activate.ps1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/bin/activate" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/bin/activate.csh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/bin/activate.fish" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/bin/pip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/bin/pip3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/bin/pip3.10" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/bin/python" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/bin/python3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/bin/python3.10" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/_distutils_hack/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/_distutils_hack/override.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/distutils-precedence.pth" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip-22.0.2.dist-info/INSTALLER" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip-22.0.2.dist-info/LICENSE.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip-22.0.2.dist-info/METADATA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip-22.0.2.dist-info/RECORD" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip-22.0.2.dist-info/REQUESTED" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip-22.0.2.dist-info/WHEEL" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip-22.0.2.dist-info/entry_points.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip-22.0.2.dist-info/top_level.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/__main__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/build_env.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/cache.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/cli/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/cli/autocompletion.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/cli/base_command.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/cli/cmdoptions.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/cli/command_context.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/cli/main.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/cli/main_parser.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/cli/parser.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/cli/progress_bars.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/cli/req_command.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/cli/spinners.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/cli/status_codes.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/commands/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/commands/cache.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/commands/check.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/commands/completion.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/commands/configuration.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/commands/debug.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/commands/download.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/commands/freeze.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/commands/hash.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/commands/help.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/commands/index.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/commands/install.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/commands/list.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/commands/search.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/commands/show.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/commands/uninstall.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/commands/wheel.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/configuration.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/distributions/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/distributions/base.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/distributions/installed.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/distributions/sdist.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/distributions/wheel.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/exceptions.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/index/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/index/collector.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/index/package_finder.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/index/sources.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/locations/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/locations/_distutils.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/locations/_sysconfig.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/locations/base.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/main.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/metadata/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/metadata/base.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/metadata/pkg_resources.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/models/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/models/candidate.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/models/direct_url.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/models/format_control.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/models/index.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/models/link.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/models/scheme.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/models/search_scope.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/models/selection_prefs.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/models/target_python.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/models/wheel.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/network/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/network/auth.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/network/cache.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/network/download.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/network/lazy_wheel.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/network/session.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/network/utils.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/network/xmlrpc.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/operations/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/operations/check.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/operations/freeze.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/operations/install/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/operations/install/editable_legacy.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/operations/install/legacy.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/operations/install/wheel.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/operations/prepare.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/pyproject.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/req/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/req/constructors.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/req/req_file.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/req/req_install.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/req/req_set.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/req/req_tracker.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/req/req_uninstall.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/resolution/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/resolution/base.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/resolution/legacy/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/resolution/legacy/resolver.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/resolution/resolvelib/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/resolution/resolvelib/base.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/resolution/resolvelib/candidates.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/resolution/resolvelib/factory.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/resolution/resolvelib/found_candidates.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/resolution/resolvelib/provider.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/resolution/resolvelib/reporter.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/resolution/resolvelib/requirements.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/resolution/resolvelib/resolver.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/self_outdated_check.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/utils/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/utils/_log.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/utils/appdirs.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/utils/compat.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/utils/compatibility_tags.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/utils/datetime.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/utils/deprecation.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/utils/direct_url_helpers.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/utils/distutils_args.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/utils/egg_link.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/utils/encoding.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/utils/entrypoints.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/utils/filesystem.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/utils/filetypes.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/utils/glibc.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/utils/hashes.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/utils/inject_securetransport.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/utils/logging.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/utils/misc.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/utils/models.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/utils/packaging.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/utils/setuptools_build.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/utils/subprocess.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/utils/temp_dir.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/utils/unpacking.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/utils/urls.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/utils/virtualenv.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/utils/wheel.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/vcs/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/vcs/bazaar.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/vcs/git.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/vcs/mercurial.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/vcs/subversion.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/vcs/versioncontrol.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_internal/wheel_builder.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/cachecontrol/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/cachecontrol/_cmd.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/cachecontrol/adapter.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/cachecontrol/cache.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/cachecontrol/caches/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/cachecontrol/caches/file_cache.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/cachecontrol/caches/redis_cache.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/cachecontrol/compat.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/cachecontrol/controller.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/cachecontrol/filewrapper.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/cachecontrol/heuristics.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/cachecontrol/serialize.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/cachecontrol/wrapper.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/certifi/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/certifi/__main__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/certifi/cacert.pem" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/certifi/core.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/big5freq.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/big5prober.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/chardistribution.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/charsetgroupprober.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/charsetprober.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/cli/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/cli/chardetect.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/codingstatemachine.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/compat.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/cp949prober.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/enums.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/escprober.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/escsm.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/eucjpprober.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/euckrfreq.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/euckrprober.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/euctwfreq.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/euctwprober.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/gb2312freq.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/gb2312prober.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/hebrewprober.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/jisfreq.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/jpcntx.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/langbulgarianmodel.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/langgreekmodel.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/langhebrewmodel.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/langhungarianmodel.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/langrussianmodel.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/langthaimodel.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/langturkishmodel.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/latin1prober.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/mbcharsetprober.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/mbcsgroupprober.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/mbcssm.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/metadata/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/metadata/languages.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/sbcharsetprober.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/sbcsgroupprober.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/sjisprober.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/universaldetector.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/utf8prober.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/chardet/version.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/colorama/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/colorama/ansi.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/colorama/ansitowin32.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/colorama/initialise.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/colorama/win32.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/colorama/winterm.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/distlib/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/distlib/compat.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/distlib/database.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/distlib/index.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/distlib/locators.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/distlib/manifest.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/distlib/markers.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/distlib/metadata.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/distlib/resources.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/distlib/scripts.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/distlib/util.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/distlib/version.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/distlib/wheel.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/distro.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/_ihatexml.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/_inputstream.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/_tokenizer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/_trie/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/_trie/_base.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/_trie/py.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/_utils.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/constants.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/filters/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/filters/alphabeticalattributes.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/filters/base.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/filters/inject_meta_charset.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/filters/lint.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/filters/optionaltags.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/filters/sanitizer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/filters/whitespace.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/html5parser.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/serializer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/treeadapters/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/treeadapters/genshi.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/treeadapters/sax.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/treebuilders/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/treebuilders/base.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/treebuilders/dom.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/treebuilders/etree.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/treebuilders/etree_lxml.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/treewalkers/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/treewalkers/base.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/treewalkers/dom.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/treewalkers/etree.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/treewalkers/etree_lxml.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/html5lib/treewalkers/genshi.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/idna/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/idna/codec.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/idna/compat.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/idna/core.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/idna/idnadata.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/idna/intranges.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/idna/package_data.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/idna/uts46data.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/msgpack/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/msgpack/_version.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/msgpack/exceptions.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/msgpack/ext.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/msgpack/fallback.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/packaging/__about__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/packaging/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/packaging/_manylinux.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/packaging/_musllinux.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/packaging/_structures.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/packaging/markers.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/packaging/requirements.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/packaging/specifiers.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/packaging/tags.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/packaging/utils.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/packaging/version.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pep517/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pep517/build.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pep517/check.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pep517/colorlog.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pep517/compat.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pep517/dirtools.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pep517/envbuild.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pep517/in_process/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pep517/in_process/_in_process.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pep517/meta.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pep517/wrappers.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pkg_resources/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pkg_resources/py31compat.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/platformdirs/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/platformdirs/__main__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/platformdirs/android.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/platformdirs/api.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/platformdirs/macos.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/platformdirs/unix.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/platformdirs/version.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/platformdirs/windows.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/progress/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/progress/bar.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/progress/colors.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/progress/counter.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/progress/spinner.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/__main__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/cmdline.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/console.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/filter.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/filters/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/formatter.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/formatters/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/formatters/_mapping.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/formatters/bbcode.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/formatters/groff.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/formatters/html.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/formatters/img.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/formatters/irc.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/formatters/latex.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/formatters/other.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/formatters/pangomarkup.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/formatters/rtf.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/formatters/svg.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/formatters/terminal.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/formatters/terminal256.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/lexer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/lexers/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/lexers/_mapping.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/lexers/python.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/modeline.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/plugin.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/regexopt.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/scanner.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/sphinxext.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/style.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/styles/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/token.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/unistring.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pygments/util.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pyparsing/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pyparsing/actions.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pyparsing/common.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pyparsing/core.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pyparsing/diagram/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pyparsing/exceptions.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pyparsing/helpers.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pyparsing/results.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pyparsing/testing.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pyparsing/unicode.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/pyparsing/util.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/requests/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/requests/__version__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/requests/_internal_utils.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/requests/adapters.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/requests/api.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/requests/auth.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/requests/certs.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/requests/compat.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/requests/cookies.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/requests/exceptions.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/requests/help.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/requests/hooks.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/requests/models.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/requests/packages.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/requests/sessions.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/requests/status_codes.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/requests/structures.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/requests/utils.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/resolvelib/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/resolvelib/compat/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/resolvelib/compat/collections_abc.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/resolvelib/providers.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/resolvelib/reporters.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/resolvelib/resolvers.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/resolvelib/structs.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/__main__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/_cell_widths.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/_emoji_codes.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/_emoji_replace.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/_extension.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/_inspect.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/_log_render.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/_loop.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/_lru_cache.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/_palettes.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/_pick.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/_ratio.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/_spinners.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/_stack.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/_timer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/_windows.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/_wrap.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/abc.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/align.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/ansi.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/bar.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/box.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/cells.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/color.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/color_triplet.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/columns.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/console.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/constrain.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/containers.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/control.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/default_styles.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/diagnose.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/emoji.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/errors.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/file_proxy.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/filesize.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/highlighter.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/json.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/jupyter.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/layout.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/live.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/live_render.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/logging.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/markup.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/measure.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/padding.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/pager.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/palette.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/panel.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/pretty.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/progress.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/progress_bar.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/prompt.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/protocol.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/region.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/repr.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/rule.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/scope.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/screen.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/segment.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/spinner.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/status.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/style.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/styled.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/syntax.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/table.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/tabulate.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/terminal_theme.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/text.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/theme.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/themes.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/traceback.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/rich/tree.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/six.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/tenacity/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/tenacity/_asyncio.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/tenacity/_utils.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/tenacity/after.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/tenacity/before.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/tenacity/before_sleep.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/tenacity/nap.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/tenacity/retry.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/tenacity/stop.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/tenacity/tornadoweb.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/tenacity/wait.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/tomli/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/tomli/_parser.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/tomli/_re.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/typing_extensions.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/_collections.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/_version.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/connection.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/connectionpool.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/contrib/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/contrib/_appengine_environ.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/contrib/_securetransport/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/contrib/_securetransport/bindings.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/contrib/_securetransport/low_level.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/contrib/appengine.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/contrib/ntlmpool.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/contrib/pyopenssl.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/contrib/securetransport.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/contrib/socks.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/exceptions.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/fields.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/filepost.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/packages/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/packages/backports/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/packages/backports/makefile.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/packages/six.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/poolmanager.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/request.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/response.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/util/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/util/connection.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/util/proxy.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/util/queue.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/util/request.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/util/response.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/util/retry.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/util/ssl_.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/util/ssl_match_hostname.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/util/ssltransport.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/util/timeout.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/util/url.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/urllib3/util/wait.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/vendor.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/webencodings/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/webencodings/labels.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/webencodings/mklabels.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/webencodings/tests.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/_vendor/webencodings/x_user_defined.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pip/py.typed" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pkg_resources/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pkg_resources/_vendor/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pkg_resources/_vendor/appdirs.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pkg_resources/_vendor/packaging/__about__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pkg_resources/_vendor/packaging/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pkg_resources/_vendor/packaging/_manylinux.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pkg_resources/_vendor/packaging/_musllinux.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pkg_resources/_vendor/packaging/_structures.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pkg_resources/_vendor/packaging/markers.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pkg_resources/_vendor/packaging/requirements.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pkg_resources/_vendor/packaging/specifiers.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pkg_resources/_vendor/packaging/tags.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pkg_resources/_vendor/packaging/utils.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pkg_resources/_vendor/packaging/version.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pkg_resources/_vendor/pyparsing.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pkg_resources/extern/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/pkg_resources/tests/data/my-test-package-source/setup.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools-59.6.0.dist-info/INSTALLER" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools-59.6.0.dist-info/LICENSE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools-59.6.0.dist-info/METADATA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools-59.6.0.dist-info/RECORD" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools-59.6.0.dist-info/REQUESTED" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools-59.6.0.dist-info/WHEEL" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools-59.6.0.dist-info/entry_points.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools-59.6.0.dist-info/top_level.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_deprecation_warning.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/_msvccompiler.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/archive_util.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/bcppcompiler.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/ccompiler.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/cmd.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/command/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/command/bdist.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/command/bdist_dumb.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/command/bdist_msi.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/command/bdist_rpm.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/command/bdist_wininst.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/command/build.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/command/build_clib.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/command/build_ext.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/command/build_py.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/command/build_scripts.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/command/check.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/command/clean.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/command/config.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/command/install.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/command/install_data.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/command/install_egg_info.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/command/install_headers.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/command/install_lib.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/command/install_scripts.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/command/py37compat.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/command/register.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/command/sdist.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/command/upload.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/config.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/core.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/cygwinccompiler.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/debug.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/dep_util.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/dir_util.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/dist.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/errors.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/extension.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/fancy_getopt.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/file_util.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/filelist.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/log.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/msvc9compiler.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/msvccompiler.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/py35compat.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/py38compat.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/spawn.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/sysconfig.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/text_file.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/unixccompiler.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/util.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/version.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_distutils/versionpredicate.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_imp.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_vendor/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_vendor/more_itertools/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_vendor/more_itertools/more.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_vendor/more_itertools/recipes.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_vendor/ordered_set.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_vendor/packaging/__about__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_vendor/packaging/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_vendor/packaging/_manylinux.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_vendor/packaging/_musllinux.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_vendor/packaging/_structures.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_vendor/packaging/markers.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_vendor/packaging/requirements.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_vendor/packaging/specifiers.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_vendor/packaging/tags.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_vendor/packaging/utils.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_vendor/packaging/version.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/_vendor/pyparsing.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/archive_util.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/build_meta.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/cli-32.exe" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/cli-64.exe" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/cli-arm64.exe" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/cli.exe" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/command/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/command/alias.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/command/bdist_egg.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/command/bdist_rpm.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/command/build_clib.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/command/build_ext.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/command/build_py.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/command/develop.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/command/dist_info.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/command/easy_install.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/command/egg_info.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/command/install.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/command/install_egg_info.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/command/install_lib.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/command/install_scripts.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/command/launcher manifest.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/command/py36compat.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/command/register.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/command/rotate.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/command/saveopts.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/command/sdist.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/command/setopt.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/command/test.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/command/upload.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/command/upload_docs.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/config.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/dep_util.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/depends.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/dist.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/errors.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/extension.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/extern/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/glob.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/gui-32.exe" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/gui-64.exe" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/gui-arm64.exe" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/gui.exe" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/installer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/launch.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/monkey.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/msvc.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/namespaces.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/package_index.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/py34compat.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/sandbox.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/script (dev).tmpl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/script.tmpl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/unicode_utils.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/version.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/wheel.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/windows_support.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib64" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/pyvenv.cfg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/.metadata" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/LICENSE" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/analysis_options.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/analysis_options.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/google-services.json" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/google-services.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/debug/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/src/debug/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/com/example/flutter_app/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/src/main/kotlin/com/example/flutter_app/MainActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/drawable-v21/launch_background.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/src/main/res/drawable-v21/launch_background.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/drawable/launch_background.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/src/main/res/drawable/launch_background.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-hdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/src/main/res/mipmap-hdpi/ic_launcher.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-mdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/src/main/res/mipmap-mdpi/ic_launcher.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/src/main/res/mipmap-xhdpi/ic_launcher.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/values-night/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/src/main/res/values-night/styles.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/src/main/res/values/styles.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/profile/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/src/profile/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/gradle.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/settings.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/academe/academe_logo-github.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/academe/academe_logo-github.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/academe/academe_logo-modified.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/academe/academe_logo-modified.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/academe/academe_logo.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/academe/academe_logo.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/academe/bulb_logo.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/academe/bulb_logo.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/academe/course.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/academe/course.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/academe/progress_logo.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/academe/progress_logo.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/academe/robot_logo.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/academe/robot_logo.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/academe/study_image.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/academe/study_image.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/design_course/UI_design.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/design_course/UI_design.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/design_course/app_color_schemes.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/design_course/app_color_schemes.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/design_course/interFace1.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/design_course/interFace1.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/design_course/interFace2.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/design_course/interFace2.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/design_course/interFace3.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/design_course/interFace3.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/design_course/interFace4.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/design_course/interFace4.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/design_course/product_design.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/design_course/product_design.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/design_course/userImage.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/design_course/userImage.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/design_course/webInterFace.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/design_course/webInterFace.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/fonts/Poppins-Regular.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/fonts/Poppins-Regular.ttf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/fonts/Roboto-Bold.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/fonts/Roboto-Bold.ttf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/fonts/Roboto-Medium.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/fonts/Roboto-Medium.ttf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/fonts/Roboto-Regular.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/fonts/Roboto-Regular.ttf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/fonts/WorkSans-Bold.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/fonts/WorkSans-Bold.ttf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/fonts/WorkSans-Medium.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/fonts/WorkSans-Medium.ttf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/fonts/WorkSans-Regular.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/fonts/WorkSans-Regular.ttf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/fonts/WorkSans-SemiBold.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/fonts/WorkSans-SemiBold.ttf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/hotel/hotel_1.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/hotel/hotel_1.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/hotel/hotel_2.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/hotel/hotel_2.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/hotel/hotel_3.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/hotel/hotel_3.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/hotel/hotel_4.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/hotel/hotel_4.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/hotel/hotel_5.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/hotel/hotel_5.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/hotel/hotel_booking.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/hotel/hotel_booking.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/icons/ASKMe.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/icons/ASKMe.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/icons/ASKMe_dark.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/icons/ASKMe_dark.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/icons/google_icon.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/icons/google_icon.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/icons/house_door.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/icons/house_door.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/AI.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/images/AI.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/feedbackImage.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/images/feedbackImage.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/helpImage.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/images/helpImage.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/inviteImage.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/images/inviteImage.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/supportIcon.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/images/supportIcon.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/userImage.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/images/userImage.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/firebase.json" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/firebase.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Flutter/AppFrameworkInfo.plist" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Flutter/AppFrameworkInfo.plist" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Flutter/Debug.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Flutter/Debug.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Flutter/Release.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Flutter/Release.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner.xcodeproj/project.pbxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner.xcodeproj/project.xcworkspace/contents.xcworkspacedata" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner.xcodeproj/project.xcworkspace/contents.xcworkspacedata" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner.xcworkspace/contents.xcworkspacedata" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner.xcworkspace/contents.xcworkspacedata" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/AppDelegate.swift" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/AppDelegate.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@1x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@1x.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@2x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@2x.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@3x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@3x.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@1x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@1x.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@2x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@2x.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@3x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@3x.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@1x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@1x.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@2x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@2x.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@3x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@3x.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@2x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@2x.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@3x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@3x.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@1x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@1x.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@2x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@2x.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-83.5x83.5@2x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-83.5x83.5@2x.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@2x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@2x.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@3x.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@3x.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Base.lproj/LaunchScreen.storyboard" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Base.lproj/LaunchScreen.storyboard" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Base.lproj/Main.storyboard" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Base.lproj/Main.storyboard" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Info.plist" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Runner-Bridging-Header.h" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/Runner/Runner-Bridging-Header.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/RunnerTests/RunnerTests.swift" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/ios/RunnerTests/RunnerTests.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/academe_theme.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/academe_theme.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/firebase_options.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/firebase_options.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/home/auth/auth_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/auth/auth_service.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/home/auth/auth_wrapper.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/auth/auth_wrapper.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/home/components/ASKMe_button.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/components/ASKMe_button.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/home/components/category_list_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/components/category_list_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/home/components/course_info_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/components/course_info_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/home/components/popular_course_list_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/components/popular_course_list_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/home/courses/linear_algebra/Linear_algebra.dar.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/courses/linear_algebra/Linear_algebra.dar.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/home/courses/linear_algebra/Q&amp;A.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/courses/linear_algebra/Q&amp;A.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/home/courses/linear_algebra/lessons.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/courses/linear_algebra/lessons.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/home/courses/linear_algebra/overview.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/courses/linear_algebra/overview.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/home/models/category.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/models/category.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/home/pages/ASKMe.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/ASKMe.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/home/pages/bottomNav.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/bottomNav.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/home/pages/edit_profile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/edit_profile.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/home/pages/forgot_password.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/forgot_password.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/home/pages/home_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/home_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/home/pages/my_community.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/my_community.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/home/pages/my_courses.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/my_courses.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/home/pages/profile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/profile.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/introduction_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/introduction_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/started/pages/animated_splash.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/animated_splash.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/started/pages/get-started_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/get-started_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/started/pages/login_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/login_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/started/pages/signup_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/signup_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/utils/constants/colors.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/utils/constants/colors.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/utils/constants/image_strings.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/utils/constants/image_strings.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/utils/constants/text_strings.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/utils/constants/text_strings.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/utils/theme/custom_themes/appbar_theme.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/utils/theme/custom_themes/appbar_theme.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/utils/theme/custom_themes/bottom_sheet_theme.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/utils/theme/custom_themes/bottom_sheet_theme.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/utils/theme/custom_themes/checkbox_theme.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/utils/theme/custom_themes/checkbox_theme.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/utils/theme/custom_themes/chip_theme.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/utils/theme/custom_themes/chip_theme.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/utils/theme/custom_themes/course_theme.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/utils/theme/custom_themes/course_theme.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/utils/theme/custom_themes/elevated_button_theme.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/utils/theme/custom_themes/elevated_button_theme.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/utils/theme/custom_themes/outlined_button_theme.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/utils/theme/custom_themes/outlined_button_theme.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/utils/theme/custom_themes/text_field_theme.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/utils/theme/custom_themes/text_field_theme.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/utils/theme/custom_themes/text_theme.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/utils/theme/custom_themes/text_theme.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/utils/theme/theme.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/utils/theme/theme.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/utils/validators/validation.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/utils/validators/validation.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/linux/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/linux/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/linux/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/linux/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/linux/flutter/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/linux/flutter/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/linux/flutter/generated_plugin_registrant.cc" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/linux/flutter/generated_plugin_registrant.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/linux/flutter/generated_plugin_registrant.h" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/linux/flutter/generated_plugin_registrant.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/linux/flutter/generated_plugins.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/linux/flutter/generated_plugins.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/linux/runner/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/linux/runner/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/linux/runner/main.cc" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/linux/runner/main.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/linux/runner/my_application.cc" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/linux/runner/my_application.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/linux/runner/my_application.h" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/linux/runner/my_application.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Flutter/Flutter-Debug.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Flutter/Flutter-Debug.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Flutter/Flutter-Release.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Flutter/Flutter-Release.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Flutter/GeneratedPluginRegistrant.swift" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Flutter/GeneratedPluginRegistrant.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Runner.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner.xcodeproj/project.pbxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Runner.xcworkspace/contents.xcworkspacedata" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner.xcworkspace/contents.xcworkspacedata" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Runner/AppDelegate.swift" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/AppDelegate.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_1024.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_1024.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_128.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_128.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_16.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_16.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_256.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_256.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_32.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_32.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_512.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_512.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_64.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_64.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Runner/Base.lproj/MainMenu.xib" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/Base.lproj/MainMenu.xib" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Runner/Configs/AppInfo.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/Configs/AppInfo.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Runner/Configs/Debug.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/Configs/Debug.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Runner/Configs/Release.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/Configs/Release.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Runner/Configs/Warnings.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/Configs/Warnings.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Runner/DebugProfile.entitlements" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/DebugProfile.entitlements" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Runner/Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/Info.plist" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Runner/MainFlutterWindow.swift" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/MainFlutterWindow.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Runner/Release.entitlements" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Runner/Release.entitlements" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/RunnerTests/RunnerTests.swift" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/RunnerTests/RunnerTests.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/pubspec.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/widget_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/test/widget_test.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/favicon.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/web/favicon.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/icons/Icon-192.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/web/icons/Icon-192.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/icons/Icon-512.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/web/icons/Icon-512.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/icons/Icon-maskable-192.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/web/icons/Icon-maskable-192.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/icons/Icon-maskable-512.png" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/web/icons/Icon-maskable-512.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/web/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/web/manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/windows/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/windows/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/windows/flutter/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/flutter/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/windows/flutter/generated_plugin_registrant.cc" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/flutter/generated_plugin_registrant.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/windows/flutter/generated_plugin_registrant.h" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/flutter/generated_plugin_registrant.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/windows/flutter/generated_plugins.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/flutter/generated_plugins.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/windows/runner/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/runner/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/windows/runner/Runner.rc" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/runner/Runner.rc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/windows/runner/flutter_window.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/runner/flutter_window.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/windows/runner/flutter_window.h" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/runner/flutter_window.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/windows/runner/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/runner/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/windows/runner/resource.h" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/runner/resource.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/windows/runner/resources/app_icon.ico" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/runner/resources/app_icon.ico" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/windows/runner/runner.exe.manifest" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/runner/runner.exe.manifest" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/windows/runner/utils.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/runner/utils.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/windows/runner/utils.h" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/runner/utils.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/windows/runner/win32_window.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/runner/win32_window.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/windows/runner/win32_window.h" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/runner/win32_window.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/ASKMe.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/ASKMe.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/bottomNav.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/bottomNav.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/signup_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/signup_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/utils/constants/image_strings.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/utils/constants/image_strings.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/linux/flutter/generated_plugin_registrant.cc" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/linux/flutter/generated_plugin_registrant.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/linux/flutter/generated_plugins.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/linux/flutter/generated_plugins.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/macos/Flutter/GeneratedPluginRegistrant.swift" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Flutter/GeneratedPluginRegistrant.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/windows/flutter/generated_plugin_registrant.cc" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/flutter/generated_plugin_registrant.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/windows/flutter/generated_plugins.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/flutter/generated_plugins.cmake" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -241,6 +966,13 @@
   </component>
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Dart File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -266,34 +998,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
-    &quot;Flutter.main.dart.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
-    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;io.flutter.reload.alreadyRun&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Clone/ACADEMe/assets/design_course&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;experimental&quot;,
-    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
+    "Flutter.main.dart.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "main",
+    "io.flutter.reload.alreadyRun": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/preeti/Music/ACADEMe/ACADEMe-frontend/assets/design_course",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "experimental",
+    "show.migrate.to.gradle.popup": "false"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/ACADEMe-frontend/assets/design_course" />
       <recent name="C:\Clone\ACADEMe\assets\design_course" />
       <recent name="C:\Clone\ACADEMe\assets\images" />
       <recent name="C:\Clone\ACADEMe\lib\utils\theme\custom_themes" />
       <recent name="C:\Clone\ACADEMe\lib\home" />
-      <recent name="$PROJECT_DIR$/assets/icons" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/lib/home/pages" />

@@ -1,6 +1,7 @@
 import 'package:ACADEMe/home/pages/profile.dart';
 import 'package:flutter/material.dart';
 import '../../academe_theme.dart';
+import 'course_view.dart';
 import 'home_view.dart';
 import 'my_community.dart';
 import 'my_courses.dart';
@@ -34,7 +35,7 @@ class _BottomNavState extends State<BottomNav> {
           });
         },
       ),
-      const HomeScreen(),
+      const CourseListScreen(),
       const Mycommunity(),
       const ProfilePage(),
     ]);

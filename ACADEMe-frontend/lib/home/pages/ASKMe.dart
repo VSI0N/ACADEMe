@@ -8,6 +8,7 @@ import 'dart:convert';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:async';
+import 'file_view.dart';
 
 class ASKMe extends StatefulWidget {
   @override
@@ -15,6 +16,7 @@ class ASKMe extends StatefulWidget {
 }
 
 class _ASKMeState extends State<ASKMe> {
+  final ScrollController _scrollController = ScrollController();
   String selectedLanguage = "en"; // Default: English
   List<Map<String, String>> chatMessages = [];
   final TextEditingController _textController = TextEditingController();
@@ -49,6 +51,15 @@ class _ASKMeState extends State<ASKMe> {
     _textController.dispose();
     super.dispose(); // Keep only this
   }
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      // Optional: Add logic if needed when the user scrolls
+    });
+  }
+
 
   void _showPromptDialog(File file, String fileType) {
     TextEditingController promptController = TextEditingController();
@@ -106,7 +117,7 @@ class _ASKMeState extends State<ASKMe> {
         break;
       case 'Document':
         type = FileType.custom;
-        allowedExtensions = ['pdf', 'docx', 'txt']; // ✅ Define allowed document types
+        allowedExtensions = ['pdf', 'docx', 'txt'];
         break;
       case 'Video':
         type = FileType.video;
@@ -120,23 +131,23 @@ class _ASKMeState extends State<ASKMe> {
 
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: type,
-      allowedExtensions: allowedExtensions, // ✅ Only used for custom types
+      allowedExtensions: allowedExtensions,
     );
 
     if (result != null) {
       File file = File(result.files.single.path!);
-      _showPromptDialog(file, fileType); // Opens prompt before upload
+      _showPromptDialog(file, fileType);
     } else {
       print("❌ File selection canceled.");
     }
   }
 
+
   Future<void> _uploadFile(File file, String fileType, [String prompt = '']) async {
-    // ASKMe-backend URL
+    //ASKMe backend URL
     var url = Uri.parse('http://10.0.2.2:8000/api/process_${fileType.toLowerCase()}');
 
     var request = http.MultipartRequest('POST', url);
-
     request.fields.addAll({
       'prompt': prompt.isNotEmpty ? prompt : 'Describe this image',
       'source_lang': 'auto',
@@ -153,22 +164,22 @@ class _ASKMeState extends State<ASKMe> {
       try {
         var decodedResponse = jsonDecode(responseBody);
         String aiResponse = decodedResponse is Map<String, dynamic>
-            ? decodedResponse.values.first.toString()  // Extracts first value
-            : responseBody; // If not JSON, return raw text
+            ? decodedResponse.values.first.toString()
+            : responseBody;
 
         setState(() {
           chatMessages.add({
             "role": "user",
-            "text": "Uploaded a $fileType",
-            "fileInfo": "${file.path.split('/').last} (${(file.lengthSync() / 1024).toStringAsFixed(1)}KB)"
+            "text": "Uploaded $fileType",
+            "fileInfo": file.path,  // ✅ Save the image file path
+            "fileType": fileType,
           });
           chatMessages.add({
             "role": "assistant",
-            "text": aiResponse, // ✅ Show extracted AI response
+            "text": aiResponse,
           });
         });
       } catch (e) {
-        // If response is not JSON, return raw response
         setState(() {
           chatMessages.add({
             "role": "assistant",
@@ -177,28 +188,16 @@ class _ASKMeState extends State<ASKMe> {
         });
       }
     } else {
-      try {
-        var decodedError = jsonDecode(responseBody);
-        String errorMessage = decodedError is Map<String, dynamic>
-            ? decodedError.values.first.toString()
-            : responseBody;
-
-        setState(() {
-          chatMessages.add({
-            "role": "assistant",
-            "text": "⚠️ Error: $errorMessage", // ✅ Extract exact error message
-          });
+      setState(() {
+        chatMessages.add({
+          "role": "assistant",
+          "text": "⚠️ Error uploading file: $responseBody",
         });
-      } catch (e) {
-        setState(() {
-          chatMessages.add({
-            "role": "assistant",
-            "text": "⚠️ Error: $responseBody", // If not JSON, return raw response
-          });
-        });
-      }
+      });
     }
   }
+
+
 
   Future<void> _toggleRecording() async {
     if (_isRecording) {
@@ -232,13 +231,12 @@ class _ASKMeState extends State<ASKMe> {
     }
   }
 
+
   void _sendMessage() async {
     String message = _textController.text.trim();
     if (message.isNotEmpty) {
-      // ASKMe-backend URL
+      //ASKMe backend URL
       var url = Uri.parse('http://10.0.2.2:8000/api/process_text');
-
-      // CORRECT: Use form-data encoding
       var response = await http.post(
         url,
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
@@ -255,11 +253,21 @@ class _ASKMeState extends State<ASKMe> {
               {"role": "ai", "text": jsonDecode(response.body)['response']});
           _textController.clear();
         });
+
+        // Scroll to the bottom after a short delay to ensure UI updates first
+        Future.delayed(Duration(milliseconds: 100), () {
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          );
+        });
       } else {
         print("Failed to send message: ${response.statusCode}");
       }
     }
   }
+
 
   void _showLanguageSelection() {
     showModalBottomSheet(
@@ -268,48 +276,64 @@ class _ASKMeState extends State<ASKMe> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (BuildContext modalContext) {
-        return Padding(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                "Select Output Language",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        String searchQuery = ""; // Local state for search query
+
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            List<Map<String, String>> filteredLanguages = languages
+                .where((language) =>
+                language['name']!.toLowerCase().startsWith(searchQuery.toLowerCase()))
+                .toList();
+
+            return Padding(
+              padding: EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "Select Output Language",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  Divider(),
+
+                  // Search bar with live filtering
+                  TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Search Languages',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.search),
+                    ),
+                    onChanged: (query) {
+                      setModalState(() {
+                        searchQuery = query; // Live update search query
+                      });
+                    },
+                  ),
+                  SizedBox(height: 10),
+
+                  // Scrollable list of filtered languages
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: filteredLanguages.length,
+                      itemBuilder: (context, index) {
+                        var language = filteredLanguages[index];
+                        return _languageTile(
+                          language['name'] ?? '',
+                          language['code'] ?? '',
+                          modalContext,
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
-              Divider(),
-              // Search bar with live filtering
-              TextField(
-                decoration: InputDecoration(
-                  labelText: 'Search Languages',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.search),
-                ),
-                onChanged: (query) {
-                  setState(() {
-                    searchQuery = query; // Update the search query immediately
-                  });
-                },
-              ),
-              SizedBox(height: 10),
-              // Scrollable list of filtered languages
-              Expanded(
-                child: ListView(
-                  children: _getFilteredLanguages().map((language) {
-                    return _languageTile(
-                      language['name'] ?? '',  // Default to empty if null
-                      language['code'] ?? '',  // Default to empty if null
-                      modalContext,
-                    );
-                  }).toList(),
-                ),
-              ),
-            ],
-          ),
+            );
+          },
         );
       },
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -349,86 +373,117 @@ class _ASKMeState extends State<ASKMe> {
       ),
       body: chatMessages.isEmpty
           ? _buildInitialUI()
-          : _buildChatUI(),
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.all(10),
-        child: Row(
-          children: [
-            Container(
-              width: 40,
-              height: 40,
-              child: IconButton(
-                icon: Icon(
-                    Icons.add_circle, color: AcademeTheme.appColor, size: 28),
-                onPressed: () {
-                  showModalBottomSheet(
-                    context: context,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(20))),
-                    builder: (BuildContext context) {
-                      return Padding(
-                        padding: EdgeInsets.all(20),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            _buildAttachmentOption(
-                                context, Icons.image, "Image", Colors.blue,
-                                'Image'),
-                            _buildAttachmentOption(
-                                context, Icons.insert_drive_file, "Document",
-                                Colors.green, 'Document'),
-                            _buildAttachmentOption(
-                                context, Icons.video_library, "Video",
-                                Colors.orange, 'Video'),
-                            _buildAttachmentOption(
-                                context, Icons.audiotrack, "Audio",
-                                Colors.purple, 'Audio'),
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
-            Expanded(
-              child: TextField(
-                controller: _textController,
-                decoration: InputDecoration(
-                  hintText: "Type a message...",
-                  filled: true,
-                  fillColor: Colors.grey[200],
-                  contentPadding: EdgeInsets.symmetric(
-                      horizontal: 15, vertical: 10),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25),
-                      borderSide: BorderSide.none),
+          : _buildChatUI(context),
+      bottomNavigationBar: AnimatedPadding(
+        duration: Duration(milliseconds: 300),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom, // Adjusts when keyboard appears
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: Row(
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                child: IconButton(
+                  icon: Icon(Icons.attach_file, color: AcademeTheme.appColor, size: 27),
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                      ),
+                      builder: (BuildContext context) {
+                        return Padding(
+                          padding: EdgeInsets.all(20),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              _buildAttachmentOption(context, Icons.image, "Image", Colors.blue, 'Image'),
+                              _buildAttachmentOption(context, Icons.insert_drive_file, "Document", Colors.green, 'Document'),
+                              _buildAttachmentOption(context, Icons.video_library, "Video", Colors.orange, 'Video'),
+                              _buildAttachmentOption(context, Icons.audiotrack, "Audio", Colors.purple, 'Audio'),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
                 ),
               ),
-            ),
-            IconButton(
-              icon: Icon(
-                  _isRecording ? Icons.stop : Icons.mic, color: Colors.white,
-                  size: 24),
-              onPressed: _toggleRecording,
-              constraints: BoxConstraints(),
-              padding: EdgeInsets.zero,
-              color: AcademeTheme.appColor,
-            ),
-            Container(
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle, color: AcademeTheme.appColor),
-              child: IconButton(
-                icon: Icon(Icons.arrow_upward, color: Colors.white, size: 24),
-                onPressed: _sendMessage,
-                padding: EdgeInsets.zero,
-                constraints: BoxConstraints(),
+              Expanded(
+                child: Stack(
+                  alignment: Alignment.centerRight, // Align mic icon inside TextField
+                  children: [
+                    TextField(
+                      controller: _textController,
+                      maxLines: 2, // Single-line input
+                      minLines: 1,
+                      keyboardType: TextInputType.multiline,
+                      decoration: InputDecoration(
+                        hintText: "Type a message...",
+                        contentPadding: EdgeInsets.only(left: 20, right: 60, top: 14, bottom: 14), // Adjusted padding
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30), // Rounded shape
+                          borderSide: BorderSide(color: Colors.grey, width: 1.5), // Outline border
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide(color: Colors.grey, width: 1.5), // Subtle gray outline
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide(color: Colors.grey[300]!, width: 1.5), // Highlighted color when active
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      right: 15,
+                      child: GestureDetector(
+                        onTap: _toggleRecording,
+                        child: Icon(
+                          _isRecording ? Icons.stop : Icons.mic,
+                          color: AcademeTheme.appColor,
+                          size: 25,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+
+              SizedBox(width: 12), // Added space between text field and send button
+
+              Container(
+                width: 42,
+                height: 42,
+                // decoration: BoxDecoration(
+                //   shape: BoxShape.circle,
+                //   color: AcademeTheme.appColor,
+                // ),
+                child: IconButton(
+                  icon: Icon(Icons.send, color: AcademeTheme.appColor, size: 25),
+                  onPressed: _sendMessage,
+                  padding: EdgeInsets.zero,
+                  constraints: BoxConstraints(),
+                ),
+              ),
+
+
+              // Container(
+              //   width: 30,
+              //   height: 30,
+              //   decoration: BoxDecoration(shape: BoxShape.circle, color: AcademeTheme.appColor),
+              //   child: IconButton(
+              //     icon: Icon(Icons.send, color: Colors.white, size: 24),
+              //     onPressed: _sendMessage,
+              //     padding: EdgeInsets.zero,
+              //     constraints: BoxConstraints(),
+              //   ),
+              // ),
+            ],
+          ),
         ),
       ),
     );
@@ -528,59 +583,86 @@ class _ASKMeState extends State<ASKMe> {
     );
   }
 
-  Widget _buildChatUI() {
+  Widget _buildChatUI(BuildContext context) {
     return ListView.builder(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      // ✅ Moved padding here
+      padding: EdgeInsets.all(10),
+      controller: _scrollController,
       itemCount: chatMessages.length,
-      // ✅ Moved itemCount inside ListView.builder
       itemBuilder: (context, index) {
-        bool isUser = chatMessages[index]['role'] == "user";
+        Map<String, String> message = chatMessages[index];
+        bool isUser = message["role"] == "user";
 
         return Column(
-          crossAxisAlignment: isUser
-              ? CrossAxisAlignment.end
-              : CrossAxisAlignment.start,
+          crossAxisAlignment: isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
-            // ✅ Display file info if available
-            if (chatMessages[index]['fileInfo'] != null)
-              Container(
-                padding: EdgeInsets.all(8),
-                margin: EdgeInsets.symmetric(vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.attach_file, size: 16),
-                    SizedBox(width: 8),
-                    Text(
-                      chatMessages[index]['fileInfo']!,
-                      style: TextStyle(fontSize: 12),
+            if (!isUser)
+              CircleAvatar(
+                backgroundImage: AssetImage("assets/icons/ASKMe_dark.png"),
+                radius: 20,
+              ),
+            if (isUser)
+              CircleAvatar(
+                backgroundImage: AssetImage("assets/images/userImage.png"),
+                radius: 20,
+              ),
+            if (message.containsKey("fileType") && message["fileType"] == "Image")
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FullScreenImage(imagePath: message["fileInfo"]!),
                     ),
-                  ],
-                ),
-              ),
-
-            // ✅ Chat bubble
-            Align(
-              alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
-              child: Container(
-                padding: EdgeInsets.all(10),
-                margin: EdgeInsets.symmetric(vertical: 5),
-                decoration: BoxDecoration(
-                  color: isUser ? Colors.blue[400] : Colors.grey[300],
+                  );
+                },
+                child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                ),
-                child: Text(
-                  chatMessages[index]['text'] ?? "",
-                  // ✅ Handle possible null value
-                  style: TextStyle(color: isUser ? Colors.white : Colors.black),
+                  child: Image.file(
+                    File(message["fileInfo"]!),
+                    width: 200,
+                    height: 200,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
-            ),
+            Container(
+              constraints: BoxConstraints(
+                maxWidth: isUser
+                    ? MediaQuery.of(context).size.width * 0.60
+                    : MediaQuery.of(context).size.width * 0.80,
+              ),
+              padding: EdgeInsets.all(15),
+              margin: EdgeInsets.symmetric(vertical: 5),
+              decoration: BoxDecoration(
+                gradient: isUser
+                    ? LinearGradient(
+                  colors: [Colors.blue[300]!, Colors.blue[700]!], // Subtle gradient for user
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                )
+                    : null, // No gradient for AI
+                color: isUser ? null : Colors.grey[300]!, // Flat color for AI
+                borderRadius: BorderRadius.circular(isUser ? 20 : 15), // More rounding for user messages
+                boxShadow: isUser
+                    ? [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.15), // Soft shadow for user messages
+                    blurRadius: 6,
+                    offset: Offset(2, 4),
+                  ),
+                ]
+                    : [], // No shadow for AI messages
+              ),
+              child: Text(
+                message["text"]!,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: isUser ? Colors.white : Colors.black,
+                ),
+              ),
+            )
+
+
           ],
         );
       },

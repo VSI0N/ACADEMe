@@ -1,5 +1,6 @@
 import 'package:ACADEMe/started/pages/animated_splash.dart';
 import 'package:ACADEMe/home/pages/bottomNav.dart';
+import 'package:ACADEMe/started/pages/course.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'dart:io';
@@ -55,6 +56,7 @@ class MyApp extends StatelessWidget {
       home: AnimatedSplashScreen(),
       routes: {
         '/home': (context) => BottomNav(),
+        '/courses' : (context) => SelectCourseScreen()
       },
     );
   }
