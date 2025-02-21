@@ -24,14 +24,15 @@ cd askme-backend
 ### 2️⃣ Set Up the Virtual Environment
 
 ```bash
-python -m venv venv
+python3 -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
 ### 3️⃣ Install Dependencies
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements.txt 
+# if error occurs run this:  pip install torch==2.5.1+cu121 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121 and run the command: pip install -r requirements.txt  
 ```
 
 ### 4️⃣ Create a .env File
