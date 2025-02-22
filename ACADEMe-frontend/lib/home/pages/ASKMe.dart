@@ -154,8 +154,8 @@ class _ASKMeState extends State<ASKMe> {
   Future<void> _uploadFile(File file, String fileType,
       [String prompt = '']) async {
     //ASKMe backend URL
-    var url =
-        Uri.parse('http://10.0.2.2:8000/api/process_${fileType.toLowerCase()}');
+    var url = Uri.parse(
+        'https://c92f-2401-4900-b20b-f27e-e7db-5157-33a0-d3de.ngrok-free.app/api/process_${fileType.toLowerCase()}');
 
     var request = http.MultipartRequest('POST', url);
     request.fields.addAll({
@@ -281,7 +281,8 @@ class _ASKMeState extends State<ASKMe> {
       print("File size: ${file.lengthSync()} bytes");
 
       //ASKMe backend URL
-      var url = Uri.parse('http://10.0.2.2:8000/api/process_stt'); // API URL
+      var url = Uri.parse(
+          'https://c92f-2401-4900-b20b-f27e-e7db-5157-33a0-d3de.ngrok-free.app/api/process_stt'); // API URL
 
       var request = http.MultipartRequest('POST', url);
 
@@ -352,32 +353,41 @@ class _ASKMeState extends State<ASKMe> {
   void _sendMessage() async {
     String message = _textController.text.trim();
     if (message.isNotEmpty) {
-      //ASKMe backend URL
-      var url = Uri.parse('http://10.0.2.2:8000/api/process_text');
-      var response = await http.post(
-        url,
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: {'text': message, 'target_language': selectedLanguage},
-      );
+      // ASKMe backend URL
+      var url = Uri.parse(
+          'https://c92f-2401-4900-b20b-f27e-e7db-5157-33a0-d3de.ngrok-free.app/api/process_text');
 
-      if (response.statusCode == 200) {
-        setState(() {
-          chatMessages.add({"role": "user", "text": message});
-          chatMessages.add(
-              {"role": "ai", "text": jsonDecode(response.body)['response']});
-          _textController.clear();
-        });
+      try {
+        var response = await http.post(
+          url,
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          body: {'text': message, 'target_language': selectedLanguage},
+        );
 
-        // Scroll to the bottom after a short delay to ensure UI updates first
-        Future.delayed(Duration(milliseconds: 100), () {
-          _scrollController.animateTo(
-            _scrollController.position.maxScrollExtent,
-            duration: Duration(milliseconds: 300),
-            curve: Curves.easeOut,
-          );
-        });
-      } else {
-        print("Failed to send message: ${response.statusCode}");
+        if (response.statusCode == 200) {
+          // Decode the response properly to support all languages
+          String aiResponse = utf8.decode(response.bodyBytes);
+          String aiMessage = jsonDecode(aiResponse)['response'];
+
+          setState(() {
+            chatMessages.add({"role": "user", "text": message});
+            chatMessages.add({"role": "ai", "text": aiMessage});
+            _textController.clear();
+          });
+
+          // Scroll to the bottom after a short delay
+          Future.delayed(Duration(milliseconds: 100), () {
+            _scrollController.animateTo(
+              _scrollController.position.maxScrollExtent,
+              duration: Duration(milliseconds: 300),
+              curve: Curves.easeOut,
+            );
+          });
+        } else {
+          print("Failed to send message: ${response.statusCode}");
+        }
+      } catch (error) {
+        print("Error sending message: $error");
       }
     }
   }
@@ -476,7 +486,7 @@ class _ASKMeState extends State<ASKMe> {
               children: [
                 IconButton(icon: newChatIcon(), onPressed: () {}),
                 IconButton(
-                  icon: Icon(Icons.more_vert, size: 28, color: Colors.white),
+                  icon: Icon(Icons.translate, size: 28, color: Colors.white),
                   onPressed: () {
                     _showLanguageSelection();
                   },
