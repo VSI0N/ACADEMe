@@ -9,8 +9,9 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:async';
 import 'file_view.dart';
-
+import 'package:ACADEMe/widget/chat_history_drawer.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:mime/mime.dart';
 
 class ASKMe extends StatefulWidget {
   @override
@@ -26,6 +27,10 @@ class _ASKMeState extends State<ASKMe> {
   bool _isRecording = false;
   Timer? _timer;
   int _seconds = 0;
+  bool isConverting = false; // To track the loading state
+
+  final GlobalKey<ScaffoldState> _scaffoldKey =
+      GlobalKey<ScaffoldState>(); // Key for the drawer
 
   String searchQuery = "";
   List<Map<String, String>> languages = [
@@ -49,6 +54,16 @@ class _ASKMeState extends State<ASKMe> {
               .contains(searchQuery.toLowerCase()))
           .toList(); // Filter the languages based on the search query
     }
+  }
+
+  // For the chat history
+  List<ChatSession> chatHistory = [
+    ChatSession(title: "Chat with AI", timestamp: "Feb 22, 2025"),
+    ChatSession(title: "Math Help", timestamp: "Feb 21, 2025"),
+  ];
+
+  void _loadChatSession(ChatSession chat) {
+    print("Selected chat: ${chat.title}");
   }
 
   @override
@@ -155,7 +170,7 @@ class _ASKMeState extends State<ASKMe> {
       [String prompt = '']) async {
     //ASKMe backend URL
     var url = Uri.parse(
-        'https://c92f-2401-4900-b20b-f27e-e7db-5157-33a0-d3de.ngrok-free.app/api/process_${fileType.toLowerCase()}');
+        'https://aee3-2401-4900-b23f-8444-2fdd-4d3e-85be-6e6b.ngrok-free.app/api/process_${fileType.toLowerCase()}');
 
     var request = http.MultipartRequest('POST', url);
     request.fields.addAll({
@@ -271,7 +286,7 @@ class _ASKMeState extends State<ASKMe> {
     }
   }
 
-// **Update Upload Function to Support WAV**
+// Upload Speech Function
   Future<void> _uploadSpeech(File file) async {
     try {
       if (!file.existsSync() || file.lengthSync() == 0) {
@@ -280,42 +295,65 @@ class _ASKMeState extends State<ASKMe> {
       }
       print("File size: ${file.lengthSync()} bytes");
 
-      //ASKMe backend URL
+      setState(() {
+        isConverting = true;
+      });
+
+      // API URL
       var url = Uri.parse(
-          'https://c92f-2401-4900-b20b-f27e-e7db-5157-33a0-d3de.ngrok-free.app/api/process_stt'); // API URL
+          'https://aee3-2401-4900-b23f-8444-2fdd-4d3e-85be-6e6b.ngrok-free.app/api/process_stt');
 
       var request = http.MultipartRequest('POST', url);
 
-      // Add required fields for the server
+      // Ensure the selected language is not empty
+      selectedLanguage = selectedLanguage.isNotEmpty ? selectedLanguage : "hi";
+      print("Selected target language: $selectedLanguage");
+
       request.fields.addAll({
-        'prompt': 'Describe this audio',
-        'source_lang': 'auto',
-        'target_lang': selectedLanguage,
+        'prompt': 'इस ऑडियो को हिंदी में लिखो',
+        'source_lang': 'auto', // Let the server detect the source language
+        'target_lang':
+            selectedLanguage, // Send the selected language for the response
       });
 
-      // Add the audio file to the request with the 'file' field name
-      request.files.add(await http.MultipartFile.fromPath('file', file.path,
-          contentType: MediaType("audio", "x-wav")));
+      final mimeType = lookupMimeType(file.path) ?? "audio/wav";
+      print("Detected MIME type: $mimeType");
 
-      // Send the request
+      request.files.add(await http.MultipartFile.fromPath(
+        'file',
+        file.path,
+        contentType: MediaType.parse(mimeType),
+      ));
+
       var response = await request.send();
-      String responseBody =
-          await response.stream.bytesToString(); // Get server response
+      String responseBody = await response.stream.bytesToString();
 
-      // Print the server's response body
       print("Server response: $responseBody");
 
-      // Handle server response
       if (response.statusCode == 200) {
         print("✅ Audio uploaded successfully!");
 
-        // Decode the response from JSON and handle it
         var decodedResponse = jsonDecode(responseBody);
-        await _handleServerResponse(decodedResponse); // Update the input field
+
+        // Fix: Extract detected language correctly
+        String detectedLang = decodedResponse['language'] ?? 'unknown';
+        print("Detected Language: $detectedLang");
+
+        // If the detected language is Hindi and user hasn't explicitly chosen another language
+        if (detectedLang == 'hi' && selectedLanguage == "auto") {
+          setState(() {
+            selectedLanguage =
+                'hi'; // Update language to Hindi if detected language is Hindi
+          });
+          print("✅ Updated selected language to Hindi");
+        }
+
+        // Proceed with handling the server response (your AI response)
+        await _handleServerResponse(decodedResponse);
       } else {
         print("❌ Upload failed with status: ${response.statusCode}");
-        print(
-            "Server response: $responseBody"); // Print the response body for debugging
+        print("Server response: $responseBody");
+
         setState(() {
           chatMessages.add({
             "role": "assistant",
@@ -331,10 +369,14 @@ class _ASKMeState extends State<ASKMe> {
           "text": "❌ Error uploading audio: $e",
         });
       });
+    } finally {
+      setState(() {
+        isConverting = false;
+      });
     }
   }
 
-  // Handle the server response and update the input field with the "text" part
+// Handle the server response and update the input field with the "text" part
   Future<void> _handleServerResponse(Map<String, dynamic> response) async {
     try {
       if (response.containsKey('text')) {
@@ -350,18 +392,22 @@ class _ASKMeState extends State<ASKMe> {
     }
   }
 
+  // Send Message Function
   void _sendMessage() async {
     String message = _textController.text.trim();
     if (message.isNotEmpty) {
       // ASKMe backend URL
       var url = Uri.parse(
-          'https://c92f-2401-4900-b20b-f27e-e7db-5157-33a0-d3de.ngrok-free.app/api/process_text');
+          'https://aee3-2401-4900-b23f-8444-2fdd-4d3e-85be-6e6b.ngrok-free.app/api/process_text');
 
       try {
         var response = await http.post(
           url,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-          body: {'text': message, 'target_language': selectedLanguage},
+          body: {
+            'text': message,
+            'target_language': selectedLanguage, // Use selectedLanguage here
+          },
         );
 
         if (response.statusCode == 200) {
@@ -461,24 +507,30 @@ class _ASKMeState extends State<ASKMe> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey, // Attach key to control drawer
       appBar: AppBar(
         backgroundColor: AcademeTheme.appColor,
         elevation: 2,
         iconTheme: IconThemeData(color: Colors.white),
+        leading: IconButton(
+          icon: Icon(Icons.menu,
+              size: 28, color: Colors.white), // Custom hamburger icon
+          onPressed: () {
+            _scaffoldKey.currentState?.openDrawer(); // Open the drawer
+          },
+        ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Opacity(
-                opacity: 0,
-                child: IconButton(icon: Icon(Icons.menu), onPressed: () {})),
             Expanded(
               child: Text(
                 'ASKMe',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20),
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
               ),
             ),
             Row(
@@ -496,7 +548,19 @@ class _ASKMeState extends State<ASKMe> {
           ],
         ),
       ),
-      body: chatMessages.isEmpty ? _buildInitialUI() : _buildChatUI(context),
+
+      // Drawer for chat history
+      drawer: ChatHistoryDrawer(
+        chatHistory: chatHistory,
+        onSelectChat: (chat) {
+          _loadChatSession(chat);
+        },
+      ),
+
+      body: chatMessages.isEmpty
+          ? _buildInitialUI() // Your chat UI when no messages
+          : _buildChatUI(context), // Your chat UI when messages exist
+
       bottomNavigationBar: AnimatedPadding(
         duration: Duration(milliseconds: 300),
         padding: EdgeInsets.only(
@@ -559,9 +623,11 @@ class _ASKMeState extends State<ASKMe> {
                       minLines: 1,
                       keyboardType: TextInputType.multiline,
                       decoration: InputDecoration(
-                        hintText: _isRecording
-                            ? "Recording... ${_seconds}s"
-                            : "Type a message...",
+                        hintText: isConverting
+                            ? "Converting ... "
+                            : (_isRecording
+                                ? "Recording ... ${_seconds}s"
+                                : "Type a message ..."),
                         contentPadding: EdgeInsets.only(
                             left: 20, right: 60, top: 14, bottom: 14),
                         border: OutlineInputBorder(
