@@ -5,16 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="305d9e88-f8ff-4439-948e-53cd16caa2bc" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/arm64-v8a/.cmake/api/v1/reply/index-2025-02-14T09-19-24-0859.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/arm64-v8a/configure_fingerprint.bin" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/arm64-v8a/configure_fingerprint.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/armeabi-v7a/.cmake/api/v1/reply/index-2025-02-14T09-19-25-0235.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/armeabi-v7a/configure_fingerprint.bin" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/armeabi-v7a/configure_fingerprint.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/x86/.cmake/api/v1/reply/index-2025-02-14T09-19-25-0994.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/x86/configure_fingerprint.bin" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/x86/configure_fingerprint.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/x86_64/.cmake/api/v1/reply/index-2025-02-14T09-19-26-0208.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/x86_64/configure_fingerprint.bin" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/x86_64/configure_fingerprint.bin" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
