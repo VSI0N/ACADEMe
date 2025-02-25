@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+firebase-admin
+python-dotenv
+passlib[bcrypt]
+pyjwt
+pydantic
+pytest
+httpx
+pydantic[email]
+google-generativeai
+cloudinary
+python-multipart
