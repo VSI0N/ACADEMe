@@ -1,21 +1,22 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+from typing import Optional, Dict
 from datetime import datetime
-from typing import Optional
 
 class ProgressBase(BaseModel):
-    student_id: str  # The student whose progress is tracked
-    subject_id: str  # The subject this progress belongs to
-    chapter_id: str  # The chapter being tracked
-    marks: float  # Marks obtained in the chapter
-    total_marks: float  # Total possible marks
-    completion_status: Optional[str] = "in_progress"  # Status: in_progress, completed
+    topic_id: Optional[str] = None
+    subtopic_id: Optional[str] = None
+    material_id: Optional[str] = None
+    quiz_id: Optional[str] = None
+    score: Optional[float] = None
+    status: str  # 'incomplete', 'complete'
+    activity_type: str  # 'view', 'quiz_attempt', 'discussion'
+    metadata: Dict = Field(default_factory=dict)  # Ensure metadata is always a dict
+    timestamp: datetime = Field(default_factory=datetime.utcnow)  # Corrected timestamp handling
 
 class ProgressCreate(ProgressBase):
     pass
 
-class ProgressResponse(ProgressBase):
-    id: str
-    created_at: datetime
-
-    class Config:
-        from_attributes = True
+class ProgressUpdate(BaseModel):
+    status: Optional[str] = None
+    score: Optional[float] = None
+    metadata: Optional[Dict] = Field(default_factory=dict)

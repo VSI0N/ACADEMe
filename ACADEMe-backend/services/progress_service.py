@@ -1,34 +1,55 @@
 from firebase_admin import firestore
-from models.progress_model import ProgressCreate
+from fastapi import HTTPException
+from google.cloud.firestore import DocumentReference
 from datetime import datetime
-import uuid
+from fastapi.encoders import jsonable_encoder
 
 db = firestore.client()
-progress_collection = db.collection("student_progress")
 
-def add_student_progress(progress: ProgressCreate):
-    progress_id = str(uuid.uuid4())
-    new_progress = {
-        "id": progress_id,
-        "student_id": progress.student_id,
-        "subject_id": progress.subject_id,
-        "chapter_id": progress.chapter_id,
-        "marks": progress.marks,
-        "total_marks": progress.total_marks,
-        "completion_status": progress.completion_status,
-        "created_at": datetime.utcnow()
-    }
-    progress_collection.document(progress_id).set(new_progress)
-    return new_progress
+def log_progress(user_id: str, progress_data: dict):
+    """Logs a new progress entry inside the user's progress subcollection in Firestore."""
+    try:
+        progress_ref: DocumentReference = db.collection("users").document(user_id).collection("progress").document()
+        progress_data["timestamp"] = firestore.SERVER_TIMESTAMP  # Firestore will set timestamp
+        progress_ref.set(progress_data)
 
-def get_student_progress(student_id: str):
-    progress_records = progress_collection.where("student_id", "==", student_id).stream()
-    return [record.to_dict() for record in progress_records]
+        # Fetch document to get Firestore-populated timestamp
+        saved_progress = progress_ref.get().to_dict()
+        saved_progress["id"] = progress_ref.id
 
-def update_progress_status(progress_id: str, status: str):
-    progress_ref = progress_collection.document(progress_id)
-    if not progress_ref.get().exists:
-        raise ValueError("Progress record not found")
+        # Ensure FastAPI serialization by removing Firestore Sentinels
+        return jsonable_encoder(saved_progress)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error logging progress: {str(e)}")
 
-    progress_ref.update({"completion_status": status})
-    return {"id": progress_id, "completion_status": status}
+def get_student_progress(user_id: str):
+    """Fetches all progress entries for a student from Firestore."""
+    try:
+        progress_ref = db.collection("users").document(user_id).collection("progress")
+        progress_docs = progress_ref.stream()
+        return [{**doc.to_dict(), "id": doc.id} for doc in progress_docs if doc.exists]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error fetching progress: {str(e)}")
+
+def update_progress_status(user_id: str, progress_id: str, progress_update: dict):
+    """Updates an existing progress entry in Firestore."""
+    try:
+        progress_ref = db.collection("users").document(user_id).collection("progress").document(progress_id)
+        doc = progress_ref.get()
+        if not doc.exists:
+            raise HTTPException(status_code=404, detail="Progress entry not found")
+
+        # Add Firestore's server timestamp for tracking updates
+        progress_update["updated_at"] = firestore.SERVER_TIMESTAMP
+
+        # Update Firestore document
+        progress_ref.update(progress_update)
+
+        # Fetch updated document after Firestore processing
+        updated_doc = progress_ref.get().to_dict()
+        updated_doc["id"] = progress_id
+
+        # Ensure FastAPI serialization by removing Firestore Sentinels
+        return jsonable_encoder(updated_doc)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error updating progress: {str(e)}")
