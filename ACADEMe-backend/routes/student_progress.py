@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
-from services.progress_service import log_progress, get_student_progress, update_progress_status
+from services.progress_service import log_progress, get_student_progress_list, update_progress_status
 from models.progress_model import ProgressCreate, ProgressUpdate
 from utils.auth import get_current_user
 
@@ -16,7 +16,7 @@ def track_progress(progress_data: ProgressCreate, user: dict = Depends(get_curre
 @router.get("/")
 def fetch_student_progress(user: dict = Depends(get_current_user)):
     """Fetches all progress records for a student."""
-    progress = get_student_progress(user["id"])
+    progress = get_student_progress_list(user["id"])
     if not progress:
         raise HTTPException(status_code=404, detail="No progress records found")
     return {"message": "Progress records fetched successfully", "progress": progress}

@@ -208,3 +208,40 @@ class QuizService:
 
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Error fetching questions: {str(e)}")
+
+    @staticmethod
+    def get_all_quizzes() -> dict:
+        """Fetch all quizzes across courses and return a mapping {quiz_id: quiz_title}."""
+        try:
+            quiz_mapping = {}
+
+            # Fetch all courses
+            courses = db.collection("courses").stream()
+            for course in courses:
+                course_id = course.id
+
+                # Fetch all topics in this course
+                topics = db.collection("courses").document(course_id).collection("topics").stream()
+                for topic in topics:
+                    topic_id = topic.id
+
+                    # Fetch quizzes under the topic
+                    quizzes = db.collection("courses").document(course_id).collection("topics").document(topic_id).collection("quizzes").stream()
+                    for quiz in quizzes:
+                        quiz_data = quiz.to_dict()
+                        quiz_mapping[quiz.id] = quiz_data.get("title", "Unknown Quiz")
+
+                    # Fetch subtopics in the topic
+                    subtopics = db.collection("courses").document(course_id).collection("topics").document(topic_id).collection("subtopics").stream()
+                    for subtopic in subtopics:
+                        subtopic_id = subtopic.id
+
+                        # Fetch quizzes under subtopics
+                        subtopic_quizzes = db.collection("courses").document(course_id).collection("topics").document(topic_id).collection("subtopics").document(subtopic_id).collection("quizzes").stream()
+                        for quiz in subtopic_quizzes:
+                            quiz_data = quiz.to_dict()
+                            quiz_mapping[quiz.id] = quiz_data.get("title", "Unknown Quiz")
+
+            return quiz_mapping
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Error fetching all quizzes: {str(e)}")

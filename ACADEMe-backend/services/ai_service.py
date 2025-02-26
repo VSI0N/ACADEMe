@@ -1,46 +1,51 @@
-from firebase_admin import firestore
-from models.ai_model import AIAnalysisRequest
 import google.generativeai as genai
-import os
+import json
+from config.settings import GEMINI_API_KEY
+from services.progress_service import fetch_student_performance
+from services.quiz_service import QuizService
 
-# Firestore connection
-db = firestore.client()
-progress_collection = db.collection("student_progress")
+genai.configure(api_key=GEMINI_API_KEY)
 
-# Google Gemini API setup
-genai.configure(api_key=os.getenv("GOOGLE_GEMINI_API_KEY"))
-
-def analyze_student_performance(request: AIAnalysisRequest):
-    # Fetch student progress data
-    progress_records = progress_collection.where("student_id", "==", request.student_id).stream()
-    progress_data = [record.to_dict() for record in progress_records]
-
-    if not progress_data:
-        return {"error": "No progress data found for the student"}
-
-    # Prepare AI input
-    ai_prompt = f"""
-    Analyze the following student progress data and provide insights:
-    {progress_data}
-    
-    Generate key observations, strengths, weaknesses, and study recommendations.
+async def get_recommendations(user_id: str):
+    """
+    Fetch student progress, analyze it using Gemini AI, and return personalized recommendations.
     """
 
-    # Call Google Gemini AI
-    model = genai.GenerativeModel("gemini-pro")
-    response = model.generate_content(ai_prompt)
+    progress_data = await fetch_student_performance(user_id)
 
-    if response and response.candidates:
-        ai_result = response.candidates[0].content.parts[0].text
-    else:
-        ai_result = "Unable to generate insights at this time."
+    if isinstance(progress_data, str):
+        try:
+            progress_data = json.loads(progress_data)
+        except json.JSONDecodeError:
+            raise ValueError(f"Invalid JSON format in progress data: {progress_data}")
 
-    # Extract recommendations (mocked for now)
-    recommendations = ["Revise algebra basics", "Practice more physics numericals"]
+    if isinstance(progress_data, dict):
+        progress_data = [progress_data]
 
-    return {
-        "student_id": request.student_id,
-        "insights": ai_result,
-        "recommendations": recommendations,
-        "confidence_score": 0.9  # Placeholder confidence score
-    }
+    if not isinstance(progress_data, list):
+        raise ValueError(f"Expected a list, but got: {type(progress_data)}")
+
+    quiz_mapping = QuizService.get_all_quizzes()  # ✅ No `await` needed
+
+    for record in progress_data:
+        if isinstance(record, dict):
+            quiz_id = record.get("quiz_id")
+            if quiz_id and quiz_id in quiz_mapping:
+                record["quiz_title"] = quiz_mapping[quiz_id]
+        else:
+            raise ValueError(f"Unexpected progress data format: {record}")
+
+    prompt = f"""
+    Analyze the student's quiz performance and progress data: {progress_data}.
+    Suggest areas of improvement, a learning roadmap, and personalized strategies. Also make all your suggestions concise and to the point.
+    Also Remember each quiz is worth 100 points.
+    """
+
+    model = genai.GenerativeModel("gemini-1.5-flash")
+    response = model.generate_content(prompt)
+
+    response_text = response.text
+    for quiz_id, quiz_title in quiz_mapping.items():
+        response_text = response_text.replace(quiz_id, f'"{quiz_title}"')
+
+    return {"recommendations": response_text}  # ✅ Fixed incorrect `await`

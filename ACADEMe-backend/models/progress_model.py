@@ -20,3 +20,6 @@ class ProgressUpdate(BaseModel):
     status: Optional[str] = None
     score: Optional[float] = None
     metadata: Optional[Dict] = Field(default_factory=dict)
+
+class ProgressVisualResponse(BaseModel):
+    visual_data: dict
