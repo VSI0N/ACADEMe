@@ -11,3 +11,4 @@ pydantic[email]
 google-generativeai
 cloudinary
 python-multipart
+matplotlib

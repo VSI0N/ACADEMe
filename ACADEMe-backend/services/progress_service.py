@@ -3,9 +3,15 @@ from fastapi import HTTPException
 from typing import Dict, Any, List
 from services.quiz_service import QuizService
 from google.cloud.firestore import DocumentReference
+from collections import defaultdict
 from datetime import datetime
+import matplotlib.pyplot as plt
+import base64
+from io import BytesIO
 from fastapi.encoders import jsonable_encoder
 import asyncio
+from models.graph_model import ProgressVisualResponse
+import json
 
 db = firestore.client()
 
@@ -83,20 +89,93 @@ def fetch_quiz_progress(user_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error fetching quiz progress: {str(e)}")
 
-def get_progress_visuals(user_id: str):
-    """Fetches graphical data for student progress."""
+def get_progress_visuals(progress_data):
     try:
-        progress_data = get_student_progress(user_id)  # Fetch all progress
+        visual_data = defaultdict(lambda: {
+            "quizzes": 0,
+            "materials_read": 0,
+            "avg_score": 0.0,
+            "quiz_count": 0,  # ✅ Temporary count of completed quizzes
+            "quiz_scores": [],
+            "score_timeline": [],
+            "time_spent_per_day": defaultdict(int)  # ✅ Track time spent per day
+        })
 
-        chart_data = {
-            "chapters": [p.get("topic_id", "Unknown") for p in progress_data],
-            "marks": [p.get("score", 0) for p in progress_data],
-            "time_spent": [p["metadata"].get("time_spent", "0 min") for p in progress_data if "metadata" in p]
-        }
+        for entry in progress_data:
+            topic_id = entry["topic_id"]
+            activity_type = entry["activity_type"]
+            status = entry["status"]
+            score = entry.get("score")
+            metadata = entry.get("metadata", {})
 
-        return {"visual_data": chart_data}
+            # ✅ Ensure topic_id exists
+            if topic_id not in visual_data:
+                visual_data[topic_id] = {
+                    "quizzes": 0,
+                    "materials_read": 0,
+                    "avg_score": 0.0,
+                    "quiz_count": 0,
+                    "quiz_scores": [],
+                    "score_timeline": [],
+                    "time_spent_per_day": defaultdict(int)
+                }
+
+            # ✅ Extract time spent
+            time_spent = 0
+            if "duration" in metadata or "time_spent" in metadata:
+                time_str = metadata.get("duration") or metadata.get("time_spent")
+                time_spent = int(time_str.split()[0])  # Convert '10 min' → 10
+
+            # ✅ Extract date for daily tracking
+            timestamp = entry["timestamp"]
+            if isinstance(timestamp, datetime):
+                timestamp = timestamp.isoformat()  # Convert to string for JSON
+            date_key = timestamp.split("T")[0]  # Extract 'YYYY-MM-DD'
+
+            # ✅ Store time spent per day
+            visual_data[topic_id]["time_spent_per_day"][date_key] += time_spent
+
+            # ✅ Store reading materials count
+            if activity_type == "reading" and entry["material_id"] is not None:
+                visual_data[topic_id]["materials_read"] += 1
+
+            # ✅ Handle quizzes
+            if activity_type == "quiz":
+                visual_data[topic_id]["quizzes"] += 1
+                if status == "completed" and score is not None:
+                    # Update avg_score
+                    current_avg = visual_data[topic_id]["avg_score"]
+                    count = visual_data[topic_id]["quiz_count"]
+                    new_avg = ((current_avg * count) + score) / (count + 1)
+                    visual_data[topic_id]["avg_score"] = new_avg
+                    visual_data[topic_id]["quiz_count"] += 1
+
+                    # ✅ Store discrete quiz scores for line graph
+                    visual_data[topic_id]["quiz_scores"].append(score)
+
+                    # ✅ Store timestamped score for avg_score over time
+                    visual_data[topic_id]["score_timeline"].append({
+                        "timestamp": timestamp,
+                        "score": score,
+                        "time_spent": time_spent  # ✅ Time spent in this session
+                    })
+
+        # ✅ Convert defaultdict to dict before returning
+        for topic_id in visual_data:
+            # Convert nested defaultdict to normal dict
+            visual_data[topic_id]["time_spent_per_day"] = dict(visual_data[topic_id]["time_spent_per_day"])
+
+            # ✅ Fix: Calculate total `time_spent` from `time_spent_per_day`
+            visual_data[topic_id]["time_spent"] = sum(visual_data[topic_id]["time_spent_per_day"].values())
+
+            # Remove temporary fields
+            visual_data[topic_id].pop("quiz_count", None)
+
+        return dict(visual_data)
+
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching progress visuals: {str(e)}")
+        print(f"🔥 Error in get_progress_visuals: {str(e)}")
+        return {}
 
 async def fetch_student_performance(user_id: str):
     """Fetches student performance for AI-driven recommendations, replacing quiz IDs with titles."""
@@ -132,3 +211,24 @@ async def fetch_student_performance(user_id: str):
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error fetching student performance: {str(e)}")
+
+def fetch_progress_from_firestore(user_id):
+    try:
+        db = firestore.client()
+        print(f"Fetching Firestore Progress for user ID: {user_id}")  # ✅ Log User ID
+
+        progress_ref = db.collection("users").document(user_id).collection("progress")
+        progress_docs = progress_ref.stream()  # ✅ Fetch multiple documents
+
+        progress_data = []
+        for doc in progress_docs:
+            progress_entry = doc.to_dict()
+            progress_entry["id"] = doc.id  # ✅ Add Firestore document ID
+            progress_data.append(progress_entry)
+
+        print(f"✅ Fetched {len(progress_data)} progress records for {user_id}")  # ✅ Log Count
+        return progress_data
+
+    except Exception as e:
+        print(f"🔥 Error fetching progress from Firestore: {str(e)}")
+        return []
