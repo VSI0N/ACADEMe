@@ -6,6 +6,15 @@
   <component name="ChangeListManager">
     <list default="true" id="305d9e88-f8ff-4439-948e-53cd16caa2bc" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/arm64-v8a/.cmake/api/v1/reply/index-2025-02-25T15-39-23-0956.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/arm64-v8a/configure_fingerprint.bin" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/arm64-v8a/configure_fingerprint.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/armeabi-v7a/.cmake/api/v1/reply/index-2025-02-25T15-39-38-0335.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/armeabi-v7a/configure_fingerprint.bin" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/armeabi-v7a/configure_fingerprint.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/x86/.cmake/api/v1/reply/index-2025-02-25T15-39-38-0573.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/x86/configure_fingerprint.bin" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/x86/configure_fingerprint.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/x86_64/.cmake/api/v1/reply/index-2025-02-25T15-39-38-0820.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/x86_64/configure_fingerprint.bin" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/x86_64/configure_fingerprint.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/google-services.json" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/google-services.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,7 +68,7 @@
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;io.flutter.reload.alreadyRun&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/preeti/Music/ACADEMe/ACADEMe-frontend/assets/design_course&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/subhajitroy/github/ACADEMe&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,

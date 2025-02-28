@@ -31,9 +31,14 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 ### 3️⃣ Install Dependencies
 
 ```bash
-pip install -r requirements.txt 
-# if error occurs run this:  pip install torch==2.5.1+cu121 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121 and run the command: pip install -r requirements.txt  
+pip install -r requirements.txt
 ```
+
+```bash
+# if error occurs run this:
+pip install torch==2.5.1+cu121 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+# then again run the command: pip install -r requirements.txt
+````
 
 ### 4️⃣ Create a .env File
 
@@ -244,5 +249,5 @@ To contribute:
 This project is licensed under the MIT License.
 ## 🛠 Developed By
 
-💡 Subhajit Roy
+💡 Team VISI0N
 🚀 Connect with me: [GitHub](https://github.com/HappySR) | [LinkedIn](www.linkedin.com/in/subhajit-roy-dev)
