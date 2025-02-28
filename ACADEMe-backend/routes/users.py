@@ -27,16 +27,23 @@ async def login(user: UserLogin):
 @router.get("/me")
 async def get_current_user_details(user: dict = Depends(get_current_user)):
     """Fetches the currently authenticated user's details."""
-    return {"user": user}
+    return {
+        "id": user["id"],
+        "name": user["name"],
+        "email": user["email"],
+        "student_class": user["student_class"],
+        "photo_url": user.get("photo_url", None)  # Handle missing photo_url gracefully
+    }
 
-@router.patch("/update-class/", response_model=dict)
+@router.patch("/update-class/")
 async def update_user_class(update_data: UserUpdateClass, user: dict = Depends(get_current_user)):
     """Updates the class of the logged-in user."""
     user_id = user["id"]  # Get the logged-in user's ID
     user_ref = db.collection("users").document(user_id)
 
     # Check if user exists
-    if not user_ref.get().exists:
+    user_doc = user_ref.get()
+    if not user_doc.exists:
         raise HTTPException(status_code=404, detail="User not found")
 
     # Update class field

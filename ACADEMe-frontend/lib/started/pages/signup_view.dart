@@ -1,15 +1,14 @@
 import 'package:ACADEMe/started/pages/login_view.dart';
-
 import '../../academe_theme.dart';
 import 'package:flutter/material.dart';
 import '../../home/auth/auth_service.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});
 
   @override
   State<SignUpView> createState() => _SignUpViewState();
-
 }
 
 class _SignUpViewState extends State<SignUpView> {
@@ -17,57 +16,68 @@ class _SignUpViewState extends State<SignUpView> {
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
+
   bool _agreeToTerms = false;
   bool _isLoading = false;
   bool _isPasswordVisible = false;
   bool _isGoogleLoading = false;
 
+  /// Handles user signup
   Future<void> _submitForm() async {
-    if (_formKey.currentState!.validate() && _agreeToTerms) {
-      setState(() => _isLoading = true);
-
-      final (user, errorMessage) = await AuthService().signUp(
-        _emailController.text.trim(),
-        _passwordController.text.trim(),
-        _usernameController.text.trim(),
-      );
-
-      setState(() => _isLoading = false);
-
-      if (user != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Account created successfully!')),
-        );
-        Navigator.pushReplacementNamed(context, '/courses');
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorMessage ?? 'Signup failed. Please try again')),
-        );
-      }
-    } else if (!_agreeToTerms) {
+    if (!_formKey.currentState!.validate()) return;
+    if (!_agreeToTerms) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('You must agree to terms and conditions')),
+        const SnackBar(content: Text('You must agree to the terms and conditions')),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    final (_, errorMessage) = await AuthService().signUp(
+      _emailController.text.trim(),
+      _passwordController.text.trim(),
+      _usernameController.text.trim(),
+      "SELECT",
+      "https://www.w3schools.com/w3images/avatar2.png"
+    );
+
+    setState(() => _isLoading = false);
+
+    // Fetch stored token
+    String? token = await _secureStorage.read(key: "access_token");
+
+    if (token != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Account created successfully!')),
+      );
+      Navigator.pushReplacementNamed(context, '/courses'); // Redirect to courses
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage ?? 'Signup failed. Please try again')),
       );
     }
   }
 
-  Future<void> _signInWithGoogle() async {
+  /// Handles Google Sign-Up
+  Future<void> _signUpWithGoogle() async {
     setState(() => _isGoogleLoading = true);
 
     final (user, errorMessage) = await AuthService().signInWithGoogle();
-
     setState(() => _isGoogleLoading = false);
 
-    if (user != null) {
+    if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Signed in with Google successfully!')),
+        SnackBar(content: Text(errorMessage ?? '❌ Google Sign-Up failed. Please try again')),
       );
-      Navigator.pushReplacementNamed(context, '/home');
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage ?? 'Google Sign-In failed. Please try again')),
-      );
+      return;
     }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('✅ Signed up successfully with Google!')),
+    );
+    Navigator.pushReplacementNamed(context, '/home');
   }
 
   @override
@@ -266,7 +276,7 @@ class _SignUpViewState extends State<SignUpView> {
                       child: SizedBox(
                         width: double.infinity,
                         child: ElevatedButton.icon(
-                          onPressed: _isGoogleLoading ? null : _signInWithGoogle,
+                          onPressed: _isGoogleLoading ? null : _signUpWithGoogle,
                           icon: _isGoogleLoading
                               ? CircularProgressIndicator(color: Colors.white)
                               : Padding(

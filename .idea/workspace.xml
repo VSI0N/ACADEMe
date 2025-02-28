@@ -6,15 +6,20 @@
   <component name="ChangeListManager">
     <list default="true" id="305d9e88-f8ff-4439-948e-53cd16caa2bc" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/arm64-v8a/.cmake/api/v1/reply/index-2025-02-25T15-39-23-0956.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/arm64-v8a/configure_fingerprint.bin" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/arm64-v8a/configure_fingerprint.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/armeabi-v7a/.cmake/api/v1/reply/index-2025-02-25T15-39-38-0335.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/armeabi-v7a/configure_fingerprint.bin" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/armeabi-v7a/configure_fingerprint.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/x86/.cmake/api/v1/reply/index-2025-02-25T15-39-38-0573.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/x86/configure_fingerprint.bin" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/x86/configure_fingerprint.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/x86_64/.cmake/api/v1/reply/index-2025-02-25T15-39-38-0820.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/x86_64/configure_fingerprint.bin" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/x86_64/configure_fingerprint.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/google-services.json" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/google-services.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/auth/auth_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/auth/auth_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/auth/auth_wrapper.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/auth/auth_wrapper.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/login_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/login_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/signup_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/signup_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/linux/flutter/generated_plugin_registrant.cc" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/linux/flutter/generated_plugin_registrant.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/linux/flutter/generated_plugins.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/linux/flutter/generated_plugins.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/macos/Flutter/GeneratedPluginRegistrant.swift" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Flutter/GeneratedPluginRegistrant.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/windows/flutter/generated_plugin_registrant.cc" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/flutter/generated_plugin_registrant.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/windows/flutter/generated_plugins.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/windows/flutter/generated_plugins.cmake" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

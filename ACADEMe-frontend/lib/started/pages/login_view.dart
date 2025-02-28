@@ -3,7 +3,7 @@ import 'package:ACADEMe/started/pages/signup_view.dart';
 import '../../academe_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:ACADEMe/home/auth/auth_service.dart';
-
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../home/pages/forgot_password.dart';
 
 class LogInView extends StatefulWidget {
@@ -17,50 +17,76 @@ class _LogInViewState extends State<LogInView> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
   bool _isPasswordVisible = false;
+  bool _isLoading = false;
   bool _isGoogleLoading = false;
 
+  /// Handles manual login
   Future<void> _submitForm() async {
-    if (_formKey.currentState!.validate()) {
-      final (user, errorMessage) = await AuthService().signIn(
-        _emailController.text.trim(),
-        _passwordController.text.trim(),
-      );
-
-      if (user != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Login successful!')),
-        );
-        Navigator.pushReplacementNamed(context, '/home');
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorMessage ?? 'Login failed. Invalid credentials')),
-        );
-      }
-    } else {
+    if (!_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please agree to the terms and conditions')),
+        const SnackBar(content: Text('⚠️ Please enter valid credentials')),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    final (user, errorMessage) = await AuthService().signIn(
+      _emailController.text.trim(),
+      _passwordController.text.trim(),
+    );
+
+    setState(() => _isLoading = false);
+
+    if (errorMessage != null) {
+      // ❌ Show error if login fails
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage)),
+      );
+      return;
+    }
+
+    if (user != null) {
+      // ✅ Store user info for later use (optional)
+      await _secureStorage.write(key: "user_id", value: user.id);
+      await _secureStorage.write(key: "user_name", value: user.name);
+      await _secureStorage.write(key: "user_email", value: user.email);
+      await _secureStorage.write(key: "student_class", value: user.studentClass);
+      await _secureStorage.write(key: "photo_url", value: user.photo_url);
+
+      // ✅ Success! Navigate to home page
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('✅ Login successful!')),
+      );
+      Navigator.pushReplacementNamed(context, '/home');
+    } else {
+      // ❌ Fallback error
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('❌ Login failed. Please try again.')),
       );
     }
   }
 
+  /// Handles Google Sign-In
   Future<void> _signInWithGoogle() async {
     setState(() => _isGoogleLoading = true);
 
     final (user, errorMessage) = await AuthService().signInWithGoogle();
-
     setState(() => _isGoogleLoading = false);
 
-    if (user != null) {
+    if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Signed in with Google successfully!')),
+        SnackBar(content: Text(errorMessage ?? '❌ Google Login failed. Please try again')),
       );
-      Navigator.pushReplacementNamed(context, '/home');
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage ?? 'Google Sign-In failed. Please try again')),
-      );
+      return;
     }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('✅ Logged in successfully with Google!')),
+    );
+    Navigator.pushReplacementNamed(context, '/home');
   }
 
   @override

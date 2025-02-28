@@ -7,6 +7,7 @@ class UserCreate(BaseModel):
     password: str
     student_class: str  # ✅ Added to store the class of the student
     name: str
+    photo_url: str
 
 class UserLogin(BaseModel):
     """Schema for user login."""
@@ -25,6 +26,7 @@ class TokenResponse(BaseModel):
     email: EmailStr  # Include email in response
     student_class: str  # Include class in response
     name: str  # ✅ Fix missing name field
+    photo_url: str
 
     class Config:
         arbitrary_types_allowed = True

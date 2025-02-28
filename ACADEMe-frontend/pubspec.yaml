@@ -54,6 +54,7 @@ dependencies:
   url_launcher: ^6.3.1
   http_parser: ^4.1.2
   mime: ^2.0.0
+  flutter_secure_storage: ^9.2.4
 
 
 
