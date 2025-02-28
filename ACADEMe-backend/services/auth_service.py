@@ -42,7 +42,7 @@ async def register_user(user: UserCreate):
             email=user.email,
             student_class=user.student_class,
             name=user.name,
-            photoUrl=user.photo_url
+            photo_url=user.photo_url
         )
 
     except auth.EmailAlreadyExistsError:
@@ -71,7 +71,7 @@ async def login_user(user: UserLogin):
                 "id": user_data["id"],
                 "email": user.email,
                 "student_class": user_data["student_class"],
-                "photoUrl": user_data.get("photo_url", None),
+                "photo_url": user_data.get("photo_url", None),
             }
         )
 
