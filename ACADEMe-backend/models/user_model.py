@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr
 import datetime
+from typing import Optional
 
 class UserCreate(BaseModel):
     """Schema for user registration."""
@@ -7,7 +8,7 @@ class UserCreate(BaseModel):
     password: str
     student_class: str  # ✅ Added to store the class of the student
     name: str
-    photo_url: str
+    photo_url: Optional[str]
 
 class UserLogin(BaseModel):
     """Schema for user login."""

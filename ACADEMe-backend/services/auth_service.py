@@ -31,7 +31,7 @@ async def register_user(user: UserCreate):
 
         # ✅ Generate JWT token
         token = create_jwt_token(
-            {"id": user_record.uid, "email": user.email, "student_class": user.student_class, "photoUrl": user.photo_url}
+            {"id": user_record.uid, "email": user.email, "student_class": user.student_class, "photo_url": user.photo_url}
         )
 
         return TokenResponse(
