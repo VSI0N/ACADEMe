@@ -41,7 +41,7 @@ async def get_recommendations(user_id: str):
     Also Remember each quiz is worth 100 points.
     """
 
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    model = genai.GenerativeModel("gemini-2.0-flash")
     response = model.generate_content(prompt)
 
     response_text = response.text
