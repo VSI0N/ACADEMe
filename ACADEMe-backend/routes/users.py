@@ -27,11 +27,14 @@ async def login(user: UserLogin):
 @router.get("/me")
 async def get_current_user_details(user: dict = Depends(get_current_user)):
     """Fetches the currently authenticated user's details."""
+    if not user:  # Ensure user is not None or an empty dict
+        raise HTTPException(status_code=401, detail="User not authenticated")
+
     return {
-        "id": user["id"],
-        "name": user["name"],
-        "email": user["email"],
-        "student_class": user["student_class"],
+        "id": user.get("id"),  # Use .get() to avoid KeyError
+        "name": user.get("name"),
+        "email": user.get("email"),
+        "student_class": user.get("student_class"),
         "photo_url": user.get("photo_url", None)  # Handle missing photo_url gracefully
     }
 

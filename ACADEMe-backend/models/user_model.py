@@ -27,7 +27,7 @@ class TokenResponse(BaseModel):
     email: EmailStr  # Include email in response
     student_class: str  # Include class in response
     name: str  # ✅ Fix missing name field
-    photo_url: str
+    photo_url: Optional[str]
 
     class Config:
         arbitrary_types_allowed = True

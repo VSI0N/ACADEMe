@@ -177,6 +177,20 @@ echo 'export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/service-account-file.
 source ~/.zshrc
 ```
 
+#### Run the following command:
+```bash
+printenv | grep CLOUDINARY
+```
+If the above command returns nothing then run the following command to load the CLOUDINARY api keys:
+```bash
+export $(grep -v '^#' .env | xargs)
+```
+After running the above command, again check if the following command returns something:
+```bash
+printenv | grep CLOUDINARY
+```
+If it returns CLOUDINARY keys then you are good to go...
+
 ### 6️⃣ Start the Server  
 ```bash
 uvicorn main:app --host 127.0.0.1 --port 8001 --reload

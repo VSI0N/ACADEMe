@@ -31,7 +31,13 @@ async def register_user(user: UserCreate):
 
         # ✅ Generate JWT token
         token = create_jwt_token(
-            {"id": user_record.uid, "email": user.email, "student_class": user.student_class, "photo_url": user.photo_url}
+            {
+                "id": user_record.uid,
+                "email": user.email,
+                "student_class": user.student_class,
+                "name": user.name,  # ✅ Fixed
+                "photo_url": user.photo_url,
+            }
         )
 
         return TokenResponse(
@@ -71,6 +77,7 @@ async def login_user(user: UserLogin):
                 "id": user_data["id"],
                 "email": user.email,
                 "student_class": user_data["student_class"],
+                "name": user_data.get("name", ""),
                 "photo_url": user_data.get("photo_url", None),
             }
         )
