@@ -5,9 +5,9 @@ This is the backend service for **ASKMe**, a powerful AI-driven conversational a
 ## 🚀 Features  
 - ✅ **Text Processing**: Understands and responds to text-based queries.  
 - 📄 **Document Analysis**: Extracts and processes text from **PDF, DOCX, and TXT** files.  
-- 🖼 Image Processing: Analyzes images, extracts text if applicable, understands visual content, and generates insights using **Gemini AI**.
+- 🖼 **Image Processing**: Analyzes images, extracts text if applicable, understands visual content, and generates insights using **Gemini AI**.
 - 🎙 **Audio Processing**: Transcribes and analyzes audio files using **Whisper AI**.  
-- 🎥 **Video Processing**: Extracts audio from video files, transcribes it, and processes it via **Gemini AI**.  
+- 🎥 **Video Processing**: Analyzes the video, and processes it via **Gemini AI**.  
 - 🌍 **Translation Support**: Detects language and translates responses using **LibreTranslate**.  
 - 🔥 **FastAPI-based API**: A robust, asynchronous backend built with **FastAPI**.  
 
@@ -205,6 +205,8 @@ askme-backend/
 │   ├── document_agent.py             # Handles document analysis
 │   ├── image_agent.py                # Handles image processing
 │   ├── response_translation_agent.py # Handles response translation
+│   ├── stt_agent.py                # Handles speech to text
+│   ├── text_agent.py                # Handles text processing
 │   ├── video_agent.py                # Handles video processing
 │
 │── models/
@@ -212,8 +214,8 @@ askme-backend/
 │
 │── services/
 │   ├── gemini_service.py          # Manages communication with Gemini AI
-│   ├── whisper_service.py         # Transcribes speech using Whisper
 │   ├── libretranslate_service.py  # Handles translation
+│   ├── whisper_service.py         # Transcribes speech using Whisper
 │
 │── utils/
 │   ├── language_detection.py      # Language detection

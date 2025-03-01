@@ -4,14 +4,14 @@ from config import GEMINI_API_KEY
 # Configure Gemini API key
 genai.configure(api_key=GEMINI_API_KEY)
 
-# Function to get a response from Gemini 1.5 Flash
-def get_gemini_response(prompt: str, chat_history=None, image_path=None) -> str:
+# Function to get a response from Gemini 2.0 Flash
+def get_gemini_response(prompt: str, chat_history=None, image_path=None, video_path=None) -> str:
     """
-    Interacts with Gemini 1.5 Flash to generate a response.
+    Interacts with Gemini 2.0 Flash to generate a response.
     """
     try:
         # Initialize the Gemini model
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        model = genai.GenerativeModel("gemini-2.0-flash")
 
         # Define system prompt for ASKMe's identity
         systemPrompt = "Your name is ASKMe, an AI assistant developed by Team VISI0N (do not always tell it to others)."
@@ -32,11 +32,18 @@ def get_gemini_response(prompt: str, chat_history=None, image_path=None) -> str:
             try:
                 with open(image_path, "rb") as img_file:
                     image_bytes = img_file.read()
-
                 parts.append({"mime_type": "image/jpeg", "data": image_bytes})  # Adjust mime_type if needed
-
             except Exception as e:
                 print(f"Error loading image: {e}")
+
+        # If a video is provided, attach it
+        if video_path:
+            try:
+                with open(video_path, "rb") as video_file:
+                    video_bytes = video_file.read()
+                parts.append({"mime_type": "video/mp4", "data": video_bytes})  # ✅ Correct MIME type for video
+            except Exception as e:
+                print(f"Error loading video: {e}")
 
         # Send request to Gemini
         response = model.generate_content(parts)
@@ -54,7 +61,7 @@ def get_gemini_response(prompt: str, chat_history=None, image_path=None) -> str:
 # Function for processing text using Gemini
 async def process_text_with_gemini(text: str) -> str:
     """
-    Processes text using Gemini 1.5 Flash.
+    Processes text using Gemini 2.0 Flash.
 
     Args:
         text (str): The text to be processed.
