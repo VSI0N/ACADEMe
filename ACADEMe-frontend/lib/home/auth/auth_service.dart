@@ -40,7 +40,8 @@ class AuthService {
   static const String _baseUrl = "http://10.0.2.2:8001"; // Backend URL
 
   /// ✅ Sign up user via backend & store access token securely
-  Future<(AppUser?, String?)> signUp(String email, String password, String name, String studentClass, String photo_url) async {
+  Future<(AppUser?, String?)> signUp(String email, String password, String name,
+      String studentClass, String photo_url) async {
     try {
       final response = await http.post(
         Uri.parse("$_baseUrl/api/users/signup"),
@@ -90,7 +91,8 @@ class AuthService {
         final String name = responseData["name"] ?? "Unknown";
         final String userEmail = responseData["email"] ?? "";
         final String studentClass = responseData["student_class"] ?? "SELECT";
-        final String photo_url = responseData["photo_url"] ?? "https://www.w3schools.com/w3images/avatar2.png";
+        final String photo_url = responseData["photo_url"] ??
+            "https://www.w3schools.com/w3images/avatar2.png";
 
         // ✅ Store token securely
         await _secureStorage.write(key: "access_token", value: accessToken);
@@ -104,14 +106,14 @@ class AuthService {
 
         // ✅ Return the AppUser object with `id`
         return (
-        AppUser(
-          id: userId.isNotEmpty ? userId : "N/A", // ✅ Ensure non-null `id`
-          name: name,
-          email: userEmail,
-          studentClass: studentClass,
-          photo_url: photo_url,
-        ),
-        null
+          AppUser(
+            id: userId.isNotEmpty ? userId : "N/A", // ✅ Ensure non-null `id`
+            name: name,
+            email: userEmail,
+            studentClass: studentClass,
+            photo_url: photo_url,
+          ),
+          null
         );
       } else {
         return (null, "Login failed: ${response.body}");
@@ -127,22 +129,27 @@ class AuthService {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) return (null, '❌ Google Sign-In canceled');
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      final firebase_auth.AuthCredential credential = firebase_auth.GoogleAuthProvider.credential(
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+      final firebase_auth.AuthCredential credential =
+          firebase_auth.GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      final firebase_auth.UserCredential userCredential = await _auth.signInWithCredential(credential);
+      final firebase_auth.UserCredential userCredential =
+          await _auth.signInWithCredential(credential);
       final firebase_auth.User? firebaseUser = userCredential.user;
 
       if (firebaseUser == null) return (null, '❌ Google authentication failed');
 
       final String email = firebaseUser.email ?? "";
       final String name = firebaseUser.displayName ?? "Google User";
-      final String photo_url = firebaseUser.photoURL ?? "https://www.w3schools.com/w3images/avatar2.png"; // ✅ Default avatar URL
+      final String photo_url = firebaseUser.photoURL ??
+          "https://www.w3schools.com/w3images/avatar2.png"; // ✅ Default avatar URL
 
-      if (email.isEmpty) return (null, '❌ Google authentication failed: Email not found');
+      if (email.isEmpty)
+        return (null, '❌ Google authentication failed: Email not found');
 
       const String defaultPassword = "GOOGLE_AUTH_ACADEMe";
       const String defaultClass = "SELECT";
@@ -152,7 +159,8 @@ class AuthService {
 
       if (!userExists) {
         // ✅ Register user using ACADEMe-backend
-        final (_, String? signupError) = await signUp(email, defaultPassword, name, defaultClass, photo_url);
+        final (_, String? signupError) =
+            await signUp(email, defaultPassword, name, defaultClass, photo_url);
         if (signupError != null) return (null, "❌ Signup failed: $signupError");
       }
 
@@ -160,7 +168,15 @@ class AuthService {
       final (_, String? loginError) = await signIn(email, defaultPassword);
       if (loginError != null) return (null, "❌ Login failed: $loginError");
 
-      return (AppUser(id: firebaseUser.uid, email: email, name: name, studentClass: defaultClass, photo_url: photo_url), null);
+      return (
+        AppUser(
+            id: firebaseUser.uid,
+            email: email,
+            name: name,
+            studentClass: defaultClass,
+            photo_url: photo_url),
+        null
+      );
     } catch (e) {
       return (null, "❌ An unexpected error occurred: $e");
     }
