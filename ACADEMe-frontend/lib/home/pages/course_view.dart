@@ -1,12 +1,11 @@
 import 'package:ACADEMe/academe_theme.dart';
 import 'package:flutter/material.dart';
-
 import '../../utils/constants/image_strings.dart';
-
+import 'package:ACADEMe/home/pages/ASKMe.dart';
+import 'package:ACADEMe/home/components/ASKMe_button.dart';
 
 class CourseListScreen extends StatefulWidget {
   const CourseListScreen({super.key});
-
 
   @override
   _CourseListScreenState createState() => _CourseListScreenState();
@@ -57,51 +56,59 @@ class _CourseListScreenState extends State<CourseListScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: AcademeTheme.appColor,
-        automaticallyImplyLeading: false,
-        elevation: 0,
-        title: Text(
-          "My Courses",
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
+    return ASKMeButton(
+      onFABPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ASKMe()),
+        );
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: AcademeTheme.appColor,
+          automaticallyImplyLeading: false,
+          elevation: 0,
+          title: Text(
+            "My Courses",
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
         ),
-      ),
-      body: Column(
-        children: [
-          Container(
-            color: Colors.white,
-            child: TabBar(
-              controller: _tabController,
-              labelColor: Colors.blue,
-              unselectedLabelColor: Colors.black54,
-              labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
-              indicator: UnderlineTabIndicator(
-                borderSide: BorderSide(width: 4, color: Colors.blue),
+        body: Column(
+          children: [
+            Container(
+              color: Colors.white,
+              child: TabBar(
+                controller: _tabController,
+                labelColor: Colors.blue,
+                unselectedLabelColor: Colors.black54,
+                labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+                indicator: UnderlineTabIndicator(
+                  borderSide: BorderSide(width: 4, color: Colors.blue),
+                ),
+                tabs: [
+                  Tab(text: "ALL"),
+                  Tab(text: "ON GOING"),
+                  Tab(text: "COMPLETED"),
+                ],
               ),
-              tabs: [
-                Tab(text: "ALL"),
-                Tab(text: "ON GOING"),
-                Tab(text: "COMPLETED"),
-              ],
             ),
-          ),
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                _buildCourseList(), // All Courses
-                _buildFilteredCourses(ongoing: true), // Ongoing Courses
-                _buildFilteredCourses(ongoing: false), // Completed Courses
-              ],
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildCourseList(), // All Courses
+                  _buildFilteredCourses(ongoing: true), // Ongoing Courses
+                  _buildFilteredCourses(ongoing: false), // Completed Courses
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

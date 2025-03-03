@@ -1,8 +1,8 @@
 import google.generativeai as genai
-from config import GEMINI_API_KEY
+from configs import GOOGLE_GEMINI_API_KEY
 
 # Configure Gemini API key
-genai.configure(api_key=GEMINI_API_KEY)
+genai.configure(api_key=GOOGLE_GEMINI_API_KEY)
 
 # Function to get a response from Gemini 2.0 Flash
 def get_gemini_response(prompt: str, chat_history=None, image_path=None, video_path=None) -> str:

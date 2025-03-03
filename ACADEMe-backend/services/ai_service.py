@@ -1,10 +1,10 @@
 import google.generativeai as genai
 import json
-from config.settings import GEMINI_API_KEY
+from config.settings import GOOGLE_GEMINI_API_KEY
 from services.progress_service import fetch_student_performance
 from services.quiz_service import QuizService
 
-genai.configure(api_key=GEMINI_API_KEY)
+genai.configure(api_key=GOOGLE_GEMINI_API_KEY)
 
 async def get_recommendations(user_id: str):
     """

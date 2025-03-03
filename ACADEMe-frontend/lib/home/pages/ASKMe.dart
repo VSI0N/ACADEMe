@@ -170,7 +170,7 @@ class _ASKMeState extends State<ASKMe> {
       [String prompt = '']) async {
     //ASKMe backend URL
     var url = Uri.parse(
-        'https://aee3-2401-4900-b23f-8444-2fdd-4d3e-85be-6e6b.ngrok-free.app/api/process_${fileType.toLowerCase()}');
+        'https://26bf-171-60-229-118.ngrok-free.app/api/process_${fileType.toLowerCase()}');
 
     var request = http.MultipartRequest('POST', url);
     request.fields.addAll({
@@ -299,9 +299,9 @@ class _ASKMeState extends State<ASKMe> {
         isConverting = true;
       });
 
-      // API URL
+      // Backend API URL
       var url = Uri.parse(
-          'https://aee3-2401-4900-b23f-8444-2fdd-4d3e-85be-6e6b.ngrok-free.app/api/process_stt');
+          'https://26bf-171-60-229-118.ngrok-free.app/api/process_stt');
 
       var request = http.MultipartRequest('POST', url);
 
@@ -398,7 +398,7 @@ class _ASKMeState extends State<ASKMe> {
     if (message.isNotEmpty) {
       // ASKMe backend URL
       var url = Uri.parse(
-          'https://aee3-2401-4900-b23f-8444-2fdd-4d3e-85be-6e6b.ngrok-free.app/api/process_text');
+          'https://26bf-171-60-229-118.ngrok-free.app/api/process_text');
 
       try {
         var response = await http.post(

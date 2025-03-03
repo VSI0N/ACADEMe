@@ -2,7 +2,7 @@ import io
 import os
 import tempfile
 import requests
-from config import LIBRETRANSLATE_URL
+from configs import LIBRETRANSLATE_URL
 from services.gemini_service import get_gemini_response
 
 # Supported image formats (MIME types)

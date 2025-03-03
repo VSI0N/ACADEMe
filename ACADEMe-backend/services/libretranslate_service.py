@@ -1,5 +1,5 @@
 import requests
-from config import LIBRETRANSLATE_URL
+from configs import LIBRETRANSLATE_URL
 
 def translate_text(text: str, source_lang: str, target_lang: str) -> str:
     data = {"q": text, "source": source_lang, "target": target_lang, "format": "text"}

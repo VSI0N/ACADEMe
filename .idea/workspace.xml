@@ -5,8 +5,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="305d9e88-f8ff-4439-948e-53cd16caa2bc" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/auth/auth_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/auth/auth_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/ASKMe.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/ASKMe.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/course_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/course_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/command/setopt.py" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/command/setopt.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ASKMe-backend/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ASKMe-backend/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ASKMe-backend/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ASKMe-backend/agents/audio_agent.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ASKMe-backend/agents/document_agent.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ASKMe-backend/agents/image_agent.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ASKMe-backend/agents/response_translation_agent.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ASKMe-backend/agents/stt_agent.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ASKMe-backend/agents/text_agent.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ASKMe-backend/agents/video_agent.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ASKMe-backend/app.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ASKMe-backend/config.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ASKMe-backend/models/message_model.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ASKMe-backend/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ASKMe-backend/services/gemini_service.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ASKMe-backend/services/libretranslate_service.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ASKMe-backend/services/whisper_service.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ASKMe-backend/utils/language_detection.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,9 +99,11 @@
       <recent name="C:\Clone\ACADEMe\lib\home" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/ACADEMe-backend" />
+      <recent name="$PROJECT_DIR$/ACADEMe-backend/utils" />
+      <recent name="$PROJECT_DIR$/ACADEMe-backend/services" />
+      <recent name="$PROJECT_DIR$/ACADEMe-backend/models" />
       <recent name="$PROJECT_DIR$/lib/home/pages" />
-      <recent name="$PROJECT_DIR$/lib/home/auth" />
-      <recent name="$PROJECT_DIR$/assets/academe" />
     </key>
   </component>
   <component name="RunManager">

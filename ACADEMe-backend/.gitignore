@@ -5,3 +5,30 @@ routes/__pycache__
 utils/__pycache__
 services/__pycache__
 models/__pycache__
+# Ignore the virtual environment
+venv/
+pyvenv.cfg
+
+# Ignore compiled Python files and cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore environment variables & secrets
+.env
+
+# Ignore IDE/editor-specific files
+.vscode/
+.idea/
+*.iml
+
+# Ignore logs and temporary files
+*.log
+*.sqlite3
+*.db
+.DS_Store
+*.swp
+
+# Ignore uploaded files (if they are temporary)
+static/uploads/
