@@ -180,8 +180,14 @@ class _ASKMeState extends State<ASKMe> {
     });
 
     String fileFieldName = (fileType == 'Image') ? 'image' : 'file';
-    request.files
-        .add(await http.MultipartFile.fromPath(fileFieldName, file.path));
+    String? mimeType = lookupMimeType(file.path);
+    mimeType ??= (fileType == 'Video') ? 'video/mp4' : 'application/octet-stream';
+
+    request.files.add(await http.MultipartFile.fromPath(
+      fileFieldName,
+      file.path,
+      contentType: MediaType.parse(mimeType),
+    ));
 
     var response = await request.send();
     String responseBody = await response.stream.bytesToString();
