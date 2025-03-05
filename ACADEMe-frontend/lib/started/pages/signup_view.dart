@@ -5,6 +5,9 @@ import '../../home/auth/auth_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ACADEMe/localization/l10n.dart';
 
+import '../../home/auth/role.dart';
+import '../../home/pages/bottomNav.dart';
+
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});
 
@@ -55,8 +58,15 @@ class _SignUpViewState extends State<SignUpView> {
         content: Text(
             L10n.getTranslatedText(context, 'Account created successfully!')),
       ));
-      Navigator.pushReplacementNamed(
-          context, '/courses'); // Redirect to courses
+      await UserRoleManager().fetchUserRole(); // ✅ Fetch user role before navigating
+      bool isAdmin = UserRoleManager().isAdmin;
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BottomNav(isAdmin: isAdmin),
+        ),
+      ); // Redirect to courses
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(errorMessage ??
