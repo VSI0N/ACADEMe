@@ -4,6 +4,7 @@ import 'package:ACADEMe/started/pages/course.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'dart:io';
+import 'home/auth/role.dart';
 import 'home/pages/my_courses.dart';
 import 'home/auth/auth_wrapper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,11 +26,16 @@ void main() async {
     print("❌ Firebase Initialization Error: $e");
   }
 
+  await UserRoleManager().fetchUserRole(); // Fetch role on app start
+  await UserRoleManager().loadRole();
+
   await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown
   ]).then((_) => runApp(MyApp()));
 }
+
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -55,7 +61,7 @@ class MyApp extends StatelessWidget {
       ),
       home: AnimatedSplashScreen(),
       routes: {
-        '/home': (context) => BottomNav(),
+        '/home': (context) => BottomNav(isAdmin: UserRoleManager().isAdmin,),
         '/courses' : (context) => SelectCourseScreen()
       },
     );

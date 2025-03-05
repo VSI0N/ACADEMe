@@ -5,30 +5,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="305d9e88-f8ff-4439-948e-53cd16caa2bc" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/admin_panel/SubTopicContent.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/admin_panel/SubtopicQuiz.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/admin_panel/TopicQuiz.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/admin_panel/courses.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/admin_panel/material.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/admin_panel/subtopic.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/admin_panel/topic.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/auth/role.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/auth/auth_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/auth/auth_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/auth/auth_wrapper.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/auth/auth_wrapper.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/ASKMe.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/ASKMe.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/course_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/course_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/command/setopt.py" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/venv/lib/python3.10/site-packages/setuptools/command/setopt.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASKMe-backend/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASKMe-backend/LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASKMe-backend/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASKMe-backend/agents/audio_agent.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASKMe-backend/agents/document_agent.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASKMe-backend/agents/image_agent.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASKMe-backend/agents/response_translation_agent.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASKMe-backend/agents/stt_agent.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASKMe-backend/agents/text_agent.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASKMe-backend/agents/video_agent.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASKMe-backend/app.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASKMe-backend/config.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASKMe-backend/models/message_model.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASKMe-backend/requirements.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASKMe-backend/services/gemini_service.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASKMe-backend/services/libretranslate_service.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASKMe-backend/services/whisper_service.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASKMe-backend/utils/language_detection.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/bottomNav.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/bottomNav.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/home_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/home_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/course.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/course.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/login_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/login_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/signup_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/signup_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/widget/homepage_drawer.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/widget/homepage_drawer.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/macos/Flutter/GeneratedPluginRegistrant.swift" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Flutter/GeneratedPluginRegistrant.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,7 +79,7 @@
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;io.flutter.reload.alreadyRun&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/subhajitroy/github/ACADEMe&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/preeti/Pictures/ACADEMe/ACADEMe/ACADEMe-frontend/lib/home&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
@@ -92,11 +89,11 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/ACADEMe-frontend/lib/home" />
       <recent name="$PROJECT_DIR$/ACADEMe-frontend/assets/design_course" />
       <recent name="C:\Clone\ACADEMe\assets\design_course" />
       <recent name="C:\Clone\ACADEMe\assets\images" />
       <recent name="C:\Clone\ACADEMe\lib\utils\theme\custom_themes" />
-      <recent name="C:\Clone\ACADEMe\lib\home" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/ACADEMe-backend" />

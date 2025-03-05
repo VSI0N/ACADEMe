@@ -4,14 +4,16 @@ import '../../academe_theme.dart';
 import 'package:ACADEMe/home/components/ASKMe_button.dart';
 import 'package:ACADEMe/widget/homepage_drawer.dart';
 import 'dart:math';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../courses/linear_algebra/Linear_algebra.dar.dart';
 
 class HomePage extends StatelessWidget {
   final VoidCallback onProfileTap;
   final VoidCallback onAskMeTap;
+  final PageController _pageController = PageController();
 
-  const HomePage({
+  HomePage({
     Key? key,
     required this.onProfileTap,
     required this.onAskMeTap,
@@ -61,375 +63,597 @@ class HomePage extends StatelessWidget {
               topRight: Radius.circular(24),
             ),
           ),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Search Bar
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0), // Upper padding
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Search',
-                      prefixIcon: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 12.0, right: 8.0), // Spacing
-                        child: Transform.rotate(
-                          angle: -1.57, // Rotate 90 degrees counterclockwise
-                          child: const Icon(
-                              Icons.tune), // Rotated Tune Icon (Vertical)
-                        ),
-                      ),
-                      suffixIcon: const Padding(
-                        padding: EdgeInsets.only(right: 12.0),
-                        child: Icon(Icons.search), // Search icon on the right
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(26.0),
-                        borderSide: BorderSide.none,
-                      ),
-                      filled: true,
-                      fillColor: const Color.fromARGB(205, 232, 238, 239),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                Container(
+          child: Column(
+            // Use Column instead of SingleChildScrollView
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
                   padding: const EdgeInsets.all(16.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12.0),
-                    border: Border.all(
-                      color: Colors.grey.shade300, // Border color
-                      width: 1.5, // Border width
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1), // Subtle shadow
-                        blurRadius: 8,
-                        spreadRadius: 2,
-                        offset: Offset(0, 4),
-                      ),
-                    ],
-                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          // Circular Image Container
-                          Container(
-                            width: 60,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.black,
-                            ),
-                            child: ClipOval(
-                              child: SizedBox(
-                                width: 30, // Reduced by 15%
-                                height: 30, // Reduced by 15%
-                                child: Image.asset(
-                                  "assets/icons/ASKMe.png",
-                                  fit: BoxFit
-                                      .contain, // Ensures it fits within the new size
-                                ),
+                      // Search Bar
+                      Padding(
+                        padding:
+                        const EdgeInsets.only(top: 10.0), // Upper padding
+                        child: TextField(
+                          decoration: InputDecoration(
+                            hintText: 'Search',
+                            prefixIcon: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 12.0, right: 8.0), // Spacing
+                              child: Transform.rotate(
+                                angle:
+                                -1.57, // Rotate 90 degrees counterclockwise
+                                child: const Icon(
+                                    Icons.tune), // Rotated Tune Icon (Vertical)
                               ),
                             ),
+                            suffixIcon: const Padding(
+                              padding: EdgeInsets.only(right: 12.0),
+                              child: Icon(
+                                  Icons.search), // Search icon on the right
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(26.0),
+                              borderSide: BorderSide.none,
+                            ),
+                            filled: true,
+                            fillColor: const Color.fromARGB(205, 232, 238, 239),
                           ),
+                        ),
+                      ),
 
-                          const SizedBox(width: 12),
+                      const SizedBox(height: 20),
 
-                          // Texts
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text(
-                                "Your Personal Tutor",
-                                style: TextStyle(
-                                  color: Color.fromARGB(255, 10, 10, 10),
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
+                      Container(
+                        padding: const EdgeInsets.all(16.0),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12.0),
+                          border: Border.all(
+                            color: Colors.grey.shade300, // Border color
+                            width: 1.5, // Border width
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black
+                                  .withOpacity(0.1), // Subtle shadow
+                              blurRadius: 8,
+                              spreadRadius: 2,
+                              offset: Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                // Circular Image Container
+                                Container(
+                                  width: 60,
+                                  height: 60,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.black,
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(
+                                        7), // Adjust padding to reduce image size
+                                    child: ClipOval(
+                                      child: Image.asset(
+                                        "assets/icons/ASKMe.png",
+                                        fit: BoxFit
+                                            .contain, // Ensures the image fits within the padding
+                                      ),
+                                    ),
+                                  ),
                                 ),
+
+                                const SizedBox(width: 12),
+
+                                // Texts
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: const [
+                                    Text(
+                                      "Your Personal Tutor",
+                                      style: TextStyle(
+                                        color: Color.fromARGB(255, 10, 10, 10),
+                                        fontSize: 24,
+                                        fontWeight: FontWeight
+                                            .w800, // Even bolder than FontWeight.bold
+                                        fontFamily:
+                                        "Roboto", // Use built-in font
+                                      ),
+                                    ),
+                                    SizedBox(height: 4),
+                                    Text(
+                                      "ASKMe",
+                                      style: TextStyle(
+                                        color: Color.fromARGB(255, 9, 9, 9),
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+
+                            // Input Field with Send Icon
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: SizedBox(
+                                    height: 40, // Adjust this value as needed
+                                    child: TextField(
+                                      decoration: InputDecoration(
+                                        contentPadding: EdgeInsets.symmetric(
+                                            vertical: 10,
+                                            horizontal: 12), // Adjust padding
+                                        hintText: "ASKMe Anything...",
+                                        hintStyle:
+                                        TextStyle(color: Colors.grey[600]),
+                                        filled: true,
+                                        fillColor: Colors.white,
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                          BorderRadius.circular(8),
+                                          borderSide: BorderSide(
+                                            color: Colors.grey.shade400,
+                                            width: 1.5,
+                                          ),
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderRadius:
+                                          BorderRadius.circular(12),
+                                          borderSide: BorderSide(
+                                            color: Colors.grey.shade300,
+                                            width: 1.5,
+                                          ),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius:
+                                          BorderRadius.circular(12),
+                                          borderSide: BorderSide(
+                                            color: Colors.blue,
+                                            width: 2,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+
+                                const SizedBox(width: 8),
+
+                                // Send Icon Outside
+                                Transform.rotate(
+                                  angle: -pi / 4, // Rotates 45° to the left
+                                  child: IconButton(
+                                    icon: const Icon(Icons.send,
+                                        color: Colors.blue, size: 24),
+                                    onPressed: () {
+                                      // Send button action
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      // My Progress Section
+                      Card(
+                        color: Colors
+                            .indigoAccent, // Background color similar to the image
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                          BorderRadius.circular(12.0), // Rounded edges
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 15.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              // Left Section: Title & Subtitle
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  Text(
+                                    "My Progress",
+                                    style: TextStyle(
+                                      fontSize: 26,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    "Track your progress",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.white70,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              SizedBox(height: 4),
-                              Text(
-                                "ASKMe",
-                                style: TextStyle(
-                                  color: Color.fromARGB(255, 9, 9, 9),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
+
+                              // Right Section: Fire Icon with Badge
+                              Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Container(
+                                    width: 50,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: const Color.fromARGB(255, 247, 177,
+                                          55), // Fire icon background
+                                    ),
+                                    child: const Icon(
+                                        Icons.local_fire_department,
+                                        color: Colors.white,
+                                        size: 24),
+                                  ),
+                                  Positioned(
+                                    bottom: -2,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8, vertical: 2),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: const Text(
+                                        "420",
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [
+                          Text(
+                            "Continue Learning",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20),
+                          ),
+                          Text(
+                            "See All",
+                            style: TextStyle(color: Colors.blue),
                           ),
                         ],
                       ),
                       const SizedBox(height: 16),
+                      learningCard(
+                          "Linear Algebra", 4, 9, 34, Colors.pink[100]!, () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LinearAlgebraScreen()),
+                        );
+                      }),
+                      const SizedBox(height: 12),
+                      learningCard(
+                          "Atoms & Molecules", 7, 13, 65, Colors.blue[100]!,
+                              () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LinearAlgebraScreen()),
+                            );
+                          }),
+                      const SizedBox(height: 12),
+                      learningCard(
+                          "Atoms & Molecules", 7, 13, 65, Colors.green[100]!,
+                              () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LinearAlgebraScreen()),
+                            );
+                          }),
 
-                      // Input Field with Send Icon
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              decoration: InputDecoration(
-                                hintText: "ASKMe Anything...",
-                                hintStyle: TextStyle(color: Colors.grey[600]),
-                                filled: true,
-                                fillColor: Colors.white,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      12), // Rounded edges
-                                  borderSide: BorderSide(
-                                    color: Colors.grey.shade400, // Border color
-                                    width: 1.5, // Border width
-                                  ),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide(
-                                    color: Colors.grey
-                                        .shade300, // Light grey border when not focused
-                                    width: 1.5,
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide(
-                                    color:
-                                    Colors.blue, // Blue border when focused
-                                    width: 2,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-
-                          const SizedBox(width: 8),
-
-                          // Send Icon Outside
-                          Transform.rotate(
-                            angle: -pi / 4, // Rotates 45° to the left
-                            child: IconButton(
-                              icon: const Icon(Icons.send,
-                                  color: Colors.blue, size: 28),
-                              onPressed: () {
-                                // Send button action
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                // ASKMe Section
-                Card(
-                  color: Colors
-                      .indigoAccent, // Background color similar to the image
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0), // Rounded edges
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 15.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // Left Section: Title & Subtitle
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Text(
-                              "My Progress",
-                              style: TextStyle(
-                                fontSize: 26,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            SizedBox(height: 4),
-                            Text(
-                              "Track your progress",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.white70,
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        // Right Section: Fire Icon with Badge
-                        Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Container(
-                              width: 50,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: const Color.fromARGB(
-                                    255, 247, 177, 55), // Fire icon background
-                              ),
-                              child: const Icon(Icons.local_fire_department,
-                                  color: Colors.white, size: 24),
-                            ),
-                            Positioned(
-                              bottom: -2,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 2),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: const Text(
-                                  "420",
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text(
-                      "Continue Learning",
-                      style:
-                      TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                    ),
-                    Text(
-                      "See All",
-                      style: TextStyle(color: Colors.blue),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                learningCard("Linear Algebra", 4, 9, 34, Colors.pink[100]!, () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => LinearAlgebraScreen()),
-                  );
-                }),
-                const SizedBox(height: 12),
-                learningCard("Atoms & Molecules", 7, 13, 65, Colors.blue[100]!,
-                        () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => LinearAlgebraScreen()),
-                      );
-                    }),
-                const SizedBox(height: 12),
-                learningCard("Atoms & Molecules", 7, 13, 65, Colors.green[100]!,
-                        () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => LinearAlgebraScreen()),
-                      );
-                    }),
-
-                Container(
-                  padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Top Banner
                       Container(
-                        height: 120,
+                        padding: EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: Colors.purple[200],
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(16),
                         ),
-                      ),
-                      SizedBox(height: 16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // **Swipeable Banner**
+                            buildSwipeableBanner(_pageController),
 
-                      // Section: All Courses
-                      Text("All Courses",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
-                      SizedBox(height: 8),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          CourseTag("English", Colors.red),
-                          CourseTag("Maths", Colors.orange),
-                        ],
-                      ),
-                      SizedBox(height: 8),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          CourseTag("Language", Colors.blue),
-                          CourseTag("Biology", Colors.green),
-                        ],
-                      ),
+                            SizedBox(height: 16),
 
-                      SizedBox(height: 16),
+                            // **All Courses Section with "See All" Button**
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16),
+                              child: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "All Courses",
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      // Handle 'See All' action
+                                    },
+                                    child: Text(
+                                      "See All",
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.blue),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
 
-                      // Section: My Courses
-                      Text("My Courses",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
-                      SizedBox(height: 8),
-                      Row(
-                        children: [
-                          Expanded(
-                              child: CourseCard("Biology", "16 Lessons",
-                                  Colors.purple[100]!)),
-                          SizedBox(width: 8),
-                          Expanded(
-                              child: CourseCard(
-                                  "Computer", "18 Lessons", Colors.blue[100]!)),
-                        ],
-                      ),
+                            SizedBox(height: 8),
 
-                      SizedBox(height: 16),
+                            // **Course Boxes - Two Per Row**
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 6,
+                                              horizontal: 10), // Reduced height
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                            BorderRadius.circular(22),
+                                            border: Border.all(
+                                                color: Colors.red, width: 1.5),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                padding: EdgeInsets.all(
+                                                    4), // Smaller circle
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Colors.red
+                                                      .withOpacity(0.2),
+                                                ),
+                                                child: Icon(Icons.book,
+                                                    size: 16,
+                                                    color: Colors.red),
+                                              ),
+                                              SizedBox(width: 10),
+                                              Text("English",
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                      FontWeight.w500)),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 8),
+                                      Expanded(
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 6, horizontal: 10),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                            BorderRadius.circular(20),
+                                            border: Border.all(
+                                                color: Colors.orange,
+                                                width: 1.5),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                padding: EdgeInsets.all(4),
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Colors.orange
+                                                      .withOpacity(0.2),
+                                                ),
+                                                child: Icon(Icons.calculate,
+                                                    size: 16,
+                                                    color: Colors.orange),
+                                              ),
+                                              SizedBox(width: 10),
+                                              Text("Maths",
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                      FontWeight.w500)),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 8),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 6, horizontal: 10),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                            BorderRadius.circular(20),
+                                            border: Border.all(
+                                                color: Colors.blue, width: 1.5),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                padding: EdgeInsets.all(4),
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Colors.blue
+                                                      .withOpacity(0.2),
+                                                ),
+                                                child: Icon(Icons.language,
+                                                    size: 16,
+                                                    color: Colors.blue),
+                                              ),
+                                              SizedBox(width: 10),
+                                              Text("Language",
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                      FontWeight.w500)),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 8),
+                                      Expanded(
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 6, horizontal: 10),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                            BorderRadius.circular(20),
+                                            border: Border.all(
+                                                color: Colors.green,
+                                                width: 1.5),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                padding: EdgeInsets.all(4),
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Colors.green
+                                                      .withOpacity(0.2),
+                                                ),
+                                                child: Icon(Icons.science,
+                                                    size: 16,
+                                                    color: Colors.green),
+                                              ),
+                                              SizedBox(width: 10),
+                                              Text("Biology",
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                      FontWeight.w500)),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
 
-                      // Section: Recommended
-                      Text("Recommended",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
-                      SizedBox(height: 8),
-                      Row(
-                        children: [
-                          Expanded(
-                              child: CourseCard(
-                                  "Marketing", "9 Lessons", Colors.pink[100]!)),
-                          SizedBox(width: 8),
-                          Expanded(
-                              child: CourseCard(
-                                  "Trading", "14 Lessons", Colors.green[100]!)),
-                        ],
+                            SizedBox(height: 16),
+
+                            // **My Courses Section**
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16),
+                              child: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "My Courses",
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      // Handle 'See All' action
+                                    },
+                                    child: Text(
+                                      "See All",
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.blue),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: CourseCard("Biology", "16 Lessons",
+                                        Colors.purple[100]!),
+                                  ),
+                                  SizedBox(width: 8),
+                                  Expanded(
+                                    child: CourseCard("Computer", "18 Lessons",
+                                        Colors.blue[100]!),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            SizedBox(height: 16),
+
+                            // **Recommended Section**
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16),
+                              child: Text(
+                                "Recommended",
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: CourseCard("Marketing", "9 Lessons",
+                                        Colors.pink[100]!),
+                                  ),
+                                  SizedBox(width: 8),
+                                  Expanded(
+                                    child: CourseCard("Trading", "14 Lessons",
+                                        Colors.green[100]!),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
         // Use drawer for left-side drawer
@@ -601,6 +825,56 @@ class SectionHeader extends StatelessWidget {
   }
 }
 
+// **Function for Swipeable Banner**
+Widget buildSwipeableBanner(PageController controller) {
+  return Container(
+    height: 140, // Adjusted height for ads + indicator
+    child: Column(
+      children: [
+        Expanded(
+          child: PageView(
+            controller: controller,
+            children: [
+              adContainer(Colors.purple[200]!, ""),
+              adContainer(Colors.blue[200]!, ""),
+              adContainer(Colors.green[200]!, ""),
+            ],
+          ),
+        ),
+        SizedBox(height: 8),
+        SmoothPageIndicator(
+          controller: controller,
+          count: 3,
+          effect: ExpandingDotsEffect(
+            activeDotColor: Colors.purple,
+            dotColor: Colors.grey[300]!,
+            dotHeight: 8,
+            dotWidth: 8,
+            expansionFactor: 2,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+// **Function to Create an Ad Container**
+Widget adContainer(Color color, String text) {
+  return Container(
+    margin: EdgeInsets.symmetric(horizontal: 8),
+    decoration: BoxDecoration(
+      color: color,
+      borderRadius: BorderRadius.circular(16),
+    ),
+    child: Center(
+      child: Text(
+        text,
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      ),
+    ),
+  );
+}
+
 // Widget for course tags
 class CourseTag extends StatelessWidget {
   final String text;
@@ -626,6 +900,38 @@ class CourseTag extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget CourseBox(IconData icon, String label, Color color) {
+  return Container(
+    padding: EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: color, width: 2),
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          padding: EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: color.withOpacity(0.2),
+          ),
+          child: Icon(
+            icon,
+            size: 24,
+            color: color,
+          ),
+        ),
+        SizedBox(width: 8),
+        Text(
+          label,
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+        ),
+      ],
+    ),
+  );
 }
 
 // Widget for course cards

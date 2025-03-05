@@ -4,6 +4,8 @@ import '../../academe_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:ACADEMe/home/auth/auth_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../../home/auth/role.dart';
+import '../../home/pages/bottomNav.dart';
 import '../../home/pages/forgot_password.dart';
 
 class LogInView extends StatefulWidget {
@@ -57,10 +59,15 @@ class _LogInViewState extends State<LogInView> {
       await _secureStorage.write(key: "photo_url", value: user.photo_url);
 
       // ✅ Success! Navigate to home page
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('✅ Login successful!')),
+      await UserRoleManager().fetchUserRole(); // ✅ Fetch user role before navigating
+      bool isAdmin = UserRoleManager().isAdmin;
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BottomNav(isAdmin: isAdmin),
+        ),
       );
-      Navigator.pushReplacementNamed(context, '/home');
     } else {
       // ❌ Fallback error
       ScaffoldMessenger.of(context).showSnackBar(

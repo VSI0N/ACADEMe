@@ -4,6 +4,8 @@ import 'package:ACADEMe/home/pages/home_view.dart';
 import 'package:ACADEMe/introduction_page.dart';
 import 'package:flutter/material.dart';
 
+import '../../home/auth/role.dart';
+
 void main() {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
@@ -143,7 +145,7 @@ class _SelectCourseScreenState extends State<SelectCourseScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => BottomNav(),
+                      builder: (context) => BottomNav(isAdmin: UserRoleManager().isAdmin,),
                     ),
                   );
                 }

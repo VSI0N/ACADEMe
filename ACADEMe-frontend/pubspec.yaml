@@ -55,6 +55,7 @@ dependencies:
   http_parser: ^4.1.2
   mime: ^2.0.0
   flutter_secure_storage: ^9.2.4
+  smooth_page_indicator: ^1.2.1
 
 
 
@@ -128,3 +129,5 @@ dependency_overrides:
   term_glyph: ^1.2.2
   test_api: ^0.7.4
   vm_service: ^15.0.0
+  shared_preferences: ^2.5.2
+

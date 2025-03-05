@@ -170,7 +170,7 @@ class _ASKMeState extends State<ASKMe> {
       [String prompt = '']) async {
     //ASKMe backend URL
     var url = Uri.parse(
-        'https://26bf-171-60-229-118.ngrok-free.app/api/process_${fileType.toLowerCase()}');
+        'http://10.0.2.2:8000/api/process_${fileType.toLowerCase()}');
 
     var request = http.MultipartRequest('POST', url);
     request.fields.addAll({
@@ -301,7 +301,7 @@ class _ASKMeState extends State<ASKMe> {
 
       // Backend API URL
       var url = Uri.parse(
-          'https://26bf-171-60-229-118.ngrok-free.app/api/process_stt');
+          'http://10.0.2.2:8000/api/process_stt');
 
       var request = http.MultipartRequest('POST', url);
 
@@ -398,7 +398,7 @@ class _ASKMeState extends State<ASKMe> {
     if (message.isNotEmpty) {
       // ASKMe backend URL
       var url = Uri.parse(
-          'https://26bf-171-60-229-118.ngrok-free.app/api/process_text');
+          'http://10.0.2.2:8000/api/process_text');
 
       try {
         var response = await http.post(

@@ -37,7 +37,7 @@ class AuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
-  static const String _baseUrl = "https://26bf-171-60-229-118.ngrok-free.app"; // Backend URL
+  static const String _baseUrl = "http://10.0.2.2:8000"; // Backend URL
 
   /// ✅ Sign up user via backend & store access token securely
   Future<(AppUser?, String?)> signUp(String email, String password, String name,

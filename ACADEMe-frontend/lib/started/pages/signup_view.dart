@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import '../../home/auth/auth_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import '../../home/auth/role.dart';
+import '../../home/pages/bottomNav.dart';
+
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});
 
@@ -49,10 +52,18 @@ class _SignUpViewState extends State<SignUpView> {
     String? token = await _secureStorage.read(key: "access_token");
 
     if (token != null) {
+      await UserRoleManager().fetchUserRole(); // ✅ Fetch user role before navigating
+      bool isAdmin = UserRoleManager().isAdmin;
+
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Account created successfully!')),
+        SnackBar(content: Text('Account created successfully!')),
       );
-      Navigator.pushReplacementNamed(context, '/courses'); // Redirect to courses
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BottomNav(isAdmin: isAdmin),
+        ),
+      ); // Redirect to courses
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(errorMessage ?? 'Signup failed. Please try again')),

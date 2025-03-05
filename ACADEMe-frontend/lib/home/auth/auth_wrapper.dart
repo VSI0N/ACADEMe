@@ -1,3 +1,4 @@
+import 'package:ACADEMe/home/auth/role.dart';
 import 'package:ACADEMe/home/pages/bottomNav.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -27,7 +28,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasData && snapshot.data == true) {
-          return const BottomNav(); // ✅ Go to main page if logged in
+          return BottomNav(isAdmin:UserRoleManager().isAdmin,); // ✅ Go to main page if logged in
         } else {
           return const AcademeScreen(); // Show login screen if not logged in
         }
