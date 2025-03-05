@@ -58,7 +58,7 @@ class _LogInViewState extends State<LogInView> {
 
       // ✅ Success! Navigate to home page
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(L10n.getTranslatedText(context, '⚠️ Please enter valid credentials'))),
+        SnackBar(content: Text(L10n.getTranslatedText(context, '✅ Login successful!'))),
       );
       Navigator.pushReplacementNamed(context, '/home');
     } else {

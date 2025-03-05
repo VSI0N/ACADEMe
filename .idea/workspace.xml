@@ -6,16 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="305d9e88-f8ff-4439-948e-53cd16caa2bc" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/bottomNav.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/bottomNav.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/course_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/course_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/forgot_password.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/forgot_password.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/my_community.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/my_community.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/profile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/profile.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/get-started_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/get-started_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/login_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/login_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/signup_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/signup_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

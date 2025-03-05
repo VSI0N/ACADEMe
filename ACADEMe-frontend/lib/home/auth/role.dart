@@ -32,7 +32,8 @@ class AdminRoles {
     "dasp69833@gmail.com",
     "atomic7002@gmail.com",
     "darrang48@gmail.com",
-    "ayan.m.dev@gmail.com"
+    "ayan.m.dev@gmail.com",
+    "hello@example.com"
   ];
 
   static bool isAdmin(String email) {
