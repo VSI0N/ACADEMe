@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../utils/constants/image_strings.dart';
 import 'package:ACADEMe/home/pages/ASKMe.dart';
 import 'package:ACADEMe/home/components/ASKMe_button.dart';
+import 'package:ACADEMe/localization/l10n.dart';
 
 class CourseListScreen extends StatefulWidget {
   const CourseListScreen({super.key});
@@ -70,7 +71,7 @@ class _CourseListScreenState extends State<CourseListScreen>
           automaticallyImplyLeading: false,
           elevation: 0,
           title: Text(
-            "My Courses",
+              L10n.getTranslatedText(context, 'My Courses'),
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
@@ -91,9 +92,9 @@ class _CourseListScreenState extends State<CourseListScreen>
                   borderSide: BorderSide(width: 4, color: Colors.blue),
                 ),
                 tabs: [
-                  Tab(text: "ALL"),
-                  Tab(text: "ON GOING"),
-                  Tab(text: "COMPLETED"),
+                  Tab(text: L10n.getTranslatedText(context, 'ALL')),
+                  Tab(text: L10n.getTranslatedText(context, 'ON GOING')),
+                  Tab(text: L10n.getTranslatedText(context, 'COMPLETED')),
                 ],
               ),
             ),

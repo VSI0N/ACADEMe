@@ -1,6 +1,7 @@
 import 'package:ACADEMe/started/pages/signup_view.dart';
 import 'package:flutter/material.dart';
 import '../../academe_theme.dart';
+import 'package:ACADEMe/localization/l10n.dart';
 
 class GetStartedView extends StatefulWidget {
   const GetStartedView({super.key});
@@ -122,7 +123,7 @@ class _GetStartedViewState extends State<GetStartedView>
                       padding:
                           const EdgeInsets.only(left: 64, right: 64, top: 10),
                       child: Text(
-                        "Level up your learning!",
+                        L10n.getTranslatedText(context, 'Level up your learning!'),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 20.0,
@@ -156,8 +157,8 @@ class _GetStartedViewState extends State<GetStartedView>
                             borderRadius: BorderRadius.circular(10),
                             color: const Color.fromRGBO(254, 223, 0, 1.000),
                           ),
-                          child: const Text(
-                            "Get Started",
+                          child: Text(
+                            L10n.getTranslatedText(context, 'Get Started'),
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -225,7 +226,7 @@ class _GetStartedViewState extends State<GetStartedView>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Level Up!",
+                                    L10n.getTranslatedText(context, 'Level Up!'),
                                     style: TextStyle(
                                       fontSize: 40,
                                       color: Colors.black87,
@@ -234,7 +235,7 @@ class _GetStartedViewState extends State<GetStartedView>
                                     ),
                                   ),
                                   Text(
-                                    "your",
+                                    L10n.getTranslatedText(context, 'your'),
                                     style: TextStyle(
                                       fontSize: 40,
                                       color: Colors.black87,
@@ -243,7 +244,7 @@ class _GetStartedViewState extends State<GetStartedView>
                                     ),
                                   ),
                                   Text(
-                                    "learning",
+                                    L10n.getTranslatedText(context, 'learning'),
                                     style: TextStyle(
                                       fontSize: 40,
                                       color: Colors.black87,

@@ -36,7 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   font_awesome_flutter: ^10.1.0
   flutter_rating_bar: ^4.0.1
-  intl: ^0.20.2
+  intl: ^0.19.0
   animations: ^2.0.3
   firebase_core: ^3.10.1
   cloud_firestore: ^5.6.2
@@ -56,6 +56,10 @@ dependencies:
   mime: ^2.0.0
   flutter_secure_storage: ^9.2.4
   smooth_page_indicator: ^1.2.1
+  provider: ^6.1.2
+  shared_preferences: ^2.5.2
+  flutter_localizations:
+    sdk: flutter
 
 
 
@@ -83,6 +87,7 @@ flutter:
     - assets/design_course/
     - assets/academe/
     - assets/icons/
+    - assets/l10n/
 
   # An image asset can refer to one or more resolution-specific "variants"
   # For details regarding adding assets from package dependencies, see

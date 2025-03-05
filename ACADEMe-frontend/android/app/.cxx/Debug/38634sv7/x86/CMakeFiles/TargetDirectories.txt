@@ -1,0 +1,2 @@
+/home/subhajitroy/github/ACADEMe/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/x86/CMakeFiles/edit_cache.dir
+/home/subhajitroy/github/ACADEMe/ACADEMe-frontend/android/app/.cxx/Debug/38634sv7/x86/CMakeFiles/rebuild_cache.dir

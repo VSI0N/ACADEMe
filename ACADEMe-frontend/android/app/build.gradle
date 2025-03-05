@@ -1,0 +1,45 @@
+plugins {
+    id "com.android.application"
+    // START: FlutterFire Configuration
+    id 'com.google.gms.google-services'
+    // END: FlutterFire Configuration
+    id "kotlin-android"
+    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+android {
+    namespace "com.example.flutter_app"  // Manually set the namespace
+
+    compileSdk 35  // Ensure compileSdkVersion is set to an appropriate version
+    ndkVersion flutter.ndkVersion
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+
+    defaultConfig {
+        // Specify your own unique Application ID
+        applicationId = "com.example.flutter_app"
+        minSdkVersion 23
+        targetSdkVersion 34  // Explicitly set targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            // Use your own signing config for release builds
+            signingConfig signingConfigs.debug
+        }
+    }
+}
+
+flutter {
+    source "../.."  // Ensure this is set to the correct path to your Flutter project
+}

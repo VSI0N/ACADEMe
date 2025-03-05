@@ -7,6 +7,7 @@ import 'home_view.dart';
 import 'my_community.dart';
 import 'my_courses.dart';
 import 'package:ACADEMe/home/pages/profile.dart';
+import 'package:ACADEMe/localization/l10n.dart';
 
 class BottomNav extends StatefulWidget {
   final bool isAdmin;
@@ -76,17 +77,17 @@ class _BottomNavState extends State<BottomNav> {
         type: BottomNavigationBarType.fixed,
         items: widget.isAdmin
             ? [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.school), label: 'Courses'),
-          BottomNavigationBarItem(icon: Icon(Icons.groups), label: 'Community'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-          BottomNavigationBarItem(icon: Icon(Icons.admin_panel_settings), label: 'Admin'),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: L10n.getTranslatedText(context, 'Home')),
+          BottomNavigationBarItem(icon: Icon(Icons.school), label: L10n.getTranslatedText(context, 'Courses')),
+          BottomNavigationBarItem(icon: Icon(Icons.groups), label: L10n.getTranslatedText(context, 'Community')),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: L10n.getTranslatedText(context, 'Profile')),
+          BottomNavigationBarItem(icon: Icon(Icons.admin_panel_settings), label: L10n.getTranslatedText(context, 'Admin')),
         ]
             : [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.school), label: 'Courses'),
-          BottomNavigationBarItem(icon: Icon(Icons.groups), label: 'Community'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: L10n.getTranslatedText(context, 'Home')),
+          BottomNavigationBarItem(icon: Icon(Icons.school), label: L10n.getTranslatedText(context, 'Courses')),
+          BottomNavigationBarItem(icon: Icon(Icons.groups), label: L10n.getTranslatedText(context, 'Community')),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: L10n.getTranslatedText(context, 'Profile')),
         ],
       ),
     );

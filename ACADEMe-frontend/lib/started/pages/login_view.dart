@@ -1,11 +1,9 @@
 import 'package:ACADEMe/started/pages/signup_view.dart';
-
+import 'package:ACADEMe/localization/l10n.dart';
 import '../../academe_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:ACADEMe/home/auth/auth_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import '../../home/auth/role.dart';
-import '../../home/pages/bottomNav.dart';
 import '../../home/pages/forgot_password.dart';
 
 class LogInView extends StatefulWidget {
@@ -28,7 +26,7 @@ class _LogInViewState extends State<LogInView> {
   Future<void> _submitForm() async {
     if (!_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('⚠️ Please enter valid credentials')),
+        SnackBar(content: Text(L10n.getTranslatedText(context, '⚠️ Please enter valid credentials'))),
       );
       return;
     }
@@ -59,19 +57,14 @@ class _LogInViewState extends State<LogInView> {
       await _secureStorage.write(key: "photo_url", value: user.photo_url);
 
       // ✅ Success! Navigate to home page
-      await UserRoleManager().fetchUserRole(); // ✅ Fetch user role before navigating
-      bool isAdmin = UserRoleManager().isAdmin;
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => BottomNav(isAdmin: isAdmin),
-        ),
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(L10n.getTranslatedText(context, '⚠️ Please enter valid credentials'))),
       );
+      Navigator.pushReplacementNamed(context, '/home');
     } else {
       // ❌ Fallback error
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('❌ Login failed. Please try again.')),
+        SnackBar(content: Text(L10n.getTranslatedText(context, '❌ Login failed. Please try again.'))),
       );
     }
   }
@@ -85,13 +78,13 @@ class _LogInViewState extends State<LogInView> {
 
     if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage ?? '❌ Google Login failed. Please try again')),
+        SnackBar(content: Text(errorMessage ?? L10n.getTranslatedText(context, '❌ Google Login failed. Please try again'))),
       );
       return;
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('✅ Logged in successfully with Google!')),
+      SnackBar(content: Text(L10n.getTranslatedText(context, '✅ Logged in successfully with Google!'))),
     );
     Navigator.pushReplacementNamed(context, '/home');
   }
@@ -144,7 +137,7 @@ class _LogInViewState extends State<LogInView> {
                               padding: const EdgeInsets.only(
                                   left: 30, right: 30),
                               child: Text(
-                                "Hello",
+                                L10n.getTranslatedText(context, 'Hello'),
                                 style: TextStyle(
                                   fontSize: 35.0,
                                   fontWeight: FontWeight.bold,
@@ -155,7 +148,7 @@ class _LogInViewState extends State<LogInView> {
                               padding: const EdgeInsets.only(
                                   left: 30, right: 30),
                               child: Text(
-                                "Welcome back",
+                                L10n.getTranslatedText(context, 'Welcome back'),
                                 style: TextStyle(
                                   fontSize: 20.0,
                                   color: Color(0xFF808080),
@@ -175,7 +168,7 @@ class _LogInViewState extends State<LogInView> {
                             Padding(
                               padding: const EdgeInsets.only(bottom: 4.0), // Adds space between text and text field
                               child: Text(
-                                "Email", // Add the text you want
+                                L10n.getTranslatedText(context, 'Email'), // Add the text you want
                                 style: TextStyle(
                                   fontSize: 18,
                                   color: Colors.black54, // Adjust color as needed
@@ -188,16 +181,16 @@ class _LogInViewState extends State<LogInView> {
                               decoration: InputDecoration(
                                 filled: true,
                                 fillColor: AcademeTheme.notWhite,
-                                labelText: "Email",
-                                hintText: "Enter your email",
+                                labelText: L10n.getTranslatedText(context, 'Email'),
+                                hintText: L10n.getTranslatedText(context, 'Enter your email'),
                                 prefixIcon: Icon(Icons.email),
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Please enter an email';
+                                  return L10n.getTranslatedText(context, 'Please enter an email');
                                 }
                                 if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                                  return 'Enter a valid email';
+                                  return L10n.getTranslatedText(context, 'Enter a valid email');
                                 }
                                 return null;
                               },
@@ -206,7 +199,7 @@ class _LogInViewState extends State<LogInView> {
                             Padding(
                               padding: const EdgeInsets.only(bottom: 4.0), // Adds space between text and text field
                               child: Text(
-                                "Password", // Add the text you want
+                                L10n.getTranslatedText(context, 'Password'), // Add the text you want
                                 style: TextStyle(
                                   fontSize: 18,
                                   color: Colors.black54, // Adjust color as needed
@@ -220,8 +213,8 @@ class _LogInViewState extends State<LogInView> {
                               decoration: InputDecoration(
                                 filled: true,
                                 fillColor: AcademeTheme.notWhite,
-                                labelText: "Password",
-                                hintText: "Enter your password",
+                                labelText: L10n.getTranslatedText(context, 'Password'),
+                                hintText: L10n.getTranslatedText(context, 'Enter your password'),
                                 prefixIcon: Icon(Icons.lock),
                                 suffixIcon: IconButton(
                                   icon: Icon(_isPasswordVisible
@@ -236,7 +229,7 @@ class _LogInViewState extends State<LogInView> {
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Please enter a password';
+                                  return L10n.getTranslatedText(context, 'Please enter a password');
                                 }
                                 return null;
                               },
@@ -256,7 +249,7 @@ class _LogInViewState extends State<LogInView> {
                               );
                             },
                             child: Text(
-                              'Forgot Password?',
+                              L10n.getTranslatedText(context, 'Forgot Password?'),
                               style: TextStyle(
                                 color: AcademeTheme.appColor, // Change this to your desired color
                                 fontWeight: FontWeight.w500, // Optional: Make it bold
@@ -291,7 +284,7 @@ class _LogInViewState extends State<LogInView> {
                                 ),
                                 SizedBox(width: 10), // Adds space between the image and the text
                                 Text(
-                                  'Log in',
+                                  L10n.getTranslatedText(context, 'Log in'),
                                   style: TextStyle(
                                     fontSize: 18, // Font size
                                     fontWeight: FontWeight.w500, // Font weight
@@ -305,7 +298,7 @@ class _LogInViewState extends State<LogInView> {
                       ),
                       SizedBox(height: 6,),
                       Text(
-                        'OR',
+                        L10n.getTranslatedText(context, 'OR'),
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.black54,
@@ -325,7 +318,7 @@ class _LogInViewState extends State<LogInView> {
                               child: Image.asset('assets/icons/google_icon.png', height: 22),
                             ),
                             label: Text(
-                              'Continue with Google',
+                              L10n.getTranslatedText(context, 'Continue with Google'),
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w500,
@@ -348,7 +341,7 @@ class _LogInViewState extends State<LogInView> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "Don't have an account?",
+                            L10n.getTranslatedText(context, 'Don\'t have an account?'),
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.black54,
@@ -363,7 +356,7 @@ class _LogInViewState extends State<LogInView> {
                               );
                             },
                             child: Text(
-                              "Signup",
+                              L10n.getTranslatedText(context, 'Signup'),
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,

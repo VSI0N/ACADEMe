@@ -5,26 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="305d9e88-f8ff-4439-948e-53cd16caa2bc" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/admin_panel/SubTopicContent.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/admin_panel/SubtopicQuiz.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/admin_panel/TopicQuiz.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/admin_panel/courses.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/admin_panel/material.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/admin_panel/subtopic.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/admin_panel/topic.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/auth/role.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/auth/auth_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/auth/auth_service.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/auth/auth_wrapper.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/auth/auth_wrapper.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/ASKMe.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/ASKMe.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/bottomNav.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/bottomNav.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/home_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/home_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/course_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/course_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/forgot_password.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/forgot_password.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/my_community.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/my_community.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/profile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/profile.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/course.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/course.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/get-started_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/get-started_view.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/login_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/login_view.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/signup_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/signup_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/widget/homepage_drawer.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/widget/homepage_drawer.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/macos/Flutter/GeneratedPluginRegistrant.swift" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/macos/Flutter/GeneratedPluginRegistrant.swift" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -79,7 +69,7 @@
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;io.flutter.reload.alreadyRun&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/preeti/Pictures/ACADEMe/ACADEMe/ACADEMe-frontend/lib/home&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/subhajitroy/github/ACADEMe2&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,

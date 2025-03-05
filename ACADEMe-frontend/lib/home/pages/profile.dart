@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ACADEMe/home/auth/auth_service.dart';
 import '../../academe_theme.dart';
 import 'package:ACADEMe/introduction_page.dart';
+import 'package:ACADEMe/localization/l10n.dart';
+import 'package:ACADEMe/localization/language_provider.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -11,6 +15,45 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  late Locale _selectedLocale;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedLocale = const Locale('en');
+    _loadLanguage();
+  }
+
+  Future<void> _loadLanguage() async {
+    final prefs = await SharedPreferences.getInstance();
+    final langCode = prefs.getString('language') ?? 'en';
+
+    final newLocale = Locale(langCode);
+
+    Future.microtask(() {
+      final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
+      if (languageProvider.locale != newLocale) {
+        languageProvider.setLocale(newLocale);
+      }
+      setState(() {
+        _selectedLocale = newLocale; // Ensure state is updated
+      });
+    });
+  }
+
+  void _changeLanguage(Locale locale) async {
+    if (locale != _selectedLocale) {
+      setState(() {
+        _selectedLocale = locale;
+      });
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('language', locale.languageCode);
+
+      Provider.of<LanguageProvider>(context, listen: false).setLocale(locale);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +79,7 @@ class _ProfilePageState extends State<ProfilePage> {
           children: [
             const SizedBox(height: 15),
             const CircleAvatar(
-              radius:50,
+              radius: 50,
               backgroundImage: AssetImage('assets/design_course/userImage.png'),
             ),
             const SizedBox(height: 10),
@@ -92,7 +135,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: ListView(
                   padding: const EdgeInsets.all(10),
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(), // Prevent ListView from scrolling separately
+                  physics: const NeverScrollableScrollPhysics(),
                   children: [
                     _ProfileOption(
                       icon: Icons.settings,
@@ -158,6 +201,38 @@ class _ProfilePageState extends State<ProfilePage> {
                         }
                       },
                     ),
+                    const SizedBox(height: 20),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(
+                        "Select Language",
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Consumer<LanguageProvider>(
+                        builder: (context, provider, child) {
+                          return DropdownButton<Locale>(
+                            value: provider.locale,
+                            hint: const Text("Choose Language"),
+                            isExpanded: true,
+                            onChanged: (Locale? newLocale) {
+                              if (newLocale != null) {
+                                _changeLanguage(newLocale); // Call the function
+                              }
+                            },
+                            items: L10n.supportedLocales.map((Locale locale) {
+                              return DropdownMenuItem(
+                                value: locale,
+                                child: Text(L10n.getLanguageName(locale.languageCode)),
+                              );
+                            }).toList(),
+                          );
+                        },
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -187,7 +262,7 @@ class _ProfileOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap, // Makes the entire row clickable
+      onTap: onTap,
       child: ListTile(
         leading: Icon(
           icon,
@@ -196,12 +271,10 @@ class _ProfileOption extends StatelessWidget {
         ),
         title: Text(
           text,
-          style: const TextStyle(
-            fontSize: 20,
-          ),
+          style: const TextStyle(fontSize: 20),
         ),
         trailing: GestureDetector(
-          onTap: onTap, // Makes only the arrow icon clickable
+          onTap: onTap,
           child: const Icon(
             Icons.arrow_forward_ios,
             size: 20,

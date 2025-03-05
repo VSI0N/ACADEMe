@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../academe_theme.dart';
 import 'package:ACADEMe/home/components/ASKMe_button.dart';
 import 'package:ACADEMe/home/pages/ASKMe.dart';
+import 'package:ACADEMe/localization/l10n.dart';
 
 class Mycommunity extends StatelessWidget {
   const Mycommunity({super.key});
@@ -27,7 +28,7 @@ class Mycommunity extends StatelessWidget {
               elevation: 0,
               flexibleSpace: Padding(
                 padding: const EdgeInsets.only(top: 40, left: 16, right: 16),
-                child: const Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Center(
@@ -36,7 +37,7 @@ class Mycommunity extends StatelessWidget {
                           Icon(Icons.groups, color: Colors.white, size: 40),
                           SizedBox(height: 8),
                           Text(
-                            "My Communities",
+                            L10n.getTranslatedText(context, 'My Communities'),
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 22,
@@ -76,10 +77,10 @@ class Mycommunity extends StatelessWidget {
                     children: [
                       Icon(Icons.search, color: Colors.grey[700]),
                       const SizedBox(width: 8),
-                      const Expanded(
+                      Expanded(
                         child: TextField(
                           decoration: InputDecoration(
-                            hintText: "Search Communities or topics",
+                            hintText: L10n.getTranslatedText(context, 'Search Communities or topics'),
                             border: InputBorder.none,
                           ),
                         ),
@@ -93,24 +94,24 @@ class Mycommunity extends StatelessWidget {
               // Fixed TabBar
               Container(
                 color: Colors.white,
-                child: const TabBar(
+                child: TabBar(
                   indicatorColor: Colors.black,
                   labelColor: Colors.black,
                   unselectedLabelColor: Colors.black,
                   tabs: [
-                    Tab(text: "Forums"),
-                    Tab(text: "Groups"),
-                    Tab(text: "Communities"),
+                    Tab(text: L10n.getTranslatedText(context, 'Forums')),
+                    Tab(text: L10n.getTranslatedText(context, 'Groups')),
+                    Tab(text: L10n.getTranslatedText(context, 'Communities')),
                   ],
                 ),
               ),
 
               // TabBarView scrolls while search bar & tab bar remain fixed
               Expanded(
-                child: const TabBarView(
+                child: TabBarView(
                   children: [
-                    Center(child: Text("Forums Section")),
-                    Center(child: Text("Groups Section")),
+                    Center(child: Text(L10n.getTranslatedText(context, 'Forums Section'))),
+                    Center(child: Text(L10n.getTranslatedText(context, 'Groups Section'))),
                     CommunityList(),
                   ],
                 ),

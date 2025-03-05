@@ -3,9 +3,7 @@ import '../../academe_theme.dart';
 import 'package:flutter/material.dart';
 import '../../home/auth/auth_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
-import '../../home/auth/role.dart';
-import '../../home/pages/bottomNav.dart';
+import 'package:ACADEMe/localization/l10n.dart';
 
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});
@@ -31,7 +29,9 @@ class _SignUpViewState extends State<SignUpView> {
     if (!_formKey.currentState!.validate()) return;
     if (!_agreeToTerms) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('You must agree to the terms and conditions')),
+        SnackBar(
+            content: Text(L10n.getTranslatedText(
+                context, 'I agree to terms and conditions'))),
       );
       return;
     }
@@ -39,12 +39,11 @@ class _SignUpViewState extends State<SignUpView> {
     setState(() => _isLoading = true);
 
     final (_, errorMessage) = await AuthService().signUp(
-      _emailController.text.trim(),
-      _passwordController.text.trim(),
-      _usernameController.text.trim(),
-      "SELECT",
-      "https://www.w3schools.com/w3images/avatar2.png"
-    );
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+        _usernameController.text.trim(),
+        "SELECT",
+        "https://www.w3schools.com/w3images/avatar2.png");
 
     setState(() => _isLoading = false);
 
@@ -52,22 +51,17 @@ class _SignUpViewState extends State<SignUpView> {
     String? token = await _secureStorage.read(key: "access_token");
 
     if (token != null) {
-      await UserRoleManager().fetchUserRole(); // ✅ Fetch user role before navigating
-      bool isAdmin = UserRoleManager().isAdmin;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Account created successfully!')),
-      );
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => BottomNav(isAdmin: isAdmin),
-        ),
-      ); // Redirect to courses
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+            L10n.getTranslatedText(context, 'Account created successfully!')),
+      ));
+      Navigator.pushReplacementNamed(
+          context, '/courses'); // Redirect to courses
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage ?? 'Signup failed. Please try again')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(errorMessage ??
+            L10n.getTranslatedText(context, 'Signup failed. Please try again')),
+      ));
     }
   }
 
@@ -80,22 +74,25 @@ class _SignUpViewState extends State<SignUpView> {
 
     if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage ?? '❌ Google Sign-Up failed. Please try again')),
+        SnackBar(
+            content: Text(errorMessage ??
+                L10n.getTranslatedText(
+                    context, '❌ Google Sign-Up failed. Please try again'))),
       );
       return;
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('✅ Signed up successfully with Google!')),
+      SnackBar(
+          content: Text(L10n.getTranslatedText(
+              context, '✅ Signed up successfully with Google!'))),
     );
     Navigator.pushReplacementNamed(context, '/home');
   }
 
   @override
   Widget build(BuildContext context) {
-
-
-    return  Scaffold(
+    return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Form(
@@ -108,8 +105,7 @@ class _SignUpViewState extends State<SignUpView> {
               children: [
                 Center(
                   child: Container(
-                    constraints:
-                    BoxConstraints(maxWidth: 250, maxHeight: 300),
+                    constraints: BoxConstraints(maxWidth: 250, maxHeight: 300),
                     child: Image.asset(
                       'assets/academe/study_image.png',
                       fit: BoxFit.contain,
@@ -125,11 +121,10 @@ class _SignUpViewState extends State<SignUpView> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding:
-                            const EdgeInsets.only(left: 30, right: 30),
+                            padding: const EdgeInsets.only(left: 30, right: 30),
                             child: Text(
-                              "Create Your "
-                                  "Account",
+                              '${L10n.getTranslatedText(context, 'Create Your ')} '
+                              '${L10n.getTranslatedText(context, 'Account')}',
                               style: TextStyle(
                                 fontSize: 39.0,
                                 fontWeight: FontWeight.bold,
@@ -149,12 +144,15 @@ class _SignUpViewState extends State<SignUpView> {
                         decoration: InputDecoration(
                             filled: true,
                             fillColor: AcademeTheme.notWhite,
-                            labelText: "Username",
-                            hintText: "Enter a username",
+                            labelText:
+                                L10n.getTranslatedText(context, 'Username'),
+                            hintText: L10n.getTranslatedText(
+                                context, 'Enter a username'),
                             prefixIcon: Icon(Icons.person)),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter a username';
+                            return L10n.getTranslatedText(
+                                context, 'Please enter a username');
                           }
                           return null;
                         },
@@ -167,16 +165,19 @@ class _SignUpViewState extends State<SignUpView> {
                         decoration: InputDecoration(
                             filled: true,
                             fillColor: AcademeTheme.notWhite,
-                            labelText: "Email",
-                            hintText: "Enter your email",
+                            labelText: L10n.getTranslatedText(context, 'Email'),
+                            hintText: L10n.getTranslatedText(
+                                context, 'Enter your email'),
                             prefixIcon: Icon(Icons.email)),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter an email';
+                            return L10n.getTranslatedText(
+                                context, 'Please enter an email');
                           }
                           if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
                               .hasMatch(value)) {
-                            return 'Enter a valid email';
+                            return L10n.getTranslatedText(
+                                context, 'Enter a valid email');
                           }
                           return null;
                         },
@@ -190,8 +191,10 @@ class _SignUpViewState extends State<SignUpView> {
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: AcademeTheme.notWhite,
-                          labelText: "Password",
-                          hintText: "Enter your password",
+                          labelText:
+                              L10n.getTranslatedText(context, 'Password'),
+                          hintText: L10n.getTranslatedText(
+                              context, 'Enter your password'),
                           prefixIcon: Icon(Icons.lock),
                           suffixIcon: IconButton(
                             icon: Icon(_isPasswordVisible
@@ -206,16 +209,20 @@ class _SignUpViewState extends State<SignUpView> {
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter a password';
+                            return L10n.getTranslatedText(
+                                context, 'Please enter a password');
                           }
                           if (value.length < 6) {
-                            return 'Password must be at least 6 characters';
+                            return L10n.getTranslatedText(
+                                context, 'Password must be at least 6 characters');
                           }
                           return null;
                         },
                       ),
                     ),
-                    SizedBox(height: 4,),
+                    SizedBox(
+                      height: 4,
+                    ),
                     Padding(
                       padding: EdgeInsets.only(left: 20, right: 40),
                       child: Row(
@@ -229,13 +236,16 @@ class _SignUpViewState extends State<SignUpView> {
                             },
                           ),
                           Text(
-                            "I agree to terms and conditions",
+                            L10n.getTranslatedText(
+                                context, 'I agree to terms and conditions'),
                             style: TextStyle(fontSize: 14),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(height: 4,),
+                    SizedBox(
+                      height: 4,
+                    ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 35),
                       child: SizedBox(
@@ -243,36 +253,42 @@ class _SignUpViewState extends State<SignUpView> {
                         child: ElevatedButton(
                           onPressed: _isLoading ? null : _submitForm,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.yellow[600], // Change button color
-                            minimumSize: Size(double.infinity, 50), // Adjust button size
+                            backgroundColor:
+                                Colors.yellow[600], // Change button color
+                            minimumSize:
+                                Size(double.infinity, 50), // Adjust button size
                           ),
                           child: _isLoading
                               ? CircularProgressIndicator(color: Colors.white)
                               : Row(
-                            mainAxisAlignment: MainAxisAlignment.center, // Center the content
-                            children: [
-                              Image.asset(
-                                'assets/icons/house_door.png', // Replace with your image path
-                                height: 24, // Adjust size
-                                width: 24,
-                              ),
-                              SizedBox(width: 10), // Space between icon and text
-                              Text(
-                                'Sign Up',
-                                style: TextStyle(
-                                  fontSize: 18, // Adjust font size
-                                  fontWeight: FontWeight.w500, // Change font weight
-                                  color: Colors.black, // Text color
+                                  mainAxisAlignment: MainAxisAlignment
+                                      .center, // Center the content
+                                  children: [
+                                    Image.asset(
+                                      'assets/icons/house_door.png', // Replace with your image path
+                                      height: 24, // Adjust size
+                                      width: 24,
+                                    ),
+                                    SizedBox(
+                                        width:
+                                            10), // Space between icon and text
+                                    Text(
+                                      L10n.getTranslatedText(context, 'Signup'),
+                                      style: TextStyle(
+                                        fontSize: 18, // Adjust font size
+                                        fontWeight: FontWeight
+                                            .w500, // Change font weight
+                                        color: Colors.black, // Text color
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
-                          ),
                         ),
                       ),
                     ),
                     SizedBox(height: 10),
                     Text(
-                      'OR',
+                      L10n.getTranslatedText(context, 'OR'),
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.black54,
@@ -287,15 +303,20 @@ class _SignUpViewState extends State<SignUpView> {
                       child: SizedBox(
                         width: double.infinity,
                         child: ElevatedButton.icon(
-                          onPressed: _isGoogleLoading ? null : _signUpWithGoogle,
+                          onPressed:
+                              _isGoogleLoading ? null : _signUpWithGoogle,
                           icon: _isGoogleLoading
                               ? CircularProgressIndicator(color: Colors.white)
                               : Padding(
-                            padding: EdgeInsets.only(right: 7), // Adjust spacing
-                            child: Image.asset('assets/icons/google_icon.png', height: 22),
-                          ),
+                                  padding: EdgeInsets.only(
+                                      right: 7), // Adjust spacing
+                                  child: Image.asset(
+                                      'assets/icons/google_icon.png',
+                                      height: 22),
+                                ),
                           label: Text(
-                            'Continue with Google',
+                            L10n.getTranslatedText(
+                                context, 'Continue with Google'),
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w500,
@@ -313,37 +334,42 @@ class _SignUpViewState extends State<SignUpView> {
                       ),
                     ),
 
-                    SizedBox(height: 30,),
+                    SizedBox(
+                      height: 30,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Already have an account?",
+                          L10n.getTranslatedText(
+                              context, 'Already have an account?'),
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.black54,
                           ),
                         ),
                         TextButton(
-                          onPressed: (
-                              ) {
+                          onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => LogInView()),
+                              MaterialPageRoute(
+                                  builder: (context) => LogInView()),
                             );
                           },
                           child: Text(
-                            "Login",
+                            L10n.getTranslatedText(context, 'login'),
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
-                              color: AcademeTheme.appColor, // Change color for emphasis
+                              color: AcademeTheme
+                                  .appColor, // Change color for emphasis
                             ),
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 16), // Adds spacing before the "Sign Up" button
+                    SizedBox(
+                        height: 16), // Adds spacing before the "Sign Up" button
                   ],
                 ),
               ],
@@ -354,6 +380,3 @@ class _SignUpViewState extends State<SignUpView> {
     );
   }
 }
-
-
-
