@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserRoleManager {
@@ -11,13 +10,10 @@ class UserRoleManager {
 
   UserRoleManager._internal();
 
-  Future<void> fetchUserRole() async {
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      isAdmin = AdminRoles.isAdmin(user.email ?? "");
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('isAdmin', isAdmin);
-    }
+  Future<void> fetchUserRole(String userEmail) async {
+    isAdmin = AdminRoles.isAdmin(userEmail);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isAdmin', isAdmin);
   }
 
   Future<void> loadRole() async {
@@ -25,7 +21,6 @@ class UserRoleManager {
     isAdmin = prefs.getBool('isAdmin') ?? false;
   }
 }
-
 
 class AdminRoles {
   static final List<String> adminEmails = [

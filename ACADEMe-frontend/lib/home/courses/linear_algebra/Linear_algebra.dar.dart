@@ -78,28 +78,11 @@ class _LinearAlgebraScreenState extends State<LinearAlgebraScreen>
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Mathematics Linear Algebra Section
-                          Text(
-                            "Mathematics: Linear Algebra",
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(height: 8),
-                          Row(
-                            children: [
-                              Icon(Icons.star, color: Colors.amber, size: 16),
-                              Text(" 4.5 (1233) ",
-                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                              Text("• 9 lessons",
-                                  style: TextStyle(fontSize: 14, color: Colors.grey)),
-                            ],
-                          ),
-                          SizedBox(height: 8),
-                          Divider(color: Colors.black, thickness: 0.2),
-                          SizedBox(height: 5),
                           // Your Progress Section
                           Text("Your Progress",
                               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                          SizedBox(height: 15),
+                          SizedBox(height: 5),
+                          Text("6/12 Module"),
                           ClipRRect(
                             borderRadius: BorderRadius.circular(5),
                             child: LinearProgressIndicator(
@@ -110,7 +93,7 @@ class _LinearAlgebraScreenState extends State<LinearAlgebraScreen>
                             ),
                           ),
                           SizedBox(height: 15),
-                          Divider(color: Colors.black, thickness: 0.2),
+                          Divider(color: Colors.black, thickness: 0.1),
                         ],
                       ),
                     ),
@@ -128,7 +111,6 @@ class _LinearAlgebraScreenState extends State<LinearAlgebraScreen>
                         labelStyle: TextStyle(fontSize: 18),
                         tabs: [
                           Tab(text: "OVERVIEW"),
-                          Tab(text: "LESSONS"),
                           Tab(text: "Q&A"),
                         ],
                       ),
@@ -139,7 +121,6 @@ class _LinearAlgebraScreenState extends State<LinearAlgebraScreen>
               body: TabBarView(
                 controller: _tabController,
                 children: [
-                  OverviewSection(),
                   LessonsSection(),
                   QASection(),
                 ],

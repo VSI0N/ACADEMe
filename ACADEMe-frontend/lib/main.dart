@@ -31,9 +31,15 @@ void main() async {
   } catch (e) {
     print("❌ Firebase Initialization Error: $e");
   }
+  final prefs = await SharedPreferences.getInstance();
+  String? userEmail = prefs.getString("user_email");
+
+  if (userEmail != null) {
+    await UserRoleManager().fetchUserRole(userEmail);
+  }
 
 
-  await Future.microtask(() => UserRoleManager().fetchUserRole()); // Fetch role on app start
+  // Fetch role on app start
 
   await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
     DeviceOrientation.portraitUp,
@@ -41,7 +47,7 @@ void main() async {
   ]).then((_) {
     runApp(
       ChangeNotifierProvider(
-        create: (context) => LanguageProvider(),
+        create: (context) => LanguageProvider(), // Provide LanguageProvider globally
         child: const MyApp(),
       ),
     );
@@ -63,9 +69,8 @@ class MyApp extends StatelessWidget {
       systemNavigationBarIconBrightness: Brightness.dark,
     ));
 
-    return Selector<LanguageProvider, Locale>(
-      selector: (_, provider) => provider.locale,
-      builder: (_, locale, __) {
+    return Consumer<LanguageProvider>(
+      builder: (context, languageProvider, child) {
         return MaterialApp(
           title: 'ACADEMe',
           debugShowCheckedModeBanner: false,
@@ -74,7 +79,7 @@ class MyApp extends StatelessWidget {
             textTheme: AcademeTheme.textTheme,
             platform: TargetPlatform.iOS,
           ),
-          locale: locale,
+          locale: languageProvider.locale, // Get locale from provider
           supportedLocales: L10n.supportedLocales,
           localizationsDelegates: const [
             GlobalMaterialLocalizations.delegate,

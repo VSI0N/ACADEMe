@@ -63,7 +63,7 @@ class _LogInViewState extends State<LogInView> {
         SnackBar(content: Text(L10n.getTranslatedText(context, '✅ Login successful!'))),
       );
 // ✅ Success! Navigate to home page
-      await UserRoleManager().fetchUserRole(); // ✅ Fetch user role before navigating
+      await UserRoleManager().fetchUserRole(user.email);// ✅ Fetch user role before navigating
       bool isAdmin = UserRoleManager().isAdmin;
 
       Navigator.pushReplacement(
