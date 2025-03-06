@@ -1,26 +1,30 @@
-import 'dart:io';
-
-import 'package:ACADEMe/home/admin_panel/TopicQuiz.dart';
-import 'package:ACADEMe/home/admin_panel/subtopic.dart';
-import 'package:file_picker/file_picker.dart';
+import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import '../../academe_theme.dart';
-import 'material.dart';
+import 'package:ACADEMe/home/admin_panel/subtopic.dart';
 
 class TopicScreen extends StatefulWidget {
+  final String courseId;
   final String courseTitle;
 
-  TopicScreen({required this.courseTitle});
+  TopicScreen({required this.courseId, required this.courseTitle});
 
   @override
   _TopicScreenState createState() => _TopicScreenState();
 }
 
 class _TopicScreenState extends State<TopicScreen> {
-  List<Map<String, String>> topics = [];
-  List<Map<String, String>> materials = [];
+  List<Map<String, dynamic>> topics = [];
   bool isMenuOpen = false;
-  late MaterialManager materialManager;
+  final _storage = FlutterSecureStorage();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTopics();
+  }
 
   void _toggleMenu() {
     setState(() {
@@ -28,23 +32,40 @@ class _TopicScreenState extends State<TopicScreen> {
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    materialManager = MaterialManager(
-      context: context,
-      onMaterialAdded: () {
-        setState(() {}); // Refresh UI when a material is added
+  void _loadTopics() async {
+    String? token = await _storage.read(key: "access_token");
+    if (token == null) {
+      print("No access token found");
+      return;
+    }
+
+    final response = await http.get(
+      Uri.parse('http://10.0.2.2:8000/api/courses/${widget.courseId}/topics/'),
+      headers: {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
       },
-      materials: materials, // Pass the shared materials list
     );
+
+    if (response.statusCode == 200) {
+      List<dynamic> data = json.decode(response.body);
+      setState(() {
+        topics = data.map((item) => {
+          "id": item["id"].toString(),
+          "title": item["title"],
+          "description": item["description"],
+        }).toList();
+      });
+    } else {
+      print("Failed to fetch topics: ${response.body}");
+    }
   }
 
   void _addTopic() {
     showDialog(
       context: context,
       builder: (context) {
-        final TextEditingController subtopicController = TextEditingController();
+        final TextEditingController titleController = TextEditingController();
         final TextEditingController descriptionController = TextEditingController();
 
         return AlertDialog(
@@ -53,7 +74,7 @@ class _TopicScreenState extends State<TopicScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                controller: subtopicController,
+                controller: titleController,
                 decoration: InputDecoration(labelText: "Topic Name"),
               ),
               TextField(
@@ -69,15 +90,30 @@ class _TopicScreenState extends State<TopicScreen> {
               child: Text("Cancel"),
             ),
             ElevatedButton(
-              onPressed: () {
-                if (subtopicController.text.isNotEmpty && descriptionController.text.isNotEmpty) {
-                  setState(() {
-                    topics.add({
-                      "topic": subtopicController.text,
-                      "description": descriptionController.text,
-                    });
-                  });
+              onPressed: () async {
+                String? token = await _storage.read(key: "access_token");
+                if (token == null) {
+                  print("No access token found");
+                  return;
+                }
+
+                final response = await http.post(
+                  Uri.parse('http://10.0.2.2:8000/api/courses/${widget.courseId}/topics/'),
+                  headers: {
+                    "Authorization": "Bearer $token",
+                    "Content-Type": "application/json",
+                  },
+                  body: json.encode({
+                    "title": titleController.text,
+                    "description": descriptionController.text,
+                  }),
+                );
+
+                if (response.statusCode == 200) {
+                  _loadTopics();
                   Navigator.pop(context);
+                } else {
+                  print("Failed to add topic: ${response.body}");
                 }
               },
               child: Text("Add"),
@@ -86,19 +122,6 @@ class _TopicScreenState extends State<TopicScreen> {
         );
       },
     );
-  }
-
-  void _addMaterial() {
-    materialManager.addMaterial();
-  }
-
-  void _addQuiz() {
-    setState(() {
-      topics.add({
-        "topic": "Topic Quiz",
-        "description": "Quiz related to the topic",
-      });
-    });
   }
 
   @override
@@ -127,48 +150,24 @@ class _TopicScreenState extends State<TopicScreen> {
             ),
             Expanded(
               child: ListView(
-                children: [
-                  if (topics.isNotEmpty) ...[
-                    Text("topic", style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal)),
-                    ...topics.map((topic) => Card(
-                      margin: EdgeInsets.only(bottom: 10),
-                      child: ListTile(
-                        title: Text(topic["topic"]!),
-                        subtitle: Text(topic["description"]!),
-                        onTap: () {
-                          if (topic["topic"] == "Topic Quiz") {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => QuizScreen(courseTitle: widget.courseTitle),
-                              ),
-                            );
-                          } else {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SubtopicScreen(
-                                  courseTitle: widget.courseTitle,
-                                  topicTitle: topic["topic"]!,
-                                ),
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                    )),
-                  ],
-                  if (materials.isNotEmpty) ...[
-                    Text("Materials", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                    ...materials.map((material) => Card(
-                      margin: EdgeInsets.only(bottom: 10),
-                      child: ListTile(
-                        title: Text(material["type"]!),
-                        subtitle: Text(material["category"]!),
-                      ),
-                    )),
-                  ],
-                ],
+                children: topics.map((topic) => Card(
+                  margin: EdgeInsets.only(bottom: 10),
+                  child: ListTile(
+                    title: Text(topic["title"]!),
+                    subtitle: Text(topic["description"]!),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SubtopicScreen(
+                            courseTitle: widget.courseTitle,
+                            topicTitle: topic["title"]!,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                )).toList(),
               ),
             ),
           ],
@@ -180,8 +179,6 @@ class _TopicScreenState extends State<TopicScreen> {
         children: [
           if (isMenuOpen) ...[
             _buildMenuItem("Add Topic", Icons.note_add, _addTopic),
-            _buildMenuItem("Add Material", Icons.insert_drive_file, _addMaterial),
-            _buildMenuItem("Add Quiz", Icons.quiz, _addQuiz),
             SizedBox(height: 10),
           ],
           FloatingActionButton(

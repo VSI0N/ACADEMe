@@ -1,11 +1,9 @@
-import 'package:ACADEMe/home/admin_panel/topic.dart';
-import 'package:flutter/material.dart';
-import 'package:ACADEMe/academe_theme.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
-import '../../utils/theme/custom_themes/course_theme.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../../academe_theme.dart';
+import 'topic.dart';
 
 class CourseManagementScreen extends StatefulWidget {
   @override
@@ -14,6 +12,7 @@ class CourseManagementScreen extends StatefulWidget {
 
 class _CourseManagementScreenState extends State<CourseManagementScreen> {
   List<Map<String, dynamic>> courses = [];
+  final _storage = FlutterSecureStorage();
 
   @override
   void initState() {
@@ -22,18 +21,33 @@ class _CourseManagementScreenState extends State<CourseManagementScreen> {
   }
 
   void _loadCourses() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? coursesString = prefs.getString('courses');
-    if (coursesString != null) {
-      setState(() {
-        courses = List<Map<String, dynamic>>.from(json.decode(coursesString));
-      });
+    String? token = await _storage.read(key: "access_token");
+    if (token == null) {
+      print("No access token found");
+      return;
     }
-  }
 
-  void _saveCourses() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('courses', json.encode(courses));
+    final response = await http.get(
+      Uri.parse('http://10.0.2.2:8000/api/courses/'),
+      headers: {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+      },
+    );
+
+    if (response.statusCode == 200) {
+      List<dynamic> data = json.decode(response.body);
+      setState(() {
+        courses = data.map((item) => {
+          "id": item["id"].toString(),
+          "title": item["title"],
+          "class_name": item["class_name"],
+          "description": item["description"],
+        }).toList();
+      });
+    } else {
+      print("Failed to fetch courses: ${response.body}");
+    }
   }
 
   void _addCourse() {
@@ -42,87 +56,74 @@ class _CourseManagementScreenState extends State<CourseManagementScreen> {
       builder: (context) {
         final TextEditingController titleController = TextEditingController();
         final TextEditingController classController = TextEditingController();
-        final TextEditingController durationController = TextEditingController();
-        File? image;
+        final TextEditingController descriptionController = TextEditingController();
 
-        Future<void> pickImage() async {
-          final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-          if (pickedFile != null) {
-            setState(() {
-              image = File(pickedFile.path);
-            });
-          }
-        }
-
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return AlertDialog(
-              title: Text("Add Course"),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    controller: titleController,
-                    decoration: InputDecoration(labelText: "Course Title"),
-                  ),
-                  TextField(
-                    controller: classController,
-                    decoration: InputDecoration(labelText: "Class"),
-                  ),
-                  TextField(
-                    controller: durationController,
-                    decoration: InputDecoration(labelText: "Duration"),
-                  ),
-                  SizedBox(height: 10),
-                  image == null
-                      ? Text("No Image Selected")
-                      : Image.file(image!, height: 90),
-                  TextButton(
-                    onPressed: () async {
-                      final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-                      if (pickedFile != null) {
-                        setDialogState(() {
-                          image = File(pickedFile.path);
-                        });
-                      }
-                    },
-                    child: Text("Select Image"),
-                  ),
-                ],
+        return AlertDialog(
+          title: Text("Add Course"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: titleController,
+                decoration: InputDecoration(labelText: "Course Title"),
               ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text("Cancel"),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      courses.add({
-                        "title": titleController.text,
-                        "duration": durationController.text,
-                        "class": classController.text,
-                        "image": image?.path ?? "assets/images/default.png",
-                      });
-                      _saveCourses();
-                    });
-                    Navigator.pop(context);
+              TextField(
+                controller: classController,
+                decoration: InputDecoration(labelText: "Class Name"),
+              ),
+              TextField(
+                controller: descriptionController,
+                decoration: InputDecoration(labelText: "Description"),
+                maxLines: 3,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                String? token = await _storage.read(key: "access_token");
+                if (token == null) {
+                  print("No access token found");
+                  return;
+                }
+
+                final response = await http.post(
+                  Uri.parse('http://10.0.2.2:8000/api/courses/'),
+                  headers: {
+                    "Authorization": "Bearer $token",
+                    "Content-Type": "application/json",
                   },
-                  child: Text("Add"),
-                ),
-              ],
-            );
-          },
+                  body: json.encode({
+                    "title": titleController.text,
+                    "class_name": classController.text,
+                    "description": descriptionController.text,
+                  }),
+                );
+
+                if (response.statusCode == 200) {
+                  _loadCourses();
+                  Navigator.pop(context);
+                } else {
+                  print("Failed to add course: ${response.body}");
+                }
+              },
+              child: Text("Add"),
+            ),
+          ],
         );
       },
     );
   }
 
-  void _navigateToTopics(String courseTitle) {
+  void _navigateToTopics(String courseId, String courseTitle) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => TopicScreen(courseTitle: courseTitle),
+        builder: (context) => TopicScreen(courseId: courseId, courseTitle: courseTitle),
       ),
     );
   }
@@ -136,7 +137,7 @@ class _CourseManagementScreenState extends State<CourseManagementScreen> {
         centerTitle: true,
       ),
       body: Padding(
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.all(16.0),
         child: Column(
           children: [
             Padding(
@@ -150,18 +151,15 @@ class _CourseManagementScreenState extends State<CourseManagementScreen> {
               ),
             ),
             Expanded(
-              child: ListView.builder(
-                itemCount: courses.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(courses[index]['title']),
-                    subtitle: Text("Class: ${courses[index]['class']}, Duration: ${courses[index]['duration']}"),
-                    leading: courses[index]['image'] != null
-                        ? Image.file(File(courses[index]['image']), height: 50, width: 50)
-                        : Icon(Icons.book),
-                    onTap: () => _navigateToTopics(courses[index]['title']),
-                  );
-                },
+              child: ListView(
+                children: courses.map((course) => Card(
+                  margin: EdgeInsets.only(bottom: 10),
+                  child: ListTile(
+                    title: Text(course["title"]!),
+                    subtitle: Text(course["description"]!),
+                    onTap: () => _navigateToTopics(course["id"]!, course["title"]!),
+                  ),
+                )).toList(),
               ),
             ),
           ],

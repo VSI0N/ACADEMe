@@ -6,15 +6,16 @@
   <component name="ChangeListManager">
     <list default="true" id="305d9e88-f8ff-4439-948e-53cd16caa2bc" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/123e5w5x/arm64-v8a/configure_fingerprint.bin" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/123e5w5x/arm64-v8a/configure_fingerprint.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/123e5w5x/armeabi-v7a/configure_fingerprint.bin" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/123e5w5x/armeabi-v7a/configure_fingerprint.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/123e5w5x/x86/configure_fingerprint.bin" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/123e5w5x/x86/configure_fingerprint.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/123e5w5x/x86_64/configure_fingerprint.bin" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/123e5w5x/x86_64/configure_fingerprint.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/auth/auth_wrapper.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/auth/auth_wrapper.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/auth/role.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/auth/role.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/login_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/login_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/signup_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/started/pages/signup_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/55221s2g/arm64-v8a/.cmake/api/v1/reply/index-2025-03-05T15-08-49-0248.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/55221s2g/arm64-v8a/configure_fingerprint.bin" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/55221s2g/arm64-v8a/configure_fingerprint.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/55221s2g/armeabi-v7a/.cmake/api/v1/reply/index-2025-03-05T15-08-49-0639.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/55221s2g/armeabi-v7a/configure_fingerprint.bin" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/55221s2g/armeabi-v7a/configure_fingerprint.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/55221s2g/x86/.cmake/api/v1/reply/index-2025-03-05T15-08-49-0932.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/55221s2g/x86/configure_fingerprint.bin" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/55221s2g/x86/configure_fingerprint.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/55221s2g/x86_64/.cmake/api/v1/reply/index-2025-03-05T15-08-50-0294.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/55221s2g/x86_64/configure_fingerprint.bin" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/55221s2g/x86_64/configure_fingerprint.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/admin_panel/courses.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/admin_panel/courses.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/admin_panel/topic.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/admin_panel/topic.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
