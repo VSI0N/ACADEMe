@@ -4,6 +4,7 @@ import 'package:ACADEMe/started/pages/course.dart';
 import 'package:ACADEMe/localization/l10n.dart';
 import 'package:ACADEMe/localization/language_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'firebase_options.dart';
 import 'dart:io';
 import 'home/auth/role.dart';
@@ -31,8 +32,8 @@ void main() async {
     print("❌ Firebase Initialization Error: $e");
   }
 
-  await UserRoleManager().fetchUserRole(); // Fetch role on app start
-  await UserRoleManager().loadRole();
+
+  await Future.microtask(() => UserRoleManager().fetchUserRole()); // Fetch role on app start
 
   await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
     DeviceOrientation.portraitUp,
@@ -40,7 +41,7 @@ void main() async {
   ]).then((_) {
     runApp(
       ChangeNotifierProvider(
-        create: (context) => LanguageProvider(), // Provide LanguageProvider globally
+        create: (context) => LanguageProvider(),
         child: const MyApp(),
       ),
     );
@@ -62,8 +63,9 @@ class MyApp extends StatelessWidget {
       systemNavigationBarIconBrightness: Brightness.dark,
     ));
 
-    return Consumer<LanguageProvider>(
-      builder: (context, languageProvider, child) {
+    return Selector<LanguageProvider, Locale>(
+      selector: (_, provider) => provider.locale,
+      builder: (_, locale, __) {
         return MaterialApp(
           title: 'ACADEMe',
           debugShowCheckedModeBanner: false,
@@ -72,7 +74,7 @@ class MyApp extends StatelessWidget {
             textTheme: AcademeTheme.textTheme,
             platform: TargetPlatform.iOS,
           ),
-          locale: languageProvider.locale, // Get locale from provider
+          locale: locale,
           supportedLocales: L10n.supportedLocales,
           localizationsDelegates: const [
             GlobalMaterialLocalizations.delegate,

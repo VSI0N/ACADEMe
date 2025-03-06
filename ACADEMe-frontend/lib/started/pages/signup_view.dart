@@ -54,19 +54,19 @@ class _SignUpViewState extends State<SignUpView> {
     String? token = await _secureStorage.read(key: "access_token");
 
     if (token != null) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(
-            L10n.getTranslatedText(context, 'Account created successfully!')),
-      ));
       await UserRoleManager().fetchUserRole(); // ✅ Fetch user role before navigating
       bool isAdmin = UserRoleManager().isAdmin;
 
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Account created successfully!')),
+      );
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => BottomNav(isAdmin: isAdmin),
         ),
-      ); // Redirect to courses
+      );
+      // Redirect to courses
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(errorMessage ??

@@ -71,7 +71,8 @@ class _LogInViewState extends State<LogInView> {
         MaterialPageRoute(
           builder: (context) => BottomNav(isAdmin: isAdmin),
         ),
-      );    } else {
+      );
+    } else {
       // ❌ Fallback error
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(L10n.getTranslatedText(context, '❌ Login failed. Please try again.'))),

@@ -15,6 +15,14 @@ class AuthWrapper extends StatefulWidget {
 class _AuthWrapperState extends State<AuthWrapper> {
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   UserRoleManager().fetchUserRole(); // Fetch user role here after app startup
+  // }
+
+
   Future<bool> _isUserLoggedIn() async {
     String? token = await _secureStorage.read(key: "access_token");
     return token != null; // ✅ Only check for access token
