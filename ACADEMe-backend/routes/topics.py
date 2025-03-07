@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from fastapi import APIRouter, Depends, UploadFile, File, Form, HTTPException
+from fastapi import APIRouter, Depends, UploadFile, File, Form, HTTPException, Query
 from services.topic_service import TopicService
 from services.material_service import MaterialService
 from models.topic_model import TopicCreate, SubtopicCreate
@@ -14,36 +14,34 @@ router = APIRouter(prefix="/courses", tags=["Courses & Topics"])
 
 @router.post("/{course_id}/topics/", response_model=dict)
 async def add_topic(course_id: str, topic: TopicCreate, user: dict = Depends(get_current_user)):
-    """Add a new topic to a course (Admin-only)."""
+    """Add a new topic to a course (Admin-only) with multilingual support."""
     if user["role"] != "admin":
         raise HTTPException(status_code=403, detail="Permission denied: Admins only")
     
-    """Adds a topic (chapter) under a specific course with an auto-generated ID."""
-    topic_id = str(uuid.uuid4())  # ✅ Auto-generate topic ID
+    topic_id = str(uuid.uuid4())
     return await TopicService.create_topic(course_id, topic_id, topic)
 
 @router.get("/{course_id}/topics/", response_model=list)
-async def fetch_topics(course_id: str, user: dict = Depends(get_current_user)):
-    """Fetches all topics (chapters) under a specific course."""
-    return await TopicService.get_all_topics(course_id)
+async def fetch_topics(course_id: str, target_language: str = Query("en"), user: dict = Depends(get_current_user)):
+    """Fetches all topics under a specific course in the requested language."""
+    return await TopicService.get_all_topics(course_id, target_language)
 
 
 ### 📌 SUBTOPIC ROUTES ###
 
 @router.post("/{course_id}/topics/{topic_id}/subtopics/", response_model=dict)
 async def add_subtopic(course_id: str, topic_id: str, subtopic: SubtopicCreate, user: dict = Depends(get_current_user)):
-    """Add a new subtopic to a topic (Admin-only)."""
+    """Add a new subtopic with multilingual support (Admin-only)."""
     if user["role"] != "admin":
         raise HTTPException(status_code=403, detail="Permission denied: Admins only")
     
-    """Adds a subtopic under a specific topic with an auto-generated ID."""
-    subtopic_id = str(uuid.uuid4())  # ✅ Auto-generate subtopic ID
+    subtopic_id = str(uuid.uuid4())
     return await TopicService.create_subtopic(course_id, topic_id, subtopic_id, subtopic)
 
 @router.get("/{course_id}/topics/{topic_id}/subtopics/", response_model=list)
-async def fetch_subtopics(course_id: str, topic_id: str, user: dict = Depends(get_current_user)):
-    """Fetches all subtopics under a topic."""
-    return await TopicService.get_subtopics_by_topic(course_id, topic_id)
+async def fetch_subtopics(course_id: str, topic_id: str, target_language: str = Query("en"), user: dict = Depends(get_current_user)):
+    """Fetches all subtopics under a topic in the requested language."""
+    return await TopicService.get_subtopics_by_topic(course_id, topic_id, target_language)
 
 
 ### 📌 STUDY MATERIAL ROUTES (FOR TOPICS & SUBTOPICS) ###
@@ -73,9 +71,14 @@ async def add_material_to_topic(
     return await MaterialService.add_material(course_id, topic_id, material_data)
 
 @router.get("/{course_id}/topics/{topic_id}/materials/", response_model=list[MaterialResponse])
-async def fetch_materials_from_topic(course_id: str, topic_id: str, user: dict = Depends(get_current_user)):
-    """Fetches all study materials under a topic."""
-    return await MaterialService.get_materials(course_id, topic_id)
+async def fetch_materials_from_topic(
+    course_id: str, 
+    topic_id: str, 
+    target_language: str = Query("en"), 
+    user: dict = Depends(get_current_user)
+):
+    """Fetches all study materials under a topic in the requested language."""
+    return await MaterialService.get_materials(course_id, topic_id, target_language=target_language)
 
 
 @router.post("/{course_id}/topics/{topic_id}/subtopics/{subtopic_id}/materials/", response_model=MaterialResponse)
@@ -111,10 +114,11 @@ async def fetch_materials_from_subtopic(
     course_id: str, 
     topic_id: str, 
     subtopic_id: str, 
+    target_language: str = Query("en"), 
     user: dict = Depends(get_current_user)
 ):
-    """Fetches all study materials under a subtopic."""
-    return await MaterialService.get_materials(course_id=course_id, topic_id=topic_id, subtopic_id=subtopic_id, is_subtopic=True)
+    """Fetches all study materials under a subtopic in the requested language."""
+    return await MaterialService.get_materials(course_id, topic_id, target_language=target_language, subtopic_id=subtopic_id, is_subtopic=True)
 
 ### 📌 Utility Function to Handle File Uploads ###
 async def handle_material_upload(

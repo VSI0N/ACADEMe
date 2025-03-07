@@ -12,7 +12,7 @@ async def create_course(course: CourseCreate, user: dict = Depends(get_current_u
     if user["role"] != "admin":
         raise HTTPException(status_code=403, detail="Permission denied: Admins only")
 
-    created_course = CourseService.create_course(course)  # ✅ Pass course model directly
+    created_course = await CourseService.create_course(course)  # ✅ Pass course model directly
 
     if not created_course:
         raise HTTPException(status_code=400, detail="Course creation failed")
@@ -20,7 +20,7 @@ async def create_course(course: CourseCreate, user: dict = Depends(get_current_u
     return created_course
 
 @router.get("/", response_model=list[CourseResponse])
-async def get_courses(user: dict = Depends(get_current_user)):
-    """Fetches all courses filtered by the user’s selected class."""
-    all_courses = CourseService.get_courses()
+async def get_courses(target_language: str = "en", user: dict = Depends(get_current_user)):
+    """Fetches all courses in the specified language."""
+    all_courses = CourseService.get_courses(target_language)
     return filter_courses_by_class(all_courses, user["student_class"])

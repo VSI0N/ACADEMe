@@ -3,6 +3,7 @@ from models.material_model import MaterialResponse
 from datetime import datetime
 import uuid
 from fastapi import HTTPException
+from services.course_service import CourseService
 
 db = firestore.client()
 
@@ -11,21 +12,52 @@ class MaterialService:
     async def add_material(
         course_id: str, 
         topic_id: str, 
-        material: dict,  # ✅ Accept dictionary
+        material: dict,  
         is_subtopic: bool = False, 
         subtopic_id: str = None
     ) -> MaterialResponse:
-        """Adds a material under a topic or subtopic in Firestore."""
+        """Adds a material under a topic or subtopic in Firestore with multilingual support."""
         try:
-            # ✅ Generate unique ID
             material_id = str(uuid.uuid4())
-
-            # ✅ Convert datetime to ISO string
             material["id"] = material_id
-            material["created_at"] = datetime.utcnow().isoformat()  # ✅ Fix here
-            material["updated_at"] = datetime.utcnow().isoformat()  # ✅ Fix here
+            material["created_at"] = datetime.utcnow().isoformat()
+            material["updated_at"] = datetime.utcnow().isoformat()
 
-            # ✅ Determine Firestore reference
+            # 🔹 Detect language only if `text_content` or `optional_text` exist
+            detected_lang = "en"
+            text_fields = [material.get("text_content", ""), material.get("optional_text", "")]
+            if any(text_fields):
+                detected_lang = await CourseService.detect_language(text_fields) or "en"
+
+            # 🔹 Organize translations under "languages" key
+            languages = {
+                detected_lang: {
+                    "content": material.get("content", ""),
+                    "optional_text": material.get("optional_text", ""),
+                }
+            }
+
+            # 🔹 Translate only `content` if type == "text", and always translate `optional_text`
+            target_languages = ["fr", "es", "de", "zh", "ar", "hi", "en"]
+            target_languages.remove(detected_lang)
+
+            translation_tasks = {
+                lang: {
+                    "content": CourseService.translate_text(material["content"], lang) if material["type"] == "text" else None,
+                    "optional_text": CourseService.translate_text(material["optional_text"], lang) if material.get("optional_text") else None,
+                }
+                for lang in target_languages
+            }
+
+            for lang in target_languages:
+                languages[lang] = {
+                    "content": await translation_tasks[lang]["content"] if translation_tasks[lang]["content"] else material["content"],  # ✅ Keeps original content if not text
+                    "optional_text": await translation_tasks[lang]["optional_text"] if translation_tasks[lang]["optional_text"] else "",
+                }
+            
+            material["languages"] = languages  # ✅ Store translations properly
+
+            # 🔹 Determine Firestore reference
             if is_subtopic and subtopic_id:
                 ref = (
                     db.collection("courses")
@@ -47,24 +79,24 @@ class MaterialService:
                     .document(material_id)
                 )
 
-            # ✅ Save to Firestore
             ref.set(material, merge=True)
 
-            return MaterialResponse(**material)  # ✅ Convert back to Pydantic model
-        
+            return MaterialResponse(**material)
+
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Error adding material: {str(e)}")
-            
+
     @staticmethod
     async def get_materials(
         course_id: str, 
         topic_id: str, 
+        target_language: str = "en",
         is_subtopic: bool = False, 
         subtopic_id: str = None
     ) -> list[MaterialResponse]:
-        """Fetches all materials under a topic or subtopic from Firestore."""
+        """Fetches all materials under a topic or subtopic in the requested language."""
         try:
-            # ✅ Determine Firestore reference
+            # 🔹 Determine Firestore reference
             if is_subtopic and subtopic_id:
                 ref = (
                     db.collection("courses")
@@ -84,19 +116,30 @@ class MaterialService:
                     .collection("materials")
                 )
 
-            # ✅ Fetch documents from Firestore
             materials = ref.stream()
-            material_list = [material.to_dict() for material in materials]
+            material_list = []
 
-            # ✅ Convert Firestore Timestamp to datetime
-            for material in material_list:
-                if isinstance(material.get("created_at"), datetime):
-                    material["created_at"] = material["created_at"].isoformat()
-                if isinstance(material.get("updated_at"), datetime):
-                    material["updated_at"] = material["updated_at"].isoformat()
+            for material in materials:
+                material_data = material.to_dict()
 
-            # ✅ Return empty list instead of raising HTTPException
+                # 🔹 Ensure "languages" key exists
+                if "languages" not in material_data:
+                    continue  
+
+                lang_data = material_data["languages"].get(target_language, material_data["languages"].get("en", {}))
+
+                # 🔹 Construct material response
+                material_list.append({
+                    "id": material.id,
+                    "type": material_data.get("type", ""),
+                    "category": material_data.get("category", ""),
+                    "content": lang_data.get("content", material_data["content"]),  # ✅ Use translated content if available
+                    "optional_text": lang_data.get("optional_text", ""),
+                    "created_at": material_data["created_at"],
+                    "updated_at": material_data["updated_at"],
+                })
+
             return [MaterialResponse(**material) for material in material_list]
-        
+
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Error fetching materials: {str(e)}")
