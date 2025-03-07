@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import '../../academe_theme.dart';
 import 'package:ACADEMe/home/admin_panel/subtopic.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class TopicScreen extends StatefulWidget {
   final String courseId;
@@ -40,7 +41,7 @@ class _TopicScreenState extends State<TopicScreen> {
     }
 
     final response = await http.get(
-      Uri.parse('http://10.0.2.2:8000/api/courses/${widget.courseId}/topics/'),
+      Uri.parse('${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/${widget.courseId}/topics/'),
       headers: {
         "Authorization": "Bearer $token",
         "Content-Type": "application/json",
@@ -98,7 +99,7 @@ class _TopicScreenState extends State<TopicScreen> {
                 }
 
                 final response = await http.post(
-                  Uri.parse('http://10.0.2.2:8000/api/courses/${widget.courseId}/topics/'),
+                  Uri.parse('${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/${widget.courseId}/topics/'),
                   headers: {
                     "Authorization": "Bearer $token",
                     "Content-Type": "application/json",

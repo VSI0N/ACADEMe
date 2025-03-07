@@ -12,6 +12,7 @@ import 'file_view.dart';
 import 'package:ACADEMe/widget/chat_history_drawer.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ASKMe extends StatefulWidget {
   @override
@@ -170,7 +171,7 @@ class _ASKMeState extends State<ASKMe> {
       [String prompt = '']) async {
     //ASKMe backend URL
     var url = Uri.parse(
-        'http://10.0.2.2:8000/api/process_${fileType.toLowerCase()}');
+        '${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/process_${fileType.toLowerCase()}');
 
     var request = http.MultipartRequest('POST', url);
     request.fields.addAll({
@@ -307,7 +308,7 @@ class _ASKMeState extends State<ASKMe> {
 
       // Backend API URL
       var url = Uri.parse(
-          'http://10.0.2.2:8000/api/process_stt');
+          dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000');
 
       var request = http.MultipartRequest('POST', url);
 
@@ -404,7 +405,7 @@ class _ASKMeState extends State<ASKMe> {
     if (message.isNotEmpty) {
       // ASKMe backend URL
       var url = Uri.parse(
-          'http://10.0.2.2:8000/api/process_text');
+          '${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/process_text');
 
       try {
         var response = await http.post(

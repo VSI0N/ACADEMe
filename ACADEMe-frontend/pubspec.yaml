@@ -58,6 +58,7 @@ dependencies:
   smooth_page_indicator: ^1.2.1
   provider: ^6.1.2
   shared_preferences: ^2.5.2
+  flutter_dotenv: ^5.2.1
   flutter_localizations:
     sdk: flutter
 

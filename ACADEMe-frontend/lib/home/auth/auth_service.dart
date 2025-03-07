@@ -4,6 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AppUser {
   final String id;
@@ -37,7 +38,7 @@ class AuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
-  static const String _baseUrl = "http://10.0.2.2:8000"; // Backend URL
+  static final String _baseUrl = dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'; // Backend URL
 
   /// ✅ Sign up user via backend & store access token securely
   Future<(AppUser?, String?)> signUp(String email, String password, String name,

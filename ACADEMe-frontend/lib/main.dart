@@ -19,9 +19,17 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  try {
+    await dotenv.load(fileName: ".env");
+    print("✅ .env file Initialized Successfully");
+  } catch (e) {
+    print("❌ .env file Initialization Error: $e");
+  }
 
   try {
     await Firebase.initializeApp(

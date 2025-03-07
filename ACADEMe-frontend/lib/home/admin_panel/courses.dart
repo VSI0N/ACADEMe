@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../academe_theme.dart';
 import 'topic.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class CourseManagementScreen extends StatefulWidget {
   @override
@@ -28,7 +29,7 @@ class _CourseManagementScreenState extends State<CourseManagementScreen> {
     }
 
     final response = await http.get(
-      Uri.parse('http://10.0.2.2:8000/api/courses/'),
+      Uri.parse('${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/'),
       headers: {
         "Authorization": "Bearer $token",
         "Content-Type": "application/json",
@@ -92,7 +93,7 @@ class _CourseManagementScreenState extends State<CourseManagementScreen> {
                 }
 
                 final response = await http.post(
-                  Uri.parse('http://10.0.2.2:8000/api/courses/'),
+                  Uri.parse('${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/'),
                   headers: {
                     "Authorization": "Bearer $token",
                     "Content-Type": "application/json",
