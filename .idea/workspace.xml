@@ -5,19 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="305d9e88-f8ff-4439-948e-53cd16caa2bc" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/db/sessions/026043aa98b145214e1bdbbc62162f77" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/db/sessions/4b6986724e70cd6fb9358a1a0fd11d2e" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/db/sessions/8287d7386f40446ab7e9973d2412f22d" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/db/sessions/f2e7c4639c9abe7bc45f0b209ec639a7" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ACADEMe-frontend/assets/.env_example" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/55221s2g/arm64-v8a/configure_fingerprint.bin" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/55221s2g/arm64-v8a/configure_fingerprint.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/55221s2g/armeabi-v7a/configure_fingerprint.bin" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/55221s2g/armeabi-v7a/configure_fingerprint.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/55221s2g/x86/configure_fingerprint.bin" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/55221s2g/x86/configure_fingerprint.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/55221s2g/x86_64/configure_fingerprint.bin" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/android/app/.cxx/Debug/55221s2g/x86_64/configure_fingerprint.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/admin_panel/courses.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/admin_panel/courses.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/admin_panel/topic.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/admin_panel/topic.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/auth/auth_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/auth/auth_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/ASKMe.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/home/pages/ASKMe.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/lib/main.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ACADEMe-frontend/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/ACADEMe-frontend/pubspec.yaml" afterDir="false" />
@@ -92,11 +82,11 @@
       <recent name="C:\Clone\ACADEMe\lib\utils\theme\custom_themes" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/ACADEMe-frontend" />
+      <recent name="$PROJECT_DIR$/ACADEMe-frontend/assets/config" />
       <recent name="$PROJECT_DIR$/ACADEMe-backend" />
       <recent name="$PROJECT_DIR$/ACADEMe-backend/utils" />
       <recent name="$PROJECT_DIR$/ACADEMe-backend/services" />
-      <recent name="$PROJECT_DIR$/ACADEMe-backend/models" />
-      <recent name="$PROJECT_DIR$/lib/home/pages" />
     </key>
   </component>
   <component name="RunManager">

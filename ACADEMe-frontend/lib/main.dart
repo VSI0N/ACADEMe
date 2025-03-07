@@ -25,10 +25,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   try {
-    await dotenv.load(fileName: ".env");
-    print("✅ .env file Initialized Successfully");
+    await dotenv.load(fileName: "assets/.env");
+    print("✅ .env Loaded Successfully");
   } catch (e) {
-    print("❌ .env file Initialization Error: $e");
+    print("❌ .env Load Error: $e");
   }
 
   try {
@@ -45,6 +45,8 @@ void main() async {
   if (userEmail != null) {
     await UserRoleManager().fetchUserRole(userEmail);
   }
+
+  await UserRoleManager().loadRole();
 
 
   // Fetch role on app start

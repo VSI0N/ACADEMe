@@ -308,7 +308,7 @@ class _ASKMeState extends State<ASKMe> {
 
       // Backend API URL
       var url = Uri.parse(
-          dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000');
+          '${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/process_stt');
 
       var request = http.MultipartRequest('POST', url);
 
