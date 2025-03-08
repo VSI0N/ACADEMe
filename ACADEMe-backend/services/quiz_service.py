@@ -4,6 +4,8 @@ from models.quiz_model import QuizCreate, QuizResponse, QuestionCreate, Question
 from datetime import datetime
 import uuid
 from fastapi import HTTPException
+from services.course_service import CourseService
+import httpx
 
 db = firestore.client()
 
@@ -12,23 +14,37 @@ class QuizService:
     async def add_quiz(
         course_id: str, 
         topic_id: str, 
-        quiz_data: QuizCreate,  # ✅ This is a Pydantic model
+        quiz_data: QuizCreate,  
         is_subtopic: bool = False, 
         subtopic_id: str = None
     ) -> QuizResponse:
-        """Adds a quiz under a topic or subtopic in Firestore."""
+        """Adds a quiz under a topic or subtopic in Firestore with multilingual support."""
         try:
             quiz_id = str(uuid.uuid4())
-
-            # ✅ Convert Pydantic model to a dictionary
             quiz_dict = quiz_data.model_dump()
-
-            # ✅ Now modify values in the dictionary
             quiz_dict["id"] = quiz_id
             quiz_dict["created_at"] = datetime.utcnow().isoformat()
             quiz_dict["updated_at"] = datetime.utcnow().isoformat()
 
-            # ✅ Reference to Firestore
+            # ✅ Detect language
+            detected_language = await CourseService.detect_language([quiz_data.title, quiz_data.description])
+
+            # ✅ Define target languages (modify as needed)
+            target_languages = ["fr", "es", "de", "zh", "ar", "hi", "en"]
+            if detected_language not in target_languages:
+                detected_language = "en"  # Default to English if the detected language is not supported
+
+            quiz_dict["languages"] = {detected_language: {"title": quiz_data.title, "description": quiz_data.description}}
+
+            # ✅ Translate title & description
+            for lang in target_languages:
+                if lang != detected_language:
+                    quiz_dict["languages"][lang] = {
+                        "title": await CourseService.translate_text(quiz_data.title, lang),
+                        "description": await CourseService.translate_text(quiz_data.description, lang)
+                    }
+
+            # ✅ Store quiz in Firestore
             if is_subtopic and subtopic_id:
                 ref = (
                     db.collection("courses")
@@ -50,10 +66,7 @@ class QuizService:
                     .document(quiz_id)
                 )
 
-            # ✅ Store modified quiz data in Firestore
             ref.set(quiz_dict, merge=True)
-
-            # ✅ Return response using Pydantic model
             return QuizResponse(**quiz_dict)
 
         except Exception as e:
@@ -63,10 +76,11 @@ class QuizService:
     async def get_quizzes(
         course_id: str, 
         topic_id: str, 
+        target_language: str = "en",  # Allow specifying language
         is_subtopic: bool = False, 
         subtopic_id: str = None
     ) -> list[QuizResponse]:
-        """Fetches quizzes either under a topic or subtopic from Firestore."""
+        """Fetches quizzes either under a topic or subtopic from Firestore, supporting multilingual responses."""
         try:
             if is_subtopic and subtopic_id:
                 ref = (
@@ -91,13 +105,22 @@ class QuizService:
             quiz_list = [quiz.to_dict() for quiz in quizzes]
 
             if not quiz_list:
-                return []  # ✅ Return empty list instead of throwing error
+                return []
 
             for quiz in quiz_list:
                 if isinstance(quiz.get("created_at"), datetime):
                     quiz["created_at"] = quiz["created_at"].isoformat()
                 if isinstance(quiz.get("updated_at"), datetime):
                     quiz["updated_at"] = quiz["updated_at"].isoformat()
+                
+                # ✅ Fetch translation if available
+                languages = quiz.get("languages", {})
+                if target_language in languages:
+                    quiz["title"] = languages[target_language].get("title", quiz["title"])
+                    quiz["description"] = languages[target_language].get("description", quiz["description"])
+                else:
+                    quiz["title"] = languages.get("en", {}).get("title", quiz["title"])
+                    quiz["description"] = languages.get("en", {}).get("description", quiz["description"])
 
             return [QuizResponse(**quiz) for quiz in quiz_list]
 
@@ -109,21 +132,43 @@ class QuizService:
         course_id: str,
         topic_id: str,
         quiz_id: str,
-        question_data: QuestionCreate,  # ✅ This is a Pydantic model
+        question_data: QuestionCreate,  
         is_subtopic: bool = False,
         subtopic_id: str = None
     ) -> QuestionResponse:
-        """Adds a question to a quiz in Firestore."""
+        """Adds a question to a quiz in Firestore with multilingual support."""
         try:
             question_id = str(uuid.uuid4())
-
-            # ✅ Convert Pydantic model to dictionary before modifying
-            question_dict = question_data.dict()
+            question_dict = question_data.model_dump()
             question_dict["id"] = question_id
-            question_dict["quiz_id"] = quiz_id  # ✅ Add quiz_id
+            question_dict["quiz_id"] = quiz_id
             question_dict["created_at"] = datetime.utcnow().isoformat()
-            question_dict["updated_at"] = datetime.utcnow().isoformat()  # ✅ Add updated_at
+            question_dict["updated_at"] = datetime.utcnow().isoformat()
 
+            # ✅ Detect language
+            detected_language = await CourseService.detect_language([question_data.question_text] + question_data.options)
+
+            # ✅ Define target languages (modify as needed)
+            target_languages = ["fr", "es", "de", "zh", "ar", "hi", "en"]
+            if detected_language not in target_languages:
+                detected_language = "en"  # Default to English if the detected language is not supported
+
+            question_dict["languages"] = {
+                detected_language: {
+                    "question_text": question_data.question_text,
+                    "options": question_data.options
+                }
+            }
+
+            # ✅ Translate question_text & options
+            for lang in target_languages:
+                if lang != detected_language:
+                    question_dict["languages"][lang] = {
+                        "question_text": await CourseService.translate_text(question_data.question_text, lang),
+                        "options": [await CourseService.translate_text(opt, lang) for opt in question_data.options]
+                    }
+
+            # ✅ Store question in Firestore
             if is_subtopic and subtopic_id:
                 ref = (
                     db.collection("courses")
@@ -150,7 +195,7 @@ class QuizService:
                 )
 
             ref.set(question_dict, merge=True)
-            return QuestionResponse(**question_dict)  # ✅ No more missing fields!
+            return QuestionResponse(**question_dict)
 
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Error adding question: {str(e)}")
@@ -160,12 +205,12 @@ class QuizService:
         course_id: str,
         topic_id: str,
         quiz_id: str,
+        target_language: str = "en",  # Allow specifying language
         is_subtopic: bool = False,
         subtopic_id: str = None
     ) -> list[QuestionResponse]:
-        """Fetches all questions under a quiz from Firestore."""
+        """Fetches all questions under a quiz from Firestore, supporting multilingual responses."""
         try:
-            # ✅ Determine Firestore reference based on topic or subtopic
             if is_subtopic and subtopic_id:
                 ref = (
                     db.collection("courses")
@@ -189,18 +234,25 @@ class QuizService:
                     .collection("questions")
                 )
 
-            # ✅ Fetch questions
             questions = ref.stream()
             question_list = []
 
             for question in questions:
                 question_data = question.to_dict()
 
-                # ✅ Ensure required fields exist
-                question_data["id"] = question.id  # Assign Firestore document ID
-                question_data["quiz_id"] = quiz_id  # ✅ Ensure `quiz_id` exists
+                question_data["id"] = question.id
+                question_data["quiz_id"] = quiz_id
                 question_data["updated_at"] = question_data.get("updated_at", datetime.utcnow().isoformat())
                 question_data["created_at"] = question_data.get("created_at", datetime.utcnow().isoformat())
+
+                # ✅ Fetch translation if available
+                languages = question_data.get("languages", {})
+                if target_language in languages:
+                    question_data["question_text"] = languages[target_language].get("question_text", question_data["question_text"])
+                    question_data["options"] = languages[target_language].get("options", question_data["options"])
+                else:
+                    question_data["question_text"] = languages.get("en", {}).get("question_text", question_data["question_text"])
+                    question_data["options"] = languages.get("en", {}).get("options", question_data["options"])
 
                 question_list.append(QuestionResponse(**question_data))
 

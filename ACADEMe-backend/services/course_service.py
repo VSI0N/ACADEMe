@@ -68,7 +68,6 @@ class CourseService:
 
         # 🌎 Translate into other languages (excluding detected language)
         target_languages = ["fr", "es", "de", "zh", "ar", "hi", "en"]
-        target_languages.remove(detected_lang)
 
         # 🚀 Run all translation tasks in parallel
         translation_tasks = {

@@ -17,7 +17,6 @@ class TopicService:
         }
 
         target_languages = ["fr", "es", "de", "zh", "ar", "hi", "en"]
-        target_languages.remove(detected_lang)
 
         translation_tasks = {
             lang: {
@@ -76,7 +75,6 @@ class TopicService:
         }
 
         target_languages = ["fr", "es", "de", "zh", "ar", "hi", "en"]
-        target_languages.remove(detected_lang)
 
         translation_tasks = {
             lang: {

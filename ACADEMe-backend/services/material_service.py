@@ -39,7 +39,6 @@ class MaterialService:
 
             # 🔹 Translate only `content` if type == "text", and always translate `optional_text`
             target_languages = ["fr", "es", "de", "zh", "ar", "hi", "en"]
-            target_languages.remove(detected_lang)
 
             translation_tasks = {
                 lang: {

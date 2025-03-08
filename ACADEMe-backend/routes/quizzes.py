@@ -38,17 +38,16 @@ async def create_subtopic_quiz(
     """Creates a quiz under a subtopic."""
     return await QuizService.add_quiz(course_id, topic_id, quiz_data, is_subtopic=True, subtopic_id=subtopic_id)
 
-
 ### 📌 Fetch Quizzes Under a Topic ###
 @router.get("/{course_id}/topics/{topic_id}/quizzes/")
 async def get_topic_quizzes(
     course_id: str,
     topic_id: str,
+    target_language: str = "en",  # ✅ Add language parameter
     user: dict = Depends(get_current_user)
 ):
     """Fetches quizzes that are directly added under a topic."""
-    return await QuizService.get_quizzes(course_id, topic_id, is_subtopic=False)
-
+    return await QuizService.get_quizzes(course_id, topic_id, target_language, is_subtopic=False)
 
 ### 📌 Fetch Quizzes Under a Subtopic ###
 @router.get("/{course_id}/topics/{topic_id}/subtopics/{subtopic_id}/quizzes/")
@@ -56,11 +55,11 @@ async def get_subtopic_quizzes(
     course_id: str,
     topic_id: str,
     subtopic_id: str,
+    target_language: str = "en",  # ✅ Add language parameter
     user: dict = Depends(get_current_user)
 ):
     """Fetches quizzes that are specifically added under a subtopic."""
-    return await QuizService.get_quizzes(course_id, topic_id, is_subtopic=True, subtopic_id=subtopic_id)
-
+    return await QuizService.get_quizzes(course_id, topic_id, target_language, is_subtopic=True, subtopic_id=subtopic_id)
 
 ### 📌 Add a Question to a Topic Quiz ###
 @router.post("/{course_id}/topics/{topic_id}/quizzes/{quiz_id}/questions/")
@@ -102,10 +101,11 @@ async def get_questions_for_topic_quiz(
     course_id: str,
     topic_id: str,
     quiz_id: str,
+    target_language: str = "en",  # ✅ Add language parameter
     user: dict = Depends(get_current_user)
 ):
     """Fetches all questions under a quiz in a topic."""
-    return await QuizService.get_questions(course_id, topic_id, quiz_id, is_subtopic=False)
+    return await QuizService.get_questions(course_id, topic_id, quiz_id, target_language, is_subtopic=False)
 
 
 ### 📌 Fetch Questions for a Subtopic Quiz ###
@@ -115,7 +115,8 @@ async def get_questions_for_subtopic_quiz(
     topic_id: str,
     subtopic_id: str,
     quiz_id: str,
+    target_language: str = "en",  # ✅ Add language parameter
     user: dict = Depends(get_current_user)
 ):
     """Fetches all questions under a quiz in a subtopic."""
-    return await QuizService.get_questions(course_id, topic_id, quiz_id, is_subtopic=True, subtopic_id=subtopic_id)
+    return await QuizService.get_questions(course_id, topic_id, quiz_id, target_language, is_subtopic=True, subtopic_id=subtopic_id)
