@@ -12,33 +12,112 @@ from fastapi.encoders import jsonable_encoder
 import asyncio
 from models.graph_model import ProgressVisualResponse
 import json
+from services.course_service import CourseService
 
 db = firestore.client()
 
-def log_progress(user_id: str, progress_data: dict):
-    """Logs a new progress entry inside the user's progress subcollection in Firestore."""
-    try:
-        progress_ref: DocumentReference = db.collection("users").document(user_id).collection("progress").document()
-        progress_data["timestamp"] = firestore.SERVER_TIMESTAMP  # Firestore will set timestamp
-        progress_ref.set(progress_data)
+target_languages = ["fr", "es", "de", "zh", "ar", "hi", "en"]
 
-        # Fetch document to get Firestore-populated timestamp
-        saved_progress = progress_ref.get().to_dict()
-        saved_progress["id"] = progress_ref.id
+async def log_progress(user_id: str, progress_data: dict):
+    """Logs student progress in Firestore with translations."""
+    progress_ref = db.collection("users").document(user_id).collection("progress").document()
+    progress_id = progress_ref.id  # ✅ Get the generated document ID
 
-        # Ensure FastAPI serialization by removing Firestore Sentinels
-        return jsonable_encoder(saved_progress)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error logging progress: {str(e)}")
+    # 🔍 Detect the language of input fields
+    detected_language = await CourseService.detect_language([
+        progress_data.get("status", ""),
+        progress_data.get("activity_type", ""),
+    ])
+    progress_data["language"] = detected_language  # Store detected language
+    
+    # 🔄 Extract only relevant fields for `languages` tab
+    languages = {
+        detected_language: {
+            "status": progress_data.get("status", ""),
+            "activity_type": progress_data.get("activity_type", ""),
+            "metadata": progress_data.get("metadata", {})  # Keep metadata as-is
+        }
+    }
 
-def get_student_progress_list(user_id: str):
-    """Fetches all progress entries for a student from Firestore."""
-    try:
-        progress_ref = db.collection("users").document(user_id).collection("progress")
-        progress_docs = progress_ref.stream()
-        return [{**doc.to_dict(), "id": doc.id} for doc in progress_docs if doc.exists]
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching progress: {str(e)}")
+    tasks = []
+    for lang in target_languages:
+        if lang == detected_language:
+            continue  # ✅ Skip detected language (already stored)
+
+        # Translate status and activity type
+        tasks.append(asyncio.create_task(CourseService.translate_text(progress_data.get("status", ""), lang)))
+        tasks.append(asyncio.create_task(CourseService.translate_text(progress_data.get("activity_type", ""), lang)))
+
+        # Translate metadata if applicable
+        if "metadata" in progress_data:
+            for key, value in progress_data["metadata"].items():
+                if isinstance(value, str):  # Only translate string values
+                    tasks.append(asyncio.create_task(CourseService.translate_text(value, lang)))
+
+    translated_results = await asyncio.gather(*tasks)  # Run translations concurrently
+    
+    index = 0
+    for lang in target_languages:
+        if lang == detected_language:
+            continue
+
+        languages[lang] = {
+            "status": translated_results[index],
+            "activity_type": translated_results[index + 1],
+            "metadata": {}
+        }
+        index += 2
+
+        if "metadata" in progress_data:
+            for key, value in progress_data["metadata"].items():
+                if isinstance(value, str):  # Only translate string values
+                    languages[lang]["metadata"][key] = translated_results[index]
+                    index += 1
+                else:
+                    languages[lang]["metadata"][key] = value  # Keep non-string values unchanged
+
+    progress_data["languages"] = languages  # Store translations
+    progress_data["progress_id"] = progress_id  # ✅ Include progress ID
+
+    progress_ref.set(progress_data)  # Store in Firestore
+    return {"progress_id": progress_id, **progress_data}  # ✅ Return progress_id in response
+
+async def get_student_progress_list(user_id: str, target_language: str):
+    """Fetches student progress records, returning only the requested language data."""
+    progress_ref = db.collection("users").document(user_id).collection("progress")
+    docs = progress_ref.stream()
+
+    progress_list = []
+    for doc in docs:
+        data = doc.to_dict()
+
+        # If target language exists in translations, replace original fields
+        if target_language in data.get("languages", {}):
+            translated_data = data["languages"][target_language]
+        else:
+            translated_data = {
+                "status": data["status"],
+                "activity_type": data["activity_type"],
+                "metadata": data["metadata"],
+            }
+
+        # Add only relevant fields to the response
+        progress_entry = {
+            "progress_id": doc.id,
+            "topic_id": data["topic_id"],
+            "subtopic_id": data["subtopic_id"],
+            "material_id": data["material_id"],
+            "quiz_id": data["quiz_id"],
+            "score": data["score"],
+            "timestamp": data["timestamp"],
+            "status": translated_data.get("status", data["status"]),
+            "activity_type": translated_data.get("activity_type", data["activity_type"]),
+            "metadata": translated_data.get("metadata", data["metadata"]),
+        }
+
+        progress_list.append(progress_entry)
+
+    return progress_list
 
 async def get_student_progress(user_id: str):
     """Fetches all progress entries for a student using Firestore's `stream()` asynchronously."""
@@ -56,28 +135,70 @@ async def get_student_progress(user_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error fetching progress: {str(e)}")
 
-def update_progress_status(user_id: str, progress_id: str, progress_update: dict):
-    """Updates an existing progress entry in Firestore."""
-    try:
-        progress_ref = db.collection("users").document(user_id).collection("progress").document(progress_id)
-        doc = progress_ref.get()
-        if not doc.exists:
-            raise HTTPException(status_code=404, detail="Progress entry not found")
+async def update_progress_status(user_id: str, progress_id: str, update_data: dict):
+    """Updates student progress and translates updated fields, ensuring metadata keys remain unchanged."""
+    progress_ref = db.collection("users").document(user_id).collection("progress").document(progress_id)
+    progress_doc = progress_ref.get()
 
-        # Add Firestore's server timestamp for tracking updates
-        progress_update["updated_at"] = firestore.SERVER_TIMESTAMP
+    print(f"🔍 Checking progress record: {progress_ref.path}")
 
-        # Update Firestore document
-        progress_ref.update(progress_update)
+    if not progress_doc.exists:
+        print(f"❌ Progress {progress_id} not found for user {user_id}")
+        return None  # ✅ Return None if progress not found
 
-        # Fetch updated document after Firestore processing
-        updated_doc = progress_ref.get().to_dict()
-        updated_doc["id"] = progress_id
+    progress_data = progress_doc.to_dict()
+    detected_language = progress_data.get("language", "en")  # Use stored language
+    translations = progress_data.get("languages", {})
 
-        # Ensure FastAPI serialization by removing Firestore Sentinels
-        return jsonable_encoder(updated_doc)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error updating progress: {str(e)}")
+    # 🔹 Fields to translate
+    translatable_fields = ["title", "description", "status"]
+    tasks = []
+    lang_keys = []
+
+    # 🔄 Queue translations for title, description, and status
+    for lang in target_languages:
+        if lang == detected_language:
+            continue  # ✅ Skip detected language
+
+        for field in translatable_fields:
+            if field in update_data:
+                tasks.append(asyncio.create_task(CourseService.translate_text(update_data[field], lang)))
+                lang_keys.append((lang, field))
+
+    # 🔄 Handle metadata values separately (keys should remain unchanged)
+    metadata_translations = {}
+    if "metadata" in update_data:
+        metadata_translations = {lang: {} for lang in target_languages if lang != detected_language}
+
+        for key, value in update_data["metadata"].items():
+            for lang in metadata_translations.keys():
+                tasks.append(asyncio.create_task(CourseService.translate_text(value, lang)))
+                lang_keys.append((lang, "metadata", key))  # Store key for proper mapping
+
+    # 🛠️ Perform translations
+    translated_results = await asyncio.gather(*tasks)
+
+    # 🔄 Store translations in the correct language structure
+    for idx, data in enumerate(lang_keys):
+        if len(data) == 2:  # Regular fields (title, description, status)
+            lang, field = data
+            translations.setdefault(lang, {})[field] = translated_results[idx]
+        elif len(data) == 3:  # Metadata values (key should remain unchanged)
+            lang, field, meta_key = data
+            metadata_translations[lang][meta_key] = translated_results[idx]
+
+    # 🔄 Merge metadata translations into the languages structure
+    for lang, meta_data in metadata_translations.items():
+        translations.setdefault(lang, {})["metadata"] = meta_data
+
+    # ✅ Store translated data in Firestore
+    update_data["languages"] = translations
+    json_data = jsonable_encoder(update_data)  # Ensure proper serialization
+    progress_ref.update(json_data)
+
+    print(f"✅ Progress {progress_id} updated successfully for user {user_id}")
+
+    return json_data  # Return the updated data
 
 def fetch_quiz_progress(user_id: str):
     """Fetches only quiz-related progress entries for analytics."""
