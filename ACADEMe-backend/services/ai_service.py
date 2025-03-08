@@ -3,12 +3,14 @@ import json
 from config.settings import GOOGLE_GEMINI_API_KEY
 from services.progress_service import fetch_student_performance
 from services.quiz_service import QuizService
+from services.course_service import CourseService
 
 genai.configure(api_key=GOOGLE_GEMINI_API_KEY)
 
-async def get_recommendations(user_id: str):
+async def get_recommendations(user_id: str, target_language: str = "en"):
     """
     Fetch student progress, analyze it using Gemini AI, and return personalized recommendations.
+    Automatically translates the response into the specified target language.
     """
 
     progress_data = await fetch_student_performance(user_id)
@@ -48,4 +50,7 @@ async def get_recommendations(user_id: str):
     for quiz_id, quiz_title in quiz_mapping.items():
         response_text = response_text.replace(quiz_id, f'"{quiz_title}"')
 
-    return {"recommendations": response_text}  # ✅ Fixed incorrect `await`
+    # ✅ Translate the recommendations into the target language
+    translated_text = await CourseService.translate_text(response_text, target_language)
+
+    return {"recommendations": translated_text}  # ✅ Return translated text

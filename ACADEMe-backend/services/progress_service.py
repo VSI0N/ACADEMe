@@ -21,7 +21,12 @@ target_languages = ["fr", "es", "de", "zh", "ar", "hi", "en"]
 async def log_progress(user_id: str, progress_data: dict):
     """Logs student progress in Firestore with translations."""
     progress_ref = db.collection("users").document(user_id).collection("progress").document()
-    progress_id = progress_ref.id  # ✅ Get the generated document ID
+    progress_id = progress_ref.id  # ✅ Generate a unique progress ID
+
+    # Ensure `course_id` is included
+    course_id = progress_data.get("course_id")
+    if not course_id:
+        raise HTTPException(status_code=400, detail="course_id is required")
 
     # 🔍 Detect the language of input fields
     detected_language = await CourseService.detect_language([
@@ -29,7 +34,7 @@ async def log_progress(user_id: str, progress_data: dict):
         progress_data.get("activity_type", ""),
     ])
     progress_data["language"] = detected_language  # Store detected language
-    
+
     # 🔄 Extract only relevant fields for `languages` tab
     languages = {
         detected_language: {
@@ -78,6 +83,7 @@ async def log_progress(user_id: str, progress_data: dict):
 
     progress_data["languages"] = languages  # Store translations
     progress_data["progress_id"] = progress_id  # ✅ Include progress ID
+    progress_data["course_id"] = course_id  # ✅ Store `course_id`
 
     progress_ref.set(progress_data)  # Store in Firestore
     return {"progress_id": progress_id, **progress_data}  # ✅ Return progress_id in response
@@ -104,6 +110,7 @@ async def get_student_progress_list(user_id: str, target_language: str):
         # Add only relevant fields to the response
         progress_entry = {
             "progress_id": doc.id,
+            "course_id": data["course_id"],
             "topic_id": data["topic_id"],
             "subtopic_id": data["subtopic_id"],
             "material_id": data["material_id"],

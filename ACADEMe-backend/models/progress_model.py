@@ -3,6 +3,7 @@ from typing import Optional, Dict
 from datetime import datetime
 
 class ProgressBase(BaseModel):
+    course_id: Optional[str] = None
     topic_id: Optional[str] = None
     subtopic_id: Optional[str] = None
     material_id: Optional[str] = None
