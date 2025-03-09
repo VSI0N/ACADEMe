@@ -5,6 +5,7 @@ import 'package:ACADEMe/home/pages/course_view.dart';
 import 'package:ACADEMe/home/pages/profile.dart';
 import 'package:ACADEMe/home/pages/ASKMe.dart';
 import '../../academe_theme.dart';
+import 'package:ACADEMe/home/pages/my_progress.dart';
 
 class HomepageDrawer extends StatelessWidget {
   final VoidCallback onClose;
@@ -62,7 +63,7 @@ class HomepageDrawer extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) =>
-                const ProfilePage(), // Directly navigate to ProfileScreen
+                    const ProfilePage(), // Directly navigate to ProfileScreen
               ),
             );
           }),
@@ -71,18 +72,18 @@ class HomepageDrawer extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) =>
-                const CourseListScreen(), // Directly navigate to CourseListScreen
+                    const CourseListScreen(), // Directly navigate to CourseListScreen
               ),
             );
           }),
           _buildDrawerItem(Icons.show_chart, "My Progress", () {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) =>
-            //         const ProgressScreen(), // Directly navigate to ProgressScreen
-            //   ),
-            // );
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    ProgressScreen(), // Directly navigate to ProgressScreen
+              ),
+            );
           }),
           _buildDrawerItem(Icons.headset_mic, "ASKMe", () {
             Navigator.push(
@@ -129,7 +130,7 @@ class HomepageDrawer extends StatelessWidget {
                   child: const CircleAvatar(
                     radius: 25,
                     backgroundImage:
-                    AssetImage('assets/design_course/userImage.png'),
+                        AssetImage('assets/design_course/userImage.png'),
                   ),
                 ),
                 const SizedBox(width: 12),

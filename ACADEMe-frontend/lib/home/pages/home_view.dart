@@ -5,6 +5,7 @@ import 'package:ACADEMe/home/components/ASKMe_button.dart';
 import 'package:ACADEMe/widget/homepage_drawer.dart';
 import 'dart:math';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:ACADEMe/home/pages/my_progress.dart';
 
 import '../courses/linear_algebra/Linear_algebra.dar.dart';
 
@@ -42,10 +43,10 @@ class HomePage extends StatelessWidget {
             leading: Container(), // Remove default hamburger
             flexibleSpace: Padding(
               padding:
-              const EdgeInsets.only(top: 15.0), // Adjust top padding here
+                  const EdgeInsets.only(top: 15.0), // Adjust top padding here
               child: getAppBarUI(
                 onProfileTap,
-                    () {
+                () {
                   scaffoldKey.currentState
                       ?.openDrawer(); // Open drawer when custom button is clicked
                 },
@@ -75,7 +76,7 @@ class HomePage extends StatelessWidget {
                       // Search Bar
                       Padding(
                         padding:
-                        const EdgeInsets.only(top: 10.0), // Upper padding
+                            const EdgeInsets.only(top: 10.0), // Upper padding
                         child: TextField(
                           decoration: InputDecoration(
                             hintText: 'Search',
@@ -84,7 +85,7 @@ class HomePage extends StatelessWidget {
                                   left: 12.0, right: 8.0), // Spacing
                               child: Transform.rotate(
                                 angle:
-                                -1.57, // Rotate 90 degrees counterclockwise
+                                    -1.57, // Rotate 90 degrees counterclockwise
                                 child: const Icon(
                                     Icons.tune), // Rotated Tune Icon (Vertical)
                               ),
@@ -165,7 +166,7 @@ class HomePage extends StatelessWidget {
                                         fontWeight: FontWeight
                                             .w800, // Even bolder than FontWeight.bold
                                         fontFamily:
-                                        "Roboto", // Use built-in font
+                                            "Roboto", // Use built-in font
                                       ),
                                     ),
                                     SizedBox(height: 4),
@@ -195,12 +196,12 @@ class HomePage extends StatelessWidget {
                                             horizontal: 12), // Adjust padding
                                         hintText: "ASKMe Anything...",
                                         hintStyle:
-                                        TextStyle(color: Colors.grey[600]),
+                                            TextStyle(color: Colors.grey[600]),
                                         filled: true,
                                         fillColor: Colors.white,
                                         border: OutlineInputBorder(
                                           borderRadius:
-                                          BorderRadius.circular(8),
+                                              BorderRadius.circular(8),
                                           borderSide: BorderSide(
                                             color: Colors.grey.shade400,
                                             width: 1.5,
@@ -208,7 +209,7 @@ class HomePage extends StatelessWidget {
                                         ),
                                         enabledBorder: OutlineInputBorder(
                                           borderRadius:
-                                          BorderRadius.circular(12),
+                                              BorderRadius.circular(12),
                                           borderSide: BorderSide(
                                             color: Colors.grey.shade300,
                                             width: 1.5,
@@ -216,7 +217,7 @@ class HomePage extends StatelessWidget {
                                         ),
                                         focusedBorder: OutlineInputBorder(
                                           borderRadius:
-                                          BorderRadius.circular(12),
+                                              BorderRadius.circular(12),
                                           borderSide: BorderSide(
                                             color: Colors.blue,
                                             width: 2,
@@ -249,80 +250,90 @@ class HomePage extends StatelessWidget {
                       const SizedBox(height: 20),
 
                       // My Progress Section
-                      Card(
-                        color: Colors
-                            .indigoAccent, // Background color similar to the image
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                          BorderRadius.circular(12.0), // Rounded edges
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 15.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              // Left Section: Title & Subtitle
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  Text(
-                                    "My Progress",
-                                    style: TextStyle(
-                                      fontSize: 26,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProgressScreen()),
+                          );
+                        },
+                        child: Card(
+                          color: Colors
+                              .indigoAccent, // Background color similar to the image
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(12.0), // Rounded edges
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 15.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                // Left Section: Title & Subtitle
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                    Text(
+                                      "My Progress",
+                                      style: TextStyle(
+                                        fontSize: 26,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(height: 4),
-                                  Text(
-                                    "Track your progress",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.white70,
+                                    SizedBox(height: 4),
+                                    Text(
+                                      "Track your progress",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.white70,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
+                                  ],
+                                ),
 
-                              // Right Section: Fire Icon with Badge
-                              Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  Container(
-                                    width: 50,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: const Color.fromARGB(255, 247, 177,
-                                          55), // Fire icon background
-                                    ),
-                                    child: const Icon(
-                                        Icons.local_fire_department,
-                                        color: Colors.white,
-                                        size: 24),
-                                  ),
-                                  Positioned(
-                                    bottom: -2,
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8, vertical: 2),
+                                // Right Section: Fire Icon with Badge
+                                Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Container(
+                                      width: 50,
+                                      height: 50,
                                       decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(20),
+                                        shape: BoxShape.circle,
+                                        color: const Color.fromARGB(255, 247,
+                                            177, 55), // Fire icon background
                                       ),
-                                      child: const Text(
-                                        "420",
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold),
+                                      child: const Icon(
+                                          Icons.local_fire_department,
+                                          color: Colors.white,
+                                          size: 24),
+                                    ),
+                                    Positioned(
+                                      bottom: -2,
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 2),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                        child: const Text(
+                                          "420",
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -355,23 +366,23 @@ class HomePage extends StatelessWidget {
                       const SizedBox(height: 12),
                       learningCard(
                           "Atoms & Molecules", 7, 13, 65, Colors.blue[100]!,
-                              () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LinearAlgebraScreen()),
-                            );
-                          }),
+                          () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LinearAlgebraScreen()),
+                        );
+                      }),
                       const SizedBox(height: 12),
                       learningCard(
                           "Atoms & Molecules", 7, 13, 65, Colors.green[100]!,
-                              () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LinearAlgebraScreen()),
-                            );
-                          }),
+                          () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LinearAlgebraScreen()),
+                        );
+                      }),
 
                       Container(
                         padding: EdgeInsets.all(16),
@@ -392,7 +403,7 @@ class HomePage extends StatelessWidget {
                               padding: EdgeInsets.symmetric(horizontal: 16),
                               child: Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     "All Courses",
@@ -430,7 +441,7 @@ class HomePage extends StatelessWidget {
                                               horizontal: 10), // Reduced height
                                           decoration: BoxDecoration(
                                             borderRadius:
-                                            BorderRadius.circular(22),
+                                                BorderRadius.circular(22),
                                             border: Border.all(
                                                 color: Colors.red, width: 1.5),
                                           ),
@@ -453,7 +464,7 @@ class HomePage extends StatelessWidget {
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
-                                                      FontWeight.w500)),
+                                                          FontWeight.w500)),
                                             ],
                                           ),
                                         ),
@@ -465,7 +476,7 @@ class HomePage extends StatelessWidget {
                                               vertical: 6, horizontal: 10),
                                           decoration: BoxDecoration(
                                             borderRadius:
-                                            BorderRadius.circular(20),
+                                                BorderRadius.circular(20),
                                             border: Border.all(
                                                 color: Colors.orange,
                                                 width: 1.5),
@@ -488,7 +499,7 @@ class HomePage extends StatelessWidget {
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
-                                                      FontWeight.w500)),
+                                                          FontWeight.w500)),
                                             ],
                                           ),
                                         ),
@@ -504,7 +515,7 @@ class HomePage extends StatelessWidget {
                                               vertical: 6, horizontal: 10),
                                           decoration: BoxDecoration(
                                             borderRadius:
-                                            BorderRadius.circular(20),
+                                                BorderRadius.circular(20),
                                             border: Border.all(
                                                 color: Colors.blue, width: 1.5),
                                           ),
@@ -526,7 +537,7 @@ class HomePage extends StatelessWidget {
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
-                                                      FontWeight.w500)),
+                                                          FontWeight.w500)),
                                             ],
                                           ),
                                         ),
@@ -538,7 +549,7 @@ class HomePage extends StatelessWidget {
                                               vertical: 6, horizontal: 10),
                                           decoration: BoxDecoration(
                                             borderRadius:
-                                            BorderRadius.circular(20),
+                                                BorderRadius.circular(20),
                                             border: Border.all(
                                                 color: Colors.green,
                                                 width: 1.5),
@@ -561,7 +572,7 @@ class HomePage extends StatelessWidget {
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
-                                                      FontWeight.w500)),
+                                                          FontWeight.w500)),
                                             ],
                                           ),
                                         ),
@@ -579,7 +590,7 @@ class HomePage extends StatelessWidget {
                               padding: EdgeInsets.symmetric(horizontal: 16),
                               child: Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     "My Courses",
@@ -666,7 +677,7 @@ class HomePage extends StatelessWidget {
         drawerEdgeDragWidth: double
             .infinity, // Make drawer full-width and allow dragging from anywhere
         endDrawerEnableOpenDragGesture:
-        true, // Allow drag to open the drawer from the right
+            true, // Allow drag to open the drawer from the right
       ),
     );
   }
@@ -711,7 +722,7 @@ Widget learningCard(String title, int completed, int total, int percentage,
               Text(
                 title,
                 style:
-                const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
               const SizedBox(height: 15),
               Text("$completed/$total"),
