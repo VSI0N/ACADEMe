@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException
-from services.course_service import CourseService
-from models.course_model import CourseCreate, CourseResponse
 from utils.auth import get_current_user
+from services.course_service import CourseService
+from fastapi import APIRouter, Depends, HTTPException
 from utils.class_filter import filter_courses_by_class
+from models.course_model import CourseCreate, CourseResponse
 
 router = APIRouter(prefix="/courses", tags=["Courses"])
 

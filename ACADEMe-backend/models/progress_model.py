@@ -1,6 +1,6 @@
-from pydantic import BaseModel, Field
-from typing import Optional, Dict
 from datetime import datetime
+from typing import Optional, Dict
+from pydantic import BaseModel, Field
 
 class ProgressBase(BaseModel):
     course_id: Optional[str] = None

@@ -1,18 +1,18 @@
-from firebase_admin import firestore
-from fastapi import HTTPException
-from typing import Dict, Any, List
-from services.quiz_service import QuizService
-from google.cloud.firestore import DocumentReference
-from collections import defaultdict
+import json
+import base64
+import asyncio
+from io import BytesIO
 from datetime import datetime
 import matplotlib.pyplot as plt
-import base64
-from io import BytesIO
+from fastapi import HTTPException
+from typing import Dict, Any, List
+from collections import defaultdict
+from firebase_admin import firestore
 from fastapi.encoders import jsonable_encoder
-import asyncio
-from models.graph_model import ProgressVisualResponse
-import json
+from services.quiz_service import QuizService
 from services.course_service import CourseService
+from google.cloud.firestore import DocumentReference
+from models.graph_model import ProgressVisualResponse
 
 db = firestore.client()
 

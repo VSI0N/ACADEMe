@@ -1,6 +1,6 @@
+from datetime import datetime
 from pydantic import BaseModel
 from typing import Literal, Optional
-from datetime import datetime
 
 class MaterialCreate(BaseModel):
     type: Literal["text", "document", "image", "audio", "video"]

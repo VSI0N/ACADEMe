@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
-from services.discussion_service import create_discussion, get_discussions_by_topic, create_message, get_messages_by_discussion
 from models.discussion_model import DiscussionCreate, MessageCreate
+from services.discussion_service import create_discussion, get_discussions_by_topic, create_message, get_messages_by_discussion
 
 router = APIRouter()
 

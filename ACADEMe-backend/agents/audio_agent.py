@@ -1,8 +1,8 @@
-from services.whisper_service import transcribe_audio
-from services.gemini_service import process_text_with_gemini
-from utils.language_detection import detect_language
-from services.libretranslate_service import translate_text
 import mimetypes
+from utils.language_detection import detect_language
+from services.whisper_service import transcribe_audio
+from services.libretranslate_service import translate_text
+from services.gemini_service import process_text_with_gemini
 
 SUPPORTED_AUDIO_FORMATS = {
     "audio/mpeg",

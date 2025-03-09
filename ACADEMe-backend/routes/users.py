@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException
-from models.user_model import UserCreate, UserLogin, TokenResponse, UserUpdateClass
-from services.auth_service import register_user, login_user
-from utils.auth import get_current_user
 from firebase_admin import firestore
+from utils.auth import get_current_user
+from fastapi import APIRouter, Depends, HTTPException
+from services.auth_service import register_user, login_user
+from models.user_model import UserCreate, UserLogin, TokenResponse, UserUpdateClass
 
 router = APIRouter(prefix="/users", tags=["Users & Authentication"])
 

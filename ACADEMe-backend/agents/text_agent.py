@@ -1,6 +1,6 @@
-from services.libretranslate_service import translate_text
-from services.gemini_service import get_gemini_response
 from utils.language_detection import detect_language
+from services.gemini_service import get_gemini_response
+from services.libretranslate_service import translate_text
 
 async def process_text(text: str, target_language: str) -> str:
     source_lang = detect_language(text)

@@ -1,6 +1,6 @@
+from datetime import datetime
 from pydantic import BaseModel
 from typing import List, Optional
-from datetime import datetime
 
 class DiscussionBase(BaseModel):
     topic_id: str  # The topic related to this discussion

@@ -1,6 +1,6 @@
+import mimetypes
 from fastapi import UploadFile
 from services.whisper_service import transcribe_audio
-import mimetypes
 
 # Supported audio formats
 SUPPORTED_AUDIO_FORMATS = {

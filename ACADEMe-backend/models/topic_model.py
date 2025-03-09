@@ -1,6 +1,6 @@
+from datetime import datetime
 from pydantic import BaseModel
 from typing import Optional, Dict
-from datetime import datetime
 
 class TopicBase(BaseModel):
     title: str

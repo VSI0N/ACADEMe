@@ -1,7 +1,7 @@
+import uuid
+from datetime import datetime
 from firebase_admin import firestore
 from models.discussion_model import DiscussionCreate, MessageCreate
-from datetime import datetime
-import uuid
 
 db = firestore.client()
 discussions_collection = db.collection("discussions")

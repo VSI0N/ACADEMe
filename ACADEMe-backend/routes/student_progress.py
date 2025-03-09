@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.encoders import jsonable_encoder
-from services.progress_service import log_progress, get_student_progress_list, update_progress_status
-from models.progress_model import ProgressCreate, ProgressUpdate
 from utils.auth import get_current_user
+from fastapi.encoders import jsonable_encoder
+from fastapi import APIRouter, Depends, HTTPException, status
+from models.progress_model import ProgressCreate, ProgressUpdate
+from services.progress_service import log_progress, get_student_progress_list, update_progress_status
 
 router = APIRouter(prefix="/progress", tags=["Student Progress"])
 

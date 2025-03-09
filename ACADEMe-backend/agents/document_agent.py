@@ -1,10 +1,10 @@
-import fitz  # PyMuPDF for PDFs
 import io
 import docx
+import fitz  # PyMuPDF for PDFs
 from fastapi import UploadFile
-from services.gemini_service import process_text_with_gemini
 from utils.language_detection import detect_language
 from services.libretranslate_service import translate_text
+from services.gemini_service import process_text_with_gemini
 
 async def process_document(file: UploadFile, prompt: str = None):
     """

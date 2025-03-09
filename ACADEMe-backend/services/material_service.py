@@ -1,11 +1,15 @@
-from firebase_admin import firestore
-from models.material_model import MaterialResponse
-from datetime import datetime
+import os
+import json
 import uuid
+from datetime import datetime
 from fastapi import HTTPException
+from firebase_admin import firestore
 from services.course_service import CourseService
+from models.material_model import MaterialResponse
 
 db = firestore.client()
+
+MATERIALS_JSON_PATH = "assets/materials.json"
 
 class MaterialService:
     @staticmethod
@@ -79,6 +83,17 @@ class MaterialService:
                 )
 
             ref.set(material, merge=True)
+
+            # ✅ Update materials.json
+            materials = {}
+            if os.path.exists(MATERIALS_JSON_PATH):
+                with open(MATERIALS_JSON_PATH, "r", encoding="utf-8") as f:
+                    materials = json.load(f)
+
+            materials[material_id] = material["content"]  # Store material ID and content
+
+            with open(MATERIALS_JSON_PATH, "w", encoding="utf-8") as f:
+                json.dump(materials, f, indent=4, ensure_ascii=False)
 
             return MaterialResponse(**material)
 

@@ -1,13 +1,18 @@
+import os
+import json
+import uuid
+import httpx
+from datetime import datetime
+from fastapi import HTTPException
 from firebase_admin import firestore
 from models.course_model import CourseCreate, CourseResponse
-from fastapi import HTTPException
-import uuid
-from datetime import datetime
-import httpx
 from langdetect import detect, DetectorFactory
 
 db = firestore.client()
 DetectorFactory.seed = 0
+
+ASSETS_DIR = "assets"
+COURSES_FILE = os.path.join(ASSETS_DIR, "courses.json")
 
 class CourseService:
     @staticmethod
@@ -48,7 +53,7 @@ class CourseService:
 
     @staticmethod
     async def create_course(course: CourseCreate):
-        """Creates a new course with multilingual support."""
+        """Creates a new course with multilingual support and updates courses.json."""
         course_id = str(uuid.uuid4())
         course_ref = db.collection("courses").document(course_id)
 
@@ -68,8 +73,7 @@ class CourseService:
 
         # 🌎 Translate into other languages (excluding detected language)
         target_languages = ["fr", "es", "de", "zh", "ar", "hi", "en"]
-
-        # 🚀 Run all translation tasks in parallel
+        
         translation_tasks = {
             lang: {
                 "title": CourseService.translate_text(course.title, lang),
@@ -78,10 +82,10 @@ class CourseService:
             for lang in target_languages
         }
 
-        # 🔄 Wait for all translations to complete (parallel execution)
+        # 🔄 Wait for all translations to complete
         for lang in target_languages:
             translations[lang] = {
-                "title": await translation_tasks[lang]["title"],  # ✅ Fix: No double await
+                "title": await translation_tasks[lang]["title"],
                 "description": await translation_tasks[lang]["description"],
             }
 
@@ -93,7 +97,35 @@ class CourseService:
             "languages": translations,
         }
 
+        # ✅ **Write to Firestore**
+        print(f"📌 Storing course {course_id} in Firestore: {course.title}")
         course_ref.set(course_data)
+
+        # ✅ **Update `courses.json`**
+        try:
+            print("📌 Ensuring `assets/` directory exists...")
+            os.makedirs(ASSETS_DIR, exist_ok=True)  # Ensure `assets/` exists
+
+            # Load existing data (if any)
+            if os.path.exists(COURSES_FILE):
+                print(f"📂 Loading existing {COURSES_FILE}...")
+                with open(COURSES_FILE, "r", encoding="utf-8") as file:
+                    courses = json.load(file)
+            else:
+                print(f"🆕 Creating new {COURSES_FILE}...")
+                courses = {}
+
+            # ✅ **Update the dictionary**
+            courses[course_id] = course.title  # **Only store English titles**
+
+            # ✅ **Write back to JSON**
+            with open(COURSES_FILE, "w", encoding="utf-8") as file:
+                json.dump(courses, file, ensure_ascii=False, indent=4)
+
+            print(f"✅ Successfully updated {COURSES_FILE} with {course_id}: {course.title}")
+        except Exception as e:
+            print(f"⚠️ Failed to update {COURSES_FILE}: {e}")
+
         return CourseResponse(
             **course_data,
             title=translations[detected_lang]["title"],

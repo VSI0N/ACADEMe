@@ -1,13 +1,17 @@
+import os
+import json
+import uuid
+import httpx
+from datetime import datetime
+from fastapi import HTTPException
 from firebase_admin import firestore
+from services.course_service import CourseService
 from models.quiz_model import QuizResponse, QuestionResponse
 from models.quiz_model import QuizCreate, QuizResponse, QuestionCreate, QuestionResponse
-from datetime import datetime
-import uuid
-from fastapi import HTTPException
-from services.course_service import CourseService
-import httpx
 
 db = firestore.client()
+
+QUIZZES_JSON_PATH = "assets/quizzes.json"
 
 class QuizService:
     @staticmethod
@@ -29,10 +33,10 @@ class QuizService:
             # ✅ Detect language
             detected_language = await CourseService.detect_language([quiz_data.title, quiz_data.description])
 
-            # ✅ Define target languages (modify as needed)
+            # ✅ Define target languages
             target_languages = ["fr", "es", "de", "zh", "ar", "hi", "en"]
             if detected_language not in target_languages:
-                detected_language = "en"  # Default to English if the detected language is not supported
+                detected_language = "en"  # Default to English if unsupported
 
             quiz_dict["languages"] = {detected_language: {"title": quiz_data.title, "description": quiz_data.description}}
 
@@ -67,6 +71,18 @@ class QuizService:
                 )
 
             ref.set(quiz_dict, merge=True)
+
+            # ✅ Update quizzes.json
+            quizzes = {}
+            if os.path.exists(QUIZZES_JSON_PATH):
+                with open(QUIZZES_JSON_PATH, "r", encoding="utf-8") as f:
+                    quizzes = json.load(f)
+
+            quizzes[quiz_id] = quiz_data.title  # Store quiz ID and title
+
+            with open(QUIZZES_JSON_PATH, "w", encoding="utf-8") as f:
+                json.dump(quizzes, f, indent=4, ensure_ascii=False)
+
             return QuizResponse(**quiz_dict)
 
         except Exception as e:

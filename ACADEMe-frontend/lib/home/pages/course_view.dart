@@ -18,26 +18,26 @@ class _CourseListScreenState extends State<CourseListScreen>
 
   final List<Map<String, dynamic>> courses = [
     {
-      "title": "UX Foundation",
-      "duration": "2 hrs 25 mins",
+      "title": "Shapes and Angles",
+      "duration": "1 hrs 25 mins",
       "progress": 0.3,
       "image": AImages.product_design,
     },
     {
-      "title": "Creative Art Design",
-      "duration": "3 hrs 25 mins",
+      "title": "How Many Squares?",
+      "duration": "45 mins",
       "progress": 0.7,
       "image": AImages.art_design,
     },
     {
-      "title": "Palettes for Your App",
-      "duration": "4 hrs 50 mins",
+      "title": "Parts and Wholes",
+      "duration": "50 mins",
       "progress": 1.0,
       "image": AImages.app_color_schemes,
     },
     {
-      "title": "Typography in UI Design",
-      "duration": "4 hrs 50 mins",
+      "title": "Does it Look the Same?",
+      "duration": "20 mins",
       "progress": 0.5,
       "image": AImages.typography,
     },

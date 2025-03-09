@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
-from services.ai_service import get_recommendations
-from models.recommendation_model import AIRecommendationResponse
 from utils.auth import get_current_user
+from services.ai_service import get_recommendations
+from fastapi import APIRouter, Depends, HTTPException, Query
+from models.recommendation_model import AIRecommendationResponse
 
 router = APIRouter(prefix="/recommendations", tags=["AI Recommendations"])
 

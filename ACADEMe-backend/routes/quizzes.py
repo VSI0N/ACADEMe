@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException
+from typing import List
 from utils.auth import get_current_user
 from services.quiz_service import QuizService
+from fastapi import APIRouter, Depends, HTTPException
 from models.quiz_model import QuizCreate, QuizResponse, QuestionCreate
-from typing import List
 
 router = APIRouter(prefix="/courses", tags=["Quizzes"])
 

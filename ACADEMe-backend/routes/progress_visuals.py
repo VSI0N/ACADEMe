@@ -1,8 +1,8 @@
+import json
+from utils.auth import get_current_user
+from models.graph_model import ProgressVisualResponse
 from fastapi import APIRouter, Depends, HTTPException
 from services.progress_service import get_progress_visuals, fetch_progress_from_firestore
-from models.graph_model import ProgressVisualResponse
-from utils.auth import get_current_user
-import json
 
 router = APIRouter(prefix="/progress-visuals", tags=["Progress Visualization"])
 

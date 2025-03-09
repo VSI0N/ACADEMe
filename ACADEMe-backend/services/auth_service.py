@@ -1,8 +1,8 @@
+import datetime
+from fastapi import HTTPException
 from firebase_admin import auth, firestore
 from models.user_model import UserCreate, UserLogin, TokenResponse
 from utils.auth import create_jwt_token, verify_password, hash_password
-from fastapi import HTTPException
-import datetime
 
 db = firestore.client()
 

@@ -1,6 +1,6 @@
+import os
 import whisper
 import tempfile
-import os
 
 # Load the Whisper model once to optimize performance
 model = whisper.load_model("base")

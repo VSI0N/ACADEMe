@@ -1,5 +1,5 @@
-import cloudinary.uploader
 import uuid
+import cloudinary.uploader
 
 class CloudinaryService:
     @staticmethod

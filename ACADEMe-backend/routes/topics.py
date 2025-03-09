@@ -1,12 +1,12 @@
 import uuid
 from datetime import datetime
-from fastapi import APIRouter, Depends, UploadFile, File, Form, HTTPException, Query
+from utils.auth import get_current_user
 from services.topic_service import TopicService
 from services.material_service import MaterialService
+from utils.cloudinary_service import CloudinaryService
 from models.topic_model import TopicCreate, SubtopicCreate
 from models.material_model import MaterialCreate, MaterialResponse
-from utils.cloudinary_service import CloudinaryService
-from utils.auth import get_current_user
+from fastapi import APIRouter, Depends, UploadFile, File, Form, HTTPException, Query
 
 router = APIRouter(prefix="/courses", tags=["Courses & Topics"])
 

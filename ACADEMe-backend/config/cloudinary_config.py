@@ -1,5 +1,5 @@
-import cloudinary
 import os
+import cloudinary
 from dotenv import load_dotenv
 
 # Load environment variables
