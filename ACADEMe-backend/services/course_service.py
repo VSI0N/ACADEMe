@@ -136,7 +136,7 @@ class CourseService:
     def get_courses(target_language: str = "en"):
         """Fetches courses and returns them in the requested language."""
         courses_ref = db.collection("courses").stream()
-        
+
         courses = []
         for doc in courses_ref:
             course_data = doc.to_dict()
@@ -144,14 +144,14 @@ class CourseService:
             if "languages" not in course_data:
                 raise HTTPException(status_code=500, detail=f"Missing 'languages' field in course {doc.id}")
 
-            # 🏷️ Fetch content in requested language, fallback to English
-            lang_data = course_data["languages"].get(target_language, course_data["languages"].get("en", {}))
+            # 🏷️ Fetch content in requested language, fallback to English, and ensure both fields exist
+            lang_data = course_data["languages"].get(target_language, {}) or course_data["languages"].get("en", {})
 
             courses.append(CourseResponse(
                 id=course_data["id"],
-                title=lang_data.get("title", ""),
+                title=lang_data.get("title", course_data["languages"].get(target_language, {}).get("title", "Untitled Course")),
                 class_name=course_data["class_name"],
-                description=lang_data.get("description", ""),
+                description=lang_data.get("description", course_data["languages"].get("en", {}).get("description", "No Description")),
                 created_at=course_data["created_at"].isoformat(),  # ✅ Convert Firestore timestamp
                 updated_at=course_data["updated_at"].isoformat(),  # ✅ Convert Firestore timestamp
             ))
