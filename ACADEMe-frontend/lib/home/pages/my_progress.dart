@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:ACADEMe/academe_theme.dart';
+import 'package:ACADEMe/home/pages/MotivationPopup.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -143,7 +144,7 @@ class ProgressScreen extends StatelessWidget {
                                   child: TabBarView(
                                     children: [
                                       SingleChildScrollView(
-                                        child: _buildSummarySection(),
+                                        child: _buildSummarySection(context),
                                       ),
                                       SingleChildScrollView(
                                         child: _buildCourseProgress(),
@@ -285,122 +286,135 @@ class ProgressScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSummarySection() {
+  Widget _buildSummarySection(BuildContext context) {
     return SingleChildScrollView(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       child: Column(
         children: [
           Row(
             children: [
               Expanded(
                 child: Card(
-                  elevation: 0, // Remove default card elevation
+                  elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.white, // White background
+                      color: Colors.white,
                       border: Border.all(
-                          color: const Color.fromARGB(
-                              27, 158, 158, 158)), // Border color
-                      borderRadius: BorderRadius.circular(8), // Rounded corners
+                          color: const Color.fromARGB(27, 158, 158, 158)),
+                      borderRadius: BorderRadius.circular(8),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1), // Shadow color
-                          blurRadius: 6, // Shadow blur radius
-                          offset: Offset(0, 4), // Shadow offset
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 6,
+                          offset: const Offset(0, 4),
                         ),
                       ],
                     ),
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     child: _buildSummaryItem("Total Courses", "4"),
                   ),
                 ),
               ),
-              SizedBox(width: 16), // Space between the two cards
+              const SizedBox(width: 16),
               Expanded(
                 child: Card(
-                  elevation: 0, // Remove default card elevation
+                  elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.white, // White background
+                      color: Colors.white,
                       border: Border.all(
-                          color: const Color.fromARGB(
-                              27, 158, 158, 158)), // Border color
-                      borderRadius: BorderRadius.circular(8), // Rounded corners
+                          color: const Color.fromARGB(27, 158, 158, 158)),
+                      borderRadius: BorderRadius.circular(8),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1), // Shadow color
-                          blurRadius: 6, // Shadow blur radius
-                          offset: Offset(0, 4), // Shadow offset
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 6,
+                          offset: const Offset(0, 4),
                         ),
                       ],
                     ),
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     child: _buildSummaryItem("Completed", "2"),
                   ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Card(
-            elevation: 0, // Remove default card elevation
+            elevation: 0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.white, // White background
+                color: Colors.white,
                 border: Border.all(
-                    color: const Color.fromARGB(
-                        27, 158, 158, 158)), // Border color
-                borderRadius: BorderRadius.circular(8), // Rounded corners
+                    color: const Color.fromARGB(27, 158, 158, 158)),
+                borderRadius: BorderRadius.circular(8),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1), // Shadow color
-                    blurRadius: 6, // Shadow blur radius
-                    offset: Offset(0, 4), // Shadow offset
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 6,
+                    offset: const Offset(0, 4),
                   ),
                 ],
               ),
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child:
-                  _buildSummaryItem("Overall Grade", "87.00", isCircular: true),
+              _buildSummaryItem("Overall Grade", "87.00", isCircular: true),
             ),
           ),
-          SizedBox(height: 16),
-          _buildMotivationCard(),
+          const SizedBox(height: 16),
+
+          // **Pass context here**
+          _buildMotivationCard(context),
         ],
       ),
     );
   }
 
-  Widget _buildMotivationCard() {
-    return Container(
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.yellow,
-        borderRadius: BorderRadius.circular(16),
+  Widget _buildMotivationCard(BuildContext context) {
+    return GestureDetector(
+      onTap: () => showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        builder: (context) => const MotivationPopup(), // Updated call
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("You're doing Great!",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-              Text("Learn about your weak points",
-                  style: TextStyle(fontSize: 15)),
-            ],
-          ),
-          Icon(Icons.arrow_forward_ios_rounded),
-        ],
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.yellow,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "You're doing Great!",
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+                const Text(
+                  "Learn about your weak points",
+                  style: TextStyle(fontSize: 15),
+                ),
+              ],
+            ),
+            const Icon(Icons.arrow_forward_ios_rounded),
+          ],
+        ),
       ),
     );
   }
