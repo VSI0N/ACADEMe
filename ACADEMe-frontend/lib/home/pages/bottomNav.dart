@@ -1,95 +1,91 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../academe_theme.dart';
 import '../../started/pages/course.dart';
 import '../admin_panel/courses.dart';
 import 'course_view.dart';
 import 'home_view.dart';
 import 'my_community.dart';
-import 'my_courses.dart';
 import 'package:ACADEMe/home/pages/profile.dart';
 import 'package:ACADEMe/localization/l10n.dart';
+import 'package:ACADEMe/providers/bottom_nav_provider.dart'; // Import provider
 
-class BottomNav extends StatefulWidget {
+class BottomNav extends StatelessWidget {
   final bool isAdmin;
   const BottomNav({super.key, required this.isAdmin});
 
   @override
-  _BottomNavState createState() => _BottomNavState();
-}
-
-class _BottomNavState extends State<BottomNav> {
-  int _selectedIndex = 0;
-  late List<Widget> _pages;
-
-  @override
-  void initState() {
-    super.initState();
-    _pages = widget.isAdmin
-        ? [
-      HomePage(
-        onProfileTap: () {
-          setState(() {
-            _selectedIndex = 3; // Navigate to Profile tab when user image is tapped
-          });
-        },
-        onAskMeTap: () {
-          setState(() {
-            _selectedIndex = 1; // Navigate to Chatbot tab when ASKMe card is tapped
-          });
-        },
-      ),
-      const CourseListScreen(),
-      const Mycommunity(),
-      const ProfilePage(),
-      CourseManagementScreen()
-    ]
-        : [HomePage(
-      onProfileTap: () {
-        setState(() {
-          _selectedIndex = 3; // Navigate to Profile tab when user image is tapped
-        });
-      },
-      onAskMeTap: () {
-        setState(() {
-          _selectedIndex = 1; // Navigate to Chatbot tab when ASKMe card is tapped
-        });
-      },
-    ), CourseListScreen(), Mycommunity(), ProfilePage()];
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        selectedItemColor: AcademeTheme.appColor.withOpacity(0.9),
-        unselectedItemColor: Colors.grey,
-        showUnselectedLabels: true,
-        backgroundColor: Colors.white,
-        type: BottomNavigationBarType.fixed,
-        items: widget.isAdmin
+    return Consumer<BottomNavProvider>(
+      builder: (context, bottomNavProvider, child) {
+        final int selectedIndex = bottomNavProvider.selectedIndex;
+
+        final List<Widget> pages = isAdmin
             ? [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: L10n.getTranslatedText(context, 'Home')),
-          BottomNavigationBarItem(icon: Icon(Icons.school), label: L10n.getTranslatedText(context, 'Courses')),
-          BottomNavigationBarItem(icon: Icon(Icons.groups), label: L10n.getTranslatedText(context, 'Community')),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: L10n.getTranslatedText(context, 'Profile')),
-          BottomNavigationBarItem(icon: Icon(Icons.admin_panel_settings), label: L10n.getTranslatedText(context, 'Admin')),
+          HomePage(
+            onProfileTap: () => bottomNavProvider.setIndex(3),
+            onAskMeTap: () => bottomNavProvider.setIndex(1),
+          ),
+          const CourseListScreen(),
+          const Mycommunity(),
+          const ProfilePage(),
+          CourseManagementScreen(),
         ]
             : [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: L10n.getTranslatedText(context, 'Home')),
-          BottomNavigationBarItem(icon: Icon(Icons.school), label: L10n.getTranslatedText(context, 'Courses')),
-          BottomNavigationBarItem(icon: Icon(Icons.groups), label: L10n.getTranslatedText(context, 'Community')),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: L10n.getTranslatedText(context, 'Profile')),
-        ],
-      ),
+          HomePage(
+            onProfileTap: () => bottomNavProvider.setIndex(3),
+            onAskMeTap: () => bottomNavProvider.setIndex(1),
+          ),
+          CourseListScreen(),
+          Mycommunity(),
+          ProfilePage(),
+        ];
+
+        return Scaffold(
+          body: pages[selectedIndex],
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: selectedIndex,
+            onTap: bottomNavProvider.setIndex,
+            selectedItemColor: AcademeTheme.appColor.withOpacity(0.9),
+            unselectedItemColor: Colors.grey,
+            showUnselectedLabels: true,
+            backgroundColor: Colors.white,
+            type: BottomNavigationBarType.fixed,
+            items: isAdmin
+                ? [
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: L10n.getTranslatedText(context, 'Home')),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.school),
+                  label: L10n.getTranslatedText(context, 'Courses')),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.groups),
+                  label: L10n.getTranslatedText(context, 'Community')),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: L10n.getTranslatedText(context, 'Profile')),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.admin_panel_settings),
+                  label: L10n.getTranslatedText(context, 'Admin')),
+            ]
+                : [
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: L10n.getTranslatedText(context, 'Home')),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.school),
+                  label: L10n.getTranslatedText(context, 'Courses')),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.groups),
+                  label: L10n.getTranslatedText(context, 'Community')),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: L10n.getTranslatedText(context, 'Profile')),
+            ],
+          ),
+        );
+      },
     );
   }
 }

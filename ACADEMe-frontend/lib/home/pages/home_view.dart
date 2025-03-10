@@ -1,3 +1,5 @@
+import 'package:ACADEMe/home/admin_panel/courses.dart';
+import 'package:ACADEMe/home/pages/course_view.dart';
 import 'package:flutter/material.dart';
 import 'package:ACADEMe/home/pages/ASKMe.dart';
 import '../../academe_theme.dart';
@@ -6,7 +8,8 @@ import 'package:ACADEMe/widget/homepage_drawer.dart';
 import 'dart:math';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:ACADEMe/home/pages/my_progress.dart';
-
+import 'package:provider/provider.dart';
+import 'package:ACADEMe/providers/bottom_nav_provider.dart';
 import '../courses/linear_algebra/Linear_algebra.dar.dart';
 
 class HomePage extends StatelessWidget {
@@ -342,15 +345,21 @@ class HomePage extends StatelessWidget {
 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
+                        children: [
                           Text(
                             "Continue Learning",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 20),
                           ),
-                          Text(
-                            "See All",
-                            style: TextStyle(color: Colors.blue),
+                          GestureDetector(
+                            onTap: () {
+                              // Find the BottomNavigationBar and switch to the My Courses tab
+                              Provider.of<BottomNavProvider>(context, listen: false).setIndex(1);
+                            },
+                            child: const Text(
+                              "See All",
+                              style: TextStyle(color: Colors.blue),
+                            ),
                           ),
                         ],
                       ),
@@ -402,23 +411,20 @@ class HomePage extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 16),
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
+                                  const Text(
                                     "All Courses",
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold),
+                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                   ),
                                   TextButton(
                                     onPressed: () {
-                                      // Handle 'See All' action
+                                      // Switch to the Courses tab using BottomNavProvider
+                                      Provider.of<BottomNavProvider>(context, listen: false).setIndex(1);
                                     },
-                                    child: Text(
+                                    child: const Text(
                                       "See All",
-                                      style: TextStyle(
-                                          fontSize: 16, color: Colors.blue),
+                                      style: TextStyle(fontSize: 16, color: Colors.blue),
                                     ),
                                   ),
                                 ],
@@ -589,23 +595,20 @@ class HomePage extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 16),
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
+                                  const Text(
                                     "My Courses",
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold),
+                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                   ),
                                   TextButton(
                                     onPressed: () {
-                                      // Handle 'See All' action
+                                      // Switch to the Courses tab using BottomNavProvider
+                                      Provider.of<BottomNavProvider>(context, listen: false).setIndex(1);
                                     },
-                                    child: Text(
+                                    child: const Text(
                                       "See All",
-                                      style: TextStyle(
-                                          fontSize: 16, color: Colors.blue),
+                                      style: TextStyle(fontSize: 16, color: Colors.blue),
                                     ),
                                   ),
                                 ],
