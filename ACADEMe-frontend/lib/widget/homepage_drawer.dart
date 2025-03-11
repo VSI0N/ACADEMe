@@ -6,6 +6,7 @@ import 'package:ACADEMe/home/pages/profile.dart';
 import 'package:ACADEMe/home/pages/ASKMe.dart';
 import '../../academe_theme.dart';
 import 'package:ACADEMe/home/pages/my_progress.dart';
+import 'package:ACADEMe/localization/l10n.dart';
 
 class HomepageDrawer extends StatelessWidget {
   final VoidCallback onClose;
@@ -49,7 +50,7 @@ class HomepageDrawer extends StatelessWidget {
           const SizedBox(height: 20),
 
           // Drawer Items with Navigation
-          _buildDrawerItem(Icons.bookmark, "Bookmarks", () {
+          _buildDrawerItem(Icons.bookmark, L10n.getTranslatedText(context, 'Bookmarks'), () {
             // Navigator.push(
             //   context,
             //   MaterialPageRoute(
@@ -58,7 +59,7 @@ class HomepageDrawer extends StatelessWidget {
             //   ),
             // );
           }),
-          _buildDrawerItem(Icons.person, "Profile", () {
+          _buildDrawerItem(Icons.person, L10n.getTranslatedText(context, 'Profile'), () {
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -67,7 +68,7 @@ class HomepageDrawer extends StatelessWidget {
               ),
             );
           }),
-          _buildDrawerItem(Icons.menu_book, "My Courses", () {
+          _buildDrawerItem(Icons.menu_book, L10n.getTranslatedText(context, 'My Courses'), () {
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -76,7 +77,7 @@ class HomepageDrawer extends StatelessWidget {
               ),
             );
           }),
-          _buildDrawerItem(Icons.show_chart, "My Progress", () {
+          _buildDrawerItem(Icons.show_chart, L10n.getTranslatedText(context, 'My Progress'), () {
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -94,7 +95,7 @@ class HomepageDrawer extends StatelessWidget {
               ),
             );
           }),
-          _buildDrawerItem(Icons.settings, "Settings", () {
+          _buildDrawerItem(Icons.settings, L10n.getTranslatedText(context, 'Settings'), () {
             // Navigator.push(
             //   context,
             //   MaterialPageRoute(
@@ -103,7 +104,7 @@ class HomepageDrawer extends StatelessWidget {
             //   ),
             // );
           }),
-          _buildDrawerItem(Icons.help_outline, "Get Help", () {
+          _buildDrawerItem(Icons.help_outline, L10n.getTranslatedText(context, 'Get Help'), () {
             // Navigator.push(
             //   context,
             //   MaterialPageRoute(
@@ -135,7 +136,7 @@ class HomepageDrawer extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 const Text(
-                  "User Name",
+                  "Alex",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
                 const Spacer(),

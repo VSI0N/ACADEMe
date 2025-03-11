@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ACADEMe/academe_theme.dart';
+import 'package:ACADEMe/localization/l10n.dart';
 
 class ChatSession {
   final String title;
@@ -75,7 +76,7 @@ class ChatHistoryDrawer extends StatelessWidget {
                       ),
                       child: TextField(
                         decoration: InputDecoration(
-                          hintText: 'Search Chat History...',
+                          hintText: L10n.getTranslatedText(context, 'Search Chat History...'),
                           border: InputBorder.none,
                           icon:
                               Icon(Icons.search, color: AcademeTheme.appColor),
@@ -94,7 +95,7 @@ class ChatHistoryDrawer extends StatelessWidget {
                 leading:
                     Icon(Icons.chat, color: AcademeTheme.appColor, size: 25),
                 title: Text(
-                  'Chat History',
+                  L10n.getTranslatedText(context, 'Chat History'),
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 20,

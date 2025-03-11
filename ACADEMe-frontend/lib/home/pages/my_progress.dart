@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:ACADEMe/academe_theme.dart';
 import 'package:ACADEMe/home/pages/MotivationPopup.dart';
+import 'package:ACADEMe/localization/l10n.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -20,7 +21,7 @@ class ProgressScreen extends StatelessWidget {
         appBar: AppBar(
           automaticallyImplyLeading: false, // Removes back button
           title: Text(
-            "My Progress",
+            L10n.getTranslatedText(context, 'My Progress'),
             style: TextStyle(color: Colors.white, fontSize: 22),
           ),
           backgroundColor: AcademeTheme.appColor,
@@ -49,7 +50,7 @@ class ProgressScreen extends StatelessWidget {
                       // Graph section with margin
                       Container(
                         margin: const EdgeInsets.all(16.0),
-                        child: _buildStudyTimeCard(),
+                        child: _buildStudyTimeCard(context),
                       ),
                       const SizedBox(height: 8),
                       // Container wrapping both TabBar & TabBarView
@@ -90,7 +91,7 @@ class ProgressScreen extends StatelessWidget {
                                         width: 100, // Control the tab width
                                         child: Center(
                                           child: Text(
-                                            "Summary",
+                                            L10n.getTranslatedText(context, 'Summary'),
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
@@ -102,7 +103,7 @@ class ProgressScreen extends StatelessWidget {
                                         width: 100, // Control the tab width
                                         child: Center(
                                           child: Text(
-                                            "Progress",
+                                            L10n.getTranslatedText(context, 'Progress'),
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
@@ -114,7 +115,7 @@ class ProgressScreen extends StatelessWidget {
                                         width: 100, // Control the tab width
                                         child: Center(
                                           child: Text(
-                                            "Activity",
+                                            L10n.getTranslatedText(context, 'Activity'),
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
@@ -147,7 +148,7 @@ class ProgressScreen extends StatelessWidget {
                                         child: _buildSummarySection(context),
                                       ),
                                       SingleChildScrollView(
-                                        child: _buildCourseProgress(),
+                                        child: _buildCourseProgress(context),
                                       ),
                                       SingleChildScrollView(
                                         child: _buildActivitySection(),
@@ -171,7 +172,7 @@ class ProgressScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStudyTimeCard() {
+  Widget _buildStudyTimeCard(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -185,7 +186,7 @@ class ProgressScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Average Study Time",
+                L10n.getTranslatedText(context, 'Average Study Time'),
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 24,
@@ -199,7 +200,7 @@ class ProgressScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
-                  "This Week",
+                  L10n.getTranslatedText(context, 'This Week'),
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -314,7 +315,7 @@ class ProgressScreen extends StatelessWidget {
                       ],
                     ),
                     padding: const EdgeInsets.all(16),
-                    child: _buildSummaryItem("Total Courses", "4"),
+                    child: _buildSummaryItem(L10n.getTranslatedText(context, 'Total Courses'), "4"),
                   ),
                 ),
               ),
@@ -340,7 +341,7 @@ class ProgressScreen extends StatelessWidget {
                       ],
                     ),
                     padding: const EdgeInsets.all(16),
-                    child: _buildSummaryItem("Completed", "2"),
+                    child: _buildSummaryItem(L10n.getTranslatedText(context, 'Completed'), "2"),
                   ),
                 ),
               ),
@@ -368,7 +369,7 @@ class ProgressScreen extends StatelessWidget {
               ),
               padding: const EdgeInsets.all(16),
               child:
-              _buildSummaryItem("Overall Grade", "87.00", isCircular: true),
+              _buildSummaryItem(L10n.getTranslatedText(context, 'Overall Grade'), "87.00", isCircular: true),
             ),
           ),
           const SizedBox(height: 16),
@@ -402,12 +403,12 @@ class ProgressScreen extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "You're doing Great!",
+                Text(
+                  L10n.getTranslatedText(context, 'You\'re doing Great!'),
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
-                const Text(
-                  "Learn about your weak points",
+                Text(
+                  L10n.getTranslatedText(context, 'Learn about your weak points'),
                   style: TextStyle(fontSize: 15),
                 ),
               ],
@@ -485,7 +486,7 @@ class ProgressScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCourseProgress() {
+  Widget _buildCourseProgress(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(
           vertical: 16.0), // Top and bottom padding outside the entire column
@@ -499,21 +500,21 @@ class ProgressScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment
                   .center, // This centers the widget horizontally
               children: [
-                _buildMePoints(),
+                _buildMePoints(context),
               ],
             ),
           ),
-          _buildSectionTitle("Course Progress"),
-          _buildCourseCard("Linear Algebra", "Mathematics", 80, "10 Modules"),
-          _buildCourseCard("Organic Chemistry", "Chemistry", 25, "5 Modules"),
-          _buildCourseCard("Linear Algebra", "Mathematics", 80, "10 Modules"),
+          _buildSectionTitle(L10n.getTranslatedText(context, 'Course Progress')),
+          _buildCourseCard(L10n.getTranslatedText(context, 'Linear Algebra'), L10n.getTranslatedText(context, 'Mathematics'), 80, L10n.getTranslatedText(context, '10 Modules')),
+          _buildCourseCard(L10n.getTranslatedText(context, 'Organic Chemistry'), L10n.getTranslatedText(context, 'Chemistry'), 25, L10n.getTranslatedText(context, '5 Modules')),
+          _buildCourseCard(L10n.getTranslatedText(context, 'Linear Algebra'), L10n.getTranslatedText(context, 'Mathematics'), 80, L10n.getTranslatedText(context, '10 Modules')),
           _buildQuizScores(),
         ],
       ),
     );
   }
 
-  Widget _buildMePoints() {
+  Widget _buildMePoints(BuildContext context) {
     return Container(
       width: 380, // Set a fixed width
       decoration: BoxDecoration(
@@ -550,7 +551,7 @@ class ProgressScreen extends StatelessWidget {
             SizedBox(height: 5),
             RichText(
               text: TextSpan(
-                text: 'My ',
+                text: L10n.getTranslatedText(context, 'My '),
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -561,13 +562,13 @@ class ProgressScreen extends StatelessWidget {
                     text: 'Me',
                     style: TextStyle(color: Colors.purple),
                   ),
-                  TextSpan(text: ' Points'),
+                  TextSpan(text: L10n.getTranslatedText(context, ' Points')),
                 ],
               ),
             ),
             SizedBox(height: 5),
             Text(
-              'Redeem your points',
+              L10n.getTranslatedText(context, 'Redeem your points'),
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.black54,
