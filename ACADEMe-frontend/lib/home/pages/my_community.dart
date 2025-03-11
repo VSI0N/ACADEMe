@@ -170,10 +170,10 @@ class CommunityList extends StatelessWidget {
               child: Icon(community["icon"], color: Colors.white),
             ),
             title: Text(
-              community["title"],
+              L10n.getTranslatedText(context, community["title"]),
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            subtitle: const Text("Begin your journey with us!"),
+            subtitle: Text(L10n.getTranslatedText(context, 'Begin your journey with us!')),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [

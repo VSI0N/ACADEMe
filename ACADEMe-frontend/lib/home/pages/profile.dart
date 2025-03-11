@@ -63,8 +63,8 @@ class _ProfilePageState extends State<ProfilePage> {
           backgroundColor: AcademeTheme.appColor,
           automaticallyImplyLeading: false,
           elevation: 0,
-          title: const Text(
-            'Profile',
+          title: Text(
+            L10n.getTranslatedText(context, 'Profile'),
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
@@ -179,7 +179,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     _ProfileOption(
                       icon: Icons.logout,
-                      text: 'Logout',
+                      text: L10n.getTranslatedText(context, 'Logout'),
                       iconColor: Colors.red,
                       onTap: () async {
                         try {
