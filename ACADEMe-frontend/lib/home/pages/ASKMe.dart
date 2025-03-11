@@ -13,6 +13,7 @@ import 'package:ACADEMe/widget/chat_history_drawer.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import '../../localization/l10n.dart';
 
 class ASKMe extends StatefulWidget {
   @override
@@ -106,7 +107,7 @@ class _ASKMeState extends State<ASKMe> {
             TextField(
               controller: promptController,
               decoration: InputDecoration(
-                hintText: "Enter your prompt (optional)",
+                hintText: L10n.getTranslatedText(context, 'Enter your prompt (optional)'),
                 border: OutlineInputBorder(),
               ),
               maxLines: 3,
@@ -116,14 +117,14 @@ class _ASKMeState extends State<ASKMe> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text("Cancel"),
+            child: Text(L10n.getTranslatedText(context, 'Cancel')),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
               _uploadFile(file, fileType, promptController.text);
             },
-            child: Text("Upload"),
+            child: Text(L10n.getTranslatedText(context, 'Upload')),
           ),
         ],
       ),
@@ -175,7 +176,7 @@ class _ASKMeState extends State<ASKMe> {
 
     var request = http.MultipartRequest('POST', url);
     request.fields.addAll({
-      'prompt': prompt.isNotEmpty ? prompt : 'Describe this image',
+      'prompt': prompt.isNotEmpty ? prompt : L10n.getTranslatedText(context, 'Describe this image'),
       'source_lang': 'auto',
       'target_lang': selectedLanguage,
     });
@@ -468,7 +469,7 @@ class _ASKMeState extends State<ASKMe> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    "Select Output Language",
+                    L10n.getTranslatedText(context, 'Select Output Language'),
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   Divider(),
@@ -476,7 +477,7 @@ class _ASKMeState extends State<ASKMe> {
                   // Search bar with live filtering
                   TextField(
                     decoration: InputDecoration(
-                      labelText: 'Search Languages',
+                      labelText: L10n.getTranslatedText(context, 'Search Languages'),
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.search),
                     ),
@@ -597,21 +598,21 @@ class _ASKMeState extends State<ASKMe> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               _buildAttachmentOption(context, Icons.image,
-                                  "Image", Colors.blue, 'Image'),
+                                  L10n.getTranslatedText(context, 'Image'), Colors.blue, 'Image'),
                               _buildAttachmentOption(
                                   context,
                                   Icons.insert_drive_file,
-                                  "Document",
+                                  L10n.getTranslatedText(context, 'Document'),
                                   Colors.green,
                                   'Document'),
                               _buildAttachmentOption(
                                   context,
                                   Icons.video_library,
-                                  "Video",
+                                  L10n.getTranslatedText(context, 'Video'),
                                   Colors.orange,
                                   'Video'),
                               _buildAttachmentOption(context, Icons.audiotrack,
-                                  "Audio", Colors.purple, 'Audio'),
+                                  L10n.getTranslatedText(context, 'Audio'), Colors.purple, 'Audio'),
                             ],
                           ),
                         );
@@ -631,10 +632,10 @@ class _ASKMeState extends State<ASKMe> {
                       keyboardType: TextInputType.multiline,
                       decoration: InputDecoration(
                         hintText: isConverting
-                            ? "Converting ... "
+                            ? L10n.getTranslatedText(context, 'Converting ... ')
                             : (_isRecording
                                 ? "Recording ... ${_seconds}s"
-                                : "Type a message ..."),
+                                : L10n.getTranslatedText(context, 'Type a message ...')),
                         contentPadding: EdgeInsets.only(
                             left: 20, right: 60, top: 14, bottom: 14),
                         border: OutlineInputBorder(
@@ -756,12 +757,12 @@ class _ASKMeState extends State<ASKMe> {
                   TextSpan(
                     children: [
                       TextSpan(
-                          text: 'Hey there! I am ',
+                          text: L10n.getTranslatedText(context, 'Hey there! I am '),
                           style: _textStyle(Colors.black)),
                       TextSpan(
                           text: 'ASKMe', style: _textStyle(Colors.amber[700]!)),
                       TextSpan(
-                          text: ' your\npersonal tutor.',
+                          text: L10n.getTranslatedText(context, ' your\npersonal tutor.'),
                           style: _textStyle(Colors.black)),
                     ],
                   ),
@@ -775,13 +776,13 @@ class _ASKMeState extends State<ASKMe> {
               runSpacing: 12.0,
               alignment: WrapAlignment.center,
               children: [
-                _buildButton(Icons.help_outline, 'Clear Your Doubts',
+                _buildButton(Icons.help_outline, L10n.getTranslatedText(context, 'Clear Your Doubts'),
                     Colors.lightBlue.shade400),
                 _buildButton(
-                    Icons.quiz, 'Explain / Quiz', Colors.orange.shade400),
-                _buildButton(Icons.upload_file, 'Upload Study Materials',
+                    Icons.quiz, L10n.getTranslatedText(context, 'Explain / Quiz'), Colors.orange.shade400),
+                _buildButton(Icons.upload_file, L10n.getTranslatedText(context, 'Upload Study Materials'),
                     Colors.green.shade500),
-                _buildButton(Icons.more_horiz, 'More', Colors.grey),
+                _buildButton(Icons.more_horiz, L10n.getTranslatedText(context, 'More'), Colors.grey),
               ],
             ),
           ],
