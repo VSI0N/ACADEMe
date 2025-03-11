@@ -108,8 +108,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),
-              child: const Text(
-                'Edit Profile',
+              child: Text(
+                L10n.getTranslatedText(context, 'Edit Profile'),
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
@@ -139,7 +139,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: [
                     _ProfileOption(
                       icon: Icons.settings,
-                      text: 'Settings',
+                      text: L10n.getTranslatedText(context, 'Settings'),
                       iconColor: Colors.blue,
                       onTap: () {
                         print('Settings tapped');
@@ -147,7 +147,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     _ProfileOption(
                       icon: Icons.credit_card,
-                      text: 'Billing Details',
+                      text: L10n.getTranslatedText(context, 'Billing Details'),
                       iconColor: Colors.blue,
                       onTap: () {
                         print('Billing Details tapped');
@@ -155,7 +155,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     _ProfileOption(
                       icon: Icons.people,
-                      text: 'User Management',
+                      text: L10n.getTranslatedText(context, 'User Management'),
                       iconColor: Colors.blue,
                       onTap: () {
                         print('User Management tapped');
@@ -163,7 +163,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     _ProfileOption(
                       icon: Icons.info,
-                      text: 'Information',
+                      text: L10n.getTranslatedText(context, 'Information'),
                       iconColor: Colors.blue,
                       onTap: () {
                         print('Information tapped');
@@ -171,7 +171,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     _ProfileOption(
                       icon: Icons.card_giftcard,
-                      text: 'Redeem Points',
+                      text: L10n.getTranslatedText(context, 'Redeem Points'),
                       iconColor: Colors.blue,
                       onTap: () {
                         print('Redeem points tapped');
@@ -202,10 +202,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10),
                       child: Text(
-                        "Select Language",
+                        L10n.getTranslatedText(context, 'Select Language'),
                         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                     ),

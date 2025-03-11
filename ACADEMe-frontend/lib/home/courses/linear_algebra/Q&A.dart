@@ -41,9 +41,14 @@ class QASection extends StatelessWidget {
 
   Widget buildQAItem(String name, String time, String imageUrl, int likes, int comments) {
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: Colors.grey[300]!), // Outline border color grey
+      ),
+        // elevation: 2,
       margin: EdgeInsets.only(bottom: 12),
+    child: Container(
+    color: Colors.white,
       child: Padding(
         padding: EdgeInsets.all(16),
         child: Column(
@@ -72,7 +77,7 @@ class QASection extends StatelessWidget {
             ),
             SizedBox(height: 10),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Row(
                   children: [
@@ -81,6 +86,7 @@ class QASection extends StatelessWidget {
                     Text(likes.toString()),
                   ],
                 ),
+                SizedBox(width: 18,),
                 Row(
                   children: [
                     Icon(Icons.comment, color: Colors.grey, size: 18),
@@ -93,6 +99,7 @@ class QASection extends StatelessWidget {
           ],
         ),
       ),
+    )
     );
   }
 
@@ -105,16 +112,41 @@ class QASection extends StatelessWidget {
           Expanded(
             child: TextField(
               decoration: InputDecoration(
-                hintText: "Write a Q&A...",
-                contentPadding: EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25),
-                  borderSide: BorderSide.none,
-                ),
+                contentPadding: EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: 12), // Adjust padding
+                hintText: "Write a comment",
+                hintStyle:
+                TextStyle(color: Colors.grey[600]),
                 filled: true,
-                fillColor: Colors.grey[200],
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius:
+                  BorderRadius.circular(8),
+                  borderSide: BorderSide(
+                    color: Colors.grey.shade400,
+                    width: 1.5,
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius:
+                  BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: Colors.grey.shade300,
+                    width: 1.5,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius:
+                  BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: AcademeTheme.appColor,
+                    width: 1,
+                  ),
+                ),
               ),
             ),
+
           ),
           SizedBox(width: 10),
           CircleAvatar(

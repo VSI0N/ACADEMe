@@ -59,6 +59,7 @@ dependencies:
   provider: ^6.1.2
   shared_preferences: ^2.5.2
   flutter_dotenv: ^5.2.1
+  youtube_player_flutter: ^9.1.1
   flutter_localizations:
     sdk: flutter
   fl_chart: ^0.70.2
