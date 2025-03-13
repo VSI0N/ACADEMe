@@ -28,7 +28,9 @@ class _LogInViewState extends State<LogInView> {
   Future<void> _submitForm() async {
     if (!_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(L10n.getTranslatedText(context, '⚠️ Please enter valid credentials'))),
+        SnackBar(
+            content: Text(L10n.getTranslatedText(
+                context, '⚠️ Please enter valid credentials'))),
       );
       return;
     }
@@ -55,15 +57,19 @@ class _LogInViewState extends State<LogInView> {
       await _secureStorage.write(key: "user_id", value: user.id);
       await _secureStorage.write(key: "user_name", value: user.name);
       await _secureStorage.write(key: "user_email", value: user.email);
-      await _secureStorage.write(key: "student_class", value: user.studentClass);
+      await _secureStorage.write(
+          key: "student_class", value: user.studentClass);
       await _secureStorage.write(key: "photo_url", value: user.photo_url);
 
       // ✅ Success! Navigate to home page
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(L10n.getTranslatedText(context, '✅ Login successful!'))),
+        SnackBar(
+            content:
+                Text(L10n.getTranslatedText(context, '✅ Login successful!'))),
       );
 // ✅ Success! Navigate to home page
-      await UserRoleManager().fetchUserRole(user.email);// ✅ Fetch user role before navigating
+      await UserRoleManager()
+          .fetchUserRole(user.email); // ✅ Fetch user role before navigating
       bool isAdmin = UserRoleManager().isAdmin;
 
       Navigator.pushReplacement(
@@ -75,7 +81,9 @@ class _LogInViewState extends State<LogInView> {
     } else {
       // ❌ Fallback error
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(L10n.getTranslatedText(context, '❌ Login failed. Please try again.'))),
+        SnackBar(
+            content: Text(L10n.getTranslatedText(
+                context, '❌ Login failed. Please try again.'))),
       );
     }
   }
@@ -89,13 +97,18 @@ class _LogInViewState extends State<LogInView> {
 
     if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage ?? L10n.getTranslatedText(context, '❌ Google Login failed. Please try again'))),
+        SnackBar(
+            content: Text(errorMessage ??
+                L10n.getTranslatedText(
+                    context, '❌ Google Login failed. Please try again'))),
       );
       return;
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(L10n.getTranslatedText(context, '✅ Logged in successfully with Google!'))),
+      SnackBar(
+          content: Text(L10n.getTranslatedText(
+              context, '✅ Logged in successfully with Google!'))),
     );
     Navigator.pushReplacementNamed(context, '/home');
   }
@@ -115,8 +128,7 @@ class _LogInViewState extends State<LogInView> {
               children: [
                 Center(
                   child: Container(
-                    constraints: BoxConstraints(
-                        maxWidth: 400, maxHeight: 400),
+                    constraints: BoxConstraints(maxWidth: 400, maxHeight: 400),
                     child: Image.asset(
                       'assets/academe/academe_logo.png',
                       fit: BoxFit.contain,
@@ -145,8 +157,8 @@ class _LogInViewState extends State<LogInView> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 30, right: 30),
+                              padding:
+                                  const EdgeInsets.only(left: 30, right: 30),
                               child: Text(
                                 L10n.getTranslatedText(context, 'Hello'),
                                 style: TextStyle(
@@ -156,8 +168,8 @@ class _LogInViewState extends State<LogInView> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 30, right: 30),
+                              padding:
+                                  const EdgeInsets.only(left: 30, right: 30),
                               child: Text(
                                 L10n.getTranslatedText(context, 'Welcome back'),
                                 style: TextStyle(
@@ -174,16 +186,22 @@ class _LogInViewState extends State<LogInView> {
                       Padding(
                         padding: EdgeInsets.only(left: 30, right: 30, top: 16),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start, // Align children to the start (left side)
+                          crossAxisAlignment: CrossAxisAlignment
+                              .start, // Align children to the start (left side)
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(bottom: 4.0), // Adds space between text and text field
+                              padding: const EdgeInsets.only(
+                                  bottom:
+                                      4.0), // Adds space between text and text field
                               child: Text(
-                                L10n.getTranslatedText(context, 'Email'), // Add the text you want
+                                L10n.getTranslatedText(
+                                    context, 'Email'), // Add the text you want
                                 style: TextStyle(
                                   fontSize: 18,
-                                  color: Colors.black54, // Adjust color as needed
-                                  fontWeight: FontWeight.w700, // Adjust weight as needed
+                                  color:
+                                      Colors.black54, // Adjust color as needed
+                                  fontWeight: FontWeight
+                                      .w700, // Adjust weight as needed
                                 ),
                               ),
                             ),
@@ -192,29 +210,39 @@ class _LogInViewState extends State<LogInView> {
                               decoration: InputDecoration(
                                 filled: true,
                                 fillColor: AcademeTheme.notWhite,
-                                labelText: L10n.getTranslatedText(context, 'Email'),
-                                hintText: L10n.getTranslatedText(context, 'Enter your email'),
+                                labelText:
+                                    L10n.getTranslatedText(context, 'Email'),
+                                hintText: L10n.getTranslatedText(
+                                    context, 'Enter your email'),
                                 prefixIcon: Icon(Icons.email),
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return L10n.getTranslatedText(context, 'Please enter an email');
+                                  return L10n.getTranslatedText(
+                                      context, 'Please enter an email');
                                 }
-                                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                                  return L10n.getTranslatedText(context, 'Enter a valid email');
+                                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                                    .hasMatch(value)) {
+                                  return L10n.getTranslatedText(
+                                      context, 'Enter a valid email');
                                 }
                                 return null;
                               },
                             ),
                             SizedBox(height: 16),
                             Padding(
-                              padding: const EdgeInsets.only(bottom: 4.0), // Adds space between text and text field
+                              padding: const EdgeInsets.only(
+                                  bottom:
+                                      4.0), // Adds space between text and text field
                               child: Text(
-                                L10n.getTranslatedText(context, 'Password'), // Add the text you want
+                                L10n.getTranslatedText(context,
+                                    'Password'), // Add the text you want
                                 style: TextStyle(
                                   fontSize: 18,
-                                  color: Colors.black54, // Adjust color as needed
-                                  fontWeight: FontWeight.w700, // Adjust weight as needed
+                                  color:
+                                      Colors.black54, // Adjust color as needed
+                                  fontWeight: FontWeight
+                                      .w700, // Adjust weight as needed
                                 ),
                               ),
                             ),
@@ -224,8 +252,10 @@ class _LogInViewState extends State<LogInView> {
                               decoration: InputDecoration(
                                 filled: true,
                                 fillColor: AcademeTheme.notWhite,
-                                labelText: L10n.getTranslatedText(context, 'Password'),
-                                hintText: L10n.getTranslatedText(context, 'Enter your password'),
+                                labelText:
+                                    L10n.getTranslatedText(context, 'Password'),
+                                hintText: L10n.getTranslatedText(
+                                    context, 'Enter your password'),
                                 prefixIcon: Icon(Icons.lock),
                                 suffixIcon: IconButton(
                                   icon: Icon(_isPasswordVisible
@@ -240,7 +270,8 @@ class _LogInViewState extends State<LogInView> {
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return L10n.getTranslatedText(context, 'Please enter a password');
+                                  return L10n.getTranslatedText(
+                                      context, 'Please enter a password');
                                 }
                                 return null;
                               },
@@ -256,14 +287,19 @@ class _LogInViewState extends State<LogInView> {
                             onPressed: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => const ForgotPasswordPage()),
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const ForgotPasswordPage()),
                               );
                             },
                             child: Text(
-                              L10n.getTranslatedText(context, 'Forgot Password?'),
+                              L10n.getTranslatedText(
+                                  context, 'Forgot Password?'),
                               style: TextStyle(
-                                color: AcademeTheme.appColor, // Change this to your desired color
-                                fontWeight: FontWeight.w500, // Optional: Make it bold
+                                color: AcademeTheme
+                                    .appColor, // Change this to your desired color
+                                fontWeight:
+                                    FontWeight.w500, // Optional: Make it bold
                                 fontSize: 14, // Optional: Adjust font size
                               ),
                             ),
@@ -278,22 +314,28 @@ class _LogInViewState extends State<LogInView> {
                           child: ElevatedButton(
                             onPressed: _submitForm,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.yellow[600], // Button background color
-                              minimumSize: Size(double.infinity, 42), // Set the height of the button
+                              backgroundColor:
+                                  Colors.yellow[600], // Button background color
+                              minimumSize: Size(double.infinity,
+                                  42), // Set the height of the button
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30), // Rounded corners
+                                borderRadius: BorderRadius.circular(
+                                    30), // Rounded corners
                               ),
                               elevation: 0, // Removes shadow
                             ),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center, // Centers the content
+                              mainAxisAlignment: MainAxisAlignment
+                                  .center, // Centers the content
                               children: [
                                 Image.asset(
                                   'assets/icons/house_door.png', // Replace with your image path
                                   height: 24, // Adjust the size of the image
                                   width: 24, // Adjust the size of the image
                                 ),
-                                SizedBox(width: 10), // Adds space between the image and the text
+                                SizedBox(
+                                    width:
+                                        10), // Adds space between the image and the text
                                 Text(
                                   L10n.getTranslatedText(context, 'Log in'),
                                   style: TextStyle(
@@ -307,7 +349,9 @@ class _LogInViewState extends State<LogInView> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 6,),
+                      SizedBox(
+                        height: 6,
+                      ),
                       Text(
                         L10n.getTranslatedText(context, 'OR'),
                         style: TextStyle(
@@ -321,15 +365,20 @@ class _LogInViewState extends State<LogInView> {
                         child: SizedBox(
                           width: double.infinity,
                           child: ElevatedButton.icon(
-                            onPressed: _isGoogleLoading ? null : _signInWithGoogle,
+                            onPressed:
+                                _isGoogleLoading ? null : _signInWithGoogle,
                             icon: _isGoogleLoading
                                 ? CircularProgressIndicator(color: Colors.white)
                                 : Padding(
-                              padding: EdgeInsets.only(right: 7), // Adjust spacing
-                              child: Image.asset('assets/icons/google_icon.png', height: 22),
-                            ),
+                                    padding: EdgeInsets.only(
+                                        right: 7), // Adjust spacing
+                                    child: Image.asset(
+                                        'assets/icons/google_icon.png',
+                                        height: 22),
+                                  ),
                             label: Text(
-                              L10n.getTranslatedText(context, 'Continue with Google'),
+                              L10n.getTranslatedText(
+                                  context, 'Continue with Google'),
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w500,
@@ -352,18 +401,19 @@ class _LogInViewState extends State<LogInView> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            L10n.getTranslatedText(context, 'Don\'t have an account?'),
+                            L10n.getTranslatedText(
+                                context, 'Don\'t have an account?'),
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.black54,
                             ),
                           ),
                           TextButton(
-                            onPressed: (
-                                ) {
+                            onPressed: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => SignUpView()),
+                                MaterialPageRoute(
+                                    builder: (context) => SignUpView()),
                               );
                             },
                             child: Text(
@@ -371,12 +421,13 @@ class _LogInViewState extends State<LogInView> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
-                                color: AcademeTheme.appColor, // Change color for emphasis
+                                color: AcademeTheme
+                                    .appColor, // Change color for emphasis
                               ),
                             ),
                           ),
                         ],
-                      ),// Adds spacing before the "Log In" button
+                      ), // Adds spacing before the "Log In" button
                     ],
                   ),
                 ),

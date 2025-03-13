@@ -54,7 +54,8 @@ class _SignUpViewState extends State<SignUpView> {
     String? token = await _secureStorage.read(key: "access_token");
 
     if (token != null) {
-      await UserRoleManager().fetchUserRole(_emailController.text.trim());// ✅ Fetch user role before navigating
+      await UserRoleManager().fetchUserRole(
+          _emailController.text.trim()); // ✅ Fetch user role before navigating
       bool isAdmin = UserRoleManager().isAdmin;
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -223,8 +224,8 @@ class _SignUpViewState extends State<SignUpView> {
                                 context, 'Please enter a password');
                           }
                           if (value.length < 6) {
-                            return L10n.getTranslatedText(
-                                context, 'Password must be at least 6 characters');
+                            return L10n.getTranslatedText(context,
+                                'Password must be at least 6 characters');
                           }
                           return null;
                         },
