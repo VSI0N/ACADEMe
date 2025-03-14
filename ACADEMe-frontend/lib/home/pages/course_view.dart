@@ -72,7 +72,6 @@ class _CourseListScreenState extends State<CourseListScreen>
             "id": course["id"],
             "title": course["title"],
             "progress": 0.0,
-            "image": AImages.typography,
           }).toList();
         });
       } else {
@@ -245,17 +244,17 @@ class _CourseListScreenState extends State<CourseListScreen>
         ),
         child: Row(
           children: [
-            Expanded(
-              flex: 2,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.asset(
-                  course["image"],
-                  fit: BoxFit.cover,
-                  height: double.infinity,
-                ),
-              ),
-            ),
+            // Expanded(
+            //   flex: 2,
+            //   child: ClipRRect(
+            //     borderRadius: BorderRadius.circular(12),
+            //     child: Image.asset(
+            //       course["image"],
+            //       fit: BoxFit.cover,
+            //       height: double.infinity,
+            //     ),
+            //   ),
+            // ),
             SizedBox(width: 12),
             Expanded(
               flex: 3,

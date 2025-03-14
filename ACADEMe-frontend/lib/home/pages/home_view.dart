@@ -1,5 +1,3 @@
-import 'package:ACADEMe/home/admin_panel/courses.dart';
-import 'package:ACADEMe/home/pages/course_view.dart';
 import 'package:flutter/material.dart';
 import 'package:ACADEMe/home/pages/ASKMe.dart';
 import '../../academe_theme.dart';
@@ -7,16 +5,15 @@ import 'package:ACADEMe/home/components/ASKMe_button.dart';
 import 'package:ACADEMe/widget/homepage_drawer.dart';
 import 'dart:math';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:ACADEMe/home/pages/my_progress.dart';
-import 'package:provider/provider.dart';
-import 'package:ACADEMe/providers/bottom_nav_provider.dart';
-import '../../localization/l10n.dart';
-import 'package:ACADEMe/home/courses/linear_algebra/Linear_algebra.dart';
+
+import '../courses/linear_algebra/Linear_algebra.dart';
 
 class HomePage extends StatelessWidget {
   final VoidCallback onProfileTap;
   final VoidCallback onAskMeTap;
   final PageController _pageController = PageController();
+  final ValueNotifier<bool> _showSearchUI = ValueNotifier(false); // Use ValueNotifier
+
 
   HomePage({
     Key? key,
@@ -24,7 +21,117 @@ class HomePage extends StatelessWidget {
     required this.onAskMeTap,
   }) : super(key: key);
 
+
+
+  @override
   Widget build(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: _showSearchUI,
+      builder: (context, showSearch, child) {
+        return Scaffold(
+          body: showSearch ? _buildSearchUI() : _buildMainUI(context),
+        );
+      },
+    );
+  }
+
+  Widget _buildSearchUI() {
+    return GestureDetector(
+      onTap: () {
+        _showSearchUI.value = false; // Update notifier instead of setState()
+      },
+      behavior: HitTestBehavior.opaque, // Ensures taps outside are detected
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: TextField(
+              autofocus: true,
+              decoration: InputDecoration(
+                hintText: 'Search...',
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(26.0),
+                  borderSide: BorderSide.none,
+                ),
+                filled: true,
+                fillColor: Colors.grey[200],
+              ),
+            ),
+          ),
+          Expanded(
+            child: SingleChildScrollView( // Ensures content scrolls
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Popular Searches",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 10),
+                    Wrap(
+                      spacing: 8.0,
+                      children: [
+                        ActionChip(
+                          label: Text("Machine Learning"),
+                          onPressed: () {
+                            print("Machine Learning clicked");
+                            // Handle chip click action here
+                          },
+                        ),
+                        ActionChip(
+                          label: Text("Data Science"),
+                          onPressed: () {
+                            print("Data Science clicked");
+                            // Handle chip click action here
+                          },
+                        ),
+                        ActionChip(
+                          label: Text("Flutter"),
+                          onPressed: () {
+                            print("Flutter clicked");
+                            // Handle chip click action here
+                          },
+                        ),
+                        ActionChip(
+                          label: Text("Linear Algebra"),
+                          onPressed: () {
+                            print("Linear Algebra clicked");
+                            // Handle chip click action here
+                          },
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      "Recent Searches",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 10),
+                    ListTile(
+                      leading: Icon(Icons.history),
+                      title: Text("Advanced Python"),
+                      onTap: () {}, // Keep these as they are
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.history),
+                      title: Text("Cyber Security"),
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+
+  Widget _buildMainUI(BuildContext context) {
     // GlobalKey for controlling the Scaffold state (drawer)
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     return ASKMeButton(
@@ -49,17 +156,18 @@ class HomePage extends StatelessWidget {
               padding:
               const EdgeInsets.only(top: 15.0), // Adjust top padding here
               child: getAppBarUI(
-                  onProfileTap,
-                      () {
-                    scaffoldKey.currentState
-                        ?.openDrawer(); // Open drawer when custom button is clicked
-                  },context
+                onProfileTap,
+                    () {
+                  scaffoldKey.currentState
+                      ?.openDrawer(); // Open drawer when custom button is clicked
+                },
               ),
             ),
           ),
         ),
         // Use drawer for left-side drawer
         backgroundColor: AcademeTheme.appColor, // Set background same as AppBar
+
         body: Container(
           decoration: BoxDecoration(
             color: Colors.white,
@@ -82,8 +190,11 @@ class HomePage extends StatelessWidget {
                         padding:
                         const EdgeInsets.only(top: 10.0), // Upper padding
                         child: TextField(
+                          onTap: () {
+                            _showSearchUI.value = true; // Update state properly
+                          },
                           decoration: InputDecoration(
-                            hintText: L10n.getTranslatedText(context, 'Search'),
+                            hintText: 'Search',
                             prefixIcon: Padding(
                               padding: const EdgeInsets.only(
                                   left: 12.0, right: 8.0), // Spacing
@@ -161,9 +272,9 @@ class HomePage extends StatelessWidget {
                                 // Texts
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  children:  [
+                                  children: const [
                                     Text(
-                                      L10n.getTranslatedText(context, 'Your Personal Tutor'),
+                                      "Your Personal Tutor",
                                       style: TextStyle(
                                         color: Color.fromARGB(255, 10, 10, 10),
                                         fontSize: 24,
@@ -198,7 +309,7 @@ class HomePage extends StatelessWidget {
                                         contentPadding: EdgeInsets.symmetric(
                                             vertical: 10,
                                             horizontal: 12), // Adjust padding
-                                        hintText: L10n.getTranslatedText(context, 'ASKMe Anything...'),
+                                        hintText: "ASKMe Anything...",
                                         hintStyle:
                                         TextStyle(color: Colors.grey[600]),
                                         filled: true,
@@ -254,90 +365,80 @@ class HomePage extends StatelessWidget {
                       const SizedBox(height: 20),
 
                       // My Progress Section
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ProgressScreen()),
-                          );
-                        },
-                        child: Card(
-                          color: Colors
-                              .indigoAccent, // Background color similar to the image
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                            BorderRadius.circular(12.0), // Rounded edges
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 15.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                // Left Section: Title & Subtitle
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      L10n.getTranslatedText(context, 'My Progress'),
-                                      style: TextStyle(
-                                        fontSize: 26,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
+                      Card(
+                        color: Colors
+                            .indigoAccent, // Background color similar to the image
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                          BorderRadius.circular(12.0), // Rounded edges
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 15.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              // Left Section: Title & Subtitle
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  Text(
+                                    "My Progress",
+                                    style: TextStyle(
+                                      fontSize: 26,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
                                     ),
-                                    SizedBox(height: 4),
-                                    Text(
-                                      L10n.getTranslatedText(context, 'Track your progress'),
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.white70,
-                                      ),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    "Track your progress",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.white70,
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
+                              ),
 
-                                // Right Section: Fire Icon with Badge
-                                Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    Container(
-                                      width: 50,
-                                      height: 50,
+                              // Right Section: Fire Icon with Badge
+                              Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Container(
+                                    width: 50,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: const Color.fromARGB(255, 247, 177,
+                                          55), // Fire icon background
+                                    ),
+                                    child: const Icon(
+                                        Icons.local_fire_department,
+                                        color: Colors.white,
+                                        size: 24),
+                                  ),
+                                  Positioned(
+                                    bottom: -2,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8, vertical: 2),
                                       decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: const Color.fromARGB(255, 247,
-                                            177, 55), // Fire icon background
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(20),
                                       ),
-                                      child: const Icon(
-                                          Icons.local_fire_department,
-                                          color: Colors.white,
-                                          size: 24),
-                                    ),
-                                    Positioned(
-                                      bottom: -2,
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8, vertical: 2),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                          BorderRadius.circular(20),
-                                        ),
-                                        child: const Text(
-                                          "420",
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.bold),
-                                        ),
+                                      child: const Text(
+                                        "420",
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -346,27 +447,21 @@ class HomePage extends StatelessWidget {
 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
+                        children: const [
                           Text(
-                            L10n.getTranslatedText(context, 'Continue Learning'),
+                            "Continue Learning",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 20),
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              // Find the BottomNavigationBar and switch to the My Courses tab
-                              Provider.of<BottomNavProvider>(context, listen: false).setIndex(1);
-                            },
-                            child: Text(
-                              L10n.getTranslatedText(context, 'See All'),
-                              style: TextStyle(color: Colors.blue),
-                            ),
+                          Text(
+                            "See All",
+                            style: TextStyle(color: Colors.blue),
                           ),
                         ],
                       ),
                       const SizedBox(height: 16),
                       learningCard(
-                          L10n.getTranslatedText(context, 'Linear Algebra'), 4, 9, 34, Colors.pink[100]!, () {
+                          "Linear Algebra", 4, 9, 34, Colors.pink[100]!, () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -375,7 +470,7 @@ class HomePage extends StatelessWidget {
                       }),
                       const SizedBox(height: 12),
                       learningCard(
-                          L10n.getTranslatedText(context, 'Atoms & Molecules'), 7, 13, 65, Colors.blue[100]!,
+                          "Atoms & Molecules", 7, 13, 65, Colors.blue[100]!,
                               () {
                             Navigator.push(
                               context,
@@ -385,7 +480,7 @@ class HomePage extends StatelessWidget {
                           }),
                       const SizedBox(height: 12),
                       learningCard(
-                          L10n.getTranslatedText(context, 'Atoms & Molecules'), 7, 13, 65, Colors.green[100]!,
+                          "Atoms & Molecules", 7, 13, 65, Colors.green[100]!,
                               () {
                             Navigator.push(
                               context,
@@ -412,20 +507,23 @@ class HomePage extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 16),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    L10n.getTranslatedText(context, 'All Courses'),
-                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                    "All Courses",
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                   TextButton(
                                     onPressed: () {
-                                      // Switch to the Courses tab using BottomNavProvider
-                                      Provider.of<BottomNavProvider>(context, listen: false).setIndex(1);
+                                      // Handle 'See All' action
                                     },
-                                    child:  Text(
-                                      L10n.getTranslatedText(context, 'See All'),
-                                      style: TextStyle(fontSize: 16, color: Colors.blue),
+                                    child: Text(
+                                      "See All",
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.blue),
                                     ),
                                   ),
                                 ],
@@ -467,7 +565,7 @@ class HomePage extends StatelessWidget {
                                                     color: Colors.red),
                                               ),
                                               SizedBox(width: 10),
-                                              Text(L10n.getTranslatedText(context, 'English'),
+                                              Text("English",
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
@@ -502,7 +600,7 @@ class HomePage extends StatelessWidget {
                                                     color: Colors.orange),
                                               ),
                                               SizedBox(width: 10),
-                                              Text(L10n.getTranslatedText(context, 'Maths'),
+                                              Text("Maths",
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
@@ -540,7 +638,7 @@ class HomePage extends StatelessWidget {
                                                     color: Colors.blue),
                                               ),
                                               SizedBox(width: 10),
-                                              Text(L10n.getTranslatedText(context, 'Language'),
+                                              Text("Language",
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
@@ -575,7 +673,7 @@ class HomePage extends StatelessWidget {
                                                     color: Colors.green),
                                               ),
                                               SizedBox(width: 10),
-                                              Text(L10n.getTranslatedText(context, 'Biology'),
+                                              Text("Biology",
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
@@ -596,20 +694,23 @@ class HomePage extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 16),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    L10n.getTranslatedText(context, 'My Courses'),
-                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                    "My Courses",
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                   TextButton(
                                     onPressed: () {
-                                      // Switch to the Courses tab using BottomNavProvider
-                                      Provider.of<BottomNavProvider>(context, listen: false).setIndex(1);
+                                      // Handle 'See All' action
                                     },
                                     child: Text(
-                                      L10n.getTranslatedText(context, 'See All'),
-                                      style: TextStyle(fontSize: 16, color: Colors.blue),
+                                      "See All",
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.blue),
                                     ),
                                   ),
                                 ],
@@ -621,14 +722,12 @@ class HomePage extends StatelessWidget {
                               child: Row(
                                 children: [
                                   Expanded(
-                                    child: CourseCard(L10n.getTranslatedText(context, 'Biology'),
-                                        "16 ${L10n.getTranslatedText(context, 'Lessons')}",
+                                    child: CourseCard("Biology", "16 Lessons",
                                         Colors.purple[100]!),
                                   ),
                                   SizedBox(width: 8),
                                   Expanded(
-                                    child: CourseCard(L10n.getTranslatedText(context, 'Computer'),
-                                        "18 ${L10n.getTranslatedText(context, 'Lessons')}",
+                                    child: CourseCard("Computer", "18 Lessons",
                                         Colors.blue[100]!),
                                   ),
                                 ],
@@ -641,7 +740,7 @@ class HomePage extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 16),
                               child: Text(
-                                L10n.getTranslatedText(context, 'Recommended'),
+                                "Recommended",
                                 style: TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.bold),
                               ),
@@ -652,14 +751,12 @@ class HomePage extends StatelessWidget {
                               child: Row(
                                 children: [
                                   Expanded(
-                                    child: CourseCard(L10n.getTranslatedText(context, 'Marketing'),
-                                        "9 ${L10n.getTranslatedText(context, 'Lessons')}",
+                                    child: CourseCard("Marketing", "9 Lessons",
                                         Colors.pink[100]!),
                                   ),
                                   SizedBox(width: 8),
                                   Expanded(
-                                    child: CourseCard(L10n.getTranslatedText(context, 'Trading'),
-                                        "14 ${L10n.getTranslatedText(context, 'Lessons')}",
+                                    child: CourseCard("Trading", "14 Lessons",
                                         Colors.green[100]!),
                                   ),
                                 ],
@@ -690,6 +787,10 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+
+
+
+
 
 Widget barGraph(double yellowHeight, double purpleHeight) {
   return Column(
@@ -761,7 +862,7 @@ Widget learningCard(String title, int completed, int total, int percentage,
 // AppBar UI with the Hamburger icon inside a circular button
 // AppBar UI without the Hamburger icon inside it
 // AppBar UI with the Hamburger icon inside a circular button
-Widget getAppBarUI(VoidCallback onProfileTap, VoidCallback onHamburgerTap, BuildContext context) {
+Widget getAppBarUI(VoidCallback onProfileTap, VoidCallback onHamburgerTap) {
   return Container(
     height: 100, // Increased height for the AppBar
     padding: const EdgeInsets.only(top: 38.0, left: 18, right: 18, bottom: 5),
@@ -781,9 +882,9 @@ Widget getAppBarUI(VoidCallback onProfileTap, VoidCallback onHamburgerTap, Build
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: const [
             Text(
-              L10n.getTranslatedText(context, 'Hello'),
+              'Hello,',
               style: TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: 16,
@@ -791,7 +892,7 @@ Widget getAppBarUI(VoidCallback onProfileTap, VoidCallback onHamburgerTap, Build
               ),
             ),
             Text(
-              'Alex', // Dynamically set this if needed
+              'Atomic Shadow', // Dynamically set this if needed
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,

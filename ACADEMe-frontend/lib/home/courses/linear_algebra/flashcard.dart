@@ -2,6 +2,8 @@ import 'package:ACADEMe/academe_theme.dart';
 import 'package:ACADEMe/home/courses/linear_algebra/quiz.dart';
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:flutter_swiper_view/flutter_swiper_view.dart';
+
 
 class flashCard extends StatefulWidget {
   @override
@@ -16,6 +18,7 @@ class _flashCardState extends State<flashCard> {
   int _currentPage = 0; // ✅ Tracks current page for progress indicator
   double _swipeProgress = 0.0;
   bool _hasNavigated = false;
+
 
 
   @override
@@ -79,6 +82,8 @@ class _flashCardState extends State<flashCard> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> flashCards = [_buildTextContent(), _buildVideoContent()];
+
     return Scaffold(
       backgroundColor: AcademeTheme.appColor,
       appBar: AppBar(
@@ -165,39 +170,28 @@ class _flashCardState extends State<flashCard> {
 
           SizedBox(height: 20),
           Expanded(
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTapUp: (TapUpDetails details) {
-                double screenWidth = MediaQuery.of(context).size.width;
-                double tapPosition = details.globalPosition.dx;
-                if (tapPosition > screenWidth * 0.6 && _currentPage < 1) {
-                  _pageController.nextPage(duration: Duration(milliseconds: 350), curve: Curves.easeInOutCubic);
-                } else if (tapPosition < screenWidth * 0.4 && _currentPage > 0) {
-                  _pageController.previousPage(duration: Duration(milliseconds: 350), curve: Curves.easeInOutCubic);
-                }
-              },
-              child: ClipRRect(
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-                child: Container(
-                  color: Colors.white,
-                  child: Stack(
-                    children: [
-                      PageView.builder(
-                        controller: _pageController,
-                        onPageChanged: _onPageChanged,
-                        physics: BouncingScrollPhysics(),
-                        itemCount: 2,
-                        itemBuilder: (context, index) {
-                          return Stack(
-                            children: [
-                              index == 0 ? _buildTextContent() : _buildVideoContent(),
-                            ],
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return Swiper(
+                    itemWidth: constraints.maxWidth,
+                    itemHeight: constraints.maxHeight,
+                    loop: false, // ✅ Enables infinite looping
+                    duration: 1200,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: flashCards[index],
+                      );
+                    },
+                    itemCount: flashCards.length,
+                    layout: SwiperLayout.STACK,
+                    axisDirection: AxisDirection.right,
+                    onIndexChanged:_onPageChanged,
+                  );
+                },
               ),
             ),
           ),
@@ -206,58 +200,46 @@ class _flashCardState extends State<flashCard> {
     );
   }
 
-  // Widget _buildNextPageShadow() {
-  //   return Container(
-  //     decoration: BoxDecoration(
-  //       gradient: LinearGradient(
-  //         begin: Alignment.centerRight,
-  //         end: Alignment.centerLeft,
-  //         colors: [
-  //           Colors.black.withOpacity(0.1), // Darker on the right side
-  //           Colors.transparent,             // Fades towards the left
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-
 
   Widget _buildTextContent() {
-    return const SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.all(16),
-        child: Text(
-          "Linear algebra is a branch of mathematics that deals with vector spaces, linear equations, and transformations.\n\n"
-              "It provides the foundation for various applications in engineering, physics, computer science, and data science. "
-              "The core concepts include matrices, determinants, eigenvalues, eigenvectors, and systems of linear equations.\n\n"
-              "These tools help solve complex problems involving multiple variables and dimensions. "
-              "Linear algebra is widely used in artificial intelligence, cryptography, image processing, and scientific computing, making it an essential subject for modern technological advancements.\n\n"
-              "A real-life example of linear algebra is Google’s PageRank algorithm, which ranks web pages based on their relevance.",
-          style: TextStyle(fontSize: 14, color: Colors.black87, height: 1.5),
+    return Expanded(
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+          boxShadow: [
+            BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2),
+          ],
+        ),
+        child: SingleChildScrollView(
+          child: const Text(
+            "Linear algebra is a branch of mathematics that deals with vector spaces, linear equations, and transformations.\n\n"
+                "It provides the foundation for various applications in engineering, physics, computer science, and data science. "
+                "The core concepts include matrices, determinants, eigenvalues, eigenvectors, and systems of linear equations.\n\n"
+                "These tools help solve complex problems involving multiple variables and dimensions. "
+                "Linear algebra is widely used in artificial intelligence, cryptography, image processing, and scientific computing, making it an essential subject for modern technological advancements.\n\n"
+                "A real-life example of linear algebra is Google’s PageRank algorithm, which ranks web pages based on their relevance.",
+            style: TextStyle(fontSize: 14, color: Colors.black87, height: 1.5),
+          ),
         ),
       ),
     );
   }
 
+
   Widget _buildVideoContent() {
     return GestureDetector(
       onTap: _toggleVideo,
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16),
-        width: double.infinity,
-        height: _isShorts ? MediaQuery.of(context).size.height * 0.7 : 300,
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Colors.grey.shade300,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 5)],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: YoutubePlayer(
-            controller: _controller,
-            showVideoProgressIndicator: true,
-          ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: YoutubePlayer(
+          controller: _controller,
+          showVideoProgressIndicator: true,
         ),
       ),
     );
