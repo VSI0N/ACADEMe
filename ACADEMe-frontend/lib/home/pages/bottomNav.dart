@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../academe_theme.dart';
-import '../../started/pages/course.dart';
 import '../admin_panel/courses.dart';
-import '../courses/report.dart';
 import 'course_view.dart';
 import 'home_view.dart';
 import 'my_community.dart';
@@ -29,7 +27,7 @@ class BottomNav extends StatelessWidget {
           ),
           const CourseListScreen(),
           const Mycommunity(),
-          ProfilePage(),
+          const ProfilePage(),
           CourseManagementScreen(),
         ]
             : [

@@ -1,3 +1,5 @@
+import 'package:ACADEMe/home/admin_panel/courses.dart';
+import 'package:ACADEMe/home/pages/course_view.dart';
 import 'package:flutter/material.dart';
 import 'package:ACADEMe/home/pages/ASKMe.dart';
 import '../../academe_theme.dart';
@@ -5,8 +7,11 @@ import 'package:ACADEMe/home/components/ASKMe_button.dart';
 import 'package:ACADEMe/widget/homepage_drawer.dart';
 import 'dart:math';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
-import '../courses/linear_algebra/Linear_algebra.dart';
+import 'package:ACADEMe/home/pages/my_progress.dart';
+import 'package:provider/provider.dart';
+import 'package:ACADEMe/providers/bottom_nav_provider.dart';
+import '../../localization/l10n.dart';
+import 'package:ACADEMe/home/courses/linear_algebra/Linear_algebra.dart';
 
 class HomePage extends StatelessWidget {
   final VoidCallback onProfileTap;
@@ -20,8 +25,6 @@ class HomePage extends StatelessWidget {
     required this.onProfileTap,
     required this.onAskMeTap,
   }) : super(key: key);
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -130,7 +133,6 @@ class HomePage extends StatelessWidget {
     );
   }
 
-
   Widget _buildMainUI(BuildContext context) {
     // GlobalKey for controlling the Scaffold state (drawer)
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -161,6 +163,7 @@ class HomePage extends StatelessWidget {
                   scaffoldKey.currentState
                       ?.openDrawer(); // Open drawer when custom button is clicked
                 },
+                context
               ),
             ),
           ),
@@ -365,80 +368,90 @@ class HomePage extends StatelessWidget {
                       const SizedBox(height: 20),
 
                       // My Progress Section
-                      Card(
-                        color: Colors
-                            .indigoAccent, // Background color similar to the image
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                          BorderRadius.circular(12.0), // Rounded edges
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 15.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              // Left Section: Title & Subtitle
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  Text(
-                                    "My Progress",
-                                    style: TextStyle(
-                                      fontSize: 26,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProgressScreen()),
+                          );
+                        },
+                        child: Card(
+                          color: Colors
+                              .indigoAccent, // Background color similar to the image
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                            BorderRadius.circular(12.0), // Rounded edges
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 15.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                // Left Section: Title & Subtitle
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      L10n.getTranslatedText(context, 'My Progress'),
+                                      style: TextStyle(
+                                        fontSize: 26,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(height: 4),
-                                  Text(
-                                    "Track your progress",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.white70,
+                                    SizedBox(height: 4),
+                                    Text(
+                                      L10n.getTranslatedText(context, 'Track your progress'),
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.white70,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
+                                  ],
+                                ),
 
-                              // Right Section: Fire Icon with Badge
-                              Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  Container(
-                                    width: 50,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: const Color.fromARGB(255, 247, 177,
-                                          55), // Fire icon background
-                                    ),
-                                    child: const Icon(
-                                        Icons.local_fire_department,
-                                        color: Colors.white,
-                                        size: 24),
-                                  ),
-                                  Positioned(
-                                    bottom: -2,
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8, vertical: 2),
+                                // Right Section: Fire Icon with Badge
+                                Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Container(
+                                      width: 50,
+                                      height: 50,
                                       decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(20),
+                                        shape: BoxShape.circle,
+                                        color: const Color.fromARGB(255, 247,
+                                            177, 55), // Fire icon background
                                       ),
-                                      child: const Text(
-                                        "420",
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold),
+                                      child: const Icon(
+                                          Icons.local_fire_department,
+                                          color: Colors.white,
+                                          size: 24),
+                                    ),
+                                    Positioned(
+                                      bottom: -2,
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 2),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                          BorderRadius.circular(20),
+                                        ),
+                                        child: const Text(
+                                          "420",
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -786,11 +799,9 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
+
+
 }
-
-
-
-
 
 Widget barGraph(double yellowHeight, double purpleHeight) {
   return Column(
@@ -862,7 +873,7 @@ Widget learningCard(String title, int completed, int total, int percentage,
 // AppBar UI with the Hamburger icon inside a circular button
 // AppBar UI without the Hamburger icon inside it
 // AppBar UI with the Hamburger icon inside a circular button
-Widget getAppBarUI(VoidCallback onProfileTap, VoidCallback onHamburgerTap) {
+Widget getAppBarUI(VoidCallback onProfileTap, VoidCallback onHamburgerTap, BuildContext context) {
   return Container(
     height: 100, // Increased height for the AppBar
     padding: const EdgeInsets.only(top: 38.0, left: 18, right: 18, bottom: 5),
@@ -882,9 +893,9 @@ Widget getAppBarUI(VoidCallback onProfileTap, VoidCallback onHamburgerTap) {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             Text(
-              'Hello,',
+              L10n.getTranslatedText(context, 'Hello'),
               style: TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: 16,
@@ -892,7 +903,7 @@ Widget getAppBarUI(VoidCallback onProfileTap, VoidCallback onHamburgerTap) {
               ),
             ),
             Text(
-              'Atomic Shadow', // Dynamically set this if needed
+              'Alex', // Dynamically set this if needed
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
