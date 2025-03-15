@@ -9,6 +9,7 @@ import 'package:ACADEMe/localization/l10n.dart';
 import 'package:ACADEMe/home/pages/subtopic_view.dart';
 import 'package:provider/provider.dart';
 import 'package:ACADEMe/localization/language_provider.dart';
+import 'package:ACADEMe/home/courses/overview/overview.dart';
 
 class TopicViewScreen extends StatefulWidget {
   final String courseId;
@@ -180,7 +181,7 @@ class _TopicViewScreenState extends State<TopicViewScreen>
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => SubtopicViewScreen(courseId: courseId, topicId: topic["id"]),
+              builder: (context) => OverviewScreen(courseId: courseId, topicId: topic["id"]),
             ),
           );
         } else {

@@ -11,7 +11,7 @@ import 'package:ACADEMe/home/pages/my_progress.dart';
 import 'package:provider/provider.dart';
 import 'package:ACADEMe/providers/bottom_nav_provider.dart';
 import '../../localization/l10n.dart';
-import 'package:ACADEMe/home/courses/linear_algebra/Linear_algebra.dart';
+import 'package:ACADEMe/home/courses/overview/overview.dart';
 
 class HomePage extends StatelessWidget {
   final VoidCallback onProfileTap;
@@ -478,7 +478,7 @@ class HomePage extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => LinearAlgebraScreen()),
+                              builder: (context) => OverviewScreen(courseId: 'courseId', topicId: 'topicId')),
                         );
                       }),
                       const SizedBox(height: 12),
@@ -488,7 +488,7 @@ class HomePage extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => LinearAlgebraScreen()),
+                                  builder: (context) => OverviewScreen(courseId: 'courseId', topicId: 'topicId')),
                             );
                           }),
                       const SizedBox(height: 12),
@@ -498,7 +498,7 @@ class HomePage extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => LinearAlgebraScreen()),
+                                  builder: (context) => OverviewScreen(courseId: 'courseId', topicId: 'topicId')),
                             );
                           }),
 
