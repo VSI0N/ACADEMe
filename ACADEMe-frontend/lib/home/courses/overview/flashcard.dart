@@ -153,6 +153,18 @@ class _FlashCardState extends State<FlashCard> {
   }
 
   Widget _buildMaterial(Map<String, String> material) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSubtopicTitle(material["title"] ?? "Subtopic"), // Adding the title dynamically
+        Expanded(
+          child: _getMaterialWidget(material),
+        ),
+      ],
+    );
+  }
+
+  Widget _getMaterialWidget(Map<String, String> material) {
     switch (material["type"]) {
       case "text":
         return _buildTextContent(material["content"]!);
@@ -181,6 +193,30 @@ class _FlashCardState extends State<FlashCard> {
         ),
         child: SingleChildScrollView(
           child: Text(content, style: const TextStyle(fontSize: 14, color: Colors.black87, height: 1.5)),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSubtopicTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 4, spreadRadius: 1)],
+        ),
+        child: Text(
+          title,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+          textAlign: TextAlign.center,
         ),
       ),
     );
