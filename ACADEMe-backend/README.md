@@ -193,9 +193,44 @@ If it returns CLOUDINARY keys then you are good to go...
 
 ### 6️⃣ Start the Server  
 ```bash
-uvicorn main:app --host 127.0.0.1 --port 8001 --reload
+uvicorn main:app --host 127.0.0.1 --port 8000 --reload
 ```
-Your API will be available at **http://127.0.0.1:8001**  
+Your API will be available at **http://127.0.0.1:8000**
+
+## Installation by Docker
+
+### 1️⃣ Build the Docker Container
+
+After cloning this repository and creating the .env file in ACADEMe-backend, you can run the following commands:
+
+```bash
+docker build -t academe-backend .
+```
+
+### 2️⃣ Run the Docker Container
+
+You can download the firebase-key.json file from Firebase Console > Project Overview > Project Settings > Service accounts and then store it in firebase folder of ACADEMe-backend and then run the following command after replacing firebase-key.json with your actual firebase-key.json file.
+
+```bash
+docker run -d -p 8000:8000 \
+  -v $(pwd)/firebase/firebase-key.json:/app/firebase-key.json \
+  -e GOOGLE_APPLICATION_CREDENTIALS=/app/firebase-key.json \
+  academe-backend
+```
+
+Your API will be available at **http://localhost:8000**
+
+#### To stop the Docker Container, you can run the following command:
+
+```bash
+docker stop <container_id>
+```
+
+#### To start the Docker Container, you can run the following command:
+
+```bash
+docker start <container_id>
+```
 
 ---
 

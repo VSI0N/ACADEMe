@@ -1,10 +1,11 @@
 .env
 venv
-__pycache__
+__pycache__/
 routes/__pycache__
 utils/__pycache__
 services/__pycache__
 models/__pycache__
+firebase/
 # Ignore the virtual environment
 venv/
 pyvenv.cfg

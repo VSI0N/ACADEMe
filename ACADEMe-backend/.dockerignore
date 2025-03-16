@@ -1,0 +1,26 @@
+# Ignore Python cache files  
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore virtual environments  
+venv/
+
+# Ignore environment and secret files  
+.env  
+firebase.py  # If this contains sensitive credentials
+
+# Ignore Git files  
+.git  
+.gitignore
+
+# Ignore local development files  
+.DS_Store  
+*.log  
+
+# Ignore unnecessary assets (optional)  
+assets/  # If this is only needed for local development  
+
+# Ignore generated keys (if they are sensitive)  
+generate_secret_keys/  
