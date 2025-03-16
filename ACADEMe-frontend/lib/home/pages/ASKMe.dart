@@ -20,6 +20,8 @@ import 'package:ACADEMe/widget/full_screen_video.dart';
 import 'package:ACADEMe/widget/video_thumbnail.dart';
 import 'package:ACADEMe/widget/typing_indicator.dart';
 
+Function(String)? sendMessageExternally;
+
 class ASKMe extends StatefulWidget {
   @override
   _ASKMeState createState() => _ASKMeState();
@@ -51,6 +53,16 @@ class _ASKMeState extends State<ASKMe> {
     {'name': 'Japanese', 'code': 'ja'},
     {'name': 'Bengali', 'code': 'bn'},
   ];
+
+  void _scrollToBottom() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
+  }
 
   List<Map<String, String>> _getFilteredLanguages() {
     if (searchQuery.isEmpty) {
@@ -430,8 +442,7 @@ class _ASKMeState extends State<ASKMe> {
     if (message.isNotEmpty) {
       setState(() {
         chatMessages.add({"role": "user", "text": message});
-        chatMessages.add(
-            {"role": "ai", "text": "AI is typing..."}); // Temporary message
+        chatMessages.add({"role": "ai", "isTyping": true}); // Typing animation
         _textController.clear();
       });
 
@@ -444,7 +455,6 @@ class _ASKMeState extends State<ASKMe> {
         );
       });
 
-      // ASKMe backend URL
       var url = Uri.parse(
           '${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/process_text');
 
@@ -463,11 +473,10 @@ class _ASKMeState extends State<ASKMe> {
           String aiMessage = jsonDecode(aiResponse)['response'];
 
           setState(() {
-            // Replace "AI is typing..." with the actual response
-            chatMessages[chatMessages.length - 1] = {
-              "role": "ai",
-              "text": aiMessage
-            };
+            // Remove the TypingIndicator
+            chatMessages.removeWhere((msg) => msg["isTyping"] == true);
+            // Add AI response
+            chatMessages.add({"role": "ai", "text": aiMessage});
           });
 
           // Scroll again to show the AI response
@@ -480,19 +489,21 @@ class _ASKMeState extends State<ASKMe> {
           });
         } else {
           setState(() {
-            chatMessages[chatMessages.length - 1] = {
+            chatMessages.removeWhere((msg) => msg["isTyping"] == true);
+            chatMessages.add({
               "role": "ai",
               "text": "Oops! Something went wrong. Please try again."
-            };
+            });
           });
         }
       } catch (error) {
         setState(() {
-          chatMessages[chatMessages.length - 1] = {
+          chatMessages.removeWhere((msg) => msg["isTyping"] == true);
+          chatMessages.add({
             "role": "ai",
             "text":
                 "Error connecting to the server. Please check your internet connection."
-          };
+          });
         });
       }
     }
@@ -844,6 +855,8 @@ class _ASKMeState extends State<ASKMe> {
   }
 
   Widget _buildChatUI(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
+
     return ListView.builder(
       padding: EdgeInsets.all(10),
       controller: _scrollController,
@@ -856,18 +869,6 @@ class _ASKMeState extends State<ASKMe> {
           crossAxisAlignment:
               isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
-            // Profile Picture
-            if (!isUser)
-              CircleAvatar(
-                backgroundImage: AssetImage("assets/icons/ASKMe_dark.png"),
-                radius: 20,
-              ),
-            if (isUser)
-              CircleAvatar(
-                backgroundImage: AssetImage("assets/images/userImage.png"),
-                radius: 20,
-              ),
-
             // Display Image
             if (message.containsKey("fileType") &&
                 message["fileType"] == "Image")
@@ -892,7 +893,7 @@ class _ASKMeState extends State<ASKMe> {
                 ),
               ),
 
-            // Display Video with Play Button Overlay
+            // Display Video
             if (message.containsKey("fileType") &&
                 message["fileType"] == "Video")
               GestureDetector(
@@ -921,7 +922,7 @@ class _ASKMeState extends State<ASKMe> {
                 ),
               ),
 
-            // Display Audio Player
+            // Display Audio
             if (message.containsKey("fileType") &&
                 message["fileType"] == "Audio")
               Container(
@@ -935,7 +936,7 @@ class _ASKMeState extends State<ASKMe> {
                 child: AudioPlayerWidget(audioPath: message["fileInfo"]),
               ),
 
-            // Display Document Preview
+            // Display Document
             if (message.containsKey("fileType") &&
                 message["fileType"] != "Image" &&
                 message["fileType"] != "Video" &&
@@ -986,7 +987,7 @@ class _ASKMeState extends State<ASKMe> {
                         )
                       : null,
                   color: isUser ? null : Colors.grey[300]!,
-                  borderRadius: BorderRadius.circular(isUser ? 20 : 15),
+                  borderRadius: BorderRadius.circular(12),
                   boxShadow: isUser
                       ? [
                           BoxShadow(

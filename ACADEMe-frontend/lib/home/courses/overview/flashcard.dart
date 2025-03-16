@@ -38,30 +38,35 @@ class _FlashCardState extends State<FlashCard> {
       _videoController?.dispose();
       _chewieController?.dispose();
 
-      _videoController = VideoPlayerController.network(_currentMaterial()["content"]!)
-        ..initialize().then((_) {
-          setState(() {});
+      _videoController =
+          VideoPlayerController.network(_currentMaterial()["content"]!)
+            ..initialize().then((_) {
+              setState(() {});
 
-          _chewieController = ChewieController(
-            videoPlayerController: _videoController!,
-            autoPlay: true,
-            looping: false,
-            allowMuting: true,
-            allowFullScreen: true,
-            allowPlaybackSpeedChanging: true,
-          );
+              _chewieController = ChewieController(
+                videoPlayerController: _videoController!,
+                autoPlay: true, // ✅ Ensure autoplay
+                looping: false,
+                allowMuting: true,
+                allowFullScreen: true,
+                allowPlaybackSpeedChanging: true,
+              );
 
-          setState(() {});
+              setState(() {});
 
-          _videoController!.addListener(() {
-            if (!_hasNavigated &&
-                _videoController!.value.isInitialized &&
-                _videoController!.value.position >= _videoController!.value.duration) {
-              _hasNavigated = true;
-              _nextMaterialOrQuiz();
-            }
-          });
-        });
+              _videoController!.addListener(() {
+                if (!_hasNavigated &&
+                    _videoController!.value.isInitialized &&
+                    _videoController!.value.position >=
+                        _videoController!.value.duration) {
+                  _hasNavigated = true;
+                  Future.delayed(
+                      Duration(milliseconds: 500),
+                      () =>
+                          _nextMaterialOrQuiz()); // ✅ Small delay for smoother transition
+                }
+              });
+            });
     }
   }
 
@@ -102,24 +107,63 @@ class _FlashCardState extends State<FlashCard> {
         ),
         title: const Text(
           'Lesson Materials',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
+          style: TextStyle(
+              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
         ),
         centerTitle: true,
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildProgressIndicator(),
+          _buildSubtopicTitle(_currentMaterial()["title"] ??
+              "Subtopic"), // ✅ Keep title fixed above
           Expanded(
-            child: Swiper(
-              loop: false,
-              itemCount: widget.materials.length,
-              onIndexChanged: (index) {
-                setState(() => _currentPage = index);
-                _setupVideoController();
-              },
-              itemBuilder: (context, index) {
-                return _buildMaterial(widget.materials[index]);
-              },
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return Swiper(
+                    itemWidth:
+                        constraints.maxWidth, // ✅ Ensure a proper stack effect
+                    itemHeight: constraints.maxHeight,
+                    loop: false,
+                    duration: 600, // ✅ Adjust for smooth animation
+                    layout:
+                        SwiperLayout.STACK, // ✅ Enables stack-like animation
+                    axisDirection: AxisDirection
+                        .right, // ✅ Ensure swipe direction is correct
+                    onIndexChanged: (index) {
+                      setState(() => _currentPage = index);
+                      _setupVideoController();
+                    },
+                    itemBuilder: (context, index) {
+                      return Stack(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: _buildMaterial(widget.materials[index]),
+                          ),
+                          AnimatedOpacity(
+                            opacity: _currentPage == index
+                                ? 0.0
+                                : 0.6, // Shadow fades out when fully opened
+                            duration: const Duration(milliseconds: 500),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(
+                                    0.4), // Adjust shadow intensity
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                    itemCount: widget.materials.length,
+                  );
+                },
+              ),
             ),
           ),
         ],
@@ -141,7 +185,9 @@ class _FlashCardState extends State<FlashCard> {
                 height: 6,
                 margin: const EdgeInsets.symmetric(horizontal: 2),
                 decoration: BoxDecoration(
-                  color: _currentPage == index ? Colors.yellow[700] : Colors.grey[400],
+                  color: _currentPage == index
+                      ? Colors.yellow[700]
+                      : Colors.grey[400],
                   borderRadius: BorderRadius.circular(3),
                 ),
               ),
@@ -156,7 +202,6 @@ class _FlashCardState extends State<FlashCard> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSubtopicTitle(material["title"] ?? "Subtopic"), // Adding the title dynamically
         Expanded(
           child: _getMaterialWidget(material),
         ),
@@ -189,10 +234,14 @@ class _FlashCardState extends State<FlashCard> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
-          boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2)],
+          boxShadow: [
+            BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2)
+          ],
         ),
         child: SingleChildScrollView(
-          child: Text(content, style: const TextStyle(fontSize: 14, color: Colors.black87, height: 1.5)),
+          child: Text(content,
+              style: const TextStyle(
+                  fontSize: 14, color: Colors.black87, height: 1.5)),
         ),
       ),
     );
@@ -207,7 +256,9 @@ class _FlashCardState extends State<FlashCard> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 4, spreadRadius: 1)],
+          boxShadow: [
+            BoxShadow(color: Colors.black26, blurRadius: 4, spreadRadius: 1)
+          ],
         ),
         child: Text(
           title,
@@ -235,7 +286,8 @@ class _FlashCardState extends State<FlashCard> {
       borderRadius: BorderRadius.circular(12),
       child: CachedNetworkImage(
         imageUrl: imageUrl,
-        placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+        placeholder: (context, url) =>
+            const Center(child: CircularProgressIndicator()),
         errorWidget: (context, url, error) => const Icon(Icons.error),
         fit: BoxFit.cover,
       ),

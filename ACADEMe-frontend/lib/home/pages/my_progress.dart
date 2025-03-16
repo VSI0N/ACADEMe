@@ -3,6 +3,10 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:ACADEMe/academe_theme.dart';
 import 'package:ACADEMe/home/pages/MotivationPopup.dart';
 import 'package:ACADEMe/localization/l10n.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -12,6 +16,81 @@ void main() {
 }
 
 class ProgressScreen extends StatelessWidget {
+  String getLetterGrade(double score) {
+    if (score >= 90) return "A++";
+    if (score >= 80) return "A+";
+    if (score >= 70) return "A";
+    if (score >= 60) return "B+";
+    if (score >= 50) return "B";
+    if (score >= 40) return "C";
+    return "F"; // If below 40
+  }
+
+  int totalCourses = 0;
+  // Fetch courses from the backend
+
+  Future<List<dynamic>> _fetchCourses() async {
+    final String backendUrl =
+        dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
+    final String? token =
+        await const FlutterSecureStorage().read(key: 'access_token');
+
+    if (token == null) {
+      throw Exception("❌ No access token found");
+    }
+
+    final response = await http.get(
+      Uri.parse("$backendUrl/api/courses/?target_language=en"),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data; // Return full list of courses
+    } else {
+      throw Exception("❌ Failed to fetch courses: ${response.statusCode}");
+    }
+  }
+
+  Future<double> _fetchOverallGrade() async {
+    final String backendUrl =
+        dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
+    final String? token =
+        await const FlutterSecureStorage().read(key: 'access_token');
+
+    if (token == null) {
+      throw Exception("❌ No access token found");
+    }
+
+    final response = await http.get(
+      Uri.parse("$backendUrl/api/progress-visuals/"),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      final Map<String, dynamic> visualData = data['visual_data'];
+
+      if (visualData.isNotEmpty) {
+        final String firstKey =
+            visualData.keys.first; // Get the first course ID dynamically
+        final double avgScore = (visualData[firstKey]['avg_score'] ?? 0)
+            .toDouble(); // ✅ Keep as double
+        return avgScore; // ✅ No need to round, use double
+      }
+      return 0.0;
+    } else {
+      throw Exception(
+          "❌ Failed to fetch overall grade: ${response.statusCode}");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -91,7 +170,8 @@ class ProgressScreen extends StatelessWidget {
                                         width: 100, // Control the tab width
                                         child: Center(
                                           child: Text(
-                                            L10n.getTranslatedText(context, 'Summary'),
+                                            L10n.getTranslatedText(
+                                                context, 'Summary'),
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
@@ -103,7 +183,8 @@ class ProgressScreen extends StatelessWidget {
                                         width: 100, // Control the tab width
                                         child: Center(
                                           child: Text(
-                                            L10n.getTranslatedText(context, 'Progress'),
+                                            L10n.getTranslatedText(
+                                                context, 'Progress'),
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
@@ -115,7 +196,8 @@ class ProgressScreen extends StatelessWidget {
                                         width: 100, // Control the tab width
                                         child: Center(
                                           child: Text(
-                                            L10n.getTranslatedText(context, 'Activity'),
+                                            L10n.getTranslatedText(
+                                                context, 'Activity'),
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
@@ -288,96 +370,129 @@ class ProgressScreen extends StatelessWidget {
   }
 
   Widget _buildSummarySection(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          Row(
+    return FutureBuilder<List<dynamic>>(
+      future: Future.wait([_fetchCourses(), _fetchOverallGrade()]),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text("❌ Error: ${snapshot.error}"));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Center(child: Text("No courses available."));
+        }
+
+        List<dynamic> courses =
+            snapshot.data![0] as List<dynamic>; // ✅ Courses data
+        double overallGrade = snapshot.data![1] as double; // ✅ Avg score
+
+        int totalCourses = courses.length; // ✅ Get total courses
+        String letterGrade =
+            getLetterGrade(overallGrade); // ✅ Convert to letter grade
+        double progressValue =
+            overallGrade / 100; // ✅ Normalize for progress bar
+
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
             children: [
-              Expanded(
-                child: Card(
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(
-                          color: const Color.fromARGB(27, 158, 158, 158)),
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 6,
-                          offset: const Offset(0, 4),
+              Row(
+                children: [
+                  Expanded(
+                    child: Card(
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(
+                              color: const Color.fromARGB(27, 158, 158, 158)),
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 6,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
                         ),
-                      ],
+                        padding: const EdgeInsets.all(16),
+                        child: _buildSummaryItem(
+                            L10n.getTranslatedText(context, 'Total Courses'),
+                            totalCourses.toString()), // ✅ Display total courses
+                      ),
                     ),
-                    padding: const EdgeInsets.all(16),
-                    child: _buildSummaryItem(L10n.getTranslatedText(context, 'Total Courses'), "4"),
                   ),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Card(
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(
-                          color: const Color.fromARGB(27, 158, 158, 158)),
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 6,
-                          offset: const Offset(0, 4),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Card(
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(
+                              color: const Color.fromARGB(27, 158, 158, 158)),
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 6,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
                         ),
-                      ],
+                        padding: const EdgeInsets.all(16),
+                        child: _buildSummaryItem(
+                            L10n.getTranslatedText(context, 'Completed'), "2"),
+                      ),
                     ),
-                    padding: const EdgeInsets.all(16),
-                    child: _buildSummaryItem(L10n.getTranslatedText(context, 'Completed'), "2"),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Card(
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(
-                    color: const Color.fromARGB(27, 158, 158, 158)),
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 6,
-                    offset: const Offset(0, 4),
                   ),
                 ],
               ),
-              padding: const EdgeInsets.all(16),
-              child:
-              _buildSummaryItem(L10n.getTranslatedText(context, 'Overall Grade'), "87.00", isCircular: true),
-            ),
-          ),
-          const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-          // **Pass context here**
-          _buildMotivationCard(context),
-        ],
-      ),
+              /// ✅ "Overall Grade" Card (Using Combined FutureBuilder)
+              Card(
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                        color: const Color.fromARGB(27, 158, 158, 158)),
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 6,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  padding: const EdgeInsets.all(16),
+                  child: _buildSummaryItem(
+                    L10n.getTranslatedText(context, 'Overall Grade'),
+                    overallGrade
+                        .toStringAsFixed(2), // ✅ Fix function call issue
+                    isCircular: true,
+                    letterGrade: letterGrade, // ✅ Dynamic letter grade
+                    progressValue: progressValue, // ✅ Dynamic progress bar
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 16),
+              _buildMotivationCard(context),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -408,7 +523,8 @@ class ProgressScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  L10n.getTranslatedText(context, 'Learn about your weak points'),
+                  L10n.getTranslatedText(
+                      context, 'Learn about your weak points'),
                   style: TextStyle(fontSize: 15),
                 ),
               ],
@@ -421,15 +537,16 @@ class ProgressScreen extends StatelessWidget {
   }
 
   Widget _buildSummaryItem(String title, String value,
-      {bool isCircular = false}) {
+      {bool isCircular = false,
+      String letterGrade = "",
+      double progressValue = 0.0}) {
     return Padding(
-      padding:
-          EdgeInsets.symmetric(horizontal: 12), // More left & right padding
+      padding: EdgeInsets.symmetric(horizontal: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Align(
-            alignment: Alignment.centerLeft, // Align text to the left
+            alignment: Alignment.centerLeft,
             child: Text(
               title,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -441,30 +558,30 @@ class ProgressScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      value, // Shows the numeric grade (87.00)
+                      value, // ✅ Shows numeric grade
                       style: TextStyle(
-                        fontSize: 52, // Made it even bigger
+                        fontSize: 52,
                         fontWeight: FontWeight.bold,
-                        color: AcademeTheme.appColor, // Changed color to blue
+                        color: AcademeTheme.appColor,
                       ),
                     ),
                     Stack(
                       alignment: Alignment.center,
                       children: [
                         SizedBox(
-                          width: 90, // Bigger progress indicator
+                          width: 90,
                           height: 90,
                           child: CircularProgressIndicator(
-                            value: 87 / 100, // Convert to percentage
+                            value: progressValue,
                             backgroundColor: Colors.grey[300],
                             color: AcademeTheme.appColor,
-                            strokeWidth: 8, // Thicker progress bar
+                            strokeWidth: 8,
                           ),
                         ),
                         Text(
-                          "A+", // Shows the letter grade inside
+                          letterGrade, // ✅ Dynamic letter grade
                           style: TextStyle(
-                            fontSize: 28, // Bigger letter grade
+                            fontSize: 28,
                             fontWeight: FontWeight.bold,
                             color: Colors.purple,
                           ),
@@ -473,14 +590,11 @@ class ProgressScreen extends StatelessWidget {
                     ),
                   ],
                 )
-              : Text(
-                  value,
+              : Text(value,
                   style: TextStyle(
-                    fontSize: 54, // Made non-circular text larger too
-                    fontWeight: FontWeight.bold,
-                    color: AcademeTheme.appColor, // Changed color to blue
-                  ),
-                ),
+                      fontSize: 54,
+                      fontWeight: FontWeight.bold,
+                      color: AcademeTheme.appColor)),
         ],
       ),
     );
@@ -504,10 +618,23 @@ class ProgressScreen extends StatelessWidget {
               ],
             ),
           ),
-          _buildSectionTitle(L10n.getTranslatedText(context, 'Course Progress')),
-          _buildCourseCard(L10n.getTranslatedText(context, 'Linear Algebra'), L10n.getTranslatedText(context, 'Mathematics'), 80, L10n.getTranslatedText(context, '10 Modules')),
-          _buildCourseCard(L10n.getTranslatedText(context, 'Organic Chemistry'), L10n.getTranslatedText(context, 'Chemistry'), 25, L10n.getTranslatedText(context, '5 Modules')),
-          _buildCourseCard(L10n.getTranslatedText(context, 'Linear Algebra'), L10n.getTranslatedText(context, 'Mathematics'), 80, L10n.getTranslatedText(context, '10 Modules')),
+          _buildSectionTitle(
+              L10n.getTranslatedText(context, 'Course Progress')),
+          _buildCourseCard(
+              L10n.getTranslatedText(context, 'Linear Algebra'),
+              L10n.getTranslatedText(context, 'Mathematics'),
+              80,
+              L10n.getTranslatedText(context, '10 Modules')),
+          _buildCourseCard(
+              L10n.getTranslatedText(context, 'Organic Chemistry'),
+              L10n.getTranslatedText(context, 'Chemistry'),
+              25,
+              L10n.getTranslatedText(context, '5 Modules')),
+          _buildCourseCard(
+              L10n.getTranslatedText(context, 'Linear Algebra'),
+              L10n.getTranslatedText(context, 'Mathematics'),
+              80,
+              L10n.getTranslatedText(context, '10 Modules')),
           _buildQuizScores(),
         ],
       ),
