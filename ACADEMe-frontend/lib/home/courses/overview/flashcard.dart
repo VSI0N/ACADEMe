@@ -34,39 +34,43 @@ class _FlashCardState extends State<FlashCard> {
   }
 
   void _setupVideoController() {
+    // Dispose existing controllers
+    _videoController?.dispose();
+    _chewieController?.dispose();
+    _videoController = null;
+    _chewieController = null;
+
     if (_currentMaterial()["type"] == "video") {
-      _videoController?.dispose();
-      _chewieController?.dispose();
+      _videoController = VideoPlayerController.network(_currentMaterial()["content"]!);
 
-      _videoController =
-          VideoPlayerController.network(_currentMaterial()["content"]!)
-            ..initialize().then((_) {
-              setState(() {});
+      _videoController!.initialize().then((_) {
+        if (!mounted) return;
 
-              _chewieController = ChewieController(
-                videoPlayerController: _videoController!,
-                autoPlay: true, // ✅ Ensure autoplay
-                looping: false,
-                allowMuting: true,
-                allowFullScreen: true,
-                allowPlaybackSpeedChanging: true,
-              );
+        _chewieController = ChewieController(
+          videoPlayerController: _videoController!,
+          autoPlay: true,
+          looping: false,
+          allowMuting: true,
+          allowFullScreen: true,
+          allowPlaybackSpeedChanging: true,
+        );
 
-              setState(() {});
+        setState(() {}); // Ensure UI rebuilds
 
-              _videoController!.addListener(() {
-                if (!_hasNavigated &&
-                    _videoController!.value.isInitialized &&
-                    _videoController!.value.position >=
-                        _videoController!.value.duration) {
-                  _hasNavigated = true;
-                  Future.delayed(
-                      Duration(milliseconds: 500),
-                      () =>
-                          _nextMaterialOrQuiz()); // ✅ Small delay for smoother transition
-                }
-              });
+        _videoController!.addListener(() {
+          if (!_hasNavigated &&
+              _videoController!.value.isInitialized &&
+              _videoController!.value.position >= _videoController!.value.duration) {
+            _hasNavigated = true;
+            Future.delayed(const Duration(milliseconds: 500), () {
+              _hasNavigated = false;
+              _nextMaterialOrQuiz();
             });
+          }
+        });
+      }).catchError((error) {
+        print("Error initializing video: $error");
+      });
     }
   }
 
@@ -76,8 +80,15 @@ class _FlashCardState extends State<FlashCard> {
 
   void _nextMaterialOrQuiz() {
     if (_currentPage < widget.materials.length - 1) {
-      setState(() => _currentPage++);
-      _setupVideoController();
+      setState(() {
+        _currentPage++;
+        _hasNavigated = false;
+      });
+
+      // Ensure video updates properly
+      Future.delayed(const Duration(milliseconds: 300), () {
+        _setupVideoController();
+      });
     } else {
       Navigator.pushReplacement(
         context,
@@ -134,8 +145,12 @@ class _FlashCardState extends State<FlashCard> {
                     axisDirection: AxisDirection
                         .right, // ✅ Ensure swipe direction is correct
                     onIndexChanged: (index) {
-                      setState(() => _currentPage = index);
-                      _setupVideoController();
+                      if (_currentPage != index) {
+                        setState(() {
+                          _currentPage = index;
+                          _setupVideoController();
+                        });
+                      }
                     },
                     itemBuilder: (context, index) {
                       return Stack(
@@ -149,11 +164,14 @@ class _FlashCardState extends State<FlashCard> {
                                 ? 0.0
                                 : 0.6, // Shadow fades out when fully opened
                             duration: const Duration(milliseconds: 500),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(
-                                    0.4), // Adjust shadow intensity
-                                borderRadius: BorderRadius.circular(20),
+                            child: IgnorePointer( // ✅ Allows gestures to pass through
+                              ignoring: true,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withOpacity(
+                                      0.4), // Adjust shadow intensity
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
                               ),
                             ),
                           ),
@@ -274,11 +292,16 @@ class _FlashCardState extends State<FlashCard> {
   }
 
   Widget _buildVideoContent(String videoUrl) {
-    if (_videoController == null || !_videoController!.value.isInitialized) {
+    if (_chewieController == null || _videoController == null || !_videoController!.value.isInitialized) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    return Chewie(controller: _chewieController!);
+    return GestureDetector(
+      onTap: () {
+        setState(() {}); // Force UI rebuild to detect changes
+      },
+      child: Chewie(controller: _chewieController!),
+    );
   }
 
   Widget _buildImageContent(String imageUrl) {

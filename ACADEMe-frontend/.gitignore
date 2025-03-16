@@ -25,3 +25,5 @@ assets/.env
 
 .flutter-plugins
 .flutter-plugins-dependencies
+
+ACADEMe-frontend/db/sessions/
