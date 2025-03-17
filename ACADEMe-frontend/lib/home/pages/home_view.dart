@@ -1,5 +1,3 @@
-import 'package:ACADEMe/home/admin_panel/courses.dart';
-import 'package:ACADEMe/home/pages/course_view.dart';
 import 'package:flutter/material.dart';
 import 'package:ACADEMe/home/pages/ASKMe.dart';
 import '../../academe_theme.dart';
@@ -8,8 +6,6 @@ import 'package:ACADEMe/widget/homepage_drawer.dart';
 import 'dart:math';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:ACADEMe/home/pages/my_progress.dart';
-import 'package:provider/provider.dart';
-import 'package:ACADEMe/providers/bottom_nav_provider.dart';
 import '../../localization/l10n.dart';
 import 'package:ACADEMe/home/courses/overview/overview.dart';
 import 'package:http/http.dart' as http;
@@ -246,6 +242,8 @@ class HomePage extends StatelessWidget {
   Widget _buildMainUI(BuildContext context) {
     // GlobalKey for controlling the Scaffold state (drawer)
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+    TextEditingController _messageController = TextEditingController();
+
     return ASKMeButton(
       showFAB: true, // Show floating action button
       onFABPressed: () {
@@ -416,6 +414,7 @@ class HomePage extends StatelessWidget {
                                   child: SizedBox(
                                     height: 40, // Adjust this value as needed
                                     child: TextField(
+                                      controller: _messageController,
                                       decoration: InputDecoration(
                                         contentPadding: EdgeInsets.symmetric(
                                             vertical: 10,
@@ -464,7 +463,16 @@ class HomePage extends StatelessWidget {
                                     icon: const Icon(Icons.send,
                                         color: Colors.blue, size: 24),
                                     onPressed: () {
-                                      // Send button action
+                                      String message = _messageController.text.trim(); // ✅ Get typed message
+                                      if (message.isNotEmpty) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => ASKMe(initialMessage: message),
+                                          ),
+                                        );
+                                        _messageController.clear(); // Optional: Clear after sending
+                                      }
                                     },
                                   ),
                                 ),
