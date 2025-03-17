@@ -303,7 +303,8 @@ class HomePage extends StatelessWidget {
                             _showSearchUI.value = true; // Update state properly
                           },
                           decoration: InputDecoration(
-                            hintText: 'Search',
+                            hintText: L10n.getTranslatedText(
+                                context, 'search'),
                             prefixIcon: Padding(
                               padding: const EdgeInsets.only(
                                   left: 12.0, right: 8.0), // Spacing
@@ -381,9 +382,10 @@ class HomePage extends StatelessWidget {
                                 // Texts
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: const [
+                                  children: [
                                     Text(
-                                      "Your Personal Tutor",
+                                      L10n.getTranslatedText(
+                                          context, 'Your Personal Tutor'),
                                       style: TextStyle(
                                         color: Color.fromARGB(255, 10, 10, 10),
                                         fontSize: 24,
@@ -418,7 +420,8 @@ class HomePage extends StatelessWidget {
                                         contentPadding: EdgeInsets.symmetric(
                                             vertical: 10,
                                             horizontal: 12), // Adjust padding
-                                        hintText: "ASKMe Anything...",
+                                        hintText: L10n.getTranslatedText(
+                                            context, 'ASKMe Anything...'),
                                         hintStyle:
                                             TextStyle(color: Colors.grey[600]),
                                         filled: true,
@@ -568,14 +571,16 @@ class HomePage extends StatelessWidget {
 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
+                        children: [
                           Text(
-                            "Continue Learning",
+                            L10n.getTranslatedText(
+                                context, 'Continue Learning'),
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 20),
                           ),
                           Text(
-                            "See All",
+                            L10n.getTranslatedText(
+                                context, 'See All'),
                             style: TextStyle(color: Colors.blue),
                           ),
                         ],
@@ -660,7 +665,8 @@ class HomePage extends StatelessWidget {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    "All Courses",
+                                    L10n.getTranslatedText(
+                                        context, 'All Courses'),
                                     style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold),
@@ -670,7 +676,8 @@ class HomePage extends StatelessWidget {
                                       // Handle 'See All' action
                                     },
                                     child: Text(
-                                      "See All",
+                                        L10n.getTranslatedText(
+                                            context, 'See All'),
                                       style: TextStyle(
                                           fontSize: 16, color: Colors.blue),
                                     ),
@@ -714,7 +721,8 @@ class HomePage extends StatelessWidget {
                                                     color: Colors.red),
                                               ),
                                               SizedBox(width: 10),
-                                              Text("English",
+                                              Text(L10n.getTranslatedText(
+                                                  context, 'English'),
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
@@ -749,7 +757,8 @@ class HomePage extends StatelessWidget {
                                                     color: Colors.orange),
                                               ),
                                               SizedBox(width: 10),
-                                              Text("Maths",
+                                              Text(L10n.getTranslatedText(
+                                                  context, 'Maths'),
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
@@ -787,7 +796,8 @@ class HomePage extends StatelessWidget {
                                                     color: Colors.blue),
                                               ),
                                               SizedBox(width: 10),
-                                              Text("Language",
+                                              Text(L10n.getTranslatedText(
+                                                  context, 'Language'),
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
@@ -822,7 +832,8 @@ class HomePage extends StatelessWidget {
                                                     color: Colors.green),
                                               ),
                                               SizedBox(width: 10),
-                                              Text("Biology",
+                                              Text(L10n.getTranslatedText(
+                                                  context, 'Biology'),
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
@@ -847,7 +858,8 @@ class HomePage extends StatelessWidget {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    "My Courses",
+                                    L10n.getTranslatedText(
+                                        context, 'My Courses'),
                                     style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold),
@@ -857,7 +869,8 @@ class HomePage extends StatelessWidget {
                                       // Handle 'See All' action
                                     },
                                     child: Text(
-                                      "See All",
+                                      L10n.getTranslatedText(
+                                          context, 'See All'),
                                       style: TextStyle(
                                           fontSize: 16, color: Colors.blue),
                                     ),

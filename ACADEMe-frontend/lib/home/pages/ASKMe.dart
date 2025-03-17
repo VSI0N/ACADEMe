@@ -1,6 +1,7 @@
 import 'package:ACADEMe/academe_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
 import 'package:http/http.dart' as http;
@@ -14,15 +15,14 @@ import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:open_file/open_file.dart';
-import 'package:ACADEMe/widget/video_player.dart';
 import 'package:ACADEMe/widget/audio_payer_widget.dart';
 import 'package:ACADEMe/widget/full_screen_video.dart';
-import 'package:ACADEMe/widget/video_thumbnail.dart';
 import 'package:ACADEMe/widget/typing_indicator.dart';
 
-Function(String)? sendMessageExternally;
-
 class ASKMe extends StatefulWidget {
+  String? initialMessage;
+  ASKMe({Key? key, this.initialMessage}) : super(key: key);
+
   @override
   _ASKMeState createState() => _ASKMeState();
 }
@@ -40,7 +40,7 @@ class _ASKMeState extends State<ASKMe> {
   bool isConverting = false; // To track the loading state
 
   final GlobalKey<ScaffoldState> _scaffoldKey =
-      GlobalKey<ScaffoldState>(); // Key for the drawer
+  GlobalKey<ScaffoldState>(); // Key for the drawer
 
   String searchQuery = "";
   List<Map<String, String>> languages = [
@@ -54,6 +54,18 @@ class _ASKMeState extends State<ASKMe> {
     {'name': 'Bengali', 'code': 'bn'},
   ];
 
+  List<Map<String, String>> _getFilteredLanguages() {
+    if (searchQuery.isEmpty) {
+      return languages; // If search query is empty, show all languages
+    } else {
+      return languages
+          .where((language) => language['name']!
+          .toLowerCase()
+          .contains(searchQuery.toLowerCase()))
+          .toList(); // Filter the languages based on the search query
+    }
+  }
+
   void _scrollToBottom() {
     if (_scrollController.hasClients) {
       _scrollController.animateTo(
@@ -61,18 +73,6 @@ class _ASKMeState extends State<ASKMe> {
         duration: Duration(milliseconds: 300),
         curve: Curves.easeOut,
       );
-    }
-  }
-
-  List<Map<String, String>> _getFilteredLanguages() {
-    if (searchQuery.isEmpty) {
-      return languages; // If search query is empty, show all languages
-    } else {
-      return languages
-          .where((language) => language['name']!
-              .toLowerCase()
-              .contains(searchQuery.toLowerCase()))
-          .toList(); // Filter the languages based on the search query
     }
   }
 
@@ -96,6 +96,9 @@ class _ASKMeState extends State<ASKMe> {
   void initState() {
     super.initState();
     _initRecorder();
+    if (widget.initialMessage != null) {
+      _sendMessage(widget.initialMessage!);
+    }
   }
 
   Future<void> _initRecorder() async {
@@ -120,7 +123,7 @@ class _ASKMeState extends State<ASKMe> {
               leading: Icon(Icons.attach_file),
               title: Text(file.path.split('/').last),
               subtitle:
-                  Text("${(file.lengthSync() / 1024).toStringAsFixed(1)}KB"),
+              Text("${(file.lengthSync() / 1024).toStringAsFixed(1)}KB"),
             ),
             TextField(
               controller: promptController,
@@ -175,7 +178,7 @@ class _ASKMeState extends State<ASKMe> {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: type,
       allowedExtensions:
-          (type == FileType.custom) ? allowedExtensions : null, // ✅ Fix
+      (type == FileType.custom) ? allowedExtensions : null, // ✅ Fix
     );
 
     if (result != null && result.files.single.path != null) {
@@ -201,7 +204,7 @@ class _ASKMeState extends State<ASKMe> {
     String fileFieldName = (fileType == 'Image') ? 'image' : 'file';
     String? mimeType = lookupMimeType(file.path);
     mimeType ??=
-        (fileType == 'Video') ? 'video/mp4' : 'application/octet-stream';
+    (fileType == 'Video') ? 'video/mp4' : 'application/octet-stream';
 
     request.files.add(await http.MultipartFile.fromPath(
       fileFieldName,
@@ -222,7 +225,7 @@ class _ASKMeState extends State<ASKMe> {
       // Add a "typing indicator" for the AI response
       chatMessages.add({
         "role": "assistant",
-        "text": "typing...",
+        "text": "...",
         "isTyping": true, // ✅ Used to identify typing indicator
       });
     });
@@ -357,7 +360,7 @@ class _ASKMeState extends State<ASKMe> {
         'prompt': 'इस ऑडियो को हिंदी में लिखो',
         'source_lang': 'auto', // Let the server detect the source language
         'target_lang':
-            selectedLanguage, // Send the selected language for the response
+        selectedLanguage, // Send the selected language for the response
       });
 
       final mimeType = lookupMimeType(file.path) ?? "audio/wav";
@@ -387,7 +390,7 @@ class _ASKMeState extends State<ASKMe> {
         if (detectedLang == 'hi' && selectedLanguage == "auto") {
           setState(() {
             selectedLanguage =
-                'hi'; // Update language to Hindi if detected language is Hindi
+            'hi'; // Update language to Hindi if detected language is Hindi
           });
           print("✅ Updated selected language to Hindi");
         }
@@ -437,75 +440,62 @@ class _ASKMeState extends State<ASKMe> {
   }
 
   // Send Message Function
-  void _sendMessage() async {
-    String message = _textController.text.trim();
-    if (message.isNotEmpty) {
-      setState(() {
-        chatMessages.add({"role": "user", "text": message});
-        chatMessages.add({"role": "ai", "isTyping": true}); // Typing animation
-        _textController.clear();
-      });
+  void _sendMessage(String message) async {
+    setState(() {
+      chatMessages.add({"role": "user", "text": message});
+      chatMessages.add({"role": "ai", "text": "..."}); // Placeholder
+    });
 
-      // Scroll to bottom immediately
-      Future.delayed(Duration(milliseconds: 100), () {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
-      });
+    Future.delayed(Duration(milliseconds: 100), () {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    });
 
-      var url = Uri.parse(
-          '${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/process_text');
+    var url = Uri.parse('${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/process_text');
 
-      try {
-        var response = await http.post(
-          url,
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-          body: {
-            'text': message,
-            'target_language': selectedLanguage,
-          },
-        );
+    try {
+      var response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: {'text': message, 'target_language': selectedLanguage},
+      );
 
-        if (response.statusCode == 200) {
-          String aiResponse = utf8.decode(response.bodyBytes);
-          String aiMessage = jsonDecode(aiResponse)['response'];
+      if (response.statusCode == 200) {
+        String aiResponse = utf8.decode(response.bodyBytes);
+        String aiMessage = jsonDecode(aiResponse)['response'];
 
-          setState(() {
-            // Remove the TypingIndicator
-            chatMessages.removeWhere((msg) => msg["isTyping"] == true);
-            // Add AI response
-            chatMessages.add({"role": "ai", "text": aiMessage});
-          });
-
-          // Scroll again to show the AI response
-          Future.delayed(Duration(milliseconds: 100), () {
-            _scrollController.animateTo(
-              _scrollController.position.maxScrollExtent,
-              duration: Duration(milliseconds: 300),
-              curve: Curves.easeOut,
-            );
-          });
-        } else {
-          setState(() {
-            chatMessages.removeWhere((msg) => msg["isTyping"] == true);
-            chatMessages.add({
-              "role": "ai",
-              "text": "Oops! Something went wrong. Please try again."
-            });
-          });
-        }
-      } catch (error) {
         setState(() {
-          chatMessages.removeWhere((msg) => msg["isTyping"] == true);
-          chatMessages.add({
+          chatMessages[chatMessages.length - 1] = {
             "role": "ai",
-            "text":
-                "Error connecting to the server. Please check your internet connection."
-          });
+            "text": aiMessage
+          };
+        });
+
+        Future.delayed(Duration(milliseconds: 100), () {
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          );
+        });
+      } else {
+        setState(() {
+          chatMessages[chatMessages.length - 1] = {
+            "role": "ai",
+            "text": "Oops! Something went wrong. Please try again."
+          };
         });
       }
+    } catch (error) {
+      setState(() {
+        chatMessages[chatMessages.length - 1] = {
+          "role": "ai",
+          "text": "Error connecting to the server. Please check your internet connection."
+        };
+      });
     }
   }
 
@@ -522,8 +512,8 @@ class _ASKMeState extends State<ASKMe> {
           builder: (context, setModalState) {
             List<Map<String, String>> filteredLanguages = languages
                 .where((language) => language['name']!
-                    .toLowerCase()
-                    .startsWith(searchQuery.toLowerCase()))
+                .toLowerCase()
+                .startsWith(searchQuery.toLowerCase()))
                 .toList();
 
             return Padding(
@@ -652,7 +642,7 @@ class _ASKMeState extends State<ASKMe> {
                       context: context,
                       shape: RoundedRectangleBorder(
                         borderRadius:
-                            BorderRadius.vertical(top: Radius.circular(20)),
+                        BorderRadius.vertical(top: Radius.circular(20)),
                       ),
                       builder: (BuildContext context) {
                         return Padding(
@@ -697,24 +687,24 @@ class _ASKMeState extends State<ASKMe> {
                         hintText: isConverting
                             ? "Converting ... "
                             : (_isRecording
-                                ? "Recording ... ${_seconds}s"
-                                : "Type a message ..."),
+                            ? "Recording ... ${_seconds}s"
+                            : "Type a message ..."),
                         contentPadding: EdgeInsets.only(
                             left: 20, right: 60, top: 14, bottom: 14),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),
                           borderSide:
-                              BorderSide(color: Colors.grey, width: 1.5),
+                          BorderSide(color: Colors.grey, width: 1.5),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),
                           borderSide:
-                              BorderSide(color: Colors.grey, width: 1.5),
+                          BorderSide(color: Colors.grey, width: 1.5),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),
                           borderSide:
-                              BorderSide(color: Colors.grey[300]!, width: 1.5),
+                          BorderSide(color: Colors.grey[300]!, width: 1.5),
                         ),
                       ),
                     ),
@@ -738,9 +728,10 @@ class _ASKMeState extends State<ASKMe> {
                 height: 42,
                 child: IconButton(
                   icon:
-                      Icon(Icons.send, color: AcademeTheme.appColor, size: 25),
+                  Icon(Icons.send, color: AcademeTheme.appColor, size: 25),
                   onPressed: () {
-                    _sendMessage();
+                    String message = _textController.text.trim();
+                    _sendMessage(message);
                     setState(() {
                       _textController
                           .clear(); // Clear input field after sending message
@@ -867,7 +858,7 @@ class _ASKMeState extends State<ASKMe> {
 
         return Column(
           crossAxisAlignment:
-              isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
             // Display Image
             if (message.containsKey("fileType") &&
@@ -981,21 +972,21 @@ class _ASKMeState extends State<ASKMe> {
                 decoration: BoxDecoration(
                   gradient: isUser
                       ? LinearGradient(
-                          colors: [Colors.blue[300]!, Colors.blue[700]!],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        )
+                    colors: [Colors.blue[300]!, Colors.blue[700]!],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  )
                       : null,
                   color: isUser ? null : Colors.grey[300]!,
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: isUser
                       ? [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.15),
-                            blurRadius: 6,
-                            offset: Offset(2, 4),
-                          ),
-                        ]
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.15),
+                      blurRadius: 6,
+                      offset: Offset(2, 4),
+                    ),
+                  ]
                       : [],
                 ),
                 child: Text(
@@ -1036,7 +1027,7 @@ class _ASKMeState extends State<ASKMe> {
                 shape: BoxShape.circle,
                 border: Border.all(color: Colors.white, width: 2)),
             child:
-                Center(child: Icon(Icons.add, size: 12, color: Colors.white)),
+            Center(child: Icon(Icons.add, size: 12, color: Colors.white)),
           ),
         ),
       ],

@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import 'ASKMe.dart';
+
 void showMotivationPopup(BuildContext context) {
   showModalBottomSheet(
     context: context,
@@ -59,86 +61,121 @@ class _MotivationPopupState extends State<MotivationPopup> {
     }
   }
 
+
+  void _sendFollowUpToChatbot() async {
+    String followUpMessage = _messageController.text.trim();
+    if (followUpMessage.isNotEmpty) {
+      String recommendationText = "";
+      try {
+        recommendationText = await _recommendationFuture;
+      } catch (error) {
+        recommendationText = "⚠️ Error fetching recommendation. Please try again.";
+      }
+
+      // Combine Recommendation + Follow-up
+      String fullMessage = "📊 Recommendation: \n$recommendationText\n\n🗨️ Follow-up: $followUpMessage";
+
+      // Navigate to Chatbot Screen with message
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ASKMe(initialMessage: fullMessage),
+        ),
+      );
+
+      _messageController.clear();
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    return FractionallySizedBox(
-      heightFactor: 0.7, // 70% height of the screen
-      child: Column(
-        children: [
-          // **Scrollable Content (80%)**
-          Expanded(
-            flex: 4,
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: FutureBuilder<String>(
-                future: _recommendationFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError || !snapshot.hasData) {
-                    return _errorView();
-                  }
-                  return SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "📊 Your Progress Analysis",
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return FractionallySizedBox(
+          heightFactor: 0.7,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // **Scrollable Content (Fetched Data)**
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: FutureBuilder<String>(
+                    future: _recommendationFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError || !snapshot.hasData) {
+                        return _errorView();
+                      }
+                      return SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "📊 Your Progress Analysis",
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 10),
+                            _formattedText(snapshot.data!),
+                          ],
                         ),
-                        const SizedBox(height: 10),
-                        _formattedText(snapshot.data!),
-                        // **Formatted recommendation**
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-
-          // **Message Input & Send Button (20%)**
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border(top: BorderSide(color: Colors.grey.shade300, width: 1)),
-            ),
-            child: Row(
-              children: [
-                // **Message Input Box**
-                Expanded(
-                  child: TextField(
-                    controller: _messageController,
-                    decoration: InputDecoration(
-                      hintText: "Ask follow-up...",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                    ),
+                      );
+                    },
                   ),
                 ),
-                const SizedBox(width: 8),
+              ),
 
-                // **Send Button**
-                IconButton(
-                  icon: const Icon(Icons.send, color: Colors.blue),
-                  onPressed: () {
-                    String message = _messageController.text.trim();
-                    if (message.isNotEmpty) {
-                      print("📩 Sending: $message");
-                      Navigator.pop(context);
-                    }
-                  },
+              // **Message Input Field (Fixed at Bottom)**
+              Padding(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context)
+                      .viewInsets
+                      .bottom, // Moves input above keyboard
                 ),
-              ],
-            ),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border(
+                        top: BorderSide(color: Colors.grey.shade300, width: 1)),
+                  ),
+                  child: Row(
+                    children: [
+                      // **Message Input Box**
+                      Expanded(
+                        child: TextField(
+                          controller: _messageController,
+                          decoration: InputDecoration(
+                            hintText: "Ask follow-up...",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 10),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+
+                      // **Send Button**
+                      IconButton(
+                        icon: const Icon(Icons.send, color: Colors.blue),
+                        onPressed: _sendFollowUpToChatbot, // Directly call the function
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
+
 
   /// **Error View when API fails**
   Widget _errorView() {
