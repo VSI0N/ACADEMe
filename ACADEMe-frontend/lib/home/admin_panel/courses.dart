@@ -28,8 +28,10 @@ class _CourseManagementScreenState extends State<CourseManagementScreen> {
       return;
     }
 
+    final String targetLanguage = "en"; // Set the target language accordingly
+
     final response = await http.get(
-      Uri.parse('${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/'),
+      Uri.parse('${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/?target_language=$targetLanguage'),
       headers: {
         "Authorization": "Bearer $token",
         "Content-Type": "application/json",
@@ -105,9 +107,11 @@ class _CourseManagementScreenState extends State<CourseManagementScreen> {
                   }),
                 );
 
-                if (response.statusCode == 200) {
-                  _loadCourses();
+                if (response.statusCode == 200 || response.statusCode == 201) {
                   Navigator.pop(context);
+                  setState(() {
+                    _loadCourses();
+                  });
                 } else {
                   print("Failed to add course: ${response.body}");
                 }
@@ -152,7 +156,13 @@ class _CourseManagementScreenState extends State<CourseManagementScreen> {
               ),
             ),
             Expanded(
-              child: ListView(
+              child: courses.isEmpty
+                  ? Center(
+                child: CircularProgressIndicator(
+                  color: AcademeTheme.appColor, // Custom color
+                ),
+              )
+                  : ListView(
                 children: courses.map((course) => Card(
                   margin: EdgeInsets.only(bottom: 10),
                   child: ListTile(

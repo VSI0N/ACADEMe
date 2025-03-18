@@ -1,19 +1,78 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../academe_theme.dart';
 
-class QuizScreen extends StatefulWidget {
+class TopicQuizScreen extends StatefulWidget {
+  final String courseId;
+  final String topicId;
+  final String quizId;
   final String courseTitle;
+  final String topicTitle;
+  final String quizTitle;
+  final String targetLanguage;
 
-  QuizScreen({required this.courseTitle});
+  TopicQuizScreen({
+    required this.courseId,
+    required this.topicId,
+    required this.quizId,
+    required this.courseTitle,
+    required this.topicTitle,
+    required this.quizTitle,
+    required this.targetLanguage,
+  });
 
   @override
-  _QuizScreenState createState() => _QuizScreenState();
+  _TopicQuizScreenState createState() => _TopicQuizScreenState();
 }
 
-class _QuizScreenState extends State<QuizScreen> {
-  List<Map<String, String>> quizQuestions = [];
+class _TopicQuizScreenState extends State<TopicQuizScreen> {
+  List<Map<String, dynamic>> questions = [];
+  bool isLoading = true;
+  final _storage = FlutterSecureStorage();
 
-  void _addQuizQuestion() {
+  @override
+  void initState() {
+    super.initState();
+    _fetchQuestions();
+  }
+
+  Future<void> _fetchQuestions() async {
+    final url = Uri.parse(
+        "${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/${widget.courseId}/topics/${widget.topicId}/quizzes/${widget.quizId}/questions/?target_language=${widget.targetLanguage}");
+
+    try {
+      String? token = await _storage.read(key: "access_token");
+      if (token == null) {
+        _showError("No access token found");
+        return;
+      }
+
+      final response = await http.get(
+        url,
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        setState(() {
+          questions = data.cast<Map<String, dynamic>>();
+          isLoading = false;
+        });
+      } else {
+        _showError("Failed to fetch questions: ${response.statusCode}");
+      }
+    } catch (e) {
+      _showError("Error fetching questions: $e");
+    }
+  }
+
+  void _addQuestion() {
     showDialog(
       context: context,
       builder: (context) {
@@ -22,7 +81,7 @@ class _QuizScreenState extends State<QuizScreen> {
           TextEditingController(),
           TextEditingController(),
         ];
-        String correctOption = 'A';
+        int correctOption = 0;
 
         void addOption(setDialogState) {
           if (optionControllers.length < 4) {
@@ -35,19 +94,19 @@ class _QuizScreenState extends State<QuizScreen> {
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
-              title: Text("Add Quiz Question"),
+              title: Text("Add Question"),
               content: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TextField(
                       controller: questionController,
-                      decoration: InputDecoration(labelText: "Type the Question"),
+                      decoration: InputDecoration(labelText: "Question"),
                     ),
                     ...List.generate(optionControllers.length, (index) {
                       return TextField(
                         controller: optionControllers[index],
-                        decoration: InputDecoration(labelText: "Option ${String.fromCharCode(65 + index)}"),
+                        decoration: InputDecoration(labelText: "Option ${index + 1}"),
                       );
                     }),
                     if (optionControllers.length < 4)
@@ -55,13 +114,12 @@ class _QuizScreenState extends State<QuizScreen> {
                         onPressed: () => addOption(setDialogState),
                         child: Text("Add Another Option"),
                       ),
-                    DropdownButtonFormField<String>(
+                    DropdownButtonFormField<int>(
                       value: correctOption,
                       items: List.generate(optionControllers.length, (index) {
-                        String option = String.fromCharCode(65 + index);
-                        return DropdownMenuItem<String>(
-                          value: option,
-                          child: Text("Correct Option: $option"),
+                        return DropdownMenuItem<int>(
+                          value: index,
+                          child: Text("Correct Option: ${index + 1}"),
                         );
                       }),
                       onChanged: (value) {
@@ -79,20 +137,19 @@ class _QuizScreenState extends State<QuizScreen> {
                   child: Text("Cancel"),
                 ),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (questionController.text.isNotEmpty &&
                         optionControllers.every((controller) => controller.text.isNotEmpty)) {
-                      setState(() {
-                        Map<String, String> question = {
-                          "question": questionController.text,
-                          "correct": correctOption,
-                        };
-                        for (int i = 0; i < optionControllers.length; i++) {
-                          question[String.fromCharCode(65 + i)] = optionControllers[i].text;
-                        }
-                        quizQuestions.add(question);
-                      });
-                      Navigator.pop(context);
+                      final success = await _submitQuestion(
+                        question: questionController.text,
+                        options: optionControllers.map((c) => c.text).toList(),
+                        correctOption: correctOption,
+                      );
+
+                      if (success) {
+                        Navigator.pop(context);
+                        _fetchQuestions();
+                      }
                     }
                   },
                   child: Text("Add"),
@@ -105,24 +162,75 @@ class _QuizScreenState extends State<QuizScreen> {
     );
   }
 
+  Future<bool> _submitQuestion({
+    required String question,
+    required List<String> options,
+    required int correctOption,
+  }) async {
+    final url = Uri.parse(
+        "${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/${widget.courseId}/topics/${widget.topicId}/quizzes/${widget.quizId}/questions/");
+
+    try {
+      String? token = await _storage.read(key: "access_token");
+      if (token == null) {
+        _showError("No access token found");
+        return false;
+      }
+
+      final response = await http.post(
+        url,
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+        body: json.encode({
+          "question_text": question,
+          "options": options,
+          "correct_option": correctOption,
+        }),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final responseData = json.decode(response.body);
+        print("✅ Question added successfully: ${responseData["message"]}");
+        return true;
+      } else {
+        _showError("Failed to add question: ${response.body}");
+        return false;
+      }
+    } catch (e) {
+      _showError("Error submitting question: $e");
+      return false;
+    }
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+    print(message);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AcademeTheme.appColor,
         title: Text(
-          "${widget.courseTitle} > Quiz",
+          "${widget.courseTitle} > ${widget.topicTitle} > ${widget.quizTitle}",
           style: TextStyle(color: Colors.white),
         ),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
-        child: quizQuestions.isEmpty
-            ? Center(child: Text("No quiz questions added yet."))
+        child: isLoading
+            ? Center(child: CircularProgressIndicator())
+            : questions.isEmpty
+            ? Center(child: Text("No questions added yet."))
             : ListView.builder(
-          itemCount: quizQuestions.length,
+          itemCount: questions.length,
           itemBuilder: (context, index) {
-            final question = quizQuestions[index];
+            final question = questions[index];
             return Card(
               margin: EdgeInsets.symmetric(vertical: 8),
               elevation: 4,
@@ -135,27 +243,31 @@ class _QuizScreenState extends State<QuizScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "${index + 1}. ${question["question"]}",
+                      "${index + 1}. ${question["question_text"]}",
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 8),
                     Column(
-                      children: question.keys
-                          .where((key) => key.length == 1 && RegExp(r'[A-D]').hasMatch(key))
-                          .map((option) {
+                      children: (question["options"] as List<dynamic>)
+                          .asMap()
+                          .entries
+                          .map((entry) {
+                        int idx = entry.key;
+                        String optionText = entry.value;
+
                         return Container(
                           margin: EdgeInsets.symmetric(vertical: 4),
                           padding: EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: question["correct"] == option
+                            color: question["correct_option"] == idx
                                 ? Colors.green.withOpacity(0.2)
                                 : Colors.grey.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Row(
                             children: [
-                              Text("$option) ", style: TextStyle(fontWeight: FontWeight.bold)),
-                              Expanded(child: Text(question[option]!)),
+                              Text("${idx + 1}) ", style: TextStyle(fontWeight: FontWeight.bold)),
+                              Expanded(child: Text(optionText)),
                             ],
                           ),
                         );
@@ -169,7 +281,7 @@ class _QuizScreenState extends State<QuizScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _addQuizQuestion,
+        onPressed: _addQuestion,
         backgroundColor: AcademeTheme.appColor,
         child: Icon(Icons.add, color: Colors.white),
       ),

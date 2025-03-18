@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../academe_theme.dart';
 import 'package:ACADEMe/home/admin_panel/subtopic.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:ACADEMe/localization/language_provider.dart';
 
 class TopicScreen extends StatefulWidget {
   final String courseId;
@@ -36,33 +38,51 @@ class _TopicScreenState extends State<TopicScreen> {
   void _loadTopics() async {
     String? token = await _storage.read(key: "access_token");
     if (token == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Authentication failed: No token found"))
+      );
+      return;
+    }
+
+    final String targetLanguage = "en"; // Adjust as needed
+
+    try {
+      final response = await http.get(
+        Uri.parse('${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/${widget.courseId}/topics/?target_language=$targetLanguage'),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+        setState(() {
+          topics = data.map((item) => {
+            "id": item["id"].toString(),
+            "title": item["title"],
+            "description": item["description"],
+          }).toList();
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Failed to load topics: ${response.statusCode}"))
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error fetching topics: $e"))
+      );
+    }
+  }
+
+  void _addTopic() async {
+    String? token = await _storage.read(key: "access_token");
+    if (token == null) {
       print("No access token found");
       return;
     }
 
-    final response = await http.get(
-      Uri.parse('${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/${widget.courseId}/topics/'),
-      headers: {
-        "Authorization": "Bearer $token",
-        "Content-Type": "application/json",
-      },
-    );
-
-    if (response.statusCode == 200) {
-      List<dynamic> data = json.decode(response.body);
-      setState(() {
-        topics = data.map((item) => {
-          "id": item["id"].toString(),
-          "title": item["title"],
-          "description": item["description"],
-        }).toList();
-      });
-    } else {
-      print("Failed to fetch topics: ${response.body}");
-    }
-  }
-
-  void _addTopic() {
     showDialog(
       context: context,
       builder: (context) {
@@ -92,12 +112,6 @@ class _TopicScreenState extends State<TopicScreen> {
             ),
             ElevatedButton(
               onPressed: () async {
-                String? token = await _storage.read(key: "access_token");
-                if (token == null) {
-                  print("No access token found");
-                  return;
-                }
-
                 final response = await http.post(
                   Uri.parse('${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/${widget.courseId}/topics/'),
                   headers: {
@@ -110,9 +124,9 @@ class _TopicScreenState extends State<TopicScreen> {
                   }),
                 );
 
-                if (response.statusCode == 200) {
-                  _loadTopics();
+                if (response.statusCode == 200 || response.statusCode == 201) {
                   Navigator.pop(context);
+                  _loadTopics(); // Refresh topics
                 } else {
                   print("Failed to add topic: ${response.body}");
                 }
@@ -150,19 +164,29 @@ class _TopicScreenState extends State<TopicScreen> {
               ),
             ),
             Expanded(
-              child: ListView(
+              child: topics.isEmpty
+                  ? Center(
+                child: CircularProgressIndicator(
+                  color: AcademeTheme.appColor, // Custom color
+                ),
+              )
+                  : ListView(
                 children: topics.map((topic) => Card(
                   margin: EdgeInsets.only(bottom: 10),
                   child: ListTile(
                     title: Text(topic["title"]!),
                     subtitle: Text(topic["description"]!),
                     onTap: () {
+                      final targetLanguage = Provider.of<LanguageProvider>(context, listen: false).locale.languageCode;
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => SubtopicScreen(
+                            courseId: widget.courseId,
+                            topicId: topic["id"]!,
                             courseTitle: widget.courseTitle,
                             topicTitle: topic["title"]!,
+                            targetLanguage: targetLanguage, // Pass the app's language
                           ),
                         ),
                       );
@@ -203,7 +227,7 @@ class _TopicScreenState extends State<TopicScreen> {
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
           decoration: BoxDecoration(
-            color: Colors.blue,
+            color: AcademeTheme.appColor,
             borderRadius: BorderRadius.circular(30),
             boxShadow: [
               BoxShadow(
