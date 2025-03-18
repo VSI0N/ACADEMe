@@ -5,8 +5,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../../academe_theme.dart';
 import 'package:ACADEMe/home/courses/overview/flashcard.dart';
 import 'package:ACADEMe/home/courses/overview/quiz.dart';
-import 'package:ACADEMe/home/pages/material_details_page.dart';
-import 'package:ACADEMe/home/pages/quiz_details_page.dart';
 
 class LessonsSection extends StatefulWidget {
   final String courseId;

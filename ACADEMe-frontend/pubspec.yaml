@@ -97,6 +97,7 @@ flutter:
     - assets/icons/
     - assets/l10n/
     - assets/.env
+    - assets/images/growth-graph.png
 
   # An image asset can refer to one or more resolution-specific "variants"
   # For details regarding adding assets from package dependencies, see

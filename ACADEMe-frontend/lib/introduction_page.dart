@@ -1,4 +1,5 @@
 import 'package:ACADEMe/started/pages/get-started_view.dart';
+import 'package:ACADEMe/started/pages/onboarding.dart';
 
 import 'academe_theme.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ class AcademeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AcademeTheme.white,
-      body: GetStartedView(),
+      body: OnboardingFlow(),
     );
   }
 }

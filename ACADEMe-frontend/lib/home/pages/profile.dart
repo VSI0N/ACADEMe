@@ -7,6 +7,8 @@ import 'package:ACADEMe/introduction_page.dart';
 import 'package:ACADEMe/localization/l10n.dart';
 import 'package:ACADEMe/localization/language_provider.dart';
 
+import '../../started/pages/login_view.dart';
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -263,8 +265,17 @@ class _ProfilePageState extends State<ProfilePage> {
                           if (mounted) {
                             Navigator.pushAndRemoveUntil(
                               context,
-                              MaterialPageRoute(builder: (context) => const AcademeScreen()),
+                              MaterialPageRoute(builder: (context) => const LogInView()),
                                   (route) => false,
+                            );
+
+                            // Show SnackBar AFTER navigation
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  L10n.getTranslatedText(context, 'You have been logged out'),
+                                ),
+                              ),
                             );
                           }
                         } catch (e) {

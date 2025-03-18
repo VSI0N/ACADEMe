@@ -115,328 +115,276 @@ class _LogInViewState extends State<LogInView> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 200, top: 80),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Container(
-                    constraints: BoxConstraints(maxWidth: 400, maxHeight: 400),
-                    child: Image.asset(
-                      'assets/academe/academe_logo.png',
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 50),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.63,
-                  margin: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-                  decoration: BoxDecoration(
-                      color: AcademeTheme.white,
-                      boxShadow: [
-                        BoxShadow(
-                            offset: Offset(1, 1),
-                            color: Colors.grey,
-                            blurRadius: 10)
-                      ],
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Align(
-                        alignment: Alignment.topLeft,
+        backgroundColor: Colors.white,
+        resizeToAvoidBottomInset: false,
+        body: Stack(
+            children: [
+              Positioned.fill(
+                child:LayoutBuilder(
+                  builder: (context, constraints) {
+                    return Container(
+                      padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+                      constraints: BoxConstraints(maxWidth: 500),
+                      child: SingleChildScrollView(
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 30, right: 30),
-                              child: Text(
-                                L10n.getTranslatedText(context, 'Hello'),
-                                style: TextStyle(
-                                  fontSize: 35.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                            SizedBox(height: screenHeight * 0.0),
+                            Image.asset(
+                              'assets/academe/academe_logo.png',
+                              height: constraints.maxHeight * 0.23,
                             ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 30, right: 30),
-                              child: Text(
-                                L10n.getTranslatedText(context, 'Welcome back'),
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                  color: Color(0xFF808080),
-                                  fontWeight: FontWeight.bold,
+                            // SizedBox(height: screenHeight * 0.001),
+                            Container(
+                              padding: EdgeInsets.all(screenWidth * 0.05),
+                              decoration: BoxDecoration(
+                                color: AcademeTheme.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    offset: Offset(1, 1),
+                                    color: Colors.grey,
+                                    blurRadius: 10,
+                                  )
+                                ],
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Form(
+                                key: _formKey,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(L10n.getTranslatedText(context, 'Hello'),
+                                        style: TextStyle(fontSize: screenWidth * 0.08, fontWeight: FontWeight.bold)),
+                                    Text(L10n.getTranslatedText(context, 'Welcome back'),
+                                        style: TextStyle(fontSize: screenWidth * 0.047, color: Colors.grey, fontWeight: FontWeight.bold)),
+                                    SizedBox(height: screenHeight * 0.02),
+                                    Text(L10n.getTranslatedText(context, 'Email'),
+                                        style: TextStyle(fontSize: screenWidth * 0.043, color: Colors.black54, fontWeight: FontWeight.w700)),
+                                    TextFormField(
+                                      controller: _emailController,
+                                      decoration: InputDecoration(
+                                        filled: true,
+                                        fillColor: AcademeTheme.notWhite,
+                                        hintText: L10n.getTranslatedText(
+                                            context, 'Enter your email'),
+                                        prefixIcon: Icon(Icons.email),
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(7), // Adjust radius as needed
+                                          borderSide: BorderSide.none, // Removes the default underline
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(7),
+                                          borderSide: BorderSide.none,
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(7),
+                                          borderSide: BorderSide(
+                                            color: Colors.transparent, // Change color for focus effect
+                                            width: 2, // Adjust thickness
+                                          ),
+                                        ),
+                                      ),
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return L10n.getTranslatedText(
+                                              context, 'Please enter an email');
+                                        }
+                                        if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                                          return L10n.getTranslatedText(
+                                              context, 'Enter a valid email');
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                    SizedBox(height: screenHeight * 0.02),
+                                    Text(L10n.getTranslatedText(context,
+                                        'Password'),
+                                        style: TextStyle(fontSize: screenWidth * 0.043, color: Colors.black54, fontWeight: FontWeight.w700)),
+                                    TextFormField(
+                                      controller: _passwordController,
+                                      obscureText: !_isPasswordVisible,
+                                      decoration: InputDecoration(
+                                        filled: true,
+                                        fillColor: AcademeTheme.notWhite,
+                                        hintText: L10n.getTranslatedText(
+                                            context, 'Enter your password'),
+                                        prefixIcon: Icon(Icons.lock),
+                                        suffixIcon: IconButton(
+                                          icon: Icon(_isPasswordVisible ? Icons.visibility : Icons.visibility_off),
+                                          onPressed: () {
+                                            setState(() {
+                                              _isPasswordVisible = !_isPasswordVisible;
+                                            });
+                                          },
+                                        ),
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(7), // Adjust radius as needed
+                                          borderSide: BorderSide.none, // Removes the default underline
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(7),
+                                          borderSide: BorderSide.none,
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(7),
+                                          borderSide: BorderSide(
+                                            color: Colors.transparent, // Change color for focus effect
+                                            width: 2, // Adjust thickness
+                                          ),
+                                        ),
+                                      ),
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return L10n.getTranslatedText(
+                                              context, 'Please enter a password');
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 1.0),
+                                      child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: TextButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => const ForgotPasswordPage()),
+                                            );
+                                          },
+                                          child: Text(
+                                            L10n.getTranslatedText(
+                                                context, 'Forgot Password?'),
+                                            style: TextStyle(
+                                              color: AcademeTheme.appColor, // Change this to your desired color
+                                              fontWeight: FontWeight.w500, // Optional: Make it bold
+                                              fontSize: 14, // Optional: Adjust font size
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: screenHeight * 0.01),
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 1),
+                                      child: SizedBox(
+                                        width: double.infinity,
+                                        child: ElevatedButton(
+                                          onPressed: _submitForm,
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.yellow[600], // Button background color
+                                            minimumSize: Size(double.infinity, 42), // Set the height of the button
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(30), // Rounded corners
+                                            ),
+                                            elevation: 0, // Removes shadow
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center, // Centers the content
+                                            children: [
+                                              Image.asset(
+                                                'assets/icons/house_door.png', // Replace with your image path
+                                                height: 24, // Adjust the size of the image
+                                                width: 24, // Adjust the size of the image
+                                              ),
+                                              SizedBox(width: 10), // Adds space between the image and the text
+                                              Text(
+                                                L10n.getTranslatedText(context, 'Log in'),
+                                                style: TextStyle(
+                                                  fontSize: screenWidth * 0.045, // Font size
+                                                  fontWeight: FontWeight.w500, // Font weight
+                                                  color: Colors.black, // Text color
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: screenHeight * 0.01),
+                                    Row(mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(L10n.getTranslatedText(context, 'OR'),
+                                            style: TextStyle(fontSize: screenWidth * 0.04, fontWeight: FontWeight.w600, color: Colors.black54)),
+                                      ],),
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 1),
+                                      child: SizedBox(
+                                        width: double.infinity,
+                                        child: ElevatedButton.icon(
+                                          onPressed: _isGoogleLoading ? null : _signInWithGoogle,
+                                          icon: _isGoogleLoading
+                                              ? CircularProgressIndicator(color: Colors.white)
+                                              : Padding(
+                                            padding: EdgeInsets.only(right: 7), // Adjust spacing
+                                            child: Image.asset('assets/icons/google_icon.png', height: 22),
+                                          ),
+                                          label: Text(L10n.getTranslatedText(
+                                              context, 'Continue with Google'),
+                                            style: TextStyle(
+                                              fontSize: screenWidth * 0.045,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.white,
+                                            foregroundColor: Colors.black,
+                                            elevation: 2,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(15),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: screenHeight * 0.04),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          L10n.getTranslatedText(
+                                              context, 'Don\'t have an account?'),
+                                          style: TextStyle(
+                                            fontSize: screenWidth * 0.038,
+                                            color: Colors.black54,
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: (
+                                              ) {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => SignUpView()),
+                                            );
+                                          },
+                                          child: Text(
+                                            L10n.getTranslatedText(context, 'Signup'),
+                                            style: TextStyle(
+                                              fontSize: screenWidth * 0.038,
+                                              fontWeight: FontWeight.w500,
+                                              color: AcademeTheme.appColor, // Change color for emphasis
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      SizedBox(height: 50),
-                      Padding(
-                        padding: EdgeInsets.only(left: 30, right: 30, top: 16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment
-                              .start, // Align children to the start (left side)
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  bottom:
-                                      4.0), // Adds space between text and text field
-                              child: Text(
-                                L10n.getTranslatedText(
-                                    context, 'Email'), // Add the text you want
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color:
-                                      Colors.black54, // Adjust color as needed
-                                  fontWeight: FontWeight
-                                      .w700, // Adjust weight as needed
-                                ),
-                              ),
-                            ),
-                            TextFormField(
-                              controller: _emailController,
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: AcademeTheme.notWhite,
-                                labelText:
-                                    L10n.getTranslatedText(context, 'Email'),
-                                hintText: L10n.getTranslatedText(
-                                    context, 'Enter your email'),
-                                prefixIcon: Icon(Icons.email),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return L10n.getTranslatedText(
-                                      context, 'Please enter an email');
-                                }
-                                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                                    .hasMatch(value)) {
-                                  return L10n.getTranslatedText(
-                                      context, 'Enter a valid email');
-                                }
-                                return null;
-                              },
-                            ),
-                            SizedBox(height: 16),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  bottom:
-                                      4.0), // Adds space between text and text field
-                              child: Text(
-                                L10n.getTranslatedText(context,
-                                    'Password'), // Add the text you want
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color:
-                                      Colors.black54, // Adjust color as needed
-                                  fontWeight: FontWeight
-                                      .w700, // Adjust weight as needed
-                                ),
-                              ),
-                            ),
-                            TextFormField(
-                              controller: _passwordController,
-                              obscureText: !_isPasswordVisible,
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: AcademeTheme.notWhite,
-                                labelText:
-                                    L10n.getTranslatedText(context, 'Password'),
-                                hintText: L10n.getTranslatedText(
-                                    context, 'Enter your password'),
-                                prefixIcon: Icon(Icons.lock),
-                                suffixIcon: IconButton(
-                                  icon: Icon(_isPasswordVisible
-                                      ? Icons.visibility
-                                      : Icons.visibility_off),
-                                  onPressed: () {
-                                    setState(() {
-                                      _isPasswordVisible = !_isPasswordVisible;
-                                    });
-                                  },
-                                ),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return L10n.getTranslatedText(
-                                      context, 'Please enter a password');
-                                }
-                                return null;
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const ForgotPasswordPage()),
-                              );
-                            },
-                            child: Text(
-                              L10n.getTranslatedText(
-                                  context, 'Forgot Password?'),
-                              style: TextStyle(
-                                color: AcademeTheme
-                                    .appColor, // Change this to your desired color
-                                fontWeight:
-                                    FontWeight.w500, // Optional: Make it bold
-                                fontSize: 14, // Optional: Adjust font size
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 35),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: _submitForm,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  Colors.yellow[600], // Button background color
-                              minimumSize: Size(double.infinity,
-                                  42), // Set the height of the button
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    30), // Rounded corners
-                              ),
-                              elevation: 0, // Removes shadow
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment
-                                  .center, // Centers the content
-                              children: [
-                                Image.asset(
-                                  'assets/icons/house_door.png', // Replace with your image path
-                                  height: 24, // Adjust the size of the image
-                                  width: 24, // Adjust the size of the image
-                                ),
-                                SizedBox(
-                                    width:
-                                        10), // Adds space between the image and the text
-                                Text(
-                                  L10n.getTranslatedText(context, 'Log in'),
-                                  style: TextStyle(
-                                    fontSize: 18, // Font size
-                                    fontWeight: FontWeight.w500, // Font weight
-                                    color: Colors.black, // Text color
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 6,
-                      ),
-                      Text(
-                        L10n.getTranslatedText(context, 'OR'),
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black54,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 35),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton.icon(
-                            onPressed:
-                                _isGoogleLoading ? null : _signInWithGoogle,
-                            icon: _isGoogleLoading
-                                ? CircularProgressIndicator(color: Colors.white)
-                                : Padding(
-                                    padding: EdgeInsets.only(
-                                        right: 7), // Adjust spacing
-                                    child: Image.asset(
-                                        'assets/icons/google_icon.png',
-                                        height: 22),
-                                  ),
-                            label: Text(
-                              L10n.getTranslatedText(
-                                  context, 'Continue with Google'),
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              foregroundColor: Colors.black,
-                              elevation: 2,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            L10n.getTranslatedText(
-                                context, 'Don\'t have an account?'),
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black54,
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SignUpView()),
-                              );
-                            },
-                            child: Text(
-                              L10n.getTranslatedText(context, 'Signup'),
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: AcademeTheme
-                                    .appColor, // Change color for emphasis
-                              ),
-                            ),
-                          ),
-                        ],
-                      ), // Adds spacing before the "Log In" button
-                    ],
-                  ),
+                    );
+                  },
                 ),
-                SizedBox(height: 25),
-              ],
-            ),
-          ),
-        ),
-      ),
+              )
+            ]
+        )
     );
   }
 }

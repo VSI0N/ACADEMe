@@ -103,20 +103,22 @@ class _SignUpViewState extends State<SignUpView> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 100, top: 80),
+            padding: EdgeInsets.only(bottom: height * 0.1, top: height * 0.1),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Center(
                   child: Container(
-                    constraints: BoxConstraints(maxWidth: 250, maxHeight: 300),
+                    constraints: BoxConstraints(maxWidth: width * 0.5, maxHeight: height * 300),
                     child: Image.asset(
                       'assets/academe/study_image.png',
                       fit: BoxFit.contain,
@@ -135,7 +137,7 @@ class _SignUpViewState extends State<SignUpView> {
                             padding: const EdgeInsets.only(left: 30, right: 30),
                             child: Text(
                               '${L10n.getTranslatedText(context, 'Create Your ')} '
-                              '${L10n.getTranslatedText(context, 'Account')}',
+                                  '${L10n.getTranslatedText(context, 'Account')}',
                               style: TextStyle(
                                 fontSize: 39.0,
                                 fontWeight: FontWeight.bold,
@@ -153,13 +155,29 @@ class _SignUpViewState extends State<SignUpView> {
                       child: TextFormField(
                         controller: _usernameController,
                         decoration: InputDecoration(
-                            filled: true,
-                            fillColor: AcademeTheme.notWhite,
-                            labelText:
-                                L10n.getTranslatedText(context, 'Username'),
-                            hintText: L10n.getTranslatedText(
-                                context, 'Enter a username'),
-                            prefixIcon: Icon(Icons.person)),
+                          filled: true,
+                          fillColor: AcademeTheme.notWhite,
+                          labelText:
+                          L10n.getTranslatedText(context, 'Username'),
+                          hintText: L10n.getTranslatedText(
+                              context, 'Enter a username'),
+                          prefixIcon: Icon(Icons.person),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7), // Adjust radius as needed
+                            borderSide: BorderSide.none, // Removes the default underline
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7),
+                            borderSide: BorderSide.none,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7),
+                            borderSide: BorderSide(
+                              color: Colors.transparent, // Change color for focus effect
+                              width: 2, // Adjust thickness
+                            ),
+                          ),
+                        ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return L10n.getTranslatedText(
@@ -174,12 +192,28 @@ class _SignUpViewState extends State<SignUpView> {
                       child: TextFormField(
                         controller: _emailController,
                         decoration: InputDecoration(
-                            filled: true,
-                            fillColor: AcademeTheme.notWhite,
-                            labelText: L10n.getTranslatedText(context, 'Email'),
-                            hintText: L10n.getTranslatedText(
-                                context, 'Enter your email'),
-                            prefixIcon: Icon(Icons.email)),
+                          filled: true,
+                          fillColor: AcademeTheme.notWhite,
+                          labelText: L10n.getTranslatedText(context, 'Email'),
+                          hintText: L10n.getTranslatedText(
+                              context, 'Enter your email'),
+                          prefixIcon: Icon(Icons.email),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7), // Adjust radius as needed
+                            borderSide: BorderSide.none, // Removes the default underline
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7),
+                            borderSide: BorderSide.none,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7),
+                            borderSide: BorderSide(
+                              color: Colors.transparent, // Change color for focus effect
+                              width: 2, // Adjust thickness
+                            ),
+                          ),
+                        ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return L10n.getTranslatedText(
@@ -203,7 +237,7 @@ class _SignUpViewState extends State<SignUpView> {
                           filled: true,
                           fillColor: AcademeTheme.notWhite,
                           labelText:
-                              L10n.getTranslatedText(context, 'Password'),
+                          L10n.getTranslatedText(context, 'Password'),
                           hintText: L10n.getTranslatedText(
                               context, 'Enter your password'),
                           prefixIcon: Icon(Icons.lock),
@@ -217,6 +251,21 @@ class _SignUpViewState extends State<SignUpView> {
                               });
                             },
                           ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7), // Adjust radius as needed
+                            borderSide: BorderSide.none, // Removes the default underline
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7),
+                            borderSide: BorderSide.none,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7),
+                            borderSide: BorderSide(
+                              color: Colors.transparent, // Change color for focus effect
+                              width: 2, // Adjust thickness
+                            ),
+                          ),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -224,8 +273,8 @@ class _SignUpViewState extends State<SignUpView> {
                                 context, 'Please enter a password');
                           }
                           if (value.length < 6) {
-                            return L10n.getTranslatedText(context,
-                                'Password must be at least 6 characters');
+                            return L10n.getTranslatedText(
+                                context, 'Password must be at least 6 characters');
                           }
                           return null;
                         },
@@ -265,35 +314,35 @@ class _SignUpViewState extends State<SignUpView> {
                           onPressed: _isLoading ? null : _submitForm,
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
-                                Colors.yellow[600], // Change button color
+                            Colors.yellow[600], // Change button color
                             minimumSize:
-                                Size(double.infinity, 50), // Adjust button size
+                            Size(double.infinity, 50), // Adjust button size
                           ),
                           child: _isLoading
                               ? CircularProgressIndicator(color: Colors.white)
                               : Row(
-                                  mainAxisAlignment: MainAxisAlignment
-                                      .center, // Center the content
-                                  children: [
-                                    Image.asset(
-                                      'assets/icons/house_door.png', // Replace with your image path
-                                      height: 24, // Adjust size
-                                      width: 24,
-                                    ),
-                                    SizedBox(
-                                        width:
-                                            10), // Space between icon and text
-                                    Text(
-                                      L10n.getTranslatedText(context, 'Signup'),
-                                      style: TextStyle(
-                                        fontSize: 18, // Adjust font size
-                                        fontWeight: FontWeight
-                                            .w500, // Change font weight
-                                        color: Colors.black, // Text color
-                                      ),
-                                    ),
-                                  ],
+                            mainAxisAlignment: MainAxisAlignment
+                                .center, // Center the content
+                            children: [
+                              Image.asset(
+                                'assets/icons/house_door.png', // Replace with your image path
+                                height: 24, // Adjust size
+                                width: 24,
+                              ),
+                              SizedBox(
+                                  width:
+                                  10), // Space between icon and text
+                              Text(
+                                L10n.getTranslatedText(context, 'Signup'),
+                                style: TextStyle(
+                                  fontSize: 18, // Adjust font size
+                                  fontWeight: FontWeight
+                                      .w500, // Change font weight
+                                  color: Colors.black, // Text color
                                 ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -315,16 +364,16 @@ class _SignUpViewState extends State<SignUpView> {
                         width: double.infinity,
                         child: ElevatedButton.icon(
                           onPressed:
-                              _isGoogleLoading ? null : _signUpWithGoogle,
+                          _isGoogleLoading ? null : _signUpWithGoogle,
                           icon: _isGoogleLoading
                               ? CircularProgressIndicator(color: Colors.white)
                               : Padding(
-                                  padding: EdgeInsets.only(
-                                      right: 7), // Adjust spacing
-                                  child: Image.asset(
-                                      'assets/icons/google_icon.png',
-                                      height: 22),
-                                ),
+                            padding: EdgeInsets.only(
+                                right: 7), // Adjust spacing
+                            child: Image.asset(
+                                'assets/icons/google_icon.png',
+                                height: 22),
+                          ),
                           label: Text(
                             L10n.getTranslatedText(
                                 context, 'Continue with Google'),

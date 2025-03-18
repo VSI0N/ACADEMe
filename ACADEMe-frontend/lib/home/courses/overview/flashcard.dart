@@ -6,7 +6,6 @@ import 'package:chewie/chewie.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -162,7 +161,7 @@ class _FlashCardState extends State<FlashCard> {
                           AnimatedOpacity(
                             opacity: _currentPage == index
                                 ? 0.0
-                                : 0.6, // Shadow fades out when fully opened
+                                : 0.2, // Shadow fades out when fully opened
                             duration: const Duration(milliseconds: 500),
                             child: IgnorePointer( // ✅ Allows gestures to pass through
                               ignoring: true,
@@ -188,6 +187,32 @@ class _FlashCardState extends State<FlashCard> {
       ),
     );
   }
+
+
+  // Add this inside _FlashCardState (but outside all methods)
+  Widget buildStyledContainer(Widget child) {
+    final height = MediaQuery.of(context).size.height;
+    return Center(
+      child: Container(
+        width: double.infinity,
+        // 👇 Add constraints
+        constraints: BoxConstraints(
+          minHeight: height * 1.5, // You can adjust height as per your UI
+        ),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2),
+          ],
+        ),
+        child: child,
+      ),
+    );
+  }
+
+
 
   Widget _buildProgressIndicator() {
     return Padding(
@@ -245,21 +270,12 @@ class _FlashCardState extends State<FlashCard> {
   }
 
   Widget _buildTextContent(String content) {
-    return Center(
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2)
-          ],
-        ),
-        child: SingleChildScrollView(
-          child: Text(content,
-              style: const TextStyle(
-                  fontSize: 14, color: Colors.black87, height: 1.5)),
+    return buildStyledContainer(
+      SingleChildScrollView(
+        child: Text(
+          content,
+          style: const TextStyle(
+              fontSize: 14, color: Colors.black87, height: 1.5),
         ),
       ),
     );
@@ -292,51 +308,65 @@ class _FlashCardState extends State<FlashCard> {
   }
 
   Widget _buildVideoContent(String videoUrl) {
-    if (_chewieController == null || _videoController == null || !_videoController!.value.isInitialized) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    return GestureDetector(
-      onTap: () {
-        setState(() {}); // Force UI rebuild to detect changes
-      },
-      child: Chewie(controller: _chewieController!),
-    );
-  }
-
-  Widget _buildImageContent(String imageUrl) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(12),
-      child: CachedNetworkImage(
-        imageUrl: imageUrl,
-        placeholder: (context, url) =>
-            const Center(child: CircularProgressIndicator()),
-        errorWidget: (context, url, error) => const Icon(Icons.error),
-        fit: BoxFit.cover,
+    return buildStyledContainer(
+      _chewieController == null ||
+          _videoController == null ||
+          !_videoController!.value.isInitialized
+          ? const Center(child: CircularProgressIndicator())
+          : GestureDetector(
+        onTap: () {
+          setState(() {}); // Force UI rebuild
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Chewie(controller: _chewieController!),
+        ),
       ),
     );
   }
 
-  Widget _buildAudioContent(String audioUrl) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Icon(Icons.audiotrack, size: 100, color: Colors.blue),
-        ElevatedButton(
-          onPressed: () async {
-            await _audioPlayer.play(UrlSource(audioUrl));
-          },
-          child: const Text("Play Audio"),
+
+  Widget _buildImageContent(String imageUrl) {
+    return buildStyledContainer(
+      ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: CachedNetworkImage(
+          imageUrl: imageUrl,
+          placeholder: (context, url) =>
+          const Center(child: CircularProgressIndicator()),
+          errorWidget: (context, url, error) => const Icon(Icons.error),
+          fit: BoxFit.cover,
         ),
-      ],
+      ),
+    );
+  }
+
+
+  Widget _buildAudioContent(String audioUrl) {
+    return buildStyledContainer(
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.audiotrack, size: 100, color: Colors.blue),
+          const SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: () async {
+              await _audioPlayer.play(UrlSource(audioUrl));
+            },
+            child: const Text("Play Audio"),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildDocumentContent(String docUrl) {
-    return Center(
-      child: ElevatedButton(
-        onPressed: () => launchUrl(Uri.parse(docUrl)),
-        child: const Text("Open Document"),
+    return buildStyledContainer(
+      Center(
+        child: ElevatedButton(
+          onPressed: () => launchUrl(Uri.parse(docUrl)),
+          child: const Text("Open Document"),
+        ),
       ),
     );
   }

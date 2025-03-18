@@ -107,7 +107,7 @@ class _OverviewScreenState extends State<OverviewScreen> with SingleTickerProvid
               /// **🔹 Responsive Gradient Header**
               Container(
                 width: double.infinity,
-                height: screenHeight * 0.3, // 30% of the screen height
+                height: screenHeight * 0.37, // 30% of the screen height
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     colors: [Color(0xFF967EF6), Color(0xFFE8DAF9)],
