@@ -6,7 +6,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ACADEMe/academe_theme.dart';
 import '../../utils/constants/image_strings.dart';
 import 'package:ACADEMe/localization/l10n.dart';
-import 'package:ACADEMe/home/pages/subtopic_view.dart';
 import 'package:provider/provider.dart';
 import 'package:ACADEMe/localization/language_provider.dart';
 import 'package:ACADEMe/home/courses/overview/overview.dart';
@@ -201,20 +200,20 @@ class _TopicViewScreenState extends State<TopicViewScreen>
         ),
         child: Row(
           children: [
-            Expanded(
-              flex: 2,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.asset(
-                  topic["image"] ?? AImages.typography,
-                  fit: BoxFit.cover,
-                  height: double.infinity,
-                  errorBuilder: (context, error, stackTrace) {
-                    return const Icon(Icons.error, color: Colors.red);
-                  },
-                ),
-              ),
-            ),
+            // Expanded(
+            //   flex: 2,
+            //   child: ClipRRect(
+            //     borderRadius: BorderRadius.circular(12),
+            //     child: Image.asset(
+            //       topic["image"] ?? AImages.typography,
+            //       fit: BoxFit.cover,
+            //       height: double.infinity,
+            //       errorBuilder: (context, error, stackTrace) {
+            //         return const Icon(Icons.error, color: Colors.red);
+            //       },
+            //     ),
+            //   ),
+            // ),
             const SizedBox(width: 12),
             Expanded(
               flex: 3,

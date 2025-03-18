@@ -16,6 +16,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   late Locale _selectedLocale;
+  String selectedClass = 'Class 1';
 
   @override
   void initState() {
@@ -137,6 +138,76 @@ class _ProfilePageState extends State<ProfilePage> {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   children: [
+                    ListTile(
+                      leading: const Icon(
+                        Icons.class_outlined,
+                        color: Colors.blue,
+                        size: 30,
+                      ),
+                      title: const Text(
+                        "Class", // Static label on the left
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      trailing: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 0),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            value: selectedClass,
+                            icon: const Icon(Icons.arrow_drop_down, color: Colors.black), // Dropdown icon
+                            onChanged: (value) {
+                              if (value != selectedClass) {
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible: false, // Prevent dismissing by tapping outside
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                      title: const Text(
+                                        'Are you sure you want to change your class?',
+                                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                                      ),
+                                      content: const Text(
+                                        'All your progress data will be erased for this class.',
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop(); // Dismiss dialog
+                                          },
+                                          child: const Text(
+                                            'Cancel',
+                                            style: TextStyle(color: Colors.grey, fontSize: 16),
+                                          ),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              selectedClass = value!;
+                                            });
+                                            Navigator.of(context).pop(); // Dismiss dialog
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.red,
+                                            foregroundColor: Colors.white,
+                                          ),
+                                          child: const Text('Yes'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
+                            },
+                            items: List.generate(12, (index) => DropdownMenuItem(
+                              value: 'Class ${index + 1}',
+                              child: Text('${index + 1}'), // Only index displayed
+                            )),
+                          ),
+                        ),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 15),
+                    ),
                     _ProfileOption(
                       icon: Icons.settings,
                       text: L10n.getTranslatedText(context, 'Settings'),

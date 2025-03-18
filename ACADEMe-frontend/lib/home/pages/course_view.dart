@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ACADEMe/academe_theme.dart';
-import '../../utils/constants/image_strings.dart';
 import 'package:ACADEMe/home/pages/ASKMe.dart';
 import 'package:ACADEMe/home/components/ASKMe_button.dart';
 import 'package:ACADEMe/localization/l10n.dart';
