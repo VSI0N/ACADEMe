@@ -30,47 +30,37 @@ class _ProfilePageState extends State<ProfilePage> {
     super.initState();
     _selectedLocale = const Locale('en');
     _loadLanguage();
-    _fetchUserDetails();
+    _loadUserDetailsFromStorage();
   }
 
-  Future<void> _fetchUserDetails() async {
+  Future<void> _loadUserDetailsFromStorage() async {
     try {
-      final accessToken = await _secureStorage.read(key: 'access_token');
+      final name = await _secureStorage.read(key: 'name');
+      final email = await _secureStorage.read(key: 'email');
+      final studentClass = await _secureStorage.read(key: 'student_class');
+      final photoUrl = await _secureStorage.read(key: 'photo_url');
 
-      if (accessToken == null) {
-        throw Exception('Access token not found');
-      }
-
-      final backendUrl = dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
-      final response = await http.get(
-        Uri.parse('$backendUrl/api/users/me'),
-        headers: {
-          'accept': 'application/json',
-          'Authorization': 'Bearer $accessToken',
-        },
-      );
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        if (mounted) {
-          setState(() {
-            userDetails = data;
-            selectedClass = 'Class ${data['student_class']}';
-            isLoading = false;
-          });
-        }
-      } else {
-        throw Exception('Failed to load user details: ${response.statusCode}');
+      if (mounted) {
+        setState(() {
+          userDetails = {
+            'name': name,
+            'email': email,
+            'student_class': studentClass,
+            'photo_url': photoUrl,
+          };
+          selectedClass = 'Class ${studentClass ?? '1'}';
+          isLoading = false;
+        });
       }
     } catch (e) {
-      print('Error fetching user details: $e');
+      print('Error loading user details from storage: $e');
       if (mounted) {
         setState(() {
           isLoading = false;
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to fetch user details: $e'),
+            content: Text('Failed to load user details: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -103,6 +93,7 @@ class _ProfilePageState extends State<ProfilePage> {
           setState(() {
             selectedClass = 'Class ${data['new_class']}';
           });
+          await _secureStorage.write(key: 'student_class', value: data['new_class']);
         }
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -278,7 +269,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                                       ),
                                       content: const Text(
-                                        'All your progress data will be erased for this class.',
+                                        'All your progress data will be erased for this class.\nYou will need to relogin to start your journey with a new Class',
                                         style: TextStyle(fontSize: 16),
                                       ),
                                       actions: [

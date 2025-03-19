@@ -61,7 +61,7 @@ async def update_user_class(update_data: UserUpdateClass, user: dict = Depends(g
     loop = asyncio.get_running_loop()
     await loop.run_in_executor(None, lambda: user_ref.update({"student_class": update_data.new_class}))
 
-    return {"message": "Class updated successfully after progress reset", "new_class": update_data.new_class}
+    return {"message": "Class updated successfully after progress reset.\nRelogin to start your journey with a new Class", "new_class": update_data.new_class}
 
 @router.get("/admins", response_model=List[str])
 async def get_admin_ids():

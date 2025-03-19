@@ -21,6 +21,7 @@ class HomePage extends StatelessWidget {
   final PageController _pageController = PageController();
   final ValueNotifier<bool> _showSearchUI = ValueNotifier(false); // Use ValueNotifier
   List<dynamic> courses = [];
+  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
   HomePage({
     Key? key,
@@ -50,7 +51,7 @@ class HomePage extends StatelessWidget {
 
   Future<List<dynamic>> _fetchCourses() async {
     final String backendUrl = dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
-    final String? token = await const FlutterSecureStorage().read(key: 'access_token');
+    final String? token = await _secureStorage.read(key: 'access_token');
 
     if (token == null) {
       throw Exception("❌ No access token found");
@@ -69,6 +70,41 @@ class HomePage extends StatelessWidget {
       return data; // Return all courses
     } else {
       throw Exception("❌ Failed to fetch courses: ${response.statusCode}");
+    }
+  }
+
+  Future<void> _fetchAndStoreUserDetails() async {
+    try {
+      final String backendUrl = dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
+      final String? token = await _secureStorage.read(key: 'access_token');
+
+      if (token == null) {
+        throw Exception("❌ No access token found");
+      }
+
+      final response = await http.get(
+        Uri.parse("$backendUrl/api/users/me"),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+
+        // Store user details in secure storage
+        await _secureStorage.write(key: 'name', value: data['name']);
+        await _secureStorage.write(key: 'email', value: data['email']);
+        await _secureStorage.write(key: 'student_class', value: data['student_class']);
+        await _secureStorage.write(key: 'photo_url', value: data['photo_url']);
+
+        print("✅ User details stored successfully");
+      } else {
+        throw Exception("❌ Failed to fetch user details: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("❌ Error fetching user details: $e");
     }
   }
 
@@ -237,6 +273,11 @@ class HomePage extends StatelessWidget {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     TextEditingController _messageController = TextEditingController();
 
+    // Fetch and store user details when the page loads
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _fetchAndStoreUserDetails();
+    });
+
     return ASKMeButton(
       showFAB: true, // Show floating action button
       onFABPressed: () {
@@ -257,9 +298,22 @@ class HomePage extends StatelessWidget {
             leading: Container(), // Remove default hamburger
             flexibleSpace: Padding(
               padding: const EdgeInsets.only(top: 15.0), // Adjust top padding here
-              child: getAppBarUI(onProfileTap, () {
-                scaffoldKey.currentState?.openDrawer(); // Open drawer when custom button is clicked
-              }, context),
+              child: FutureBuilder<Map<String, String?>>(
+                future: _getUserDetails(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text("Error loading user details"));
+                  } else {
+                    final String name = snapshot.data?['name'] ?? 'User';
+                    final String photoUrl = snapshot.data?['photo_url'] ?? 'assets/design_course/userImage.png';
+                    return getAppBarUI(onProfileTap, () {
+                      scaffoldKey.currentState?.openDrawer(); // Open drawer when custom button is clicked
+                    }, context, name, photoUrl);
+                  }
+                },
+              ),
             ),
           ),
         ),
@@ -982,7 +1036,7 @@ Widget learningCard(String title, int completed, int total, int percentage, Colo
 }
 
 // AppBar UI with the Hamburger icon inside a circular button
-Widget getAppBarUI(VoidCallback onProfileTap, VoidCallback onHamburgerTap, BuildContext context) {
+Widget getAppBarUI(VoidCallback onProfileTap, VoidCallback onHamburgerTap, BuildContext context, String name, String photoUrl) {
   return Container(
     height: 100, // Increased height for the AppBar
     padding: const EdgeInsets.only(top: 38.0, left: 18, right: 18, bottom: 5),
@@ -993,7 +1047,9 @@ Widget getAppBarUI(VoidCallback onProfileTap, VoidCallback onHamburgerTap, Build
           onTap: onProfileTap,
           child: CircleAvatar(
             radius: 30, // Slightly larger for a prominent look
-            backgroundImage: AssetImage('assets/design_course/userImage.png'),
+            backgroundImage: photoUrl.startsWith('http')
+                ? NetworkImage(photoUrl) as ImageProvider
+                : AssetImage(photoUrl),
           ),
         ),
         const SizedBox(width: 12), // Space between profile picture and text
@@ -1012,7 +1068,7 @@ Widget getAppBarUI(VoidCallback onProfileTap, VoidCallback onHamburgerTap, Build
               ),
             ),
             Text(
-              'Alex', // Dynamically set this if needed
+              name, // Dynamically set this if needed
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
@@ -1249,4 +1305,15 @@ class CourseCard extends StatelessWidget {
       ),
     );
   }
+}
+
+// Function to fetch user details from secure storage
+Future<Map<String, String?>> _getUserDetails() async {
+  final FlutterSecureStorage _secureStorage = FlutterSecureStorage();
+  final String? name = await _secureStorage.read(key: 'name');
+  final String? photoUrl = await _secureStorage.read(key: 'photo_url');
+  return {
+    'name': name,
+    'photo_url': photoUrl,
+  };
 }
