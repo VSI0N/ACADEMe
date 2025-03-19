@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ACADEMe/home/auth/auth_service.dart';
-import '../../academe_theme.dart';
-import 'package:ACADEMe/introduction_page.dart';
+import 'package:ACADEMe/academe_theme.dart';
 import 'package:ACADEMe/localization/l10n.dart';
 import 'package:ACADEMe/localization/language_provider.dart';
-
-import '../../started/pages/login_view.dart';
+import 'package:ACADEMe/started/pages/login_view.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -17,14 +19,111 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
   late Locale _selectedLocale;
   String selectedClass = 'Class 1';
+  Map<String, dynamic>? userDetails;
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
     _selectedLocale = const Locale('en');
     _loadLanguage();
+    _fetchUserDetails();
+  }
+
+  Future<void> _fetchUserDetails() async {
+    try {
+      final accessToken = await _secureStorage.read(key: 'access_token');
+
+      if (accessToken == null) {
+        throw Exception('Access token not found');
+      }
+
+      final backendUrl = dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
+      final response = await http.get(
+        Uri.parse('$backendUrl/api/users/me'),
+        headers: {
+          'accept': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (mounted) {
+          setState(() {
+            userDetails = data;
+            selectedClass = 'Class ${data['student_class']}';
+            isLoading = false;
+          });
+        }
+      } else {
+        throw Exception('Failed to load user details: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching user details: $e');
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to fetch user details: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _updateClass(String newClass) async {
+    try {
+      final accessToken = await _secureStorage.read(key: 'access_token');
+
+      if (accessToken == null) {
+        throw Exception('Access token not found');
+      }
+
+      final backendUrl = dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
+      final response = await http.patch(
+        Uri.parse('$backendUrl/api/users/update_class/'),
+        headers: {
+          'accept': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({'new_class': newClass}),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (mounted) {
+          setState(() {
+            selectedClass = 'Class ${data['new_class']}';
+          });
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(data['message']),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        throw Exception('Failed to update class: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error updating class: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to update class: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   Future<void> _loadLanguage() async {
@@ -39,7 +138,7 @@ class _ProfilePageState extends State<ProfilePage> {
         languageProvider.setLocale(newLocale);
       }
       setState(() {
-        _selectedLocale = newLocale; // Ensure state is updated
+        _selectedLocale = newLocale;
       });
     });
   }
@@ -59,6 +158,14 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
@@ -81,20 +188,22 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           children: [
             const SizedBox(height: 15),
-            const CircleAvatar(
+            CircleAvatar(
               radius: 50,
-              backgroundImage: AssetImage('assets/design_course/userImage.png'),
+              backgroundImage: userDetails?['photo_url'] != null && userDetails!['photo_url'].isNotEmpty
+                  ? NetworkImage(userDetails!['photo_url']) // Use the provided photo URL
+                  : const AssetImage('assets/design_course/userImage.png') as ImageProvider, // Fallback to a local asset
             ),
             const SizedBox(height: 10),
-            const Text(
-              'Rahul Sharma',
+            Text(
+              userDetails?['name'] ?? 'Loading...',
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const Text(
-              'rahulSharma23@gmail.com',
+            Text(
+              userDetails?['email'] ?? 'Loading...',
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.grey,
@@ -147,7 +256,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         size: 30,
                       ),
                       title: const Text(
-                        "Class", // Static label on the left
+                        "Class",
                         style: TextStyle(fontSize: 20),
                       ),
                       trailing: Container(
@@ -155,12 +264,12 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton<String>(
                             value: selectedClass,
-                            icon: const Icon(Icons.arrow_drop_down, color: Colors.black), // Dropdown icon
+                            icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
                             onChanged: (value) {
                               if (value != selectedClass) {
                                 showDialog(
                                   context: context,
-                                  barrierDismissible: false, // Prevent dismissing by tapping outside
+                                  barrierDismissible: false,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -175,7 +284,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       actions: [
                                         TextButton(
                                           onPressed: () {
-                                            Navigator.of(context).pop(); // Dismiss dialog
+                                            Navigator.of(context).pop();
                                           },
                                           child: const Text(
                                             'Cancel',
@@ -184,10 +293,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                         ),
                                         ElevatedButton(
                                           onPressed: () {
-                                            setState(() {
-                                              selectedClass = value!;
-                                            });
-                                            Navigator.of(context).pop(); // Dismiss dialog
+                                            if (value != null) {
+                                              setState(() {
+                                                selectedClass = value!;
+                                              });
+                                              _updateClass(value!.replaceAll('Class ', ''));
+                                              Navigator.of(context).pop();
+                                            }
                                           },
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: Colors.red,
@@ -203,7 +315,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             },
                             items: List.generate(12, (index) => DropdownMenuItem(
                               value: 'Class ${index + 1}',
-                              child: Text('${index + 1}'), // Only index displayed
+                              child: Text('${index + 1}'),
                             )),
                           ),
                         ),
@@ -259,9 +371,6 @@ class _ProfilePageState extends State<ProfilePage> {
                           await AuthService().signOut();
                           print('✅ User signed out successfully');
 
-                          // Ensure UI updates instantly
-                          await Future.delayed(Duration.zero);
-
                           if (mounted) {
                             Navigator.pushAndRemoveUntil(
                               context,
@@ -269,7 +378,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                   (route) => false,
                             );
 
-                            // Show SnackBar AFTER navigation
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
@@ -302,7 +410,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             isExpanded: true,
                             onChanged: (Locale? newLocale) {
                               if (newLocale != null) {
-                                _changeLanguage(newLocale); // Call the function
+                                _changeLanguage(newLocale);
                               }
                             },
                             items: L10n.supportedLocales.map((Locale locale) {
