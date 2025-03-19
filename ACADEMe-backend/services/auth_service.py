@@ -97,3 +97,15 @@ async def login_user(user: UserLogin):
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+async def fetch_admin_ids():
+    """Fetch all document IDs from the 'admins' collection in Firestore."""
+    try:
+        admins_ref = db.collection("admins")
+        docs = admins_ref.stream()  # Ensure this is correct
+
+        admin_ids = [doc.id for doc in docs]
+        return admin_ids
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

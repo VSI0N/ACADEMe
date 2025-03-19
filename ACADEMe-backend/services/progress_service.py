@@ -360,3 +360,15 @@ def fetch_progress_from_firestore(user_id):
     except Exception as e:
         print(f"🔥 Error fetching progress from Firestore: {str(e)}")
         return []
+
+async def delete_user_progress(user_id: str):
+    """Deletes all progress records for a user."""
+    progress_ref = db.collection("users").document(user_id).collection("progress")
+    docs = list(progress_ref.stream())  # Convert to list to avoid iterator issues
+
+    loop = asyncio.get_running_loop()
+    
+    # Properly pass the callable `delete` method using a lambda
+    await asyncio.gather(*(loop.run_in_executor(None, lambda doc=doc: doc.reference.delete()) for doc in docs))
+
+    return {"message": f"All progress records deleted for user {user_id}"}
