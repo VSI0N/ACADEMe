@@ -7,6 +7,7 @@ import 'package:ACADEMe/localization/l10n.dart';
 
 import '../../home/auth/role.dart';
 import '../../home/pages/bottomNav.dart';
+import 'class.dart';
 
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});
@@ -64,7 +65,7 @@ class _SignUpViewState extends State<SignUpView> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => BottomNav(isAdmin: isAdmin),
+          builder: (context) => ClassPage(),
         ),
       );
       // Redirect to courses
@@ -118,9 +119,9 @@ class _SignUpViewState extends State<SignUpView> {
               children: [
                 Center(
                   child: Container(
-                    constraints: BoxConstraints(maxWidth: width * 0.5, maxHeight: height * 300),
+                    constraints: BoxConstraints(maxWidth: width * 0.6, maxHeight: height * 300),
                     child: Image.asset(
-                      'assets/academe/study_image.png',
+                      'assets/images/signUp_logo.png',
                       fit: BoxFit.contain,
                     ),
                   ),
@@ -309,7 +310,8 @@ class _SignUpViewState extends State<SignUpView> {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 35),
                       child: SizedBox(
-                        width: double.infinity,
+                        height: height * 0.05,
+                        width: width * 1.3,
                         child: ElevatedButton(
                           onPressed: _isLoading ? null : _submitForm,
                           style: ElevatedButton.styleFrom(
@@ -317,6 +319,9 @@ class _SignUpViewState extends State<SignUpView> {
                             Colors.yellow[600], // Change button color
                             minimumSize:
                             Size(double.infinity, 50), // Adjust button size
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
                           ),
                           child: _isLoading
                               ? CircularProgressIndicator(color: Colors.white)
@@ -361,7 +366,8 @@ class _SignUpViewState extends State<SignUpView> {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 35),
                       child: SizedBox(
-                        width: double.infinity,
+                        height: height * 0.05,
+                        width: width * 1.3,
                         child: ElevatedButton.icon(
                           onPressed:
                           _isGoogleLoading ? null : _signUpWithGoogle,
@@ -387,7 +393,7 @@ class _SignUpViewState extends State<SignUpView> {
                             foregroundColor: Colors.black,
                             elevation: 2,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
+                              borderRadius: BorderRadius.circular(20),
                             ),
                           ),
                         ),

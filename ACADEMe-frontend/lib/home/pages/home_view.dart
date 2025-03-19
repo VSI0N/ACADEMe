@@ -1094,7 +1094,45 @@ Widget getAppBarUI(VoidCallback onProfileTap, VoidCallback onHamburgerTap, Build
               color: Colors.black, // Black menu icon
               size: 20, // Icon size
             ),
-            onPressed: onHamburgerTap, // Open the drawer when clicked
+            onPressed: () {
+              showGeneralDialog(
+                context: context,
+                barrierDismissible: true, // Tapping outside closes it
+                barrierLabel: "Dismiss",
+                barrierColor: Colors.black.withOpacity(0.3), // Dim background
+                transitionDuration: const Duration(milliseconds: 300),
+                pageBuilder: (context, animation, secondaryAnimation) {
+                  return Align(
+                    alignment: Alignment.centerLeft,
+                    child: FractionallySizedBox(
+                      widthFactor: 0.75,
+                      heightFactor: 1,
+                      child: Material(
+                        color: Colors.white,
+                        child: HomepageDrawer(
+                          onClose: () {
+                            Navigator.of(context).pop(); // Close drawer manually
+                          },
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                transitionBuilder: (context, animation, secondaryAnimation, child) {
+                  // Slide in from left
+                  final offsetAnimation = Tween<Offset>(
+                    begin: const Offset(-1, 0),
+                    end: Offset.zero,
+                  ).animate(animation);
+
+                  return SlideTransition(
+                    position: offsetAnimation,
+                    child: child,
+                  );
+                },
+              );
+            },
+            // Open the drawer when clicked
           ),
         ),
       ],

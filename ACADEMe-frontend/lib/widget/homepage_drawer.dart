@@ -16,12 +16,13 @@ class HomepageDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.75, // 75% of screen width
+      width: MediaQuery.of(context).size.width * 0.75,
+      height: MediaQuery.of(context).size.height * 1,
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
-          topRight: Radius.circular(20),
-          bottomRight: Radius.circular(20),
+          // topRight: Radius.circular(20),
+          // bottomRight: Radius.circular(20),
         ),
         boxShadow: [
           BoxShadow(
@@ -48,7 +49,6 @@ class HomepageDrawer extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-
           // Drawer Items with Navigation
           _buildDrawerItem(Icons.bookmark, L10n.getTranslatedText(context, 'Bookmarks'), () {
             // Navigator.push(
@@ -64,7 +64,7 @@ class HomepageDrawer extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) =>
-                    const ProfilePage(), // Directly navigate to ProfileScreen
+                const ProfilePage(), // Directly navigate to ProfileScreen
               ),
             );
           }),
@@ -73,7 +73,7 @@ class HomepageDrawer extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) =>
-                    const CourseListScreen(), // Directly navigate to CourseListScreen
+                const CourseListScreen(), // Directly navigate to CourseListScreen
               ),
             );
           }),
@@ -113,10 +113,8 @@ class HomepageDrawer extends StatelessWidget {
             //   ),
             // );
           }),
-
           // Spacer to push user section to the bottom
           const Spacer(),
-
           // User Profile Section
           Padding(
             padding: const EdgeInsets.all(20),
@@ -131,7 +129,7 @@ class HomepageDrawer extends StatelessWidget {
                   child: const CircleAvatar(
                     radius: 25,
                     backgroundImage:
-                        AssetImage('assets/design_course/userImage.png'),
+                    AssetImage('assets/design_course/userImage.png'),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -147,7 +145,6 @@ class HomepageDrawer extends StatelessWidget {
                     try {
                       await AuthService().signOut();
                       print('✅ User signed out successfully');
-
                       // Navigate to the introduction screen after logout
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
