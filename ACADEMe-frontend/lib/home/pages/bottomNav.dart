@@ -21,24 +21,26 @@ class BottomNav extends StatelessWidget {
 
         final List<Widget> pages = isAdmin
             ? [
-                HomePage(
-                  onProfileTap: () => bottomNavProvider.setIndex(3),
-                  onAskMeTap: () => bottomNavProvider.setIndex(1),
-                ),
-                const CourseListScreen(),
-                const Mycommunity(),
-                const ProfilePage(),
-                CourseManagementScreen(),
-              ]
+          HomePage(
+            onProfileTap: () => bottomNavProvider.setIndex(3),
+            onAskMeTap: () => bottomNavProvider.setIndex(1),
+            selectedIndex: selectedIndex, // Pass selectedIndex here
+          ),
+          const CourseListScreen(),
+          const Mycommunity(),
+          const ProfilePage(),
+          CourseManagementScreen(),
+        ]
             : [
-                HomePage(
-                  onProfileTap: () => bottomNavProvider.setIndex(3),
-                  onAskMeTap: () => bottomNavProvider.setIndex(1),
-                ),
-                CourseListScreen(),
-                Mycommunity(),
-                ProfilePage(),
-              ];
+          HomePage(
+            onProfileTap: () => bottomNavProvider.setIndex(3),
+            onAskMeTap: () => bottomNavProvider.setIndex(1),
+            selectedIndex: selectedIndex, // Pass selectedIndex here
+          ),
+          CourseListScreen(),
+          Mycommunity(),
+          ProfilePage(),
+        ];
 
         return Scaffold(
           body: pages[selectedIndex],
@@ -52,36 +54,36 @@ class BottomNav extends StatelessWidget {
             type: BottomNavigationBarType.fixed,
             items: isAdmin
                 ? [
-                    BottomNavigationBarItem(
-                        icon: Icon(Icons.home),
-                        label: L10n.getTranslatedText(context, 'Home')),
-                    BottomNavigationBarItem(
-                        icon: Icon(Icons.school),
-                        label: L10n.getTranslatedText(context, 'Courses')),
-                    BottomNavigationBarItem(
-                        icon: Icon(Icons.groups),
-                        label: L10n.getTranslatedText(context, 'Community')),
-                    BottomNavigationBarItem(
-                        icon: Icon(Icons.person),
-                        label: L10n.getTranslatedText(context, 'Profile')),
-                    BottomNavigationBarItem(
-                        icon: Icon(Icons.admin_panel_settings),
-                        label: L10n.getTranslatedText(context, 'Admin')),
-                  ]
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: L10n.getTranslatedText(context, 'Home')),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.school),
+                  label: L10n.getTranslatedText(context, 'Courses')),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.groups),
+                  label: L10n.getTranslatedText(context, 'Community')),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: L10n.getTranslatedText(context, 'Profile')),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.admin_panel_settings),
+                  label: L10n.getTranslatedText(context, 'Admin')),
+            ]
                 : [
-                    BottomNavigationBarItem(
-                        icon: Icon(Icons.home),
-                        label: L10n.getTranslatedText(context, 'Home')),
-                    BottomNavigationBarItem(
-                        icon: Icon(Icons.school),
-                        label: L10n.getTranslatedText(context, 'Courses')),
-                    BottomNavigationBarItem(
-                        icon: Icon(Icons.groups),
-                        label: L10n.getTranslatedText(context, 'Community')),
-                    BottomNavigationBarItem(
-                        icon: Icon(Icons.person),
-                        label: L10n.getTranslatedText(context, 'Profile')),
-                  ],
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: L10n.getTranslatedText(context, 'Home')),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.school),
+                  label: L10n.getTranslatedText(context, 'Courses')),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.groups),
+                  label: L10n.getTranslatedText(context, 'Community')),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: L10n.getTranslatedText(context, 'Profile')),
+            ],
           ),
         );
       },

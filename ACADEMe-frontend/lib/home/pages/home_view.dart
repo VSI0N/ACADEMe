@@ -18,6 +18,7 @@ import 'package:ACADEMe/home/pages/topic_view.dart'; // Import the TopicViewScre
 class HomePage extends StatelessWidget {
   final VoidCallback onProfileTap;
   final VoidCallback onAskMeTap;
+  final int selectedIndex; // Add selectedIndex
   final PageController _pageController = PageController();
   final ValueNotifier<bool> _showSearchUI = ValueNotifier(false); // Use ValueNotifier
   List<dynamic> courses = [];
@@ -27,6 +28,7 @@ class HomePage extends StatelessWidget {
     Key? key,
     required this.onProfileTap,
     required this.onAskMeTap,
+    required this.selectedIndex, // Add selectedIndex
   }) : super(key: key);
 
   @override
@@ -308,9 +310,17 @@ class HomePage extends StatelessWidget {
                   } else {
                     final String name = snapshot.data?['name'] ?? 'User';
                     final String photoUrl = snapshot.data?['photo_url'] ?? 'assets/design_course/userImage.png';
-                    return getAppBarUI(onProfileTap, () {
-                      scaffoldKey.currentState?.openDrawer(); // Open drawer when custom button is clicked
-                    }, context, name, photoUrl);
+                    return getAppBarUI(
+                      onProfileTap,
+                          () {
+                        scaffoldKey.currentState?.openDrawer(); // Open drawer when custom button is clicked
+                      },
+                      context,
+                      name,
+                      photoUrl,
+                      _pageController,
+                      selectedIndex,
+                    );
                   }
                 },
               ),
@@ -950,12 +960,14 @@ class HomePage extends StatelessWidget {
           ),
         ),
         // Use drawer for left-side drawer
+        // Use drawer for left-side drawer
         drawer: HomepageDrawer(
           onClose: () {
             Navigator.of(context).pop(); // Close the drawer when tapped
           },
+          onProfileTap: onProfileTap, // Pass the onProfileTap callback here
         ),
-        // Modify drawerEdgeDragWidth to make it open from the right
+// Modify drawerEdgeDragWidth to make it open from the right
         drawerEdgeDragWidth: double.infinity, // Make drawer full-width and allow dragging from anywhere
         endDrawerEnableOpenDragGesture: true, // Allow drag to open the drawer from the right
       ),
@@ -1036,7 +1048,15 @@ Widget learningCard(String title, int completed, int total, int percentage, Colo
 }
 
 // AppBar UI with the Hamburger icon inside a circular button
-Widget getAppBarUI(VoidCallback onProfileTap, VoidCallback onHamburgerTap, BuildContext context, String name, String photoUrl) {
+Widget getAppBarUI(
+    VoidCallback onProfileTap,
+    VoidCallback onHamburgerTap,
+    BuildContext context,
+    String name,
+    String photoUrl,
+    PageController pageController,
+    int selectedIndex,
+    ) {
   return Container(
     height: 100, // Increased height for the AppBar
     padding: const EdgeInsets.only(top: 38.0, left: 18, right: 18, bottom: 5),
@@ -1113,6 +1133,7 @@ Widget getAppBarUI(VoidCallback onProfileTap, VoidCallback onHamburgerTap, Build
                           onClose: () {
                             Navigator.of(context).pop(); // Close drawer manually
                           },
+                          onProfileTap: onProfileTap, // Pass the onProfileTap callback here
                         ),
                       ),
                     ),
@@ -1246,7 +1267,7 @@ Widget CourseBox(IconData icon, String label, Color color) {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          padding: EdgeInsets.all(8),
+          padding: EdgeInsets.all(8), // Smaller circle
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: color.withOpacity(0.2),

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:ACADEMe/academe_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -162,7 +163,7 @@ class _MotivationPopupState extends State<MotivationPopup> {
 
                       // **Send Button**
                       IconButton(
-                        icon: const Icon(Icons.send, color: Colors.blue),
+                        icon: const Icon(Icons.send, color: AcademeTheme.appColor),
                         onPressed: _sendFollowUpToChatbot, // Directly call the function
                       ),
                     ],

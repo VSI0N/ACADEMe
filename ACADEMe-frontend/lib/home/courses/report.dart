@@ -892,12 +892,16 @@ class HomePage extends StatelessWidget {
           onClose: () {
             Navigator.of(context).pop(); // Close the drawer when tapped
           },
+          onProfileTap: () {
+            // Handle navigation to the fourth option (Profile) of the bottom navigation bar
+            // Example: If you're using a PageController or BottomNavigationBar, update the index here
+            // _selectedIndex = 3; // Assuming 3 is the index for the Profile page
+            // _pageController.jumpToPage(3); // If using a PageController
+          },
         ),
         // Modify drawerEdgeDragWidth to make it open from the right
-        drawerEdgeDragWidth: double
-            .infinity, // Make drawer full-width and allow dragging from anywhere
-        endDrawerEnableOpenDragGesture:
-            true, // Allow drag to open the drawer from the right
+        drawerEdgeDragWidth: double.infinity, // Make drawer full-width and allow dragging from anywhere
+        endDrawerEnableOpenDragGesture: true, // Allow drag to open the drawer from the right
       ),
     );
   }
