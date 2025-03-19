@@ -1,5 +1,4 @@
 import 'package:ACADEMe/academe_theme.dart';
-import 'package:ACADEMe/home/courses/overview/quiz.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
@@ -8,11 +7,19 @@ import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'quiz.dart'; // Import the quiz widget
 
 class FlashCard extends StatefulWidget {
-  final List<Map<String, String>> materials;
+  final List<Map<String, String>> materials; // Ensure correct type
+  final List<Map<String, dynamic>> quizzes;
+  final Function()? onQuizComplete;
 
-  const FlashCard({super.key, required this.materials});
+  const FlashCard({
+    super.key,
+    required this.materials,
+    required this.quizzes,
+    this.onQuizComplete,
+  });
 
   @override
   _FlashCardState createState() => _FlashCardState();
@@ -33,14 +40,14 @@ class _FlashCardState extends State<FlashCard> {
   }
 
   void _setupVideoController() {
-    // Dispose existing controllers
     _videoController?.dispose();
     _chewieController?.dispose();
     _videoController = null;
     _chewieController = null;
 
     if (_currentMaterial()["type"] == "video") {
-      _videoController = VideoPlayerController.network(_currentMaterial()["content"]!);
+      _videoController =
+          VideoPlayerController.network(_currentMaterial()["content"]!);
 
       _videoController!.initialize().then((_) {
         if (!mounted) return;
@@ -54,12 +61,13 @@ class _FlashCardState extends State<FlashCard> {
           allowPlaybackSpeedChanging: true,
         );
 
-        setState(() {}); // Ensure UI rebuilds
+        setState(() {});
 
         _videoController!.addListener(() {
           if (!_hasNavigated &&
               _videoController!.value.isInitialized &&
-              _videoController!.value.position >= _videoController!.value.duration) {
+              _videoController!.value.position >=
+                  _videoController!.value.duration) {
             _hasNavigated = true;
             Future.delayed(const Duration(milliseconds: 500), () {
               _hasNavigated = false;
@@ -73,26 +81,33 @@ class _FlashCardState extends State<FlashCard> {
     }
   }
 
-  Map<String, String> _currentMaterial() {
-    return widget.materials[_currentPage];
+  Map<String, dynamic> _currentMaterial() {
+    if (_currentPage < widget.materials.length) {
+      return widget.materials[_currentPage];
+    } else {
+      // Return the quiz data
+      return {
+        "type": "quiz",
+        "quiz": widget.quizzes[_currentPage - widget.materials.length],
+      };
+    }
   }
 
   void _nextMaterialOrQuiz() {
-    if (_currentPage < widget.materials.length - 1) {
+    if (_currentPage < widget.materials.length + widget.quizzes.length - 1) {
       setState(() {
         _currentPage++;
         _hasNavigated = false;
       });
 
-      // Ensure video updates properly
       Future.delayed(const Duration(milliseconds: 300), () {
         _setupVideoController();
       });
     } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => LessonQuestionPage()),
-      );
+      // Trigger callback when all materials and quizzes are completed
+      if (widget.onQuizComplete != null) {
+        widget.onQuizComplete!();
+      }
     }
   }
 
@@ -126,23 +141,19 @@ class _FlashCardState extends State<FlashCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildProgressIndicator(),
-          _buildSubtopicTitle(_currentMaterial()["title"] ??
-              "Subtopic"), // ✅ Keep title fixed above
+          _buildSubtopicTitle(_currentMaterial()["title"] ?? "Subtopic"),
           Expanded(
             child: Align(
               alignment: Alignment.bottomCenter,
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   return Swiper(
-                    itemWidth:
-                        constraints.maxWidth, // ✅ Ensure a proper stack effect
+                    itemWidth: constraints.maxWidth,
                     itemHeight: constraints.maxHeight,
                     loop: false,
-                    duration: 600, // ✅ Adjust for smooth animation
-                    layout:
-                        SwiperLayout.STACK, // ✅ Enables stack-like animation
-                    axisDirection: AxisDirection
-                        .right, // ✅ Ensure swipe direction is correct
+                    duration: 600,
+                    layout: SwiperLayout.STACK,
+                    axisDirection: AxisDirection.right,
                     onIndexChanged: (index) {
                       if (_currentPage != index) {
                         setState(() {
@@ -150,25 +161,39 @@ class _FlashCardState extends State<FlashCard> {
                           _setupVideoController();
                         });
                       }
+
+                      // Check if the user has swiped past the last card
+                      if (index ==
+                          widget.materials.length + widget.quizzes.length - 1) {
+                        // Only trigger callback if there are no quizzes
+                        if (widget.quizzes.isEmpty &&
+                            widget.onQuizComplete != null) {
+                          widget.onQuizComplete!();
+                        }
+                      }
                     },
                     itemBuilder: (context, index) {
                       return Stack(
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(20),
-                            child: _buildMaterial(widget.materials[index]),
+                            child:
+                                _buildMaterial(index < widget.materials.length
+                                    ? widget.materials[index]
+                                    : {
+                                        "type": "quiz",
+                                        "quiz": widget.quizzes[
+                                            index - widget.materials.length],
+                                      }),
                           ),
                           AnimatedOpacity(
-                            opacity: _currentPage == index
-                                ? 0.0
-                                : 0.2, // Shadow fades out when fully opened
+                            opacity: _currentPage == index ? 0.0 : 0.2,
                             duration: const Duration(milliseconds: 500),
-                            child: IgnorePointer( // ✅ Allows gestures to pass through
+                            child: IgnorePointer(
                               ignoring: true,
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.black.withOpacity(
-                                      0.4), // Adjust shadow intensity
+                                  color: Colors.black.withOpacity(0.4),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                               ),
@@ -177,7 +202,7 @@ class _FlashCardState extends State<FlashCard> {
                         ],
                       );
                     },
-                    itemCount: widget.materials.length,
+                    itemCount: widget.materials.length + widget.quizzes.length,
                   );
                 },
               ),
@@ -188,32 +213,6 @@ class _FlashCardState extends State<FlashCard> {
     );
   }
 
-
-  // Add this inside _FlashCardState (but outside all methods)
-  Widget buildStyledContainer(Widget child) {
-    final height = MediaQuery.of(context).size.height;
-    return Center(
-      child: Container(
-        width: double.infinity,
-        // 👇 Add constraints
-        constraints: BoxConstraints(
-          minHeight: height * 1.5, // You can adjust height as per your UI
-        ),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2),
-          ],
-        ),
-        child: child,
-      ),
-    );
-  }
-
-
-
   Widget _buildProgressIndicator() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 0),
@@ -222,7 +221,8 @@ class _FlashCardState extends State<FlashCard> {
         padding: const EdgeInsets.all(12),
         decoration: const BoxDecoration(color: Colors.white),
         child: Row(
-          children: List.generate(widget.materials.length, (index) {
+          children: List.generate(
+              widget.materials.length + widget.quizzes.length, (index) {
             return Expanded(
               child: Container(
                 height: 6,
@@ -236,46 +236,6 @@ class _FlashCardState extends State<FlashCard> {
               ),
             );
           }),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMaterial(Map<String, String> material) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: _getMaterialWidget(material),
-        ),
-      ],
-    );
-  }
-
-  Widget _getMaterialWidget(Map<String, String> material) {
-    switch (material["type"]) {
-      case "text":
-        return _buildTextContent(material["content"]!);
-      case "video":
-        return _buildVideoContent(material["content"]!);
-      case "image":
-        return _buildImageContent(material["content"]!);
-      case "audio":
-        return _buildAudioContent(material["content"]!);
-      case "document":
-        return _buildDocumentContent(material["content"]!);
-      default:
-        return const Center(child: Text("Unsupported content type"));
-    }
-  }
-
-  Widget _buildTextContent(String content) {
-    return buildStyledContainer(
-      SingleChildScrollView(
-        child: Text(
-          content,
-          style: const TextStyle(
-              fontSize: 14, color: Colors.black87, height: 1.5),
         ),
       ),
     );
@@ -307,24 +267,65 @@ class _FlashCardState extends State<FlashCard> {
     );
   }
 
-  Widget _buildVideoContent(String videoUrl) {
+  Widget _buildMaterial(Map<String, dynamic> material) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: _getMaterialWidget(material),
+        ),
+      ],
+    );
+  }
+
+  Widget _getMaterialWidget(Map<String, dynamic> material) {
+    switch (material["type"]) {
+      case "text":
+        return _buildTextContent(material["content"]!);
+      case "video":
+        return _buildVideoContent(material["content"]!);
+      case "image":
+        return _buildImageContent(material["content"]!);
+      case "audio":
+        return _buildAudioContent(material["content"]!);
+      case "document":
+        return _buildDocumentContent(material["content"]!);
+      case "quiz":
+        return _buildQuizContent(material["quiz"]);
+      default:
+        return const Center(child: Text("Unsupported content type"));
+    }
+  }
+
+  Widget _buildTextContent(String content) {
     return buildStyledContainer(
-      _chewieController == null ||
-          _videoController == null ||
-          !_videoController!.value.isInitialized
-          ? const Center(child: CircularProgressIndicator())
-          : GestureDetector(
-        onTap: () {
-          setState(() {}); // Force UI rebuild
-        },
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: Chewie(controller: _chewieController!),
+      SingleChildScrollView(
+        child: Text(
+          content,
+          style:
+              const TextStyle(fontSize: 14, color: Colors.black87, height: 1.5),
         ),
       ),
     );
   }
 
+  Widget _buildVideoContent(String videoUrl) {
+    return buildStyledContainer(
+      _chewieController == null ||
+              _videoController == null ||
+              !_videoController!.value.isInitialized
+          ? const Center(child: CircularProgressIndicator())
+          : GestureDetector(
+              onTap: () {
+                setState(() {});
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Chewie(controller: _chewieController!),
+              ),
+            ),
+    );
+  }
 
   Widget _buildImageContent(String imageUrl) {
     return buildStyledContainer(
@@ -333,14 +334,13 @@ class _FlashCardState extends State<FlashCard> {
         child: CachedNetworkImage(
           imageUrl: imageUrl,
           placeholder: (context, url) =>
-          const Center(child: CircularProgressIndicator()),
+              const Center(child: CircularProgressIndicator()),
           errorWidget: (context, url, error) => const Icon(Icons.error),
           fit: BoxFit.cover,
         ),
       ),
     );
   }
-
 
   Widget _buildAudioContent(String audioUrl) {
     return buildStyledContainer(
@@ -367,6 +367,37 @@ class _FlashCardState extends State<FlashCard> {
           onPressed: () => launchUrl(Uri.parse(docUrl)),
           child: const Text("Open Document"),
         ),
+      ),
+    );
+  }
+
+  Widget _buildQuizContent(Map<String, dynamic> quiz) {
+    return buildStyledContainer(
+      LessonQuestionPage(
+        quizzes: [quiz], // Pass the quiz data
+        onQuizComplete: () {
+          // Move to the next material or quiz
+          _nextMaterialOrQuiz();
+        },
+      ),
+    );
+  }
+
+  Widget buildStyledContainer(Widget child) {
+    final height = MediaQuery.of(context).size.height;
+    return Center(
+      child: Container(
+        width: double.infinity,
+        constraints: BoxConstraints(minHeight: height * 1.5),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2),
+          ],
+        ),
+        child: child,
       ),
     );
   }

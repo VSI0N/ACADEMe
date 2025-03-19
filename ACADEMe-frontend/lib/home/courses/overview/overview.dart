@@ -11,17 +11,20 @@ class OverviewScreen extends StatefulWidget {
   final String courseId;
   final String topicId;
 
-  const OverviewScreen({super.key, required this.courseId, required this.topicId});
+  const OverviewScreen(
+      {super.key, required this.courseId, required this.topicId});
 
   @override
   _OverviewScreenState createState() => _OverviewScreenState();
 }
 
-class _OverviewScreenState extends State<OverviewScreen> with SingleTickerProviderStateMixin {
+class _OverviewScreenState extends State<OverviewScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   late ScrollController _scrollController;
   final FlutterSecureStorage storage = const FlutterSecureStorage();
-  final String backendUrl = dotenv.env['BACKEND_URL'] ?? 'http://127.0.0.1:8000';
+  final String backendUrl =
+      dotenv.env['BACKEND_URL'] ?? 'http://127.0.0.1:8000';
 
   String topicTitle = "Loading...";
   String topicDescription = "Fetching topic details...";
@@ -44,7 +47,8 @@ class _OverviewScreenState extends State<OverviewScreen> with SingleTickerProvid
 
     try {
       final response = await http.get(
-        Uri.parse('$backendUrl/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/'),
+        Uri.parse(
+            '$backendUrl/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -61,7 +65,8 @@ class _OverviewScreenState extends State<OverviewScreen> with SingleTickerProvid
             final Map<String, dynamic> data = jsonData[0];
             updateTopicDetails(data);
           } else {
-            print("❌ Unexpected JSON format (List but empty or incorrect structure)");
+            print(
+                "❌ Unexpected JSON format (List but empty or incorrect structure)");
           }
         } else if (jsonData is Map<String, dynamic>) {
           updateTopicDetails(jsonData);
@@ -83,7 +88,8 @@ class _OverviewScreenState extends State<OverviewScreen> with SingleTickerProvid
   void updateTopicDetails(Map<String, dynamic> data) {
     setState(() {
       topicTitle = data["title"]?.toString() ?? "Untitled Topic";
-      topicDescription = data["description"]?.toString() ?? "No description available.";
+      topicDescription =
+          data["description"]?.toString() ?? "No description available.";
     });
   }
 
@@ -128,17 +134,23 @@ class _OverviewScreenState extends State<OverviewScreen> with SingleTickerProvid
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           IconButton(
-                            icon: const Icon(Icons.arrow_back, color: Colors.black),
+                            icon: const Icon(Icons.arrow_back,
+                                color: Colors.black),
                             onPressed: () => Navigator.pop(context),
                           ),
                           const Text(
                             "Topic details",
-                            style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold),
                           ),
-                          const Icon(Icons.bookmark_border, color: Colors.black),
+                          const Icon(Icons.bookmark_border,
+                              color: Colors.black),
                         ],
                       ),
-                      SizedBox(height: screenHeight * 0.02), // 2% of screen height
+                      SizedBox(
+                          height: screenHeight * 0.02), // 2% of screen height
                       Text(
                         isLoading ? "Loading..." : topicTitle,
                         style: TextStyle(
@@ -147,9 +159,12 @@ class _OverviewScreenState extends State<OverviewScreen> with SingleTickerProvid
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: screenHeight * 0.01), // 1% of screen height
+                      SizedBox(
+                          height: screenHeight * 0.01), // 1% of screen height
                       Text(
-                        isLoading ? "Fetching topic details..." : topicDescription,
+                        isLoading
+                            ? "Fetching topic details..."
+                            : topicDescription,
                         style: TextStyle(
                           fontSize: screenWidth * 0.04, // 4% of screen width
                           color: Colors.black,
@@ -169,15 +184,19 @@ class _OverviewScreenState extends State<OverviewScreen> with SingleTickerProvid
                       SliverToBoxAdapter(
                         child: Container(
                           color: Colors.white,
-                          padding: EdgeInsets.all(screenWidth * 0.04), // 4% of screen width
+                          padding: EdgeInsets.all(
+                              screenWidth * 0.04), // 4% of screen width
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text(
                                 "Your Progress",
-                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
                               ),
-                              SizedBox(height: screenHeight * 0.005), // Small spacing
+                              SizedBox(
+                                  height:
+                                      screenHeight * 0.005), // Small spacing
                               const Text("0/12 Modules"),
                               SizedBox(height: screenHeight * 0.01),
                               ClipRRect(
@@ -186,7 +205,8 @@ class _OverviewScreenState extends State<OverviewScreen> with SingleTickerProvid
                                   value: 0.0,
                                   color: AcademeTheme.appColor,
                                   backgroundColor: const Color(0xFFE8E5FB),
-                                  minHeight: screenHeight * 0.012, // Responsive height
+                                  minHeight:
+                                      screenHeight * 0.012, // Responsive height
                                 ),
                               ),
                               SizedBox(height: screenHeight * 0.02),
@@ -204,7 +224,9 @@ class _OverviewScreenState extends State<OverviewScreen> with SingleTickerProvid
                             labelColor: AcademeTheme.appColor,
                             unselectedLabelColor: Colors.black,
                             indicatorColor: AcademeTheme.appColor,
-                            labelStyle: TextStyle(fontSize: screenWidth * 0.045), // Responsive font size
+                            labelStyle: TextStyle(
+                                fontSize: screenWidth *
+                                    0.045), // Responsive font size
                             tabs: const [
                               Tab(text: "Overview"),
                               Tab(text: "Q&A"),
@@ -217,7 +239,8 @@ class _OverviewScreenState extends State<OverviewScreen> with SingleTickerProvid
                   body: TabBarView(
                     controller: _tabController,
                     children: [
-                      LessonsSection(courseId: widget.courseId, topicId: widget.topicId),
+                      LessonsSection(
+                          courseId: widget.courseId, topicId: widget.topicId),
                       QASection(),
                     ],
                   ),
@@ -243,7 +266,8 @@ class _StickyTabBarDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => _tabBar.preferredSize.height;
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
       color: Colors.white,
       child: _tabBar,
