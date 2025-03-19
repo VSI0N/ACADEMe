@@ -19,11 +19,12 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:ACADEMe/providers/bottom_nav_provider.dart'; // Import BottomNavProvider
+import 'package:ACADEMe/providers/bottom_nav_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  /// 🔹 Load environment variables
   try {
     await dotenv.load(fileName: "assets/.env");
     print("✅ .env Loaded Successfully");
@@ -31,6 +32,7 @@ void main() async {
     print("❌ .env Load Error: $e");
   }
 
+  /// 🔹 Initialize Firebase safely
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -40,29 +42,45 @@ void main() async {
     print("❌ Firebase Initialization Error: $e");
   }
 
+  /// 🔹 Fetch admin emails first (blocking)
+  await AdminRoles.fetchAdminEmails();
+
+  /// 🔹 Load user role asynchronously
   final prefs = await SharedPreferences.getInstance();
   String? userEmail = prefs.getString("user_email");
 
   if (userEmail != null) {
     await UserRoleManager().fetchUserRole(userEmail);
   }
-
   await UserRoleManager().loadRole();
 
+  /// 🔹 Lock device orientation
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
-  ]).then((_) {
-    runApp(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (context) => LanguageProvider()), // Language provider
-          ChangeNotifierProvider(create: (context) => BottomNavProvider()), // BottomNav provider
-        ],
-        child: const MyApp(),
-      ),
-    );
-  });
+  ]);
+
+  /// 🔹 Set UI style (Moved from MyApp)
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    statusBarIconBrightness: Brightness.dark,
+    statusBarBrightness:
+    !kIsWeb && Platform.isAndroid ? Brightness.dark : Brightness.light,
+    systemNavigationBarColor: Colors.white,
+    systemNavigationBarDividerColor: Colors.transparent,
+    systemNavigationBarIconBrightness: Brightness.dark,
+  ));
+
+  /// 🔹 Run the app with providers
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => LanguageProvider()), // Language provider
+        ChangeNotifierProvider(create: (context) => BottomNavProvider()), // BottomNav provider
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -70,16 +88,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-      statusBarBrightness:
-      !kIsWeb && Platform.isAndroid ? Brightness.dark : Brightness.light,
-      systemNavigationBarColor: Colors.white,
-      systemNavigationBarDividerColor: Colors.transparent,
-      systemNavigationBarIconBrightness: Brightness.dark,
-    ));
-
     return Consumer2<LanguageProvider, BottomNavProvider>(
       builder: (context, languageProvider, bottomNavProvider, child) {
         return MaterialApp(
@@ -90,7 +98,7 @@ class MyApp extends StatelessWidget {
             textTheme: AcademeTheme.textTheme,
             platform: TargetPlatform.iOS,
           ),
-          locale: languageProvider.locale, // Get locale from provider
+          locale: languageProvider.locale,
           supportedLocales: L10n.supportedLocales,
           localizationsDelegates: const [
             GlobalMaterialLocalizations.delegate,
@@ -101,9 +109,10 @@ class MyApp extends StatelessWidget {
           localeResolutionCallback: (locale, _) {
             return L10n.getSupportedLocale(locale);
           },
-          home: AnimatedSplashScreen(), // Start with splash screen
+          home: AnimatedSplashScreen(),
           routes: {
-            '/home': (context) => BottomNav(isAdmin: UserRoleManager().isAdmin), // Now managed with provider
+            '/home': (context) =>
+                BottomNav(isAdmin: UserRoleManager().isAdmin), // ✅ Role managed
             '/courses': (context) => SelectCourseScreen(),
           },
         );
