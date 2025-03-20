@@ -211,53 +211,47 @@ class _LessonsSectionState extends State<LessonsSection> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: isExpanded.keys.map((section) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ListTile(
-                      title: Text(
-                        section,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 17),
-                      ),
-                      trailing: Icon(
-                        isExpanded[section]!
-                            ? Icons.expand_less
-                            : Icons.expand_more,
-                        color: Colors.black,
-                      ),
-                      onTap: () async {
-                        setState(() {
-                          isExpanded[section] = !isExpanded[section]!;
-                        });
-                        if (isExpanded[section]! &&
-                            subtopicIds.containsKey(section)) {
-                          await fetchMaterialsAndQuizzes(
-                              subtopicIds[section]!);
-                        }
-                      },
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.only(
+            left: 16, right: 16, top: 16, bottom: 100), // Added bottom padding
+        child: Column(
+          children: [
+            // Existing content
+            ...isExpanded.keys.map((section) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ListTile(
+                    title: Text(
+                      section,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 17),
                     ),
-                    if (isExpanded[section]! &&
-                        subtopicIds.containsKey(section))
-                      _buildLessonsAndQuizzes(subtopicIds[section]!),
-                  ],
-                );
-              }).toList(),
-            ),
-          ),
-          // **🔹 Start Course Button**
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              color: Colors.white,
+                    trailing: Icon(
+                      isExpanded[section]!
+                          ? Icons.expand_less
+                          : Icons.expand_more,
+                      color: Colors.black,
+                    ),
+                    onTap: () async {
+                      setState(() {
+                        isExpanded[section] = !isExpanded[section]!;
+                      });
+                      if (isExpanded[section]! &&
+                          subtopicIds.containsKey(section)) {
+                        await fetchMaterialsAndQuizzes(subtopicIds[section]!);
+                      }
+                    },
+                  ),
+                  if (isExpanded[section]! && subtopicIds.containsKey(section))
+                    _buildLessonsAndQuizzes(subtopicIds[section]!),
+                ],
+              );
+            }).toList(),
+
+            // **🔹 Start Course Button**
+            Container(
+              margin: const EdgeInsets.only(top: 20, bottom: 20),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: ElevatedButton(
                 onPressed: () {
@@ -269,7 +263,8 @@ class _LessonsSectionState extends State<LessonsSection> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => FlashCard(
-                            materials: (subtopicMaterials[firstSubtopicId] ?? []).map<Map<String, String>>((material) {
+                            materials: (subtopicMaterials[firstSubtopicId] ?? [])
+                                .map<Map<String, String>>((material) {
                               return {
                                 "type": material["type"].toString(),
                                 "content": material["content"].toString(),
@@ -281,6 +276,8 @@ class _LessonsSectionState extends State<LessonsSection> {
                               _navigateToNextSubtopic(firstSubtopicId);
                             },
                             initialIndex: 0, // Start from the first item
+                            courseId: widget.courseId,
+                            topicId: widget.topicId,
                           ),
                         ),
                       );
@@ -304,8 +301,8 @@ class _LessonsSectionState extends State<LessonsSection> {
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -383,6 +380,8 @@ class _LessonsSectionState extends State<LessonsSection> {
                 _navigateToNextSubtopic(subtopicId);
               },
               initialIndex: index, // Start from the clicked material
+              courseId: widget.courseId,
+              topicId: widget.topicId,
             ),
           ),
         );
@@ -408,6 +407,8 @@ class _LessonsSectionState extends State<LessonsSection> {
                 _navigateToNextSubtopic(subtopicId);
               },
               initialIndex: index, // Start from the clicked quiz
+              courseId: widget.courseId,
+              topicId: widget.topicId,
             ),
           ),
         );
@@ -448,6 +449,8 @@ class _LessonsSectionState extends State<LessonsSection> {
                 _navigateToNextSubtopic(nextSubtopicId);
               },
               initialIndex: 0, // Start from the first item
+              courseId: widget.courseId,
+              topicId: widget.topicId,
             ),
           ),
         );

@@ -1,5 +1,6 @@
 import 'package:ACADEMe/academe_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -8,12 +9,17 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'quiz.dart'; // Import the quiz widget
+import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'dart:convert';
 
 class FlashCard extends StatefulWidget {
   final List<Map<String, String>> materials; // Ensure correct type
   final List<Map<String, dynamic>> quizzes;
   final Function()? onQuizComplete;
   final int initialIndex; // Add initialIndex parameter
+  final String courseId; // Add courseId
+  final String topicId; // Add topicId
 
   const FlashCard({
     super.key,
@@ -21,6 +27,8 @@ class FlashCard extends StatefulWidget {
     required this.quizzes,
     this.onQuizComplete,
     this.initialIndex = 0, // Default to 0
+    required this.courseId,
+    required this.topicId,
   });
 
   @override
@@ -34,6 +42,9 @@ class _FlashCardState extends State<FlashCard> {
   late YoutubePlayerController _youtubeController;
   final AudioPlayer _audioPlayer = AudioPlayer();
   bool _hasNavigated = false;
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  final String backendUrl =
+      dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'; // Replace with your backend URL
 
   @override
   void initState() {
@@ -48,9 +59,10 @@ class _FlashCardState extends State<FlashCard> {
     _videoController = null;
     _chewieController = null;
 
-    if (_currentMaterial()["type"] == "video") {
-      _videoController =
-          VideoPlayerController.network(_currentMaterial()["content"]!);
+    if (_currentPage < widget.materials.length &&
+        widget.materials[_currentPage]["type"] == "video") {
+      _videoController = VideoPlayerController.network(
+          widget.materials[_currentPage]["content"]!);
 
       _videoController!.initialize().then((_) {
         if (!mounted) return;
@@ -96,7 +108,105 @@ class _FlashCardState extends State<FlashCard> {
     }
   }
 
-  void _nextMaterialOrQuiz() {
+  Future<void> _sendProgressToBackend() async {
+    String? token = await _storage.read(key: 'access_token');
+    if (token == null) {
+      print("❌ Missing access token");
+      return;
+    }
+
+    final material = _currentMaterial();
+    final materialId = material["id"] ?? "material_${_currentPage}"; // Fallback to index if ID is missing
+
+    if (materialId == null) {
+      print("❌ Material ID is null");
+      return;
+    }
+
+    print("✅ Material ID: $materialId");
+
+    // Fetch the progress list for the current material_id
+    final progressList = await _fetchProgressList(materialId);
+
+    // Check if any progress entry with the same material_id exists
+    final progressExists = progressList.any((progress) =>
+    progress["material_id"] == materialId &&
+        progress["activity_type"] == "reading");
+
+    if (progressExists) {
+      print("✅ Progress already exists for material ID: $materialId");
+      return;
+    }
+
+    final progressData = {
+      "course_id": widget.courseId,
+      "topic_id": widget.topicId,
+      "subtopic_id": material["subtopic_id"] ?? "N/A",
+      "material_id": materialId,
+      "quiz_id": null, // Since this is for material, quiz_id is null
+      "score": 0, // No score for material
+      "status": "completed",
+      "activity_type": "reading",
+      "metadata": {
+        "time_spent": "5 minutes", // Example metadata
+      },
+      "timestamp": DateTime.now().toIso8601String(),
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse('$backendUrl/api/progress/'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(progressData),
+      );
+
+      if (response.statusCode == 200) {
+        print("✅ Progress updated successfully");
+      } else {
+        print("❌ Failed to update progress: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("❌ Error updating progress: $e");
+    }
+  }
+
+  Future<List<dynamic>> _fetchProgressList(String materialId) async {
+    String? token = await _storage.read(key: 'access_token');
+    if (token == null) {
+      print("❌ Missing access token");
+      return [];
+    }
+
+    try {
+      final response = await http.get(
+        Uri.parse('$backendUrl/api/progress/?target_language=en&material_id=$materialId'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final responseBody = jsonDecode(response.body);
+        if (responseBody is Map<String, dynamic> && responseBody.containsKey("progress")) {
+          return responseBody["progress"]; // Return the progress list
+        }
+      } else {
+        print("❌ Failed to fetch progress: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("❌ Error fetching progress: $e");
+    }
+    return [];
+  }
+
+  void _nextMaterialOrQuiz() async {
+    // Send progress to backend before moving to the next material/quiz
+    await _sendProgressToBackend();
+
     if (_currentPage < widget.materials.length + widget.quizzes.length - 1) {
       setState(() {
         _currentPage++;
@@ -164,6 +274,11 @@ class _FlashCardState extends State<FlashCard> {
                           _currentPage = index;
                           _setupVideoController();
                         });
+
+                        // Send progress to backend when swiping to the next material
+                        if (index < widget.materials.length) {
+                          _sendProgressToBackend();
+                        }
                       }
 
                       // Check if the user has swiped past the last card
@@ -181,8 +296,7 @@ class _FlashCardState extends State<FlashCard> {
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(20),
-                            child:
-                            _buildMaterial(index < widget.materials.length
+                            child: _buildMaterial(index < widget.materials.length
                                 ? widget.materials[index]
                                 : {
                               "type": "quiz",
