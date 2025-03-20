@@ -26,10 +26,11 @@ class ASKMeButton extends StatelessWidget {
               bottom: 16.0,
               right: 16.0,
               child: FloatingActionButton(
-                backgroundColor: AcademeTheme.appColor,
+                backgroundColor: Colors.yellow,
                 onPressed: onFABPressed ?? () {}, // Call the callback if provided
+                shape: CircleBorder(), // Ensure the FAB is perfectly circular
                 child: Image.asset(
-                  'assets/icons/ASKMe.png', // Replace with your image path
+                  'assets/icons/ASKMe_dark.png', // Replace with your image path
                   width: 40, // Adjust width as needed
                   height: 40, // Adjust height as needed
                   fit: BoxFit.cover, // Ensure the image fits well
