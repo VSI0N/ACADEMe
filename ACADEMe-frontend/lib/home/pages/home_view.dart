@@ -15,8 +15,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/services.dart';
 import 'package:ACADEMe/home/pages/topic_view.dart'; // Import the TopicViewScreen
 import 'package:ACADEMe/started/pages/class.dart';
-
-import '../../started/pages/class.dart'; // Import the ClassSelectionBottomSheet
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
+import 'package:ACADEMe/localization/language_provider.dart';
 
 class HomePage extends StatelessWidget {
   final VoidCallback onProfileTap;
@@ -62,8 +63,12 @@ class HomePage extends StatelessWidget {
       throw Exception("❌ No access token found");
     }
 
+    // Get the current app language from SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    final String targetLanguage = prefs.getString('language') ?? 'en';
+
     final response = await http.get(
-      Uri.parse("$backendUrl/api/courses/?target_language=en"),
+      Uri.parse("$backendUrl/api/courses/?target_language=$targetLanguage"),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -71,7 +76,7 @@ class HomePage extends StatelessWidget {
     );
 
     if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);
+      final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes)); // Ensure UTF-8 encoding
       return data; // Return all courses
     } else {
       throw Exception("❌ Failed to fetch courses: ${response.statusCode}");
@@ -96,7 +101,7 @@ class HomePage extends StatelessWidget {
       );
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data = jsonDecode(response.body);
+        final Map<String, dynamic> data = jsonDecode(utf8.decode(response.bodyBytes)); // Ensure UTF-8 encoding
 
         // Store user details in secure storage
         await _secureStorage.write(key: 'name', value: data['name']);
@@ -871,40 +876,35 @@ class HomePage extends StatelessWidget {
                               } else {
                                 final courses = snapshot.data!;
 
-                                return Container(
-                                  width: double.infinity, // Ensures ListView gets full width
-                                  height: 150,
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    physics: const BouncingScrollPhysics(),
-                                    itemCount: courses.length,
-                                    itemBuilder: (context, index) {
-                                      return Container(
-                                        width: 170,
-                                        margin: EdgeInsets.only(
-                                          left: index == 0 ? 16 : 8,
-                                          right: index == courses.length - 1 ? 16 : 0,
-                                        ),
-                                        child: CourseCard(
-                                          courses[index]["title"],
-                                          "${(index + 10) * 2} Lessons",
-                                          repeatingColors[index % repeatingColors.length]!,
-                                          onTap: () {
-                                            // Debug log to confirm the courseId
-                                            print("Course ID: ${courses[index]["id"]}");
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => TopicViewScreen(
-                                                  courseId: courses[index]["id"], // Pass the courseId
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      );
-                                    },
+                                return GridView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2, // 2 cards per row
+                                    crossAxisSpacing: 8,
+                                    mainAxisSpacing: 8,
+                                    childAspectRatio: 1.2, // Adjust aspect ratio for better layout
                                   ),
+                                  itemCount: courses.length,
+                                  itemBuilder: (context, index) {
+                                    return CourseCard(
+                                      courses[index]["title"],
+                                      "${(index + 10) * 2} Lessons",
+                                      repeatingColors[index % repeatingColors.length]!,
+                                      onTap: () {
+                                        // Debug log to confirm the courseId
+                                        print("Course ID: ${courses[index]["id"]}");
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => TopicViewScreen(
+                                              courseId: courses[index]["id"], // Pass the courseId
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
                                 );
                               }
                             },

@@ -66,12 +66,14 @@ class _TopicViewScreenState extends State<TopicViewScreen>
         Uri.parse('$backendUrl/api/courses/$courseId/topics/?target_language=$targetLanguage'),
         headers: {
           'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json; charset=UTF-8',
         },
       );
 
       if (response.statusCode == 200) {
-        List<dynamic> data = jsonDecode(response.body);
+        // Decode the response body using UTF-8
+        String responseBody = utf8.decode(response.bodyBytes);
+        List<dynamic> data = jsonDecode(responseBody);
 
         List<Map<String, dynamic>> allTopics = [];
         List<Map<String, dynamic>> ongoing = [];
@@ -82,7 +84,7 @@ class _TopicViewScreenState extends State<TopicViewScreen>
 
           Map<String, dynamic> topicData = {
             "id": topic["id"],
-            "title": topic["title"],
+            "title": utf8.encode(topic["title"]), // Ensure title is UTF-8 encoded
             "progress": progress,
           };
 
@@ -221,7 +223,7 @@ class _TopicViewScreenState extends State<TopicViewScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(topic["title"],
+                  Text(utf8.decode(topic["title"]), // Decode the title using UTF-8
                       style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 5),
                   LinearProgressIndicator(

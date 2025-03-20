@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import '../../../academe_theme.dart';
+import 'package:provider/provider.dart';
+import 'package:ACADEMe/academe_theme.dart';
 import 'package:ACADEMe/home/courses/overview/flashcard.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:ACADEMe/localization/language_provider.dart';
 
 class LessonsSection extends StatefulWidget {
   final String courseId;
@@ -48,29 +50,35 @@ class _LessonsSectionState extends State<LessonsSection> {
       return;
     }
 
+    // Get the target language from the app's language provider
+    final targetLanguage =
+        Provider.of<LanguageProvider>(context, listen: false).locale.languageCode;
+
     try {
       final response = await http.get(
         Uri.parse(
-            '$backendUrl/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/'),
+            '$backendUrl/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/?target_language=$targetLanguage'),
         headers: {
           'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json; charset=UTF-8',
         },
       );
 
       if (response.statusCode == 200) {
-        List<dynamic> data = jsonDecode(response.body);
+        // Decode the response body using UTF-8
+        final String responseBody = utf8.decode(response.bodyBytes);
+        List<dynamic> data = jsonDecode(responseBody);
 
         setState(() {
           isExpanded = {
             for (int i = 0; i < data.length; i++)
               "${(i + 1).toString().padLeft(2, '0')} - ${data[i]["title"]}":
-                  false
+              false
           };
           subtopicIds = {
             for (var sub in data)
               "${(data.indexOf(sub) + 1).toString().padLeft(2, '0')} - ${sub["title"]}":
-                  sub["id"].toString()
+              sub["id"].toString()
           };
         });
       } else {
@@ -89,20 +97,26 @@ class _LessonsSectionState extends State<LessonsSection> {
     String? token = await storage.read(key: 'access_token');
     if (token == null) return;
 
+    // Get the target language from the app's language provider
+    final targetLanguage =
+        Provider.of<LanguageProvider>(context, listen: false).locale.languageCode;
+
     try {
       // Fetch Materials
       final materialsResponse = await http.get(
         Uri.parse(
-            '$backendUrl/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/$subtopicId/materials/'),
+            '$backendUrl/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/$subtopicId/materials/?target_language=$targetLanguage'),
         headers: {
           'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json; charset=UTF-8',
         },
       );
 
       List<Map<String, dynamic>> materialsList = [];
       if (materialsResponse.statusCode == 200) {
-        List<dynamic> materialsData = jsonDecode(materialsResponse.body);
+        // Decode the response body using UTF-8
+        final String materialsBody = utf8.decode(materialsResponse.bodyBytes);
+        List<dynamic> materialsData = jsonDecode(materialsBody);
         materialsList = materialsData.map<Map<String, dynamic>>((m) {
           return {
             "id": m["id"]?.toString() ?? "N/A",
@@ -119,31 +133,35 @@ class _LessonsSectionState extends State<LessonsSection> {
       // Fetch Quizzes
       final quizzesResponse = await http.get(
         Uri.parse(
-            '$backendUrl/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/$subtopicId/quizzes/'),
+            '$backendUrl/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/$subtopicId/quizzes/?target_language=$targetLanguage'),
         headers: {
           'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json; charset=UTF-8',
         },
       );
 
       List<Map<String, dynamic>> quizzesList = [];
       if (quizzesResponse.statusCode == 200) {
-        List<dynamic> quizzesData = jsonDecode(quizzesResponse.body);
+        // Decode the response body using UTF-8
+        final String quizzesBody = utf8.decode(quizzesResponse.bodyBytes);
+        List<dynamic> quizzesData = jsonDecode(quizzesBody);
 
         // Fetch questions for each quiz
         for (var quiz in quizzesData) {
           final quizId = quiz["id"]?.toString() ?? "N/A";
           final questionsResponse = await http.get(
             Uri.parse(
-                '$backendUrl/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/$subtopicId/quizzes/$quizId/questions/?target_language=en'),
+                '$backendUrl/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/$subtopicId/quizzes/$quizId/questions/?target_language=$targetLanguage'),
             headers: {
               'Authorization': 'Bearer $token',
-              'Content-Type': 'application/json',
+              'Content-Type': 'application/json; charset=UTF-8',
             },
           );
 
           if (questionsResponse.statusCode == 200) {
-            List<dynamic> questionsData = jsonDecode(questionsResponse.body);
+            // Decode the response body using UTF-8
+            final String questionsBody = utf8.decode(questionsResponse.bodyBytes);
+            List<dynamic> questionsData = jsonDecode(questionsBody);
             for (var question in questionsData) {
               quizzesList.add({
                 "id": quizId,
@@ -151,10 +169,10 @@ class _LessonsSectionState extends State<LessonsSection> {
                 "difficulty": quiz["difficulty"] ?? "Unknown",
                 "question_count": questionsData.length.toString(),
                 "question_text":
-                    question["question_text"] ?? "No question text available",
+                question["question_text"] ?? "No question text available",
                 "options":
-                    (question["options"] as List<dynamic>?)?.cast<String>() ??
-                        ["No options available"],
+                (question["options"] as List<dynamic>?)?.cast<String>() ??
+                    ["No options available"],
                 "correct_option": question["correct_option"] ?? 0,
               });
             }
@@ -192,47 +210,103 @@ class _LessonsSectionState extends State<LessonsSection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator(color: Colors.blue))
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: isExpanded.keys.map((section) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ListTile(
-                        title: Text(
-                          section,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 19),
-                        ),
-                        trailing: Icon(
-                          isExpanded[section]!
-                              ? Icons.expand_less
-                              : Icons.expand_more,
-                          color: Colors.black,
-                        ),
-                        onTap: () async {
-                          setState(() {
-                            isExpanded[section] = !isExpanded[section]!;
-                          });
-                          if (isExpanded[section]! &&
-                              subtopicIds.containsKey(section)) {
-                            await fetchMaterialsAndQuizzes(
-                                subtopicIds[section]!);
-                          }
-                        },
+      backgroundColor: Colors.grey[100],
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: isExpanded.keys.map((section) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ListTile(
+                      title: Text(
+                        section,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 17),
                       ),
-                      if (isExpanded[section]! &&
-                          subtopicIds.containsKey(section))
-                        _buildLessonsAndQuizzes(subtopicIds[section]!),
-                    ],
-                  );
-                }).toList(),
+                      trailing: Icon(
+                        isExpanded[section]!
+                            ? Icons.expand_less
+                            : Icons.expand_more,
+                        color: Colors.black,
+                      ),
+                      onTap: () async {
+                        setState(() {
+                          isExpanded[section] = !isExpanded[section]!;
+                        });
+                        if (isExpanded[section]! &&
+                            subtopicIds.containsKey(section)) {
+                          await fetchMaterialsAndQuizzes(
+                              subtopicIds[section]!);
+                        }
+                      },
+                    ),
+                    if (isExpanded[section]! &&
+                        subtopicIds.containsKey(section))
+                      _buildLessonsAndQuizzes(subtopicIds[section]!),
+                  ],
+                );
+              }).toList(),
+            ),
+          ),
+          // **🔹 Start Course Button**
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              color: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: ElevatedButton(
+                onPressed: () {
+                  // Navigate to the first subtopic
+                  if (subtopicIds.isNotEmpty) {
+                    final firstSubtopicId = subtopicIds.values.first;
+                    fetchMaterialsAndQuizzes(firstSubtopicId).then((_) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FlashCard(
+                            materials: (subtopicMaterials[firstSubtopicId] ?? []).map<Map<String, String>>((material) {
+                              return {
+                                "type": material["type"].toString(),
+                                "content": material["content"].toString(),
+                              };
+                            }).toList(), // Convert to List<Map<String, String>>
+                            quizzes: subtopicQuizzes[firstSubtopicId] ?? [],
+                            onQuizComplete: () {
+                              // Move to next subtopic after quizzes are completed
+                              _navigateToNextSubtopic(firstSubtopicId);
+                            },
+                            initialIndex: 0, // Start from the first item
+                          ),
+                        ),
+                      );
+                    });
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AcademeTheme.appColor,
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Text(
+                  "Start Course",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -248,23 +322,26 @@ class _LessonsSectionState extends State<LessonsSection> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("📚 Materials",
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                ...materials.map((m) => _buildMaterialTile(m["id"], m["type"],
-                    m["category"], m["content"], subtopicId)),
+                ...materials.map((m) => _buildMaterialTile(
+                    m["id"],
+                    m["type"],
+                    m["category"],
+                    m["content"],
+                    subtopicId,
+                    materials.indexOf(m))), // Pass the index
               ],
             ),
           if (quizzes.isNotEmpty)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 10),
-                const Text("📝 Quizzes",
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                ...quizzes.map((q) => _buildQuizTile(q["id"], q["title"],
-                    q["difficulty"], q["question_count"], subtopicId)),
+                ...quizzes.map((q) => _buildQuizTile(
+                    q["id"],
+                    q["title"],
+                    q["difficulty"],
+                    q["question_count"],
+                    subtopicId,
+                    quizzes.indexOf(q))), // Pass the index
               ],
             ),
         ],
@@ -273,15 +350,15 @@ class _LessonsSectionState extends State<LessonsSection> {
   }
 
   Widget _buildMaterialTile(String id, String type, String category,
-      String content, String subtopicId) {
+      String content, String subtopicId, int index) {
     return _buildTile(
       type,
       category,
       Icons.article,
-      () {
+          () {
         // Convert materials to the correct type
         List<Map<String, String>> materials =
-            (subtopicMaterials[subtopicId] ?? []).map<Map<String, String>>((m) {
+        (subtopicMaterials[subtopicId] ?? []).map<Map<String, String>>((m) {
           return {
             "type": m["type"].toString(),
             "content": m["content"].toString(),
@@ -305,6 +382,7 @@ class _LessonsSectionState extends State<LessonsSection> {
                 // Move to next subtopic after quizzes are completed
                 _navigateToNextSubtopic(subtopicId);
               },
+              initialIndex: index, // Start from the clicked material
             ),
           ),
         );
@@ -313,12 +391,12 @@ class _LessonsSectionState extends State<LessonsSection> {
   }
 
   Widget _buildQuizTile(String id, String title, String difficulty,
-      String questionCount, String subtopicId) {
+      String questionCount, String subtopicId, int index) {
     return _buildTile(
       title,
       "$difficulty • $questionCount Questions",
       Icons.quiz,
-      () {
+          () {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -329,6 +407,7 @@ class _LessonsSectionState extends State<LessonsSection> {
                 // Move to next subtopic after quizzes are completed
                 _navigateToNextSubtopic(subtopicId);
               },
+              initialIndex: index, // Start from the clicked quiz
             ),
           ),
         );
@@ -349,8 +428,8 @@ class _LessonsSectionState extends State<LessonsSection> {
       fetchMaterialsAndQuizzes(nextSubtopicId).then((_) {
         // Convert materials to the correct type
         List<Map<String, String>> nextMaterials =
-            (subtopicMaterials[nextSubtopicId] ?? [])
-                .map<Map<String, String>>((material) {
+        (subtopicMaterials[nextSubtopicId] ?? [])
+            .map<Map<String, String>>((material) {
           return {
             "type": material["type"].toString(),
             "content": material["content"].toString(),
@@ -368,6 +447,7 @@ class _LessonsSectionState extends State<LessonsSection> {
                 // Move to next subtopic after quizzes are completed
                 _navigateToNextSubtopic(nextSubtopicId);
               },
+              initialIndex: 0, // Start from the first item
             ),
           ),
         );
@@ -386,18 +466,32 @@ class _LessonsSectionState extends State<LessonsSection> {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.grey[200],
+          color: Colors.white,
+          border: Border.all(color: Colors.deepPurple, width: 1),
           borderRadius: BorderRadius.circular(10),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        margin: const EdgeInsets.symmetric(vertical: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+        margin: const EdgeInsets.symmetric(vertical: 6),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Icon(icon, color: AcademeTheme.appColor, size: 22),
-            const SizedBox(width: 15),
-            Expanded(
-              child: Text("$title\n$subtitle",
-                  style: const TextStyle(fontSize: 16, height: 1.2)),
+            Row(
+              children: [
+                Text(
+                  title.split(" ")[0], // Extract number (e.g., "01", "02")
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 15, color: Colors.grey),
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  title.substring(title.indexOf(" ") + 1), // Extract text after number
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+            Icon(
+              icon,
+              color: Colors.deepPurple,
             ),
           ],
         ),

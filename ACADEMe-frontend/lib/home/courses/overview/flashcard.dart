@@ -13,12 +13,14 @@ class FlashCard extends StatefulWidget {
   final List<Map<String, String>> materials; // Ensure correct type
   final List<Map<String, dynamic>> quizzes;
   final Function()? onQuizComplete;
+  final int initialIndex; // Add initialIndex parameter
 
   const FlashCard({
     super.key,
     required this.materials,
     required this.quizzes,
     this.onQuizComplete,
+    this.initialIndex = 0, // Default to 0
   });
 
   @override
@@ -36,6 +38,7 @@ class _FlashCardState extends State<FlashCard> {
   @override
   void initState() {
     super.initState();
+    _currentPage = widget.initialIndex; // Set initial index
     _setupVideoController();
   }
 
@@ -154,6 +157,7 @@ class _FlashCardState extends State<FlashCard> {
                     duration: 600,
                     layout: SwiperLayout.STACK,
                     axisDirection: AxisDirection.right,
+                    index: _currentPage, // Set initial index for Swiper
                     onIndexChanged: (index) {
                       if (_currentPage != index) {
                         setState(() {
@@ -178,13 +182,13 @@ class _FlashCardState extends State<FlashCard> {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(20),
                             child:
-                                _buildMaterial(index < widget.materials.length
-                                    ? widget.materials[index]
-                                    : {
-                                        "type": "quiz",
-                                        "quiz": widget.quizzes[
-                                            index - widget.materials.length],
-                                      }),
+                            _buildMaterial(index < widget.materials.length
+                                ? widget.materials[index]
+                                : {
+                              "type": "quiz",
+                              "quiz": widget.quizzes[
+                              index - widget.materials.length],
+                            }),
                           ),
                           AnimatedOpacity(
                             opacity: _currentPage == index ? 0.0 : 0.2,
@@ -303,7 +307,7 @@ class _FlashCardState extends State<FlashCard> {
         child: Text(
           content,
           style:
-              const TextStyle(fontSize: 14, color: Colors.black87, height: 1.5),
+          const TextStyle(fontSize: 14, color: Colors.black87, height: 1.5),
         ),
       ),
     );
@@ -312,18 +316,18 @@ class _FlashCardState extends State<FlashCard> {
   Widget _buildVideoContent(String videoUrl) {
     return buildStyledContainer(
       _chewieController == null ||
-              _videoController == null ||
-              !_videoController!.value.isInitialized
+          _videoController == null ||
+          !_videoController!.value.isInitialized
           ? const Center(child: CircularProgressIndicator())
           : GestureDetector(
-              onTap: () {
-                setState(() {});
-              },
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Chewie(controller: _chewieController!),
-              ),
-            ),
+        onTap: () {
+          setState(() {});
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Chewie(controller: _chewieController!),
+        ),
+      ),
     );
   }
 
@@ -334,7 +338,7 @@ class _FlashCardState extends State<FlashCard> {
         child: CachedNetworkImage(
           imageUrl: imageUrl,
           placeholder: (context, url) =>
-              const Center(child: CircularProgressIndicator()),
+          const Center(child: CircularProgressIndicator()),
           errorWidget: (context, url, error) => const Icon(Icons.error),
           fit: BoxFit.cover,
         ),

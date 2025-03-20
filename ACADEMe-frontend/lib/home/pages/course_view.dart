@@ -65,7 +65,8 @@ class _CourseListScreenState extends State<CourseListScreen>
       );
 
       if (response.statusCode == 200) {
-        List<dynamic> data = jsonDecode(response.body);
+        // Decode the response body using UTF-8 encoding
+        List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
         setState(() {
           courses = data.map((course) => {
             "id": course["id"],
@@ -243,17 +244,6 @@ class _CourseListScreenState extends State<CourseListScreen>
         ),
         child: Row(
           children: [
-            // Expanded(
-            //   flex: 2,
-            //   child: ClipRRect(
-            //     borderRadius: BorderRadius.circular(12),
-            //     child: Image.asset(
-            //       course["image"],
-            //       fit: BoxFit.cover,
-            //       height: double.infinity,
-            //     ),
-            //   ),
-            // ),
             SizedBox(width: 12),
             Expanded(
               flex: 3,

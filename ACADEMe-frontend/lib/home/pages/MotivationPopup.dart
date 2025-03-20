@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:provider/provider.dart';
+import 'package:ACADEMe/localization/language_provider.dart';
 
 import 'ASKMe.dart';
 
@@ -30,6 +32,7 @@ class MotivationPopup extends StatefulWidget {
 class _MotivationPopupState extends State<MotivationPopup> {
   late Future<String> _recommendationFuture;
   final TextEditingController _messageController = TextEditingController();
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
   @override
   void initState() {
@@ -40,22 +43,28 @@ class _MotivationPopupState extends State<MotivationPopup> {
   /// **Fetch recommendations from the backend**
   Future<String> _fetchRecommendations() async {
     final String backendUrl = dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
-    final String? token = await const FlutterSecureStorage().read(key: 'access_token');
+    final String? token = await _storage.read(key: 'access_token');
 
     if (token == null) {
       throw Exception("❌ No access token found");
     }
 
+    // Get the target language from the app's language provider
+    final targetLanguage =
+        Provider.of<LanguageProvider>(context, listen: false).locale.languageCode;
+
     final response = await http.get(
-      Uri.parse("$backendUrl/api/recommendations/"),
+      Uri.parse("$backendUrl/api/recommendations/?target_language=$targetLanguage"),
       headers: {
         'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json; charset=UTF-8',
       },
     );
 
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      // Decode the response body using UTF-8
+      final String responseBody = utf8.decode(response.bodyBytes);
+      final data = jsonDecode(responseBody);
       return data["recommendations"];
     } else {
       throw Exception("❌ Failed to fetch recommendations: ${response.statusCode}");

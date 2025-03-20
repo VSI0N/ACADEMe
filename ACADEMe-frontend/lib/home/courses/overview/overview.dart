@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:provider/provider.dart';
+import 'package:ACADEMe/academe_theme.dart';
+import 'package:ACADEMe/localization/language_provider.dart';
 import 'Q&A.dart';
 import 'lessons.dart';
-import 'package:ACADEMe/academe_theme.dart';
 
 class OverviewScreen extends StatefulWidget {
   final String courseId;
@@ -45,20 +47,26 @@ class _OverviewScreenState extends State<OverviewScreen>
       return;
     }
 
+    // Get the target language from the app's language provider
+    final targetLanguage =
+        Provider.of<LanguageProvider>(context, listen: false).locale.languageCode;
+
     try {
       final response = await http.get(
         Uri.parse(
-            '$backendUrl/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/'),
+            '$backendUrl/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/?target_language=$targetLanguage'),
         headers: {
           'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json; charset=UTF-8',
         },
       );
 
       print("🔹 API Response: ${response.body}"); // ✅ Log the response
 
       if (response.statusCode == 200) {
-        final dynamic jsonData = jsonDecode(response.body);
+        // Decode the response body using UTF-8
+        final String responseBody = utf8.decode(response.bodyBytes);
+        final dynamic jsonData = jsonDecode(responseBody);
 
         if (jsonData is List) {
           if (jsonData.isNotEmpty && jsonData[0] is Map<String, dynamic>) {
@@ -131,22 +139,30 @@ class _OverviewScreenState extends State<OverviewScreen>
                     children: [
                       const SizedBox(height: 10),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           IconButton(
-                            icon: const Icon(Icons.arrow_back,
-                                color: Colors.black),
+                            icon: const Icon(Icons.arrow_back, color: Colors.black),
                             onPressed: () => Navigator.pop(context),
                           ),
-                          const Text(
-                            "Topic details",
-                            style: TextStyle(
+                          Expanded(
+                            flex: 6, // Adjust this to move text slightly left
+                            child: const Text(
+                              "Topic details",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 18,
-                                fontWeight: FontWeight.bold),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
-                          const Icon(Icons.bookmark_border,
-                              color: Colors.black),
+                          Expanded(
+                            flex: 1, // This keeps the bookmark icon slightly to the right
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: const Icon(Icons.bookmark_border, color: Colors.black),
+                            ),
+                          ),
                         ],
                       ),
                       SizedBox(
@@ -196,7 +212,7 @@ class _OverviewScreenState extends State<OverviewScreen>
                               ),
                               SizedBox(
                                   height:
-                                      screenHeight * 0.005), // Small spacing
+                                  screenHeight * 0.005), // Small spacing
                               const Text("0/12 Modules"),
                               SizedBox(height: screenHeight * 0.01),
                               ClipRRect(
@@ -206,7 +222,7 @@ class _OverviewScreenState extends State<OverviewScreen>
                                   color: AcademeTheme.appColor,
                                   backgroundColor: const Color(0xFFE8E5FB),
                                   minHeight:
-                                      screenHeight * 0.012, // Responsive height
+                                  screenHeight * 0.012, // Responsive height
                                 ),
                               ),
                               SizedBox(height: screenHeight * 0.02),
