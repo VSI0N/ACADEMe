@@ -14,6 +14,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/services.dart';
 import 'package:ACADEMe/home/pages/topic_view.dart'; // Import the TopicViewScreen
+import 'package:ACADEMe/started/pages/class.dart';
+
+import '../../started/pages/class.dart'; // Import the ClassSelectionBottomSheet
 
 class HomePage extends StatelessWidget {
   final VoidCallback onProfileTap;
@@ -107,6 +110,13 @@ class HomePage extends StatelessWidget {
       }
     } catch (e) {
       print("❌ Error fetching user details: $e");
+    }
+  }
+
+  Future<void> _checkAndShowClassSelection(BuildContext context) async {
+    final String? studentClass = await _secureStorage.read(key: 'student_class');
+    if (studentClass == null || int.tryParse(studentClass) == null || int.parse(studentClass) < 1 || int.parse(studentClass) > 12) {
+      await showClassSelectionSheet(context);
     }
   }
 
@@ -278,6 +288,7 @@ class HomePage extends StatelessWidget {
     // Fetch and store user details when the page loads
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await _fetchAndStoreUserDetails();
+      await _checkAndShowClassSelection(context);
     });
 
     return ASKMeButton(

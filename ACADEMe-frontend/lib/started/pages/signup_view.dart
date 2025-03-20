@@ -7,7 +7,6 @@ import 'package:ACADEMe/localization/l10n.dart';
 
 import '../../home/auth/role.dart';
 import '../../home/pages/bottomNav.dart';
-import 'class.dart';
 
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});
@@ -55,8 +54,11 @@ class _SignUpViewState extends State<SignUpView> {
     String? token = await _secureStorage.read(key: "access_token");
 
     if (token != null) {
-      await UserRoleManager().fetchUserRole(
-          _emailController.text.trim()); // ✅ Fetch user role before navigating
+      // Store email and password in secure storage
+      await _secureStorage.write(key: 'email', value: _emailController.text.trim());
+      await _secureStorage.write(key: 'password', value: _passwordController.text.trim());
+
+      await UserRoleManager().fetchUserRole(_emailController.text.trim()); // ✅ Fetch user role before navigating
       bool isAdmin = UserRoleManager().isAdmin;
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -65,7 +67,7 @@ class _SignUpViewState extends State<SignUpView> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => ClassPage(),
+          builder: (context) => BottomNav(isAdmin: isAdmin),
         ),
       );
       // Redirect to courses
@@ -81,47 +83,35 @@ class _SignUpViewState extends State<SignUpView> {
   Future<void> _signUpWithGoogle() async {
     setState(() => _isGoogleLoading = true);
 
-    final (user, errorMessage) = await AuthService().signInWithGoogle();
-    setState(() => _isGoogleLoading = false);
-
-    if (user == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text(errorMessage ??
-                L10n.getTranslatedText(
-                    context, '❌ Google Sign-Up failed. Please try again'))),
-      );
-      return;
-    }
-
+    // Show a snackbar indicating that Google Sign-Up is not available yet
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-          content: Text(L10n.getTranslatedText(
-              context, '✅ Signed up successfully with Google!'))),
+        content: Text(L10n.getTranslatedText(
+            context, 'Google Sign-Up is not available yet. Please sign up manually.')),
+      ),
     );
-    Navigator.pushReplacementNamed(context, '/home');
+
+    setState(() => _isGoogleLoading = false);
   }
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,
           child: Padding(
-            padding: EdgeInsets.only(bottom: height * 0.1, top: height * 0.1),
+            padding: const EdgeInsets.only(bottom: 100, top: 80),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Center(
                   child: Container(
-                    constraints: BoxConstraints(maxWidth: width * 0.6, maxHeight: height * 300),
+                    constraints: BoxConstraints(maxWidth: 250, maxHeight: 300),
                     child: Image.asset(
-                      'assets/images/signUp_logo.png',
+                      'assets/academe/study_image.png',
                       fit: BoxFit.contain,
                     ),
                   ),
@@ -156,29 +146,13 @@ class _SignUpViewState extends State<SignUpView> {
                       child: TextFormField(
                         controller: _usernameController,
                         decoration: InputDecoration(
-                          filled: true,
-                          fillColor: AcademeTheme.notWhite,
-                          labelText:
-                          L10n.getTranslatedText(context, 'Username'),
-                          hintText: L10n.getTranslatedText(
-                              context, 'Enter a username'),
-                          prefixIcon: Icon(Icons.person),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(7), // Adjust radius as needed
-                            borderSide: BorderSide.none, // Removes the default underline
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(7),
-                            borderSide: BorderSide.none,
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(7),
-                            borderSide: BorderSide(
-                              color: Colors.transparent, // Change color for focus effect
-                              width: 2, // Adjust thickness
-                            ),
-                          ),
-                        ),
+                            filled: true,
+                            fillColor: AcademeTheme.notWhite,
+                            labelText:
+                            L10n.getTranslatedText(context, 'Username'),
+                            hintText: L10n.getTranslatedText(
+                                context, 'Enter a username'),
+                            prefixIcon: Icon(Icons.person)),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return L10n.getTranslatedText(
@@ -193,28 +167,12 @@ class _SignUpViewState extends State<SignUpView> {
                       child: TextFormField(
                         controller: _emailController,
                         decoration: InputDecoration(
-                          filled: true,
-                          fillColor: AcademeTheme.notWhite,
-                          labelText: L10n.getTranslatedText(context, 'Email'),
-                          hintText: L10n.getTranslatedText(
-                              context, 'Enter your email'),
-                          prefixIcon: Icon(Icons.email),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(7), // Adjust radius as needed
-                            borderSide: BorderSide.none, // Removes the default underline
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(7),
-                            borderSide: BorderSide.none,
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(7),
-                            borderSide: BorderSide(
-                              color: Colors.transparent, // Change color for focus effect
-                              width: 2, // Adjust thickness
-                            ),
-                          ),
-                        ),
+                            filled: true,
+                            fillColor: AcademeTheme.notWhite,
+                            labelText: L10n.getTranslatedText(context, 'Email'),
+                            hintText: L10n.getTranslatedText(
+                                context, 'Enter your email'),
+                            prefixIcon: Icon(Icons.email)),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return L10n.getTranslatedText(
@@ -251,21 +209,6 @@ class _SignUpViewState extends State<SignUpView> {
                                 _isPasswordVisible = !_isPasswordVisible;
                               });
                             },
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(7), // Adjust radius as needed
-                            borderSide: BorderSide.none, // Removes the default underline
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(7),
-                            borderSide: BorderSide.none,
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(7),
-                            borderSide: BorderSide(
-                              color: Colors.transparent, // Change color for focus effect
-                              width: 2, // Adjust thickness
-                            ),
                           ),
                         ),
                         validator: (value) {
@@ -310,8 +253,7 @@ class _SignUpViewState extends State<SignUpView> {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 35),
                       child: SizedBox(
-                        height: height * 0.05,
-                        width: width * 1.3,
+                        width: double.infinity,
                         child: ElevatedButton(
                           onPressed: _isLoading ? null : _submitForm,
                           style: ElevatedButton.styleFrom(
@@ -319,9 +261,6 @@ class _SignUpViewState extends State<SignUpView> {
                             Colors.yellow[600], // Change button color
                             minimumSize:
                             Size(double.infinity, 50), // Adjust button size
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
                           ),
                           child: _isLoading
                               ? CircularProgressIndicator(color: Colors.white)
@@ -366,8 +305,7 @@ class _SignUpViewState extends State<SignUpView> {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 35),
                       child: SizedBox(
-                        height: height * 0.05,
-                        width: width * 1.3,
+                        width: double.infinity,
                         child: ElevatedButton.icon(
                           onPressed:
                           _isGoogleLoading ? null : _signUpWithGoogle,
@@ -393,7 +331,7 @@ class _SignUpViewState extends State<SignUpView> {
                             foregroundColor: Colors.black,
                             elevation: 2,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(15),
                             ),
                           ),
                         ),

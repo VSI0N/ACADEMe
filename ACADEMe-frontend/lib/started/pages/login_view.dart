@@ -64,6 +64,10 @@ class _LogInViewState extends State<LogInView> {
           key: "student_class", value: user.studentClass);
       await _secureStorage.write(key: "photo_url", value: user.photo_url);
 
+      // ✅ Store email and password in secure storage
+      await _secureStorage.write(key: 'email', value: _emailController.text.trim());
+      await _secureStorage.write(key: 'password', value: _passwordController.text.trim());
+
       // ✅ Success! Navigate to home page
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -100,31 +104,15 @@ class _LogInViewState extends State<LogInView> {
   Future<void> _signInWithGoogle() async {
     setState(() => _isGoogleLoading = true);
 
-    final (user, errorMessage) = await AuthService().signInWithGoogle();
-    setState(() => _isGoogleLoading = false);
-
-    if (user == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            errorMessage ??
-                L10n.getTranslatedText(
-                    context, '❌ Google Login failed. Please try again'),
-          ),
-        ),
-      );
-      return;
-    }
-
+    // Show a snackbar indicating that Google Sign-In is not available yet
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          L10n.getTranslatedText(
-              context, '✅ Logged in successfully with Google!'),
-        ),
+        content: Text(L10n.getTranslatedText(
+            context, 'Google Sign-In is not available yet. Please log in manually.')),
       ),
     );
-    Navigator.pushReplacementNamed(context, '/home');
+
+    setState(() => _isGoogleLoading = false);
   }
 
   @override
@@ -225,7 +213,7 @@ class _LogInViewState extends State<LogInView> {
                                           context, 'Please enter an email');
                                     }
                                     if (!RegExp(
-                                            r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                                        r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
                                         .hasMatch(value)) {
                                       return L10n.getTranslatedText(
                                           context, 'Enter a valid email');
@@ -258,7 +246,7 @@ class _LogInViewState extends State<LogInView> {
                                       onPressed: () {
                                         setState(() {
                                           _isPasswordVisible =
-                                              !_isPasswordVisible;
+                                          !_isPasswordVisible;
                                         });
                                       },
                                     ),
@@ -297,7 +285,7 @@ class _LogInViewState extends State<LogInView> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  const ForgotPasswordPage()),
+                                              const ForgotPasswordPage()),
                                         );
                                       },
                                       child: Text(
@@ -319,46 +307,46 @@ class _LogInViewState extends State<LogInView> {
                                     width: double.infinity,
                                     child: ElevatedButton(
                                       onPressed:
-                                          _isLoading ? null : _submitForm,
+                                      _isLoading ? null : _submitForm,
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Colors.yellow[600],
                                         minimumSize:
-                                            const Size(double.infinity, 42),
+                                        const Size(double.infinity, 42),
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
-                                              BorderRadius.circular(30),
+                                          BorderRadius.circular(30),
                                         ),
                                         elevation: 0,
                                       ),
                                       child: _isLoading
                                           ? const CircularProgressIndicator(
-                                              valueColor:
-                                                  AlwaysStoppedAnimation<Color>(
-                                                      Color.fromARGB(
-                                                          255, 193, 191, 191)),
-                                            )
+                                        valueColor:
+                                        AlwaysStoppedAnimation<Color>(
+                                            Color.fromARGB(
+                                                255, 193, 191, 191)),
+                                      )
                                           : Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Image.asset(
-                                                  'assets/icons/house_door.png',
-                                                  height: 24,
-                                                  width: 24,
-                                                ),
-                                                const SizedBox(width: 10),
-                                                Text(
-                                                  L10n.getTranslatedText(
-                                                      context, 'Log in'),
-                                                  style: TextStyle(
-                                                    fontSize:
-                                                        screenWidth * 0.045,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                              ],
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            'assets/icons/house_door.png',
+                                            height: 24,
+                                            width: 24,
+                                          ),
+                                          const SizedBox(width: 10),
+                                          Text(
+                                            L10n.getTranslatedText(
+                                                context, 'Log in'),
+                                            style: TextStyle(
+                                              fontSize:
+                                              screenWidth * 0.045,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.black,
                                             ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -386,14 +374,14 @@ class _LogInViewState extends State<LogInView> {
                                           : _signInWithGoogle,
                                       icon: _isGoogleLoading
                                           ? const CircularProgressIndicator(
-                                              color: Colors.white)
+                                          color: Colors.white)
                                           : Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 7),
-                                              child: Image.asset(
-                                                  'assets/icons/google_icon.png',
-                                                  height: 22),
-                                            ),
+                                        padding: const EdgeInsets.only(
+                                            right: 7),
+                                        child: Image.asset(
+                                            'assets/icons/google_icon.png',
+                                            height: 22),
+                                      ),
                                       label: Text(
                                         L10n.getTranslatedText(
                                             context, 'Continue with Google'),
@@ -408,7 +396,7 @@ class _LogInViewState extends State<LogInView> {
                                         elevation: 2,
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
-                                              BorderRadius.circular(15),
+                                          BorderRadius.circular(15),
                                         ),
                                       ),
                                     ),

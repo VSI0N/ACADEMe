@@ -21,7 +21,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
   late Locale _selectedLocale;
-  String selectedClass = 'Class 1';
+  String? selectedClass; // Allow null initially
   Map<String, dynamic>? userDetails;
   bool isLoading = true;
 
@@ -48,7 +48,7 @@ class _ProfilePageState extends State<ProfilePage> {
             'student_class': studentClass,
             'photo_url': photoUrl,
           };
-          selectedClass = 'Class ${studentClass ?? '1'}';
+          selectedClass = studentClass ?? 'SELECT'; // Use 'SELECT' as default
           isLoading = false;
         });
       }
@@ -77,7 +77,9 @@ class _ProfilePageState extends State<ProfilePage> {
       }
 
       final backendUrl = dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
-      final response = await http.patch(
+
+      // Step 1: Update the class
+      final updateResponse = await http.patch(
         Uri.parse('$backendUrl/api/users/update_class/'),
         headers: {
           'accept': 'application/json',
@@ -87,22 +89,30 @@ class _ProfilePageState extends State<ProfilePage> {
         body: json.encode({'new_class': newClass}),
       );
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        if (mounted) {
-          setState(() {
-            selectedClass = 'Class ${data['new_class']}';
-          });
-          await _secureStorage.write(key: 'student_class', value: data['new_class']);
+      if (updateResponse.statusCode == 200) {
+        final updateData = json.decode(updateResponse.body);
+
+        // Step 2: Relogin the user
+        bool reloginSuccess = await _reloginUser();
+        if (reloginSuccess) {
+          if (mounted) {
+            setState(() {
+              selectedClass = updateData['new_class']; // Update selectedClass directly
+            });
+            await _secureStorage.write(
+                key: 'student_class', value: updateData['new_class']);
+          }
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(updateData['message']),
+              backgroundColor: Colors.green,
+            ),
+          );
+        } else {
+          throw Exception('Failed to relogin after updating class');
         }
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(data['message']),
-            backgroundColor: Colors.green,
-          ),
-        );
       } else {
-        throw Exception('Failed to update class: ${response.statusCode}');
+        throw Exception('Failed to update class: ${updateResponse.statusCode}');
       }
     } catch (e) {
       print('Error updating class: $e');
@@ -117,6 +127,52 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  Future<bool> _reloginUser() async {
+    try {
+      final backendUrl = dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
+      final String? email = await _secureStorage.read(key: 'email');
+      final String? password = await _secureStorage.read(key: 'password');
+
+      if (email == null || password == null) {
+        throw Exception('Email or password not found in secure storage');
+      }
+
+      // Step 1: Make a login request
+      final loginResponse = await http.post(
+        Uri.parse('$backendUrl/api/users/login'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({
+          'email': email,
+          'password': password,
+        }),
+      );
+
+      if (loginResponse.statusCode == 200) {
+        final loginData = json.decode(loginResponse.body);
+        final String newToken = loginData['access_token'];
+
+        // Step 2: Update the access token in secure storage
+        await _secureStorage.write(key: 'access_token', value: newToken);
+        return true;
+      } else {
+        throw Exception('Failed to relogin: ${loginResponse.statusCode}');
+      }
+    } catch (e) {
+      print('Error relogging in: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to relogin: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+      return false;
+    }
+  }
+
   Future<void> _loadLanguage() async {
     final prefs = await SharedPreferences.getInstance();
     final langCode = prefs.getString('language') ?? 'en';
@@ -124,7 +180,8 @@ class _ProfilePageState extends State<ProfilePage> {
     final newLocale = Locale(langCode);
 
     Future.microtask(() {
-      final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
+      final languageProvider =
+      Provider.of<LanguageProvider>(context, listen: false);
       if (languageProvider.locale != newLocale) {
         languageProvider.setLocale(newLocale);
       }
@@ -181,9 +238,12 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(height: 15),
             CircleAvatar(
               radius: 50,
-              backgroundImage: userDetails?['photo_url'] != null && userDetails!['photo_url'].isNotEmpty
-                  ? NetworkImage(userDetails!['photo_url']) // Use the provided photo URL
-                  : const AssetImage('assets/design_course/userImage.png') as ImageProvider, // Fallback to a local asset
+              backgroundImage: userDetails?['photo_url'] != null &&
+                  userDetails!['photo_url'].isNotEmpty
+                  ? NetworkImage(
+                  userDetails!['photo_url']) // Use the provided photo URL
+                  : const AssetImage('assets/design_course/userImage.png')
+              as ImageProvider, // Fallback to a local asset
             ),
             const SizedBox(height: 10),
             Text(
@@ -206,7 +266,8 @@ class _ProfilePageState extends State<ProfilePage> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow,
                 foregroundColor: Colors.black,
-                padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                padding:
+                const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
@@ -254,19 +315,24 @@ class _ProfilePageState extends State<ProfilePage> {
                         padding: const EdgeInsets.symmetric(horizontal: 0),
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton<String>(
-                            value: selectedClass,
-                            icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
+                            value: selectedClass, // Ensure selectedClass matches one of the DropdownMenuItem values
+                            icon: const Icon(Icons.arrow_drop_down,
+                                color: Colors.black),
                             onChanged: (value) {
-                              if (value != selectedClass) {
+                              if (value != null && value != selectedClass) {
                                 showDialog(
                                   context: context,
                                   barrierDismissible: false,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                          BorderRadius.circular(20)),
                                       title: const Text(
                                         'Are you sure you want to change your class?',
-                                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18),
                                       ),
                                       content: const Text(
                                         'All your progress data will be erased for this class.\nYou will need to relogin to start your journey with a new Class',
@@ -279,16 +345,18 @@ class _ProfilePageState extends State<ProfilePage> {
                                           },
                                           child: const Text(
                                             'Cancel',
-                                            style: TextStyle(color: Colors.grey, fontSize: 16),
+                                            style: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 16),
                                           ),
                                         ),
                                         ElevatedButton(
                                           onPressed: () {
                                             if (value != null) {
                                               setState(() {
-                                                selectedClass = value!;
+                                                selectedClass = value;
                                               });
-                                              _updateClass(value!.replaceAll('Class ', ''));
+                                              _updateClass(value);
                                               Navigator.of(context).pop();
                                             }
                                           },
@@ -304,14 +372,23 @@ class _ProfilePageState extends State<ProfilePage> {
                                 );
                               }
                             },
-                            items: List.generate(12, (index) => DropdownMenuItem(
-                              value: 'Class ${index + 1}',
-                              child: Text('${index + 1}'),
-                            )),
+                            items: [
+                              const DropdownMenuItem(
+                                value: 'SELECT',
+                                child: Text('SELECT'),
+                              ),
+                              ...List.generate(
+                                  12,
+                                      (index) => DropdownMenuItem(
+                                    value: '${index + 1}',
+                                    child: Text('${index + 1}'),
+                                  )),
+                            ],
                           ),
                         ),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 15),
+                      contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 15),
                     ),
                     _ProfileOption(
                       icon: Icons.settings,
@@ -365,14 +442,16 @@ class _ProfilePageState extends State<ProfilePage> {
                           if (mounted) {
                             Navigator.pushAndRemoveUntil(
                               context,
-                              MaterialPageRoute(builder: (context) => const LogInView()),
+                              MaterialPageRoute(
+                                  builder: (context) => const LogInView()),
                                   (route) => false,
                             );
 
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
-                                  L10n.getTranslatedText(context, 'You have been logged out'),
+                                  L10n.getTranslatedText(
+                                      context, 'You have been logged out'),
                                 ),
                               ),
                             );
@@ -387,7 +466,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       padding: EdgeInsets.symmetric(horizontal: 10),
                       child: Text(
                         L10n.getTranslatedText(context, 'Select Language'),
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -407,7 +487,8 @@ class _ProfilePageState extends State<ProfilePage> {
                             items: L10n.supportedLocales.map((Locale locale) {
                               return DropdownMenuItem(
                                 value: locale,
-                                child: Text(L10n.getLanguageName(locale.languageCode)),
+                                child: Text(
+                                    L10n.getLanguageName(locale.languageCode)),
                               );
                             }).toList(),
                           );
