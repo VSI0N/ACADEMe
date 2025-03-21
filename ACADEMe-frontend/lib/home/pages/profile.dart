@@ -33,6 +33,13 @@ class _ProfilePageState extends State<ProfilePage> {
     super.initState();
     _selectedLocale = const Locale('en');
     _loadLanguage();
+    _loadUserDetailsFromStorage(); // Load user details when the page is initialized
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Reload user details when the page is revisited
     _loadUserDetailsFromStorage();
   }
 

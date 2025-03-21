@@ -52,7 +52,19 @@ class _FlashCardState extends State<FlashCard> {
   void initState() {
     super.initState();
     _currentPage = widget.initialIndex; // Set initial index
-    _setupVideoController();
+
+    // Check if the subtopic has no materials or quizzes
+    if (widget.materials.isEmpty && widget.quizzes.isEmpty) {
+      // If there are no materials or quizzes, trigger the onQuizComplete callback
+      Future.delayed(Duration.zero, () {
+        if (widget.onQuizComplete != null) {
+          widget.onQuizComplete!();
+        }
+      });
+    } else {
+      // Otherwise, set up the video controller as usual
+      _setupVideoController();
+    }
   }
 
   void _setupVideoController() {
@@ -242,6 +254,16 @@ class _FlashCardState extends State<FlashCard> {
 
   @override
   Widget build(BuildContext context) {
+    // Check if the subtopic has no materials or quizzes
+    if (widget.materials.isEmpty && widget.quizzes.isEmpty) {
+      // Return an empty container or a loading indicator
+      return Scaffold(
+        backgroundColor: AcademeTheme.appColor,
+        body: Container(), // Or use a loading indicator if needed
+      );
+    }
+
+    // Otherwise, build the normal UI
     return Scaffold(
       backgroundColor: AcademeTheme.appColor,
       appBar: AppBar(
@@ -275,7 +297,7 @@ class _FlashCardState extends State<FlashCard> {
                     duration: 600,
                     layout: SwiperLayout.STACK,
                     axisDirection: AxisDirection.right,
-                    index: _currentPage, // Set initial index for Swiper
+                    index: _currentPage,
                     onIndexChanged: (index) {
                       if (_currentPage != index) {
                         setState(() {
@@ -286,16 +308,6 @@ class _FlashCardState extends State<FlashCard> {
                         // Send progress to backend when swiping to the next material
                         if (index < widget.materials.length) {
                           _sendProgressToBackend();
-                        }
-                      }
-
-                      // Check if the user has swiped past the last card
-                      if (index ==
-                          widget.materials.length + widget.quizzes.length - 1) {
-                        // Only trigger callback if there are no quizzes
-                        if (widget.quizzes.isEmpty &&
-                            widget.onQuizComplete != null) {
-                          widget.onQuizComplete!();
                         }
                       }
                     },
@@ -326,7 +338,12 @@ class _FlashCardState extends State<FlashCard> {
                               child: Container(
                                 decoration: BoxDecoration(
                                   color: Colors.black.withOpacity(0.4),
-                                  borderRadius: BorderRadius.circular(20),
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20),
+                                    bottomLeft: Radius.circular(0),
+                                    bottomRight: Radius.circular(0),
+                                  ),
                                 ),
                               ),
                             ),
@@ -431,45 +448,144 @@ class _FlashCardState extends State<FlashCard> {
 
   Widget _buildTextContent(String content) {
     return buildStyledContainer(
-      SingleChildScrollView(
-        child: Text(
-          content,
-          style:
-              const TextStyle(fontSize: 14, color: Colors.black87, height: 1.5),
-        ),
+      Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Text(
+                content,
+                style: const TextStyle(
+                    fontSize: 14, color: Colors.black87, height: 1.5),
+              ),
+            ),
+          ),
+          if (widget.quizzes.isEmpty &&
+              _currentPage == widget.materials.length - 1)
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  if (widget.onQuizComplete != null) {
+                    widget.onQuizComplete!();
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.yellow,
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Text(
+                  "Mark as Completed",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
 
   Widget _buildVideoContent(String videoUrl) {
     return buildStyledContainer(
-      _chewieController == null ||
-              _videoController == null ||
-              !_videoController!.value.isInitialized
-          ? const Center(child: CircularProgressIndicator())
-          : GestureDetector(
-              onTap: () {
-                setState(() {});
-              },
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Chewie(controller: _chewieController!),
+      Column(
+        children: [
+          Expanded(
+            child: _chewieController == null ||
+                    _videoController == null ||
+                    !_videoController!.value.isInitialized
+                ? const Center(child: CircularProgressIndicator())
+                : GestureDetector(
+                    onTap: () {
+                      setState(() {});
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Chewie(controller: _chewieController!),
+                    ),
+                  ),
+          ),
+          if (widget.quizzes.isEmpty &&
+              _currentPage == widget.materials.length - 1)
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  if (widget.onQuizComplete != null) {
+                    widget.onQuizComplete!();
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.yellow,
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Text(
+                  "Mark as Completed",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
               ),
             ),
+        ],
+      ),
     );
   }
 
   Widget _buildImageContent(String imageUrl) {
     return buildStyledContainer(
-      ClipRRect(
-        borderRadius: BorderRadius.circular(12),
-        child: CachedNetworkImage(
-          imageUrl: imageUrl,
-          placeholder: (context, url) =>
-              const Center(child: CircularProgressIndicator()),
-          errorWidget: (context, url, error) => const Icon(Icons.error),
-          fit: BoxFit.cover,
-        ),
+      Column(
+        children: [
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: CachedNetworkImage(
+                imageUrl: imageUrl,
+                placeholder: (context, url) =>
+                    const Center(child: CircularProgressIndicator()),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          if (widget.quizzes.isEmpty &&
+              _currentPage == widget.materials.length - 1)
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  if (widget.onQuizComplete != null) {
+                    widget.onQuizComplete!();
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.yellow,
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Text(
+                  "Mark as Completed",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
@@ -477,16 +593,49 @@ class _FlashCardState extends State<FlashCard> {
   Widget _buildAudioContent(String audioUrl) {
     return buildStyledContainer(
       Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.audiotrack, size: 100, color: Colors.blue),
-          const SizedBox(height: 10),
-          ElevatedButton(
-            onPressed: () async {
-              await _audioPlayer.play(UrlSource(audioUrl));
-            },
-            child: const Text("Play Audio"),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.audiotrack, size: 100, color: Colors.blue),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () async {
+                    await _audioPlayer.play(UrlSource(audioUrl));
+                  },
+                  child: const Text("Play Audio"),
+                ),
+              ],
+            ),
           ),
+          if (widget.quizzes.isEmpty &&
+              _currentPage == widget.materials.length - 1)
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  if (widget.onQuizComplete != null) {
+                    widget.onQuizComplete!();
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.yellow,
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Text(
+                  "Mark as Completed",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -494,11 +643,44 @@ class _FlashCardState extends State<FlashCard> {
 
   Widget _buildDocumentContent(String docUrl) {
     return buildStyledContainer(
-      Center(
-        child: ElevatedButton(
-          onPressed: () => launchUrl(Uri.parse(docUrl)),
-          child: const Text("Open Document"),
-        ),
+      Column(
+        children: [
+          Expanded(
+            child: Center(
+              child: ElevatedButton(
+                onPressed: () => launchUrl(Uri.parse(docUrl)),
+                child: const Text("Open Document"),
+              ),
+            ),
+          ),
+          if (widget.quizzes.isEmpty &&
+              _currentPage == widget.materials.length - 1)
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  if (widget.onQuizComplete != null) {
+                    widget.onQuizComplete!();
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.yellow,
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Text(
+                  "Mark as Completed",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
@@ -527,7 +709,15 @@ class _FlashCardState extends State<FlashCard> {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20), // Top-left corner has a radius of 20
+            topRight:
+                Radius.circular(20), // Top-right corner has a radius of 20
+            bottomLeft:
+                Radius.circular(0), // Bottom-left corner has a radius of 0
+            bottomRight:
+                Radius.circular(0), // Bottom-right corner has a radius of 0
+          ),
           boxShadow: [
             BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2),
           ],

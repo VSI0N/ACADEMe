@@ -28,9 +28,11 @@ class LessonQuestionPage extends StatefulWidget {
 class _LessonQuestionPageState extends State<LessonQuestionPage> {
   int _currentQuestionIndex = 0;
   int? _selectedAnswer;
-  final String _baseUrl = dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'; // Replace with your API endpoint
+  final String _baseUrl = dotenv.env['BACKEND_URL'] ??
+      'http://10.0.2.2:8000'; // Replace with your API endpoint
   List<dynamic> _progressList = [];
-  final FlutterSecureStorage _storage = const FlutterSecureStorage(); // Add FlutterSecureStorage
+  final FlutterSecureStorage _storage =
+  const FlutterSecureStorage(); // Add FlutterSecureStorage
 
   @override
   void initState() {
@@ -39,7 +41,8 @@ class _LessonQuestionPageState extends State<LessonQuestionPage> {
   }
 
   Future<void> _fetchProgress() async {
-    String? token = await _storage.read(key: 'access_token'); // Retrieve the access token
+    String? token =
+    await _storage.read(key: 'access_token'); // Retrieve the access token
     if (token == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Access token not found")),
@@ -48,9 +51,11 @@ class _LessonQuestionPageState extends State<LessonQuestionPage> {
     }
 
     final response = await http.get(
-      Uri.parse("$_baseUrl/api/progress/?target_language=en"), // Hardcoded "en" for English
+      Uri.parse(
+          "$_baseUrl/api/progress/?target_language=en"), // Hardcoded "en" for English
       headers: {
-        'Authorization': 'Bearer $token', // Include the access token in the headers
+        'Authorization':
+        'Bearer $token', // Include the access token in the headers
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
@@ -80,7 +85,8 @@ class _LessonQuestionPageState extends State<LessonQuestionPage> {
   }
 
   Future<void> _sendProgress(bool isCorrect, String quizId) async {
-    String? token = await _storage.read(key: 'access_token'); // Retrieve the access token
+    String? token =
+    await _storage.read(key: 'access_token'); // Retrieve the access token
     if (token == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Access token not found")),
@@ -99,7 +105,8 @@ class _LessonQuestionPageState extends State<LessonQuestionPage> {
       final response = await http.post(
         Uri.parse("$_baseUrl/api/progress/"),
         headers: {
-          'Authorization': 'Bearer $token', // Include the access token in the headers
+          'Authorization':
+          'Bearer $token', // Include the access token in the headers
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: json.encode({
@@ -133,7 +140,8 @@ class _LessonQuestionPageState extends State<LessonQuestionPage> {
       final response = await http.put(
         Uri.parse("$_baseUrl/api/progress/$progressId"),
         headers: {
-          'Authorization': 'Bearer $token', // Include the access token in the headers
+          'Authorization':
+          'Bearer $token', // Include the access token in the headers
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: json.encode({
@@ -228,10 +236,7 @@ class _LessonQuestionPageState extends State<LessonQuestionPage> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () => Navigator.pop(context),
-          ),
+          automaticallyImplyLeading: false,
           title: const Text(
             'Quiz',
             style: TextStyle(
@@ -265,10 +270,7 @@ class _LessonQuestionPageState extends State<LessonQuestionPage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
+        automaticallyImplyLeading: false,
         title: const Text(
           'Quiz',
           style: TextStyle(

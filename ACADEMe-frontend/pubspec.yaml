@@ -68,6 +68,7 @@ dependencies:
   fl_chart: ^0.70.2
   open_file: ^3.5.10
   audioplayers: ^6.3.0
+  flutter_launcher_icons: ^0.14.3
 
 
 
@@ -149,3 +150,7 @@ dependency_overrides:
   google_fonts: ^6.1.0
   fl_chart: ^0.63.0
 
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/logo/app_logo1.png"
