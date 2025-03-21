@@ -45,8 +45,8 @@ class _FlashCardState extends State<FlashCard> {
   final AudioPlayer _audioPlayer = AudioPlayer();
   bool _hasNavigated = false;
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
-  final String backendUrl =
-      dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'; // Replace with your backend URL
+  final String backendUrl = dotenv.env['BACKEND_URL'] ??
+      'http://10.0.2.2:8000'; // Replace with your backend URL
 
   @override
   void initState() {
@@ -118,7 +118,8 @@ class _FlashCardState extends State<FlashCard> {
     }
 
     final material = _currentMaterial();
-    final materialId = material["id"] ?? "material_${_currentPage}"; // Fallback to index if ID is missing
+    final materialId = material["id"] ??
+        "material_${_currentPage}"; // Fallback to index if ID is missing
 
     if (materialId == null) {
       print("❌ Material ID is null");
@@ -132,7 +133,7 @@ class _FlashCardState extends State<FlashCard> {
 
     // Check if any progress entry with the same material_id exists
     final progressExists = progressList.any((progress) =>
-    progress["material_id"] == materialId &&
+        progress["material_id"] == materialId &&
         progress["activity_type"] == "reading");
 
     if (progressExists) {
@@ -193,7 +194,8 @@ class _FlashCardState extends State<FlashCard> {
 
       if (response.statusCode == 200) {
         final responseBody = jsonDecode(response.body);
-        if (responseBody is Map<String, dynamic> && responseBody.containsKey("progress")) {
+        if (responseBody is Map<String, dynamic> &&
+            responseBody.containsKey("progress")) {
           return responseBody["progress"]; // Return the progress list
         }
       } else if (response.statusCode == 404) {
@@ -301,14 +303,20 @@ class _FlashCardState extends State<FlashCard> {
                       return Stack(
                         children: [
                           ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: _buildMaterial(index < widget.materials.length
-                                ? widget.materials[index]
-                                : {
-                              "type": "quiz",
-                              "quiz": widget.quizzes[
-                              index - widget.materials.length],
-                            }),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(20),
+                              topRight: Radius.circular(20),
+                              bottomLeft: Radius.circular(0),
+                              bottomRight: Radius.circular(0),
+                            ),
+                            child:
+                                _buildMaterial(index < widget.materials.length
+                                    ? widget.materials[index]
+                                    : {
+                                        "type": "quiz",
+                                        "quiz": widget.quizzes[
+                                            index - widget.materials.length],
+                                      }),
                           ),
                           AnimatedOpacity(
                             opacity: _currentPage == index ? 0.0 : 0.2,
@@ -427,7 +435,7 @@ class _FlashCardState extends State<FlashCard> {
         child: Text(
           content,
           style:
-          const TextStyle(fontSize: 14, color: Colors.black87, height: 1.5),
+              const TextStyle(fontSize: 14, color: Colors.black87, height: 1.5),
         ),
       ),
     );
@@ -436,18 +444,18 @@ class _FlashCardState extends State<FlashCard> {
   Widget _buildVideoContent(String videoUrl) {
     return buildStyledContainer(
       _chewieController == null ||
-          _videoController == null ||
-          !_videoController!.value.isInitialized
+              _videoController == null ||
+              !_videoController!.value.isInitialized
           ? const Center(child: CircularProgressIndicator())
           : GestureDetector(
-        onTap: () {
-          setState(() {});
-        },
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: Chewie(controller: _chewieController!),
-        ),
-      ),
+              onTap: () {
+                setState(() {});
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Chewie(controller: _chewieController!),
+              ),
+            ),
     );
   }
 
@@ -458,7 +466,7 @@ class _FlashCardState extends State<FlashCard> {
         child: CachedNetworkImage(
           imageUrl: imageUrl,
           placeholder: (context, url) =>
-          const Center(child: CircularProgressIndicator()),
+              const Center(child: CircularProgressIndicator()),
           errorWidget: (context, url, error) => const Icon(Icons.error),
           fit: BoxFit.cover,
         ),

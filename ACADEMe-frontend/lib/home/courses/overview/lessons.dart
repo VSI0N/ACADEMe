@@ -24,8 +24,7 @@ class LessonsSection extends StatefulWidget {
 
 class _LessonsSectionState extends State<LessonsSection> {
   final FlutterSecureStorage storage = const FlutterSecureStorage();
-  final String backendUrl =
-      dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
+  final String backendUrl = dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
 
   Map<String, bool> isExpanded = {};
   Map<String, String> subtopicIds = {};
@@ -54,8 +53,9 @@ class _LessonsSectionState extends State<LessonsSection> {
     }
 
     // Get the target language from the app's language provider
-    final targetLanguage =
-        Provider.of<LanguageProvider>(context, listen: false).locale.languageCode;
+    final targetLanguage = Provider.of<LanguageProvider>(context, listen: false)
+        .locale
+        .languageCode;
 
     try {
       final response = await http.get(
@@ -76,12 +76,12 @@ class _LessonsSectionState extends State<LessonsSection> {
           isExpanded = {
             for (int i = 0; i < data.length; i++)
               "${(i + 1).toString().padLeft(2, '0')} - ${data[i]["title"]}":
-              false
+                  false
           };
           subtopicIds = {
             for (var sub in data)
               "${(data.indexOf(sub) + 1).toString().padLeft(2, '0')} - ${sub["title"]}":
-              sub["id"].toString()
+                  sub["id"].toString()
           };
         });
       } else {
@@ -101,8 +101,9 @@ class _LessonsSectionState extends State<LessonsSection> {
     if (token == null) return;
 
     // Get the target language from the app's language provider
-    final targetLanguage =
-        Provider.of<LanguageProvider>(context, listen: false).locale.languageCode;
+    final targetLanguage = Provider.of<LanguageProvider>(context, listen: false)
+        .locale
+        .languageCode;
 
     try {
       // Fetch Materials
@@ -163,7 +164,8 @@ class _LessonsSectionState extends State<LessonsSection> {
 
           if (questionsResponse.statusCode == 200) {
             // Decode the response body using UTF-8
-            final String questionsBody = utf8.decode(questionsResponse.bodyBytes);
+            final String questionsBody =
+                utf8.decode(questionsResponse.bodyBytes);
             List<dynamic> questionsData = jsonDecode(questionsBody);
             for (var question in questionsData) {
               quizzesList.add({
@@ -172,10 +174,10 @@ class _LessonsSectionState extends State<LessonsSection> {
                 "difficulty": quiz["difficulty"] ?? "Unknown",
                 "question_count": questionsData.length.toString(),
                 "question_text":
-                question["question_text"] ?? "No question text available",
+                    question["question_text"] ?? "No question text available",
                 "options":
-                (question["options"] as List<dynamic>?)?.cast<String>() ??
-                    ["No options available"],
+                    (question["options"] as List<dynamic>?)?.cast<String>() ??
+                        ["No options available"],
                 "correct_option": question["correct_option"] ?? 0,
               });
             }
@@ -214,48 +216,61 @@ class _LessonsSectionState extends State<LessonsSection> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.only(
-            left: 16, right: 16, top: 16, bottom: 100), // Added bottom padding
-        child: Column(
-          children: [
-            // Existing content
-            ...isExpanded.keys.map((section) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ListTile(
-                    title: Text(
-                      section,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 17),
-                    ),
-                    trailing: Icon(
-                      isExpanded[section]!
-                          ? Icons.expand_less
-                          : Icons.expand_more,
-                      color: Colors.black,
-                    ),
-                    onTap: () async {
-                      setState(() {
-                        isExpanded[section] = !isExpanded[section]!;
-                      });
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            padding: const EdgeInsets.only(
+                left: 16,
+                right: 16,
+                top: 16,
+                bottom: 100), // Added bottom padding
+            child: Column(
+              children: [
+                // Existing content
+                ...isExpanded.keys.map((section) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ListTile(
+                        title: Text(
+                          section,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 17),
+                        ),
+                        trailing: Icon(
+                          isExpanded[section]!
+                              ? Icons.expand_less
+                              : Icons.expand_more,
+                          color: Colors.black,
+                        ),
+                        onTap: () async {
+                          setState(() {
+                            isExpanded[section] = !isExpanded[section]!;
+                          });
+                          if (isExpanded[section]! &&
+                              subtopicIds.containsKey(section)) {
+                            await fetchMaterialsAndQuizzes(
+                                subtopicIds[section]!);
+                          }
+                        },
+                      ),
                       if (isExpanded[section]! &&
-                          subtopicIds.containsKey(section)) {
-                        await fetchMaterialsAndQuizzes(subtopicIds[section]!);
-                      }
-                    },
-                  ),
-                  if (isExpanded[section]! && subtopicIds.containsKey(section))
-                    _buildLessonsAndQuizzes(subtopicIds[section]!),
-                ],
-              );
-            }).toList(),
-
-            // **🔹 Start Course Button**
-            Container(
-              margin: const EdgeInsets.only(top: 20, bottom: 20),
+                          subtopicIds.containsKey(section))
+                        _buildLessonsAndQuizzes(subtopicIds[section]!),
+                    ],
+                  );
+                }).toList(),
+              ],
+            ),
+          ),
+          // **🔹 Sticky Start Course Button**
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              color: Colors.white,
               child: ElevatedButton(
                 onPressed: () {
                   // Navigate to the first subtopic
@@ -266,8 +281,9 @@ class _LessonsSectionState extends State<LessonsSection> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => FlashCard(
-                            materials: (subtopicMaterials[firstSubtopicId] ?? [])
-                                .map<Map<String, String>>((material) {
+                            materials:
+                                (subtopicMaterials[firstSubtopicId] ?? [])
+                                    .map<Map<String, String>>((material) {
                               return {
                                 "type": material["type"].toString(),
                                 "content": material["content"].toString(),
@@ -305,8 +321,8 @@ class _LessonsSectionState extends State<LessonsSection> {
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -356,10 +372,10 @@ class _LessonsSectionState extends State<LessonsSection> {
       type,
       category,
       Icons.article,
-          () {
+      () {
         // Convert materials to the correct type
         List<Map<String, String>> materials =
-        (subtopicMaterials[subtopicId] ?? []).map<Map<String, String>>((m) {
+            (subtopicMaterials[subtopicId] ?? []).map<Map<String, String>>((m) {
           return {
             "type": m["type"].toString(),
             "content": m["content"].toString(),
@@ -400,7 +416,7 @@ class _LessonsSectionState extends State<LessonsSection> {
       title,
       "$difficulty • $questionCount Questions",
       Icons.quiz,
-          () {
+      () {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -435,8 +451,8 @@ class _LessonsSectionState extends State<LessonsSection> {
       fetchMaterialsAndQuizzes(nextSubtopicId).then((_) {
         // Convert materials to the correct type
         List<Map<String, String>> nextMaterials =
-        (subtopicMaterials[nextSubtopicId] ?? [])
-            .map<Map<String, String>>((material) {
+            (subtopicMaterials[nextSubtopicId] ?? [])
+                .map<Map<String, String>>((material) {
           return {
             "type": material["type"].toString(),
             "content": material["content"].toString(),
@@ -490,12 +506,16 @@ class _LessonsSectionState extends State<LessonsSection> {
                 Text(
                   title.split(" ")[0], // Extract number (e.g., "01", "02")
                   style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 15, color: Colors.grey),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                      color: Colors.grey),
                 ),
                 const SizedBox(width: 10),
                 Text(
-                  title.substring(title.indexOf(" ") + 1), // Extract text after number
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  title.substring(
+                      title.indexOf(" ") + 1), // Extract text after number
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w500),
                 ),
               ],
             ),
