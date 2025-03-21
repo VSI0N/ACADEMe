@@ -12,8 +12,11 @@ class LessonsSection extends StatefulWidget {
   final String courseId;
   final String topicId;
 
-  const LessonsSection(
-      {super.key, required this.courseId, required this.topicId});
+  const LessonsSection({
+    super.key,
+    required this.courseId,
+    required this.topicId,
+  });
 
   @override
   _LessonsSectionState createState() => _LessonsSectionState();
@@ -22,7 +25,7 @@ class LessonsSection extends StatefulWidget {
 class _LessonsSectionState extends State<LessonsSection> {
   final FlutterSecureStorage storage = const FlutterSecureStorage();
   final String backendUrl =
-      dotenv.env['BACKEND_URL'] ?? 'http://127.0.0.1:8000';
+      dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
 
   Map<String, bool> isExpanded = {};
   Map<String, String> subtopicIds = {};
@@ -278,6 +281,7 @@ class _LessonsSectionState extends State<LessonsSection> {
                             initialIndex: 0, // Start from the first item
                             courseId: widget.courseId,
                             topicId: widget.topicId,
+                            subtopicId: firstSubtopicId, // Pass subtopicId
                           ),
                         ),
                       );
@@ -382,6 +386,7 @@ class _LessonsSectionState extends State<LessonsSection> {
               initialIndex: index, // Start from the clicked material
               courseId: widget.courseId,
               topicId: widget.topicId,
+              subtopicId: subtopicId, // Pass subtopicId
             ),
           ),
         );
@@ -409,6 +414,7 @@ class _LessonsSectionState extends State<LessonsSection> {
               initialIndex: index, // Start from the clicked quiz
               courseId: widget.courseId,
               topicId: widget.topicId,
+              subtopicId: subtopicId, // Pass subtopicId
             ),
           ),
         );
@@ -451,6 +457,7 @@ class _LessonsSectionState extends State<LessonsSection> {
               initialIndex: 0, // Start from the first item
               courseId: widget.courseId,
               topicId: widget.topicId,
+              subtopicId: nextSubtopicId, // Pass subtopicId
             ),
           ),
         );

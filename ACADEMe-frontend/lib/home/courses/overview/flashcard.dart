@@ -20,6 +20,7 @@ class FlashCard extends StatefulWidget {
   final int initialIndex; // Add initialIndex parameter
   final String courseId; // Add courseId
   final String topicId; // Add topicId
+  final String subtopicId; // Add subtopicId
 
   const FlashCard({
     super.key,
@@ -29,6 +30,7 @@ class FlashCard extends StatefulWidget {
     this.initialIndex = 0, // Default to 0
     required this.courseId,
     required this.topicId,
+    required this.subtopicId,
   });
 
   @override
@@ -126,7 +128,7 @@ class _FlashCardState extends State<FlashCard> {
     print("✅ Material ID: $materialId");
 
     // Fetch the progress list for the current material_id
-    final progressList = await _fetchProgressList(materialId);
+    final progressList = await _fetchProgressList();
 
     // Check if any progress entry with the same material_id exists
     final progressExists = progressList.any((progress) =>
@@ -141,7 +143,7 @@ class _FlashCardState extends State<FlashCard> {
     final progressData = {
       "course_id": widget.courseId,
       "topic_id": widget.topicId,
-      "subtopic_id": material["subtopic_id"] ?? "N/A",
+      "subtopic_id": widget.subtopicId,
       "material_id": materialId,
       "quiz_id": null, // Since this is for material, quiz_id is null
       "score": 0, // No score for material
@@ -173,7 +175,7 @@ class _FlashCardState extends State<FlashCard> {
     }
   }
 
-  Future<List<dynamic>> _fetchProgressList(String materialId) async {
+  Future<List<dynamic>> _fetchProgressList() async {
     String? token = await _storage.read(key: 'access_token');
     if (token == null) {
       print("❌ Missing access token");
@@ -182,7 +184,7 @@ class _FlashCardState extends State<FlashCard> {
 
     try {
       final response = await http.get(
-        Uri.parse('$backendUrl/api/progress/?target_language=en&material_id=$materialId'),
+        Uri.parse('$backendUrl/api/progress/?target_language=en'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json; charset=UTF-8',
@@ -194,6 +196,10 @@ class _FlashCardState extends State<FlashCard> {
         if (responseBody is Map<String, dynamic> && responseBody.containsKey("progress")) {
           return responseBody["progress"]; // Return the progress list
         }
+      } else if (response.statusCode == 404) {
+        // Handle 404 error by returning an empty list
+        print("✅ No progress records found, returning empty list");
+        return [];
       } else {
         print("❌ Failed to fetch progress: ${response.statusCode}");
       }
@@ -497,6 +503,9 @@ class _FlashCardState extends State<FlashCard> {
           // Move to the next material or quiz
           _nextMaterialOrQuiz();
         },
+        courseId: widget.courseId, // Pass courseId
+        topicId: widget.topicId, // Pass topicId
+        subtopicId: widget.subtopicId, // Pass subtopicId
       ),
     );
   }

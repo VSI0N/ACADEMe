@@ -1,12 +1,25 @@
 import 'package:ACADEMe/academe_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class LessonQuestionPage extends StatefulWidget {
   final List<Map<String, dynamic>> quizzes;
   final Function()? onQuizComplete;
+  final String courseId;
+  final String topicId;
+  final String subtopicId;
 
-  const LessonQuestionPage(
-      {super.key, required this.quizzes, this.onQuizComplete});
+  const LessonQuestionPage({
+    super.key,
+    required this.quizzes,
+    this.onQuizComplete,
+    required this.courseId,
+    required this.topicId,
+    required this.subtopicId,
+  });
 
   @override
   _LessonQuestionPageState createState() => _LessonQuestionPageState();
@@ -15,8 +28,136 @@ class LessonQuestionPage extends StatefulWidget {
 class _LessonQuestionPageState extends State<LessonQuestionPage> {
   int _currentQuestionIndex = 0;
   int? _selectedAnswer;
+  final String _baseUrl = dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'; // Replace with your API endpoint
+  List<dynamic> _progressList = [];
+  final FlutterSecureStorage _storage = const FlutterSecureStorage(); // Add FlutterSecureStorage
 
-  void _showResultPopup(bool isCorrect) {
+  @override
+  void initState() {
+    super.initState();
+    _fetchProgress();
+  }
+
+  Future<void> _fetchProgress() async {
+    String? token = await _storage.read(key: 'access_token'); // Retrieve the access token
+    if (token == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Access token not found")),
+      );
+      return;
+    }
+
+    final response = await http.get(
+      Uri.parse("$_baseUrl/api/progress/?target_language=en"), // Hardcoded "en" for English
+      headers: {
+        'Authorization': 'Bearer $token', // Include the access token in the headers
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      setState(() {
+        _progressList = data["progress"];
+      });
+    } else if (response.statusCode == 404) {
+      // Handle 404 Not Found error (no progress records)
+      final responseBody = json.decode(response.body);
+      if (responseBody["detail"] == "No progress records found") {
+        setState(() {
+          _progressList = []; // Treat as an empty progress list
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("No progress records found")),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Failed to fetch progress")),
+      );
+    }
+  }
+
+  Future<void> _sendProgress(bool isCorrect, String quizId) async {
+    String? token = await _storage.read(key: 'access_token'); // Retrieve the access token
+    if (token == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Access token not found")),
+      );
+      return;
+    }
+
+    final score = isCorrect ? 10 : 0;
+    final existingProgress = _progressList.firstWhere(
+          (progress) => progress["quiz_id"] == quizId,
+      orElse: () => null,
+    );
+
+    if (existingProgress == null) {
+      // Create new progress
+      final response = await http.post(
+        Uri.parse("$_baseUrl/api/progress/"),
+        headers: {
+          'Authorization': 'Bearer $token', // Include the access token in the headers
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: json.encode({
+          "course_id": widget.courseId,
+          "topic_id": widget.topicId,
+          "subtopic_id": widget.subtopicId,
+          "material_id": null,
+          "quiz_id": quizId,
+          "score": score,
+          "status": "completed",
+          "activity_type": "quiz",
+          "metadata": {
+            "time_spent": "5 minutes", // Example metadata
+          },
+          "timestamp": DateTime.now().toIso8601String(),
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Progress saved successfully")),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Failed to save progress")),
+        );
+      }
+    } else {
+      // Update existing progress
+      final progressId = existingProgress["progress_id"];
+      final response = await http.put(
+        Uri.parse("$_baseUrl/api/progress/$progressId"),
+        headers: {
+          'Authorization': 'Bearer $token', // Include the access token in the headers
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: json.encode({
+          "status": "completed",
+          "score": score,
+          "metadata": {
+            "time_spent": "5 minutes", // Example metadata
+          },
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Progress updated successfully")),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Failed to update progress")),
+        );
+      }
+    }
+  }
+
+  void _showResultPopup(bool isCorrect, String quizId) {
     // Show a dialog with the result and an icon
     showDialog(
       context: context,
@@ -59,6 +200,9 @@ class _LessonQuestionPageState extends State<LessonQuestionPage> {
       },
     );
 
+    // Send progress after showing the result
+    _sendProgress(isCorrect, quizId);
+
     // Navigate after 2 seconds
     Future.delayed(const Duration(seconds: 2), () {
       Navigator.pop(context); // Close the dialog
@@ -91,12 +235,18 @@ class _LessonQuestionPageState extends State<LessonQuestionPage> {
           title: const Text(
             'Quiz',
             style: TextStyle(
-                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
           ),
           centerTitle: true,
         ),
         body: const Center(
-          child: Text("No quizzes available", style: TextStyle(fontSize: 18)),
+          child: Text(
+            "No quizzes available",
+            style: TextStyle(fontSize: 18),
+          ),
         ),
       );
     }
@@ -108,6 +258,7 @@ class _LessonQuestionPageState extends State<LessonQuestionPage> {
         (currentQuiz["options"] as List<dynamic>?)?.cast<String>() ??
             ["No options available"];
     final correctOption = currentQuiz["correct_option"] as int? ?? 0;
+    final quizId = currentQuiz["quiz_id"] as String? ?? "";
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -121,7 +272,10 @@ class _LessonQuestionPageState extends State<LessonQuestionPage> {
         title: const Text(
           'Quiz',
           style: TextStyle(
-              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
         ),
         centerTitle: true,
       ),
@@ -165,7 +319,7 @@ class _LessonQuestionPageState extends State<LessonQuestionPage> {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
+                      const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2, // Two options per row
                         crossAxisSpacing: 12, // Horizontal spacing
                         mainAxisSpacing: 12, // Vertical spacing
@@ -226,7 +380,7 @@ class _LessonQuestionPageState extends State<LessonQuestionPage> {
                 onPressed: () {
                   if (_selectedAnswer != null) {
                     bool isCorrect = _selectedAnswer == correctOption;
-                    _showResultPopup(isCorrect); // Show result popup
+                    _showResultPopup(isCorrect, quizId); // Show result popup
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("Please select an answer!")),
@@ -243,9 +397,10 @@ class _LessonQuestionPageState extends State<LessonQuestionPage> {
                 child: const Text(
                   "Submit",
                   style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ),
