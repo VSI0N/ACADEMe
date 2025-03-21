@@ -158,7 +158,7 @@ class _TopicViewScreenState extends State<TopicViewScreen>
 
   Widget _buildTopicList(List<Map<String, dynamic>> topicList) {
     if (isLoading) {
-      return const Center(child: CircularProgressIndicator(color: Colors.blue));
+      return const Center(child: CircularProgressIndicator(color: AcademeTheme.appColor));
     }
     if (topicList.isEmpty) {
       return const Center(child: Text("No topics available"));
