@@ -69,6 +69,7 @@ dependencies:
   open_file: ^3.5.10
   audioplayers: ^6.3.0
   flutter_launcher_icons: ^0.14.3
+  auto_size_text: ^3.0.0
 
 
 

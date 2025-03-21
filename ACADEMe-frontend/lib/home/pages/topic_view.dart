@@ -231,6 +231,23 @@ class _TopicViewScreenState extends State<TopicViewScreen>
                     color: Colors.blue,
                     backgroundColor: Colors.grey.shade200,
                   ),
+                  SizedBox(height: 5,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text("0/12 Modules")
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          "${(topic["progress"].clamp(0.0, 1.0) * 100).toInt()}% ",
+                          style: TextStyle(fontSize: 12, color: Colors.black54),
+                        ),
+                      )
+                    ],
+                  )
                 ],
               ),
             ),

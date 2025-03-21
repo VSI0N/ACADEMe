@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:ACADEMe/home/pages/ASKMe.dart';
 import '../../academe_theme.dart';
@@ -922,8 +923,9 @@ class HomePage extends StatelessWidget {
                           ),
                           SizedBox(height: 8),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: Row(
+                            padding: EdgeInsets.symmetric(horizontal: 4),
+                            child: SizedBox( height: 160,
+                              child: Row(
                               children: [
                                 Expanded(
                                   child: CourseCard(
@@ -959,7 +961,7 @@ class HomePage extends StatelessWidget {
                                   ),
                                 ),
                               ],
-                            ),
+                            ),)
                           ),
                         ],
                       ),
@@ -1343,9 +1345,10 @@ class CourseCard extends StatelessWidget {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap, // Use the onTap callback here
+      onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -1356,26 +1359,36 @@ class CourseCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Icon(
-              _getSubjectIcon(title), // Dynamically fetch icon
-              size: 50, // Increased size to fit inside the box
+              _getSubjectIcon(title),
+              size: 50,
               color: Colors.black.withOpacity(0.8),
             ),
             const SizedBox(height: 12),
-            Text(
+
+            /// Auto-Resizing Title
+            AutoSizeText(
               title,
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              maxLines: 1,               // Keep in one line
+              minFontSize: 10,           // Minimum font size
+              overflow: TextOverflow.ellipsis, // Add "..." if needed
             ),
+
             const SizedBox(height: 4),
-            Text(
+
+            /// Auto-Resizing Subtitle (Optional)
+            AutoSizeText(
               subtitle,
               style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+              maxLines: 1,
+              minFontSize: 10,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
       ),
     );
-  }
-}
+  }}
 
 // Function to fetch user details from secure storage
 Future<Map<String, String?>> _getUserDetails() async {

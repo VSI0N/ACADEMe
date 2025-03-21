@@ -55,7 +55,10 @@ class _CourseListScreenState extends State<CourseListScreen>
     }
 
     try {
-      String targetLanguage = Provider.of<LanguageProvider>(context, listen: false).locale.languageCode;
+      String targetLanguage =
+          Provider.of<LanguageProvider>(context, listen: false)
+              .locale
+              .languageCode;
       final response = await http.get(
         Uri.parse('$backendUrl/api/courses/?target_language=$targetLanguage'),
         headers: {
@@ -68,11 +71,13 @@ class _CourseListScreenState extends State<CourseListScreen>
         // Decode the response body using UTF-8 encoding
         List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
         setState(() {
-          courses = data.map((course) => {
-            "id": course["id"],
-            "title": course["title"],
-            "progress": 0.0,
-          }).toList();
+          courses = data
+              .map((course) => {
+                    "id": course["id"],
+                    "title": course["title"],
+                    "progress": 0.0,
+                  })
+              .toList();
         });
       } else {
         print("Failed to fetch courses: ${response.statusCode}");
@@ -144,7 +149,8 @@ class _CourseListScreenState extends State<CourseListScreen>
                 controller: _tabController,
                 labelColor: Colors.blue,
                 unselectedLabelColor: Colors.black54,
-                labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+                labelStyle:
+                    TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
                 indicatorSize: TabBarIndicatorSize.tab,
                 indicator: UnderlineTabIndicator(
                   borderSide: BorderSide(width: 4, color: Colors.blue),
@@ -222,14 +228,16 @@ class _CourseListScreenState extends State<CourseListScreen>
           await storage.write(key: 'course_id', value: selectedCourseId);
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => TopicViewScreen(courseId: selectedCourseId)),
+            MaterialPageRoute(
+                builder: (context) =>
+                    TopicViewScreen(courseId: selectedCourseId)),
           );
         } catch (error) {
           print("Error storing course ID: $error");
         }
       },
       child: Container(
-        height: 150,
+        height: 120,
         margin: EdgeInsets.only(bottom: 15),
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
@@ -269,7 +277,8 @@ class _CourseListScreenState extends State<CourseListScreen>
                       ),
                       Container(
                         height: 5,
-                        width: MediaQuery.of(context).size.width * (course["progress"] * 0.6),
+                        width: MediaQuery.of(context).size.width *
+                            (course["progress"] * 0.6),
                         decoration: BoxDecoration(
                           color: Colors.blue,
                           borderRadius: BorderRadius.circular(5),
@@ -278,10 +287,23 @@ class _CourseListScreenState extends State<CourseListScreen>
                     ],
                   ),
                   SizedBox(height: 5),
-                  Text(
-                    "${(course["progress"].clamp(0.0, 1.0) * 100).toInt()}% Complete",
-                    style: TextStyle(fontSize: 12, color: Colors.black54),
-                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text("0/12 Modules")
+                        ),
+                        Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          "${(course["progress"].clamp(0.0, 1.0) * 100).toInt()}% ",
+                          style: TextStyle(fontSize: 12, color: Colors.black54),
+                        ),
+                      )
+                      ],
+                  )
+
                 ],
               ),
             ),

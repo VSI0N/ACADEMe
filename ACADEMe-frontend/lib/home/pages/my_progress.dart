@@ -23,6 +23,7 @@ class ProgressScreen extends StatelessWidget {
     if (score >= 60) return "B+";
     if (score >= 50) return "B";
     if (score >= 40) return "C";
+    if (score == 0) return "Start your\n Journey!";
     return "F"; // If below 40
   }
 
@@ -488,7 +489,7 @@ class ProgressScreen extends StatelessWidget {
               ),
 
               const SizedBox(height: 16),
-              _buildMotivationCard(context),
+              _buildMotivationCard(context, overallGrade),
             ],
           ),
         );
@@ -496,7 +497,18 @@ class ProgressScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMotivationCard(BuildContext context) {
+  Widget _buildMotivationCard(BuildContext context, double score) {
+    String getMotivationMessage(double score) {
+      if (score >= 90) return "Outstanding! Keep shining!";
+      if (score >= 80) return "Excellent job! Almost perfect!";
+      if (score >= 70) return "Great work! Keep pushing!";
+      if (score >= 60) return "Good effort! You can do better!";
+      if (score >= 50) return "Keep trying! Progress is progress!";
+      if (score >= 40) return "Don’t give up! Keep learning!";
+      if(score == 0) return "It's time to start your journey!";
+      return "Failure is the first step to success!";
+    }
+
     return GestureDetector(
       onTap: () => showModalBottomSheet(
         context: context,
@@ -504,7 +516,7 @@ class ProgressScreen extends StatelessWidget {
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
-        builder: (context) => const MotivationPopup(), // Updated call
+        builder: (context) => const MotivationPopup(),
       ),
       child: Container(
         padding: const EdgeInsets.all(16),
@@ -512,26 +524,30 @@ class ProgressScreen extends StatelessWidget {
           color: Colors.yellow,
           borderRadius: BorderRadius.circular(16),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: IntrinsicHeight(
+          child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
+            Expanded(child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  L10n.getTranslatedText(context, 'You\'re doing Great!'),
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  getMotivationMessage(score), // Dynamic message based on score
+                  style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  L10n.getTranslatedText(
-                      context, 'Learn about your weak points'),
-                  style: TextStyle(fontSize: 15),
+                  L10n.getTranslatedText(context, 'Learn about your weak points'), // Keeping this same
+                  style: const TextStyle(fontSize: 15),
                 ),
               ],
             ),
+            ),
+
             const Icon(Icons.arrow_forward_ios_rounded),
           ],
         ),
+        )
+
       ),
     );
   }
@@ -581,7 +597,7 @@ class ProgressScreen extends StatelessWidget {
                         Text(
                           letterGrade, // ✅ Dynamic letter grade
                           style: TextStyle(
-                            fontSize: 28,
+                            fontSize: letterGrade.length == 1 ? 28 : 12, // 🎯 Condition added
                             fontWeight: FontWeight.bold,
                             color: Colors.purple,
                           ),
@@ -643,7 +659,7 @@ class ProgressScreen extends StatelessWidget {
 
   Widget _buildMePoints(BuildContext context) {
     return Container(
-      width: 380, // Set a fixed width
+      width: 370, // Set a fixed width
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(25),
