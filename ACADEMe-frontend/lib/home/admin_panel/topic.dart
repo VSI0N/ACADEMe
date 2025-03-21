@@ -7,6 +7,7 @@ import '../../academe_theme.dart';
 import 'package:ACADEMe/home/admin_panel/subtopic.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ACADEMe/localization/language_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TopicScreen extends StatefulWidget {
   final String courseId;
@@ -22,10 +23,20 @@ class _TopicScreenState extends State<TopicScreen> {
   List<Map<String, dynamic>> topics = [];
   bool isMenuOpen = false;
   final _storage = FlutterSecureStorage();
+  String? _targetLanguage;
 
   @override
   void initState() {
     super.initState();
+    _loadLanguageAndTopics();
+  }
+
+  Future<void> _loadLanguageAndTopics() async {
+    // Fetch the app's language from SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    _targetLanguage = prefs.getString('language') ?? 'en'; // Default to 'en' if not set
+
+    // Load topics after fetching the language
     _loadTopics();
   }
 
@@ -44,19 +55,17 @@ class _TopicScreenState extends State<TopicScreen> {
       return;
     }
 
-    final String targetLanguage = "en"; // Adjust as needed
-
     try {
       final response = await http.get(
-        Uri.parse('${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/${widget.courseId}/topics/?target_language=$targetLanguage'),
+        Uri.parse('${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/${widget.courseId}/topics/?target_language=$_targetLanguage'),
         headers: {
           "Authorization": "Bearer $token",
-          "Content-Type": "application/json",
+          "Content-Type": "application/json; charset=UTF-8", // Ensure UTF-8 encoding
         },
       );
 
       if (response.statusCode == 200) {
-        List<dynamic> data = json.decode(response.body);
+        List<dynamic> data = json.decode(utf8.decode(response.bodyBytes)); // Decode with UTF-8
         setState(() {
           topics = data.map((item) => {
             "id": item["id"].toString(),
@@ -116,7 +125,7 @@ class _TopicScreenState extends State<TopicScreen> {
                   Uri.parse('${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/${widget.courseId}/topics/'),
                   headers: {
                     "Authorization": "Bearer $token",
-                    "Content-Type": "application/json",
+                    "Content-Type": "application/json; charset=UTF-8", // Ensure UTF-8 encoding
                   },
                   body: json.encode({
                     "title": titleController.text,

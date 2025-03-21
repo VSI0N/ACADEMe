@@ -8,6 +8,8 @@ import 'package:file_picker/file_picker.dart'; // For file picking
 import 'package:http_parser/http_parser.dart'; // For multipart requests
 import 'material.dart'; // Import the MaterialScreen
 import 'SubtopicQuiz.dart'; // Import the SubTopicQuiz screen
+import 'package:provider/provider.dart';
+import '../../localization/language_provider.dart'; // Import the LanguageProvider
 
 class SubTopicContent extends StatefulWidget {
   final String courseId;
@@ -16,7 +18,6 @@ class SubTopicContent extends StatefulWidget {
   final String courseTitle;
   final String topicTitle;
   final String subtopicTitle;
-  final String targetLanguage;
 
   SubTopicContent({
     required this.courseId,
@@ -25,7 +26,6 @@ class SubTopicContent extends StatefulWidget {
     required this.courseTitle,
     required this.topicTitle,
     required this.subtopicTitle,
-    required this.targetLanguage,
   });
 
   @override
@@ -68,8 +68,11 @@ class _SubTopicContentState extends State<SubTopicContent> with SingleTickerProv
   }
 
   Future<void> _fetchSubtopicMaterials() async {
+    final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
+    final targetLanguage = languageProvider.locale.languageCode;
+
     final url = Uri.parse(
-        "${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/${widget.subtopicId}/materials/");
+        "${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/${widget.subtopicId}/materials/?target_language=$targetLanguage");
 
     try {
       String? token = await _storage.read(key: "access_token"); // Retrieve token
@@ -82,12 +85,12 @@ class _SubTopicContentState extends State<SubTopicContent> with SingleTickerProv
         url,
         headers: {
           "Authorization": "Bearer $token", // Add token to headers
-          "Content-Type": "application/json",
+          "Content-Type": "application/json; charset=utf-8",
         },
       );
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
+        final List<dynamic> data = json.decode(utf8.decode(response.bodyBytes));
         setState(() {
           subtopicMaterials = data.cast<Map<String, dynamic>>();
         });
@@ -100,8 +103,11 @@ class _SubTopicContentState extends State<SubTopicContent> with SingleTickerProv
   }
 
   Future<void> _fetchSubtopicQuizzes() async {
+    final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
+    final targetLanguage = languageProvider.locale.languageCode;
+
     final url = Uri.parse(
-        "${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/${widget.subtopicId}/quizzes/");
+        "${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/${widget.subtopicId}/quizzes/?target_language=$targetLanguage");
 
     try {
       String? token = await _storage.read(key: "access_token"); // Retrieve token
@@ -114,12 +120,12 @@ class _SubTopicContentState extends State<SubTopicContent> with SingleTickerProv
         url,
         headers: {
           "Authorization": "Bearer $token", // Add token to headers
-          "Content-Type": "application/json",
+          "Content-Type": "application/json; charset=utf-8",
         },
       );
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
+        final List<dynamic> data = json.decode(utf8.decode(response.bodyBytes));
         setState(() {
           subtopicQuizzes = data.cast<Map<String, dynamic>>();
         });
@@ -358,6 +364,9 @@ class _SubTopicContentState extends State<SubTopicContent> with SingleTickerProv
     required String title,
     required String description,
   }) async {
+    final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
+    final targetLanguage = languageProvider.locale.languageCode;
+
     final url = Uri.parse(
         "${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/${widget.subtopicId}/quizzes/");
 
@@ -372,16 +381,17 @@ class _SubTopicContentState extends State<SubTopicContent> with SingleTickerProv
         url,
         headers: {
           "Authorization": "Bearer $token", // Add token to headers
-          "Content-Type": "application/json",
+          "Content-Type": "application/json; charset=utf-8",
         },
         body: json.encode({
           "title": title,
           "description": description,
+          "target_language": targetLanguage, // Pass the target language
         }),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final responseData = json.decode(response.body);
+        final responseData = json.decode(utf8.decode(response.bodyBytes));
         print("✅ Quiz added successfully: ${responseData["message"]}");
         return true;
       } else {
@@ -396,6 +406,9 @@ class _SubTopicContentState extends State<SubTopicContent> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
+    final languageProvider = Provider.of<LanguageProvider>(context);
+    final targetLanguage = languageProvider.locale.languageCode;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AcademeTheme.appColor,
@@ -426,7 +439,7 @@ class _SubTopicContentState extends State<SubTopicContent> with SingleTickerProv
           isLoading
               ? Center(child: CircularProgressIndicator())
               : SingleChildScrollView(
-            child: _buildQuizList(),
+            child: _buildQuizList(targetLanguage),
           ),
         ],
       ),
@@ -437,7 +450,7 @@ class _SubTopicContentState extends State<SubTopicContent> with SingleTickerProv
           if (isMenuOpen) ...[
             _buildMenuItem("Add Subtopic Materials", Icons.note_add, _addSubtopicMaterial),
             SizedBox(height: 10),
-            _buildMenuItem("Add Subtopic Questions", Icons.quiz, _addSubtopicQuestion),
+            _buildMenuItem("Add Subtopic Quizzes", Icons.quiz, _addSubtopicQuestion),
           ],
           FloatingActionButton(
             onPressed: () => setState(() => isMenuOpen = !isMenuOpen),
@@ -488,7 +501,7 @@ class _SubTopicContentState extends State<SubTopicContent> with SingleTickerProv
         : Center(child: Text("No materials available"));
   }
 
-  Widget _buildQuizList() {
+  Widget _buildQuizList(String targetLanguage) {
     return subtopicQuizzes.isNotEmpty
         ? ListView.builder(
       shrinkWrap: true,
@@ -517,7 +530,7 @@ class _SubTopicContentState extends State<SubTopicContent> with SingleTickerProv
                     courseTitle: widget.courseTitle,
                     topicTitle: widget.topicTitle,
                     subtopicTitle: widget.subtopicTitle,
-                    targetLanguage: widget.targetLanguage,
+                    targetLanguage: targetLanguage,
                   ),
                 ),
               );

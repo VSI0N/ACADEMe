@@ -11,6 +11,9 @@ import 'package:ACADEMe/started/pages/login_view.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../../started/pages/class.dart';
+import '../../widget/profile_dropdown.dart';
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -204,6 +207,21 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  Future<void> showLanguageSelectionSheet(BuildContext context, Locale currentLocale, Function(Locale) onSelected) async {
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => LanguageSelectionBottomSheet(
+        selectedLocale: currentLocale,
+        onLanguageSelected: onSelected,
+      ),
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
@@ -280,224 +298,168 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
             ),
-            const SizedBox(height: 30),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      blurRadius: 8,
-                      spreadRadius: 2,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: ListView(
-                  padding: const EdgeInsets.all(10),
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: [
-                    ListTile(
-                      leading: const Icon(
-                        Icons.class_outlined,
-                        color: Colors.blue,
-                        size: 30,
-                      ),
-                      title: const Text(
-                        "Class",
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      trailing: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 0),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            value: selectedClass, // Ensure selectedClass matches one of the DropdownMenuItem values
-                            icon: const Icon(Icons.arrow_drop_down,
-                                color: Colors.black),
-                            onChanged: (value) {
-                              if (value != null && value != selectedClass) {
-                                showDialog(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                          BorderRadius.circular(20)),
-                                      title: const Text(
-                                        'Are you sure you want to change your class?',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18),
-                                      ),
-                                      content: const Text(
-                                        'All your progress data will be erased for this class.\nYou will need to relogin to start your journey with a new Class',
-                                        style: TextStyle(fontSize: 16),
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: const Text(
-                                            'Cancel',
-                                            style: TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 16),
-                                          ),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            if (value != null) {
-                                              setState(() {
-                                                selectedClass = value;
-                                              });
-                                              _updateClass(value);
-                                              Navigator.of(context).pop();
-                                            }
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.red,
-                                            foregroundColor: Colors.white,
-                                          ),
-                                          child: const Text('Yes'),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              }
-                            },
-                            items: [
-                              const DropdownMenuItem(
-                                value: 'SELECT',
-                                child: Text('SELECT'),
-                              ),
-                              ...List.generate(
-                                  12,
-                                      (index) => DropdownMenuItem(
-                                    value: '${index + 1}',
-                                    child: Text('${index + 1}'),
-                                  )),
-                            ],
-                          ),
-                        ),
-                      ),
-                      contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 15),
-                    ),
-                    _ProfileOption(
-                      icon: Icons.settings,
-                      text: L10n.getTranslatedText(context, 'Settings'),
-                      iconColor: Colors.blue,
-                      onTap: () {
-                        print('Settings tapped');
-                      },
-                    ),
-                    _ProfileOption(
-                      icon: Icons.credit_card,
-                      text: L10n.getTranslatedText(context, 'Billing Details'),
-                      iconColor: Colors.blue,
-                      onTap: () {
-                        print('Billing Details tapped');
-                      },
-                    ),
-                    _ProfileOption(
-                      icon: Icons.people,
-                      text: L10n.getTranslatedText(context, 'User Management'),
-                      iconColor: Colors.blue,
-                      onTap: () {
-                        print('User Management tapped');
-                      },
-                    ),
-                    _ProfileOption(
-                      icon: Icons.info,
-                      text: L10n.getTranslatedText(context, 'Information'),
-                      iconColor: Colors.blue,
-                      onTap: () {
-                        print('Information tapped');
-                      },
-                    ),
-                    _ProfileOption(
-                      icon: Icons.card_giftcard,
-                      text: L10n.getTranslatedText(context, 'Redeem Points'),
-                      iconColor: Colors.blue,
-                      onTap: () {
-                        print('Redeem points tapped');
-                      },
-                    ),
-                    _ProfileOption(
-                      icon: Icons.logout,
-                      text: L10n.getTranslatedText(context, 'Logout'),
-                      iconColor: Colors.red,
-                      onTap: () async {
-                        try {
-                          await AuthService().signOut();
-                          print('✅ User signed out successfully');
-
-                          if (mounted) {
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const LogInView()),
-                                  (route) => false,
-                            );
-
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  L10n.getTranslatedText(
-                                      context, 'You have been logged out'),
+            const SizedBox(height: 5),
+            ListView(
+              padding: const EdgeInsets.all(10),
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              children: [
+                ReusableProfileOption(
+                  icon: Icons.class_outlined,
+                  title: L10n.getTranslatedText(context, 'Class'),
+                  trailingWidget: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      value: selectedClass,
+                      icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
+                      onChanged: (value) {
+                        if (value != selectedClass) {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                title: const Text(
+                                  'Are you sure you want to change your class?',
+                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                                 ),
-                              ),
-                            );
-                          }
-                        } catch (e) {
-                          print('❌ Error during logout: $e');
+                                content: const Text(
+                                  'All your progress data will be erased for this class.\nYou will need to relogin to start your journey with a new Class',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text(
+                                      'Cancel',
+                                      style: TextStyle(color: Colors.grey, fontSize: 16),
+                                    ),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      if (value != null) {
+                                        setState(() {
+                                          selectedClass = value!;
+                                        });
+                                        _updateClass(value!.replaceAll('Class ', ''));
+                                        Navigator.of(context).pop();
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.red,
+                                      foregroundColor: Colors.white,
+                                    ),
+                                    child: const Text('Yes'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         }
                       },
+                      items: [
+                        const DropdownMenuItem(
+                          value: 'SELECT',
+                          child: Text('SELECT'),
+                        ),
+                        ...List.generate(
+                            12,
+                                (index) => DropdownMenuItem(
+                              value: '${index + 1}',
+                              child: Text('${index + 1}'),
+                            )),
+                      ],
                     ),
-                    const SizedBox(height: 20),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Text(
-                        L10n.getTranslatedText(context, 'Select Language'),
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Consumer<LanguageProvider>(
-                        builder: (context, provider, child) {
-                          return DropdownButton<Locale>(
-                            value: provider.locale,
-                            hint: const Text("Choose Language"),
-                            isExpanded: true,
-                            onChanged: (Locale? newLocale) {
-                              if (newLocale != null) {
-                                _changeLanguage(newLocale);
-                              }
+                  ),
+                ),
+                ReusableProfileOption(
+                  icon: Icons.translate,
+                  title: L10n.getTranslatedText(context, 'language'),
+                  trailingWidget: Consumer<LanguageProvider>(
+                    builder: (context, provider, child) {
+                      return GestureDetector(
+                        onTap: () {
+                          showLanguageSelectionSheet(
+                            context,
+                            provider.locale,
+                                (Locale newLocale) {
+                              _changeLanguage(newLocale);
                             },
-                            items: L10n.supportedLocales.map((Locale locale) {
-                              return DropdownMenuItem(
-                                value: locale,
-                                child: Text(
-                                    L10n.getLanguageName(locale.languageCode)),
-                              );
-                            }).toList(),
                           );
                         },
-                      ),
-                    ),
-                  ],
+                        child:Icon(Icons.arrow_forward_ios, size: 18, color: Colors.grey[500],), // Only forward arrow
+                      );
+                    },
+                  ),
+                  onTap: () {},
                 ),
-              ),
+                ProfileOption(
+                  icon: Icons.settings,
+                  text: L10n.getTranslatedText(context, 'Settings'),
+                  iconColor: AcademeTheme.appColor,
+                  onTap: () {
+                    print('Settings tapped');
+                  },
+                ),
+                ProfileOption(
+                  icon: Icons.credit_card,
+                  text: L10n.getTranslatedText(context, 'Billing Details'),
+                  iconColor: AcademeTheme.appColor,
+                  onTap: () {
+                    print('Billing Details tapped');
+                  },
+                ),
+                ProfileOption(
+                  icon: Icons.info,
+                  text: L10n.getTranslatedText(context, 'Information'),
+                  iconColor: AcademeTheme.appColor,
+                  onTap: () {
+                    print('Information tapped');
+                  },
+                ),
+                ProfileOption(
+                  icon: Icons.card_giftcard,
+                  text: L10n.getTranslatedText(context, 'Redeem Me Points'),
+                  iconColor: AcademeTheme.appColor,
+                  onTap: () {
+                    print('Redeem points tapped');
+                  },
+                ),
+                ProfileOption(
+                  icon: Icons.logout,
+                  text: L10n.getTranslatedText(context, 'Logout'),
+                  iconColor: Colors.red,
+                  onTap: () async {
+                    try {
+                      await AuthService().signOut();
+                      print('✅ User signed out successfully');
+
+                      if (mounted) {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => const LogInView()),
+                              (route) => false,
+                        );
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              L10n.getTranslatedText(context, 'You have been logged out'),
+                            ),
+                          ),
+                        );
+                      }
+                    } catch (e) {
+                      print('❌ Error during logout: $e');
+                    }
+                  },
+                  showTrailing: false,
+                ),
+                const SizedBox(height: 20),
+
+              ],
             ),
             const SizedBox(height: 30),
           ],
@@ -507,43 +469,95 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
-class _ProfileOption extends StatelessWidget {
-  final IconData icon;
-  final String text;
-  final Color? iconColor;
-  final VoidCallback onTap;
 
-  const _ProfileOption({
-    required this.icon,
-    required this.text,
-    required this.onTap,
-    this.iconColor,
-    super.key,
-  });
+
+class LanguageSelectionBottomSheet extends StatefulWidget {
+  final Locale selectedLocale;
+  final Function(Locale) onLanguageSelected;
+
+  const LanguageSelectionBottomSheet({
+    Key? key,
+    required this.selectedLocale,
+    required this.onLanguageSelected,
+  }) : super(key: key);
+
+  @override
+  _LanguageSelectionBottomSheetState createState() => _LanguageSelectionBottomSheetState();
+}
+
+class _LanguageSelectionBottomSheetState extends State<LanguageSelectionBottomSheet> {
+  Locale? _selectedLocale;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedLocale = widget.selectedLocale;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: ListTile(
-        leading: Icon(
-          icon,
-          color: iconColor ?? AcademeTheme.appColor,
-          size: 30,
-        ),
-        title: Text(
-          text,
-          style: const TextStyle(fontSize: 20),
-        ),
-        trailing: GestureDetector(
-          onTap: onTap,
-          child: const Icon(
-            Icons.arrow_forward_ios,
-            size: 20,
-            color: Colors.grey,
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text(
+            "Select Language",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-        ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+          const SizedBox(height: 10),
+          DropdownButtonFormField<Locale>(
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.grey[200],
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide.none,
+              ),
+            ),
+            value: _selectedLocale,
+            items: L10n.supportedLocales.map((Locale locale) {
+              return DropdownMenuItem(
+                value: locale,
+                child: Text(L10n.getLanguageName(locale.languageCode)),
+              );
+            }).toList(),
+            onChanged: (Locale? locale) {
+              setState(() {
+                _selectedLocale = locale;
+              });
+            },
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.yellow,
+              padding: const EdgeInsets.symmetric(horizontal: 150, vertical: 10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            onPressed: () {
+              if (_selectedLocale != null) {
+                widget.onLanguageSelected(_selectedLocale!);
+                Navigator.pop(context); // Close sheet
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Please select a language')),
+                );
+              }
+            },
+            child: const Text(
+              "Confirm",
+              style: TextStyle(fontSize: 16, color: Colors.black),
+            ),
+          ),
+        ],
       ),
     );
   }

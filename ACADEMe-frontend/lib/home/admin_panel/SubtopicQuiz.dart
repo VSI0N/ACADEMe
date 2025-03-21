@@ -57,14 +57,14 @@ class _SubTopicQuizScreenState extends State<SubTopicQuizScreen> {
         url,
         headers: {
           "Authorization": "Bearer $token",
-          "Content-Type": "application/json",
+          "Content-Type": "application/json; charset=UTF-8", // Ensure UTF-8 encoding
         },
       );
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body); // Parse as List<dynamic>
+        final List<dynamic> data = json.decode(utf8.decode(response.bodyBytes)); // Decode with UTF-8
         setState(() {
-          quizQuestions = data.cast<Map<String, dynamic>>(); // Cast to List<Map<String, dynamic>>
+          quizQuestions = data.cast<Map<String, dynamic>>();
           isLoading = false;
         });
       } else {
@@ -183,19 +183,19 @@ class _SubTopicQuizScreenState extends State<SubTopicQuizScreen> {
         url,
         headers: {
           "Authorization": "Bearer $token",
-          "Content-Type": "application/json",
+          "Content-Type": "application/json; charset=UTF-8", // Ensure UTF-8 encoding
         },
         body: json.encode({
-          "title": "New Quiz", // Adding the required title field
-          "question_text": question, // Updated key to match API
+          "title": "New Quiz",
+          "question_text": question,
           "options": options,
           "correct_option": correctOption,
-          "target_language": widget.targetLanguage, // Include target_language
+          "target_language": widget.targetLanguage,
         }),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final responseData = json.decode(response.body);
+        final responseData = json.decode(utf8.decode(response.bodyBytes)); // Decode with UTF-8
         print("✅ Quiz question added successfully: ${responseData["message"]}");
         return true;
       } else {
@@ -235,7 +235,7 @@ class _SubTopicQuizScreenState extends State<SubTopicQuizScreen> {
           itemCount: quizQuestions.length,
           itemBuilder: (context, index) {
             final question = quizQuestions[index];
-            final options = question["options"] as List<dynamic>? ?? []; // Handle null options
+            final options = question["options"] as List<dynamic>? ?? [];
             return Card(
               margin: EdgeInsets.symmetric(vertical: 8),
               elevation: 4,
@@ -248,7 +248,7 @@ class _SubTopicQuizScreenState extends State<SubTopicQuizScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "${index + 1}. ${question["question_text"]}", // Updated key to match API
+                      "${index + 1}. ${question["question_text"]}",
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 8),

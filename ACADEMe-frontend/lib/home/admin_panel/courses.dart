@@ -5,6 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../academe_theme.dart';
 import 'topic.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CourseManagementScreen extends StatefulWidget {
   @override
@@ -14,10 +15,20 @@ class CourseManagementScreen extends StatefulWidget {
 class _CourseManagementScreenState extends State<CourseManagementScreen> {
   List<Map<String, dynamic>> courses = [];
   final _storage = FlutterSecureStorage();
+  String? _targetLanguage;
 
   @override
   void initState() {
     super.initState();
+    _loadLanguageAndCourses();
+  }
+
+  Future<void> _loadLanguageAndCourses() async {
+    // Fetch the app's language from SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    _targetLanguage = prefs.getString('language') ?? 'en'; // Default to 'en' if not set
+
+    // Load courses after fetching the language
     _loadCourses();
   }
 
@@ -28,18 +39,16 @@ class _CourseManagementScreenState extends State<CourseManagementScreen> {
       return;
     }
 
-    final String targetLanguage = "en"; // Set the target language accordingly
-
     final response = await http.get(
-      Uri.parse('${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/?target_language=$targetLanguage'),
+      Uri.parse('${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/?target_language=$_targetLanguage'),
       headers: {
         "Authorization": "Bearer $token",
-        "Content-Type": "application/json",
+        "Content-Type": "application/json; charset=UTF-8", // Ensure UTF-8 encoding
       },
     );
 
     if (response.statusCode == 200) {
-      List<dynamic> data = json.decode(response.body);
+      List<dynamic> data = json.decode(utf8.decode(response.bodyBytes)); // Decode with UTF-8
       setState(() {
         courses = data.map((item) => {
           "id": item["id"].toString(),
@@ -98,7 +107,7 @@ class _CourseManagementScreenState extends State<CourseManagementScreen> {
                   Uri.parse('${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/'),
                   headers: {
                     "Authorization": "Bearer $token",
-                    "Content-Type": "application/json",
+                    "Content-Type": "application/json; charset=UTF-8", // Ensure UTF-8 encoding
                   },
                   body: json.encode({
                     "title": titleController.text,

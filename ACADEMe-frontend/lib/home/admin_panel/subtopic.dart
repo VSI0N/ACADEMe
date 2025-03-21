@@ -6,10 +6,13 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../academe_theme.dart';
 import 'TopicQuiz.dart'; // Import the TopicQuiz screen
 import 'material.dart'; // Import the MaterialScreen
 import 'SubTopicContent.dart';
+import '../../localization/language_provider.dart'; // Import the LanguageProvider
 
 class SubtopicScreen extends StatefulWidget {
   final String courseId;
@@ -68,8 +71,11 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
   }
 
   Future<void> _fetchSubtopics() async {
+    final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
+    final targetLanguage = languageProvider.locale.languageCode;
+
     final url = Uri.parse(
-        "${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/?target_language=${widget.targetLanguage}");
+        "${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/?target_language=$targetLanguage");
 
     try {
       String? token = await _storage.read(key: "access_token"); // Retrieve token
@@ -82,12 +88,12 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
         url,
         headers: {
           "Authorization": "Bearer $token", // Add token to headers
-          "Content-Type": "application/json",
+          "Content-Type": "application/json; charset=utf-8",
         },
       );
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
+        final List<dynamic> data = json.decode(utf8.decode(response.bodyBytes));
         setState(() {
           subtopics = data.cast<Map<String, dynamic>>();
         });
@@ -114,12 +120,12 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
         url,
         headers: {
           "Authorization": "Bearer $token", // Add token to headers
-          "Content-Type": "application/json",
+          "Content-Type": "application/json; charset=utf-8",
         },
       );
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
+        final List<dynamic> data = json.decode(utf8.decode(response.bodyBytes));
         setState(() {
           materials = data.cast<Map<String, dynamic>>();
         });
@@ -132,8 +138,11 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
   }
 
   Future<void> _fetchQuizzes() async {
+    final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
+    final targetLanguage = languageProvider.locale.languageCode;
+
     final url = Uri.parse(
-        "${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/${widget.courseId}/topics/${widget.topicId}/quizzes/?target_language=${widget.targetLanguage}");
+        "${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/${widget.courseId}/topics/${widget.topicId}/quizzes/?target_language=$targetLanguage");
 
     try {
       String? token = await _storage.read(key: "access_token"); // Retrieve token
@@ -146,12 +155,12 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
         url,
         headers: {
           "Authorization": "Bearer $token", // Add token to headers
-          "Content-Type": "application/json",
+          "Content-Type": "application/json; charset=utf-8",
         },
       );
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
+        final List<dynamic> data = json.decode(utf8.decode(response.bodyBytes));
         setState(() {
           quizzes = data.cast<Map<String, dynamic>>();
         });
@@ -227,7 +236,7 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
         url,
         headers: {
           "Authorization": "Bearer $token", // Add token to headers
-          "Content-Type": "application/json",
+          "Content-Type": "application/json; charset=utf-8",
         },
         body: json.encode({
           "title": title,
@@ -236,7 +245,7 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final responseData = json.decode(response.body);
+        final responseData = json.decode(utf8.decode(response.bodyBytes));
         print("✅ Subtopic added successfully: ${responseData["message"]}");
         return true;
       } else {
@@ -262,7 +271,7 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
-              title: Text("Add Material"),
+              title: Text("Add Topic Material"),
               content: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -448,7 +457,7 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
         final TextEditingController descriptionController = TextEditingController();
 
         return AlertDialog(
-          title: Text("Add Quiz"),
+          title: Text("Add Topic Quiz"),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -504,7 +513,7 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
         url,
         headers: {
           "Authorization": "Bearer $token", // Add token to headers
-          "Content-Type": "application/json",
+          "Content-Type": "application/json; charset=utf-8",
         },
         body: json.encode({
           "title": title,
@@ -513,7 +522,7 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final responseData = json.decode(response.body);
+        final responseData = json.decode(utf8.decode(response.bodyBytes));
         print("✅ Quiz added successfully: ${responseData["message"]}");
         return true;
       } else {
@@ -626,7 +635,7 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
       topicTitle: widget.topicTitle,
       subtopicId: item["id"],
       subtopicTitle: item["title"] ?? "Subtopic Content",
-      targetLanguage: widget.targetLanguage,
+      // targetLanguage: widget.targetLanguage,
     );
   }
 

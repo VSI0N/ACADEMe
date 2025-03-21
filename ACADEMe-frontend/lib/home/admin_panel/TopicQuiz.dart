@@ -54,12 +54,12 @@ class _TopicQuizScreenState extends State<TopicQuizScreen> {
         url,
         headers: {
           "Authorization": "Bearer $token",
-          "Content-Type": "application/json",
+          "Content-Type": "application/json; charset=UTF-8", // Ensure UTF-8 encoding
         },
       );
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
+        final List<dynamic> data = json.decode(utf8.decode(response.bodyBytes)); // Decode with UTF-8
         setState(() {
           questions = data.cast<Map<String, dynamic>>();
           isLoading = false;
@@ -181,17 +181,18 @@ class _TopicQuizScreenState extends State<TopicQuizScreen> {
         url,
         headers: {
           "Authorization": "Bearer $token",
-          "Content-Type": "application/json",
+          "Content-Type": "application/json; charset=UTF-8", // Ensure UTF-8 encoding
         },
         body: json.encode({
           "question_text": question,
           "options": options,
           "correct_option": correctOption,
+          "target_language": widget.targetLanguage, // Include target_language
         }),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final responseData = json.decode(response.body);
+        final responseData = json.decode(utf8.decode(response.bodyBytes)); // Decode with UTF-8
         print("✅ Question added successfully: ${responseData["message"]}");
         return true;
       } else {

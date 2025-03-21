@@ -7,6 +7,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
+import 'package:provider/provider.dart';
+import '../../localization/language_provider.dart'; // Import the LanguageProvider
 
 class MaterialScreen extends StatefulWidget {
   final String courseId;
@@ -56,12 +58,15 @@ class _MaterialScreenState extends State<MaterialScreen> {
   }
 
   Future<void> _fetchMaterialDetails() async {
+    final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
+    final targetLanguage = languageProvider.locale.languageCode;
+
     // Construct the URL based on whether subtopicId is provided
     final url = widget.subtopicId == null
         ? Uri.parse(
-        "${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/${widget.courseId}/topics/${widget.topicId}/materials/")
+        "${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/${widget.courseId}/topics/${widget.topicId}/materials/?target_language=$targetLanguage")
         : Uri.parse(
-        "${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/${widget.subtopicId}/materials/");
+        "${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/${widget.subtopicId}/materials/?target_language=$targetLanguage");
 
     try {
       String? token = await _storage.read(key: "access_token");
@@ -74,12 +79,12 @@ class _MaterialScreenState extends State<MaterialScreen> {
         url,
         headers: {
           "Authorization": "Bearer $token",
-          "Content-Type": "application/json",
+          "Content-Type": "application/json; charset=utf-8",
         },
       );
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
+        final List<dynamic> data = json.decode(utf8.decode(response.bodyBytes));
         final material = data.firstWhere(
               (material) => material["id"] == widget.materialId,
           orElse: () => null,
