@@ -145,6 +145,7 @@ class _CourseListScreenState extends State<CourseListScreen>
                 labelColor: Colors.blue,
                 unselectedLabelColor: Colors.black54,
                 labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+                indicatorSize: TabBarIndicatorSize.tab,
                 indicator: UnderlineTabIndicator(
                   borderSide: BorderSide(width: 4, color: Colors.blue),
                 ),

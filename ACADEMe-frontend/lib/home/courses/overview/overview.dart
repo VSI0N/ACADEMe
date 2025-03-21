@@ -240,6 +240,7 @@ class _OverviewScreenState extends State<OverviewScreen>
                             labelColor: AcademeTheme.appColor,
                             unselectedLabelColor: Colors.black,
                             indicatorColor: AcademeTheme.appColor,
+                            indicatorSize: TabBarIndicatorSize.tab,
                             labelStyle: TextStyle(
                                 fontSize: screenWidth *
                                     0.045), // Responsive font size

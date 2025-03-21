@@ -96,6 +96,8 @@ class _SignUpViewState extends State<SignUpView> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -109,9 +111,9 @@ class _SignUpViewState extends State<SignUpView> {
               children: [
                 Center(
                   child: Container(
-                    constraints: BoxConstraints(maxWidth: 250, maxHeight: 300),
+                    constraints: BoxConstraints(maxWidth: width * 0.6, maxHeight: height * 0.5),
                     child: Image.asset(
-                      'assets/academe/study_image.png',
+                      'assets/images/signUp_logo.png',
                       fit: BoxFit.contain,
                     ),
                   ),
@@ -125,12 +127,12 @@ class _SignUpViewState extends State<SignUpView> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(left: 30, right: 30),
+                            padding: EdgeInsets.only(left: width * 0.09, right: width * 0.09),
                             child: Text(
                               '${L10n.getTranslatedText(context, 'Create Your ')} '
                                   '${L10n.getTranslatedText(context, 'Account')}',
                               style: TextStyle(
-                                fontSize: 39.0,
+                                fontSize: width * 0.1,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -139,10 +141,10 @@ class _SignUpViewState extends State<SignUpView> {
                       ),
                     ),
                     SizedBox(
-                      height: 20,
+                      height: height * 0.025,
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 30, right: 30),
+                      padding: EdgeInsets.only(left: width * 0.08, right: width * 0.08),
                       child: TextFormField(
                         controller: _usernameController,
                         decoration: InputDecoration(
@@ -152,7 +154,22 @@ class _SignUpViewState extends State<SignUpView> {
                             L10n.getTranslatedText(context, 'Username'),
                             hintText: L10n.getTranslatedText(
                                 context, 'Enter a username'),
-                            prefixIcon: Icon(Icons.person)),
+                            prefixIcon: Icon(Icons.person),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7),
+                            borderSide: BorderSide.none,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7),
+                            borderSide: BorderSide.none,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7),
+                            borderSide: const BorderSide(
+                              color: Colors.transparent,
+                              width: 2,
+                            ),
+                          ),),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return L10n.getTranslatedText(
@@ -163,7 +180,7 @@ class _SignUpViewState extends State<SignUpView> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 30, right: 30, top: 16),
+                      padding: EdgeInsets.only(left: width * 0.08, right: width * 0.08, top: height * 0.015),
                       child: TextFormField(
                         controller: _emailController,
                         decoration: InputDecoration(
@@ -172,7 +189,22 @@ class _SignUpViewState extends State<SignUpView> {
                             labelText: L10n.getTranslatedText(context, 'Email'),
                             hintText: L10n.getTranslatedText(
                                 context, 'Enter your email'),
-                            prefixIcon: Icon(Icons.email)),
+                            prefixIcon: Icon(Icons.email),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7),
+                            borderSide: BorderSide.none,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7),
+                            borderSide: BorderSide.none,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7),
+                            borderSide: const BorderSide(
+                              color: Colors.transparent,
+                              width: 2,
+                            ),
+                          ),),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return L10n.getTranslatedText(
@@ -188,7 +220,7 @@ class _SignUpViewState extends State<SignUpView> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 30, right: 30, top: 16),
+                      padding: EdgeInsets.only(left: width * 0.08, right: width * 0.08, top: height * 0.015),
                       child: TextFormField(
                         controller: _passwordController,
                         obscureText: !_isPasswordVisible,
@@ -210,6 +242,21 @@ class _SignUpViewState extends State<SignUpView> {
                               });
                             },
                           ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7),
+                            borderSide: BorderSide.none,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7),
+                            borderSide: BorderSide.none,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7),
+                            borderSide: const BorderSide(
+                              color: Colors.transparent,
+                              width: 2,
+                            ),
+                          ),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -225,10 +272,10 @@ class _SignUpViewState extends State<SignUpView> {
                       ),
                     ),
                     SizedBox(
-                      height: 4,
+                      height: height * 0.006,
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 20, right: 40),
+                      padding: EdgeInsets.only(left: width * 0.06, right: width * 0.06),
                       child: Row(
                         children: [
                           Checkbox(
@@ -242,16 +289,16 @@ class _SignUpViewState extends State<SignUpView> {
                           Text(
                             L10n.getTranslatedText(
                                 context, 'I agree to terms and conditions'),
-                            style: TextStyle(fontSize: 14),
+                            style: TextStyle(fontSize: width * 0.037),
                           ),
                         ],
                       ),
                     ),
                     SizedBox(
-                      height: 4,
+                      height: height * 0.005,
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 35),
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.07),
                       child: SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
@@ -260,7 +307,7 @@ class _SignUpViewState extends State<SignUpView> {
                             backgroundColor:
                             Colors.yellow[600], // Change button color
                             minimumSize:
-                            Size(double.infinity, 50), // Adjust button size
+                            Size(double.infinity, width * 0.11), // Adjust button size
                           ),
                           child: _isLoading
                               ? CircularProgressIndicator(color: Colors.white)
@@ -270,16 +317,16 @@ class _SignUpViewState extends State<SignUpView> {
                             children: [
                               Image.asset(
                                 'assets/icons/house_door.png', // Replace with your image path
-                                height: 24, // Adjust size
-                                width: 24,
+                                height: height * 0.05, // Adjust size
+                                width: width * 0.06,
                               ),
                               SizedBox(
                                   width:
-                                  10), // Space between icon and text
+                                  width * 0.025), // Space between icon and text
                               Text(
                                 L10n.getTranslatedText(context, 'Signup'),
                                 style: TextStyle(
-                                  fontSize: 18, // Adjust font size
+                                  fontSize: width * 0.045, // Adjust font size
                                   fontWeight: FontWeight
                                       .w500, // Change font weight
                                   color: Colors.black, // Text color
@@ -290,11 +337,11 @@ class _SignUpViewState extends State<SignUpView> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: height * 0.01),
                     Text(
                       L10n.getTranslatedText(context, 'OR'),
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: width * 0.04,
                         color: Colors.black54,
                         fontWeight: FontWeight.w600,
                       ),
@@ -303,7 +350,7 @@ class _SignUpViewState extends State<SignUpView> {
                     // SizedBox(height: 2),
 
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 35),
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.07),
                       child: SizedBox(
                         width: double.infinity,
                         child: ElevatedButton.icon(
@@ -313,16 +360,16 @@ class _SignUpViewState extends State<SignUpView> {
                               ? CircularProgressIndicator(color: Colors.white)
                               : Padding(
                             padding: EdgeInsets.only(
-                                right: 7), // Adjust spacing
+                                right: width * 0.02), // Adjust spacing
                             child: Image.asset(
                                 'assets/icons/google_icon.png',
-                                height: 22),
+                                height: height * 0.025),
                           ),
                           label: Text(
                             L10n.getTranslatedText(
                                 context, 'Continue with Google'),
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: width * 0.045,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -331,7 +378,7 @@ class _SignUpViewState extends State<SignUpView> {
                             foregroundColor: Colors.black,
                             elevation: 2,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
+                              borderRadius: BorderRadius.circular(20),
                             ),
                           ),
                         ),
@@ -339,7 +386,7 @@ class _SignUpViewState extends State<SignUpView> {
                     ),
 
                     SizedBox(
-                      height: 30,
+                      height: height * 0.03,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -348,7 +395,7 @@ class _SignUpViewState extends State<SignUpView> {
                           L10n.getTranslatedText(
                               context, 'Already have an account?'),
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: width * 0.04,
                             color: Colors.black54,
                           ),
                         ),
@@ -363,7 +410,7 @@ class _SignUpViewState extends State<SignUpView> {
                           child: Text(
                             L10n.getTranslatedText(context, 'login'),
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: width * 0.04,
                               fontWeight: FontWeight.w500,
                               color: AcademeTheme
                                   .appColor, // Change color for emphasis
