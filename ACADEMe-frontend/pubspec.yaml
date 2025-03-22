@@ -156,4 +156,4 @@ dependency_overrides:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/logo/academe_logo_cropped_2.png"
+  image_path: "assets/logo/ACADEMe_logo.png"

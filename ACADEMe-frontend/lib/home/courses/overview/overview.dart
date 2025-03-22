@@ -121,7 +121,7 @@ class _OverviewScreenState extends State<OverviewScreen>
               /// **🔹 Responsive Gradient Header**
               Container(
                 width: double.infinity,
-                height: height * 0.45, // 30% of the screen height
+                height: height * 0.38, // 30% of the screen height
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     colors: [Color(0xFF967EF6), Color(0xFFE8DAF9)],

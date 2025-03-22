@@ -374,12 +374,14 @@ class _SignUpViewState extends State<SignUpView> {
                             ),
                           ),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
+                            backgroundColor: Colors.grey[100],
                             foregroundColor: Colors.black,
                             elevation: 2,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
                             ),
+                            minimumSize:
+                            Size(double.infinity, width * 0.11),
                           ),
                         ),
                       ),

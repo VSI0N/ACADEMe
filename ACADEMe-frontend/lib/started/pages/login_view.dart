@@ -117,8 +117,8 @@ class _LogInViewState extends State<LogInView> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -129,19 +129,19 @@ class _LogInViewState extends State<LogInView> {
             child: LayoutBuilder(
               builder: (context, constraints) {
                 return Container(
-                  padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+                  padding: EdgeInsets.symmetric(horizontal: width * 0.05),
                   constraints: const BoxConstraints(maxWidth: 500),
                   child: SingleChildScrollView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        SizedBox(height: screenHeight * 0.0),
+                        SizedBox(height: height * 0.0),
                         Image.asset(
                           'assets/academe/academe_logo.png',
                           height: constraints.maxHeight * 0.23,
                         ),
                         Container(
-                          padding: EdgeInsets.all(screenWidth * 0.05),
+                          padding: EdgeInsets.all(width * 0.05),
                           decoration: BoxDecoration(
                             color: AcademeTheme.white,
                             boxShadow: [
@@ -161,7 +161,7 @@ class _LogInViewState extends State<LogInView> {
                                 Text(
                                   L10n.getTranslatedText(context, 'Hello'),
                                   style: TextStyle(
-                                    fontSize: screenWidth * 0.08,
+                                    fontSize: width * 0.08,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -169,16 +169,16 @@ class _LogInViewState extends State<LogInView> {
                                   L10n.getTranslatedText(
                                       context, 'Welcome back'),
                                   style: TextStyle(
-                                    fontSize: screenWidth * 0.047,
+                                    fontSize: width * 0.047,
                                     color: Colors.grey,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                SizedBox(height: screenHeight * 0.02),
+                                SizedBox(height: height * 0.02),
                                 Text(
                                   L10n.getTranslatedText(context, 'Email'),
                                   style: TextStyle(
-                                    fontSize: screenWidth * 0.043,
+                                    fontSize: width * 0.043,
                                     color: Colors.black54,
                                     fontWeight: FontWeight.w700,
                                   ),
@@ -221,11 +221,11 @@ class _LogInViewState extends State<LogInView> {
                                     return null;
                                   },
                                 ),
-                                SizedBox(height: screenHeight * 0.02),
+                                SizedBox(height: height * 0.02),
                                 Text(
                                   L10n.getTranslatedText(context, 'Password'),
                                   style: TextStyle(
-                                    fontSize: screenWidth * 0.043,
+                                    fontSize: width * 0.043,
                                     color: Colors.black54,
                                     fontWeight: FontWeight.w700,
                                   ),
@@ -300,7 +300,7 @@ class _LogInViewState extends State<LogInView> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: screenHeight * 0.01),
+                                SizedBox(height: height * 0.01),
                                 Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 1),
                                   child: SizedBox(
@@ -311,7 +311,7 @@ class _LogInViewState extends State<LogInView> {
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Colors.yellow[600],
                                         minimumSize:
-                                        const Size(double.infinity, 42),
+                                         Size(double.infinity, width * 0.11),
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
                                           BorderRadius.circular(30),
@@ -340,7 +340,7 @@ class _LogInViewState extends State<LogInView> {
                                                 context, 'Log in'),
                                             style: TextStyle(
                                               fontSize:
-                                              screenWidth * 0.045,
+                                              width * 0.045,
                                               fontWeight: FontWeight.w500,
                                               color: Colors.black,
                                             ),
@@ -350,14 +350,14 @@ class _LogInViewState extends State<LogInView> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: screenHeight * 0.01),
+                                SizedBox(height: height * 0.01),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
                                       L10n.getTranslatedText(context, 'OR'),
                                       style: TextStyle(
-                                        fontSize: screenWidth * 0.04,
+                                        fontSize: width * 0.04,
                                         fontWeight: FontWeight.w600,
                                         color: Colors.black54,
                                       ),
@@ -386,23 +386,26 @@ class _LogInViewState extends State<LogInView> {
                                         L10n.getTranslatedText(
                                             context, 'Continue with Google'),
                                         style: TextStyle(
-                                          fontSize: screenWidth * 0.045,
+                                          fontSize: width * 0.045,
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white,
+                                        backgroundColor: Colors.grey[100],
                                         foregroundColor: Colors.black,
                                         elevation: 2,
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
-                                          BorderRadius.circular(15),
+                                          BorderRadius.circular(30),
                                         ),
+                                        minimumSize:
+                                        Size(double.infinity, width * 0.11),
+
                                       ),
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: screenHeight * 0.04),
+                                SizedBox(height: height * 0.04),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -410,7 +413,7 @@ class _LogInViewState extends State<LogInView> {
                                       L10n.getTranslatedText(
                                           context, 'Don\'t have an account?'),
                                       style: TextStyle(
-                                        fontSize: screenWidth * 0.038,
+                                        fontSize: width * 0.038,
                                         color: Colors.black54,
                                       ),
                                     ),
@@ -427,7 +430,7 @@ class _LogInViewState extends State<LogInView> {
                                         L10n.getTranslatedText(
                                             context, 'Signup'),
                                         style: TextStyle(
-                                          fontSize: screenWidth * 0.038,
+                                          fontSize: width * 0.038,
                                           fontWeight: FontWeight.w500,
                                           color: AcademeTheme.appColor,
                                         ),

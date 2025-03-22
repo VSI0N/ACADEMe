@@ -8,6 +8,7 @@ import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../widget/whatsapp_audio.dart';
 import 'quiz.dart'; // Import the quiz widget
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -145,7 +146,7 @@ class _FlashCardState extends State<FlashCard> {
 
     // Check if any progress entry with the same material_id exists
     final progressExists = progressList.any((progress) =>
-        progress["material_id"] == materialId &&
+    progress["material_id"] == materialId &&
         progress["activity_type"] == "reading");
 
     if (progressExists) {
@@ -322,13 +323,13 @@ class _FlashCardState extends State<FlashCard> {
                               bottomRight: Radius.circular(0),
                             ),
                             child:
-                                _buildMaterial(index < widget.materials.length
-                                    ? widget.materials[index]
-                                    : {
-                                        "type": "quiz",
-                                        "quiz": widget.quizzes[
-                                            index - widget.materials.length],
-                                      }),
+                            _buildMaterial(index < widget.materials.length
+                                ? widget.materials[index]
+                                : {
+                              "type": "quiz",
+                              "quiz": widget.quizzes[
+                              index - widget.materials.length],
+                            }),
                           ),
                           AnimatedOpacity(
                             opacity: _currentPage == index ? 0.0 : 0.2,
@@ -497,18 +498,18 @@ class _FlashCardState extends State<FlashCard> {
         children: [
           Expanded(
             child: _chewieController == null ||
-                    _videoController == null ||
-                    !_videoController!.value.isInitialized
+                _videoController == null ||
+                !_videoController!.value.isInitialized
                 ? const Center(child: CircularProgressIndicator())
                 : GestureDetector(
-                    onTap: () {
-                      setState(() {});
-                    },
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Chewie(controller: _chewieController!),
-                    ),
-                  ),
+              onTap: () {
+                setState(() {});
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Chewie(controller: _chewieController!),
+              ),
+            ),
           ),
           if (widget.quizzes.isEmpty &&
               _currentPage == widget.materials.length - 1)
@@ -552,7 +553,7 @@ class _FlashCardState extends State<FlashCard> {
               child: CachedNetworkImage(
                 imageUrl: imageUrl,
                 placeholder: (context, url) =>
-                    const Center(child: CircularProgressIndicator()),
+                const Center(child: CircularProgressIndicator()),
                 errorWidget: (context, url, error) => const Icon(Icons.error),
                 fit: BoxFit.cover,
               ),
@@ -592,54 +593,13 @@ class _FlashCardState extends State<FlashCard> {
 
   Widget _buildAudioContent(String audioUrl) {
     return buildStyledContainer(
-      Column(
-        children: [
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.audiotrack, size: 100, color: Colors.blue),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () async {
-                    await _audioPlayer.play(UrlSource(audioUrl));
-                  },
-                  child: const Text("Play Audio"),
-                ),
-              ],
-            ),
-          ),
-          if (widget.quizzes.isEmpty &&
-              _currentPage == widget.materials.length - 1)
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  if (widget.onQuizComplete != null) {
-                    widget.onQuizComplete!();
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.yellow,
-                  minimumSize: const Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: const Text(
-                  "Mark as Completed",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            ),
-        ],
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: WhatsAppAudioPlayer(audioUrl: audioUrl),
       ),
     );
   }
+
 
   Widget _buildDocumentContent(String docUrl) {
     return buildStyledContainer(
@@ -712,11 +672,11 @@ class _FlashCardState extends State<FlashCard> {
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20), // Top-left corner has a radius of 20
             topRight:
-                Radius.circular(20), // Top-right corner has a radius of 20
+            Radius.circular(20), // Top-right corner has a radius of 20
             bottomLeft:
-                Radius.circular(0), // Bottom-left corner has a radius of 0
+            Radius.circular(0), // Bottom-left corner has a radius of 0
             bottomRight:
-                Radius.circular(0), // Bottom-right corner has a radius of 0
+            Radius.circular(0), // Bottom-right corner has a radius of 0
           ),
           boxShadow: [
             BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2),
