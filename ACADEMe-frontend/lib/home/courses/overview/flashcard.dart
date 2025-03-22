@@ -1,6 +1,7 @@
 import 'package:ACADEMe/academe_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../widget/document_preview.dart';
 import '../../../widget/whatsapp_audio.dart';
 import 'quiz.dart'; // Import the quiz widget
 import 'package:http/http.dart' as http;
@@ -608,7 +610,10 @@ class _FlashCardState extends State<FlashCard> {
           Expanded(
             child: Center(
               child: ElevatedButton(
-                onPressed: () => launchUrl(Uri.parse(docUrl)),
+                onPressed: () {
+                  print("Document URL: $docUrl"); // Print URL here
+                  launchUrl(Uri.parse(docUrl));
+                },
                 child: const Text("Open Document"),
               ),
             ),
@@ -619,9 +624,16 @@ class _FlashCardState extends State<FlashCard> {
               padding: const EdgeInsets.all(16.0),
               child: ElevatedButton(
                 onPressed: () {
-                  if (widget.onQuizComplete != null) {
-                    widget.onQuizComplete!();
-                  }
+                  print("Navigating to PDF Viewer with URL: $docUrl"); // Print URL before navigation
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => Scaffold(
+                        appBar: AppBar(title: const Text("Document")),
+                        body: SfPdfViewer.network(docUrl),
+                      ),
+                    ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.yellow,

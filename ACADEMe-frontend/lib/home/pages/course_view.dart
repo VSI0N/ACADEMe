@@ -292,7 +292,7 @@ class _CourseListScreenState extends State<CourseListScreen>
                       children: [
                         Align(
                           alignment: Alignment.centerLeft,
-                          child: Text("0/12 Modules")
+                          child: Text("0/12 ${L10n.getTranslatedText(context, 'Modules')}")
                         ),
                         Align(
                         alignment: Alignment.centerRight,

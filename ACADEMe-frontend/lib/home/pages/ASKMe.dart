@@ -1,4 +1,5 @@
 import 'package:ACADEMe/academe_theme.dart';
+import 'package:ACADEMe/localization/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
@@ -77,10 +78,7 @@ class _ASKMeState extends State<ASKMe> {
   }
 
   // For the chat history
-  List<ChatSession> chatHistory = [
-    ChatSession(title: "Chat with AI", timestamp: "Feb 22, 2025"),
-    ChatSession(title: "Math Help", timestamp: "Feb 21, 2025"),
-  ];
+
 
   void _loadChatSession(ChatSession chat) {
     print("Selected chat: ${chat.title}");
@@ -572,6 +570,14 @@ class _ASKMeState extends State<ASKMe> {
 
   @override
   Widget build(BuildContext context) {
+
+    List<ChatSession> chatHistory = [
+    ChatSession(title: L10n.getTranslatedText(context, 'Chat with AI'),
+        timestamp: "Feb 22, 2025"),
+    ChatSession(title: L10n.getTranslatedText(context, 'Math Help'), timestamp: "Feb 21, 2025"),
+  ];
+
+
     return Scaffold(
       key: _scaffoldKey, // Attach key to control drawer
       appBar: AppBar(

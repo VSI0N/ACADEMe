@@ -8,24 +8,20 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-void main() {
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: ProgressScreen(),
-  ));
-}
-
 class ProgressScreen extends StatelessWidget {
-  String getLetterGrade(double score) {
+  String getLetterGrade(BuildContext context, double score) {
     if (score >= 90) return "A++";
     if (score >= 80) return "A+";
     if (score >= 70) return "A";
     if (score >= 60) return "B+";
     if (score >= 50) return "B";
     if (score >= 40) return "C";
-    if (score == 0) return "Start your\n Journey!";
+    if (score == 0) {
+      return "${L10n.getTranslatedText(context, 'Start your')}\n${L10n.getTranslatedText(context, 'Journey')}";
+    }
     return "F"; // If below 40
   }
+
 
   int totalCourses = 0;
   // Fetch courses from the backend
@@ -235,7 +231,7 @@ class ProgressScreen extends StatelessWidget {
                                         child: _buildCourseProgress(context),
                                       ),
                                       SingleChildScrollView(
-                                        child: _buildActivitySection(),
+                                        child: _buildActivitySection(context),
                                       ),
                                     ],
                                   ),
@@ -391,7 +387,7 @@ class ProgressScreen extends StatelessWidget {
 
         int totalCourses = courses.length; // ✅ Get total courses
         String letterGrade =
-            getLetterGrade(overallGrade); // ✅ Convert to letter grade
+            getLetterGrade(context,overallGrade); // ✅ Convert to letter grade
         double progressValue =
             overallGrade / 100; // ✅ Normalize for progress bar
 
@@ -502,14 +498,14 @@ class ProgressScreen extends StatelessWidget {
 
   Widget _buildMotivationCard(BuildContext context, double score) {
     String getMotivationMessage(double score) {
-      if (score >= 90) return "Outstanding! Keep shining!";
-      if (score >= 80) return "Excellent job! Almost perfect!";
-      if (score >= 70) return "Great work! Keep pushing!";
-      if (score >= 60) return "Good effort! You can do better!";
-      if (score >= 50) return "Keep trying! Progress is progress!";
-      if (score >= 40) return "Don’t give up! Keep learning!";
-      if(score == 0) return "It's time to start your journey!";
-      return "Failure is the first step to success!";
+      if (score >= 90) return L10n.getTranslatedText(context, 'Outstanding! Keep shining!');
+      if (score >= 80) return L10n.getTranslatedText(context,'Excellent job! Almost perfect!');
+      if (score >= 70) return L10n.getTranslatedText(context,'Great work! Keep pushing!');
+      if (score >= 60) return L10n.getTranslatedText(context,'Good effort! You can do better!');
+      if (score >= 50) return L10n.getTranslatedText(context,'Keep trying! Progress is progress!');
+      if (score >= 40) return L10n.getTranslatedText(context,'Don’t give up! Keep learning!');
+      if(score == 0) return L10n.getTranslatedText(context,'It\'s time to start your journey!');
+      return L10n.getTranslatedText(context, 'Failure is the first step to success!');
     }
 
     return GestureDetector(
@@ -643,18 +639,18 @@ class ProgressScreen extends StatelessWidget {
               L10n.getTranslatedText(context, 'Linear Algebra'),
               L10n.getTranslatedText(context, 'Mathematics'),
               80,
-              L10n.getTranslatedText(context, '10 Modules')),
+              L10n.getTranslatedText(context, '10 ${L10n.getTranslatedText(context, 'Modules')}')),
           _buildCourseCard(
               L10n.getTranslatedText(context, 'Organic Chemistry'),
               L10n.getTranslatedText(context, 'Chemistry'),
               25,
-              L10n.getTranslatedText(context, '5 Modules')),
+              L10n.getTranslatedText(context, '5 ${L10n.getTranslatedText(context, 'Modules')}')),
           _buildCourseCard(
               L10n.getTranslatedText(context, 'Linear Algebra'),
               L10n.getTranslatedText(context, 'Mathematics'),
               80,
-              L10n.getTranslatedText(context, '10 Modules')),
-          _buildQuizScores(),
+              L10n.getTranslatedText(context, '10 ${L10n.getTranslatedText(context, 'Modules')}')),
+          _buildQuizScores(context),
         ],
       ),
     );
@@ -716,7 +712,7 @@ class ProgressScreen extends StatelessWidget {
             ),
             SizedBox(height: 5),
             Text(
-              L10n.getTranslatedText(context, 'Redeem your points'),
+              L10n.getTranslatedText(context, 'Redeem your Points'),
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.black54,
@@ -737,6 +733,7 @@ class ProgressScreen extends StatelessWidget {
       ),
     );
   }
+
 
   Widget _buildCourseCard(
       String title, String subject, int progress, String moduleCount) {
@@ -823,7 +820,7 @@ class ProgressScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildQuizScores() {
+  Widget _buildQuizScores(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(
           horizontal: 15, vertical: 12), // Left-Right: 16, Top-Bottom: 12
@@ -843,21 +840,21 @@ class ProgressScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildQuizScoreHeader(),
+            _buildQuizScoreHeader(context),
             SizedBox(height: 10),
-            _buildQuizScoreBars(),
+            _buildQuizScoreBars(context),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildQuizScoreHeader() {
+  Widget _buildQuizScoreHeader(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Your quiz scores",
+          L10n.getTranslatedText(context, "Your quiz scores"),
           style: TextStyle(
             fontSize: 25,
             fontWeight: FontWeight.bold,
@@ -881,7 +878,7 @@ class ProgressScreen extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  "Last 30 days",
+                  L10n.getTranslatedText(context, "Last 30 days"),
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.black54,
@@ -904,13 +901,13 @@ class ProgressScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildQuizScoreBars() {
+  Widget _buildQuizScoreBars(BuildContext context) {
     return Column(
       children: [
-        _buildBar("Maths", 0.9),
-        _buildBar("Chem", 0.6),
-        _buildBar("Phys", 0.2),
-        _buildBar("English", 0.4),
+        _buildBar(L10n.getTranslatedText(context, 'Maths'), 0.9),
+        _buildBar(L10n.getTranslatedText(context, 'Chem'), 0.6),
+        _buildBar(L10n.getTranslatedText(context, 'Phy'), 0.2),
+        _buildBar(L10n.getTranslatedText(context,'English' ), 0.4),
       ],
     );
   }
@@ -955,21 +952,21 @@ class ProgressScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildActivitySection() {
+  Widget _buildActivitySection(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildWeeklyStreak(),
+          _buildWeeklyStreak(context),
           const SizedBox(height: 35),
-          _buildHistorySection(),
+          _buildHistorySection(context),
         ],
       ),
     );
   }
 
-  Widget _buildWeeklyStreak() {
+  Widget _buildWeeklyStreak(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -986,8 +983,8 @@ class ProgressScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Weekly Streak",
+          Text(
+            L10n.getTranslatedText(context, 'Weekly Streak'),
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 21),
           ),
           const SizedBox(height: 10),
@@ -1023,21 +1020,33 @@ class ProgressScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHistorySection() {
+  Widget _buildHistorySection(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "History",
+        Text(
+          L10n.getTranslatedText(context, 'History'),
           style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
-        _buildHistoryItem("Liner Algebra", "Mathematics", "Module - 2", 3),
-        _buildHistoryItem("Liner Algebra", "Mathematics", "Quiz - 2", 1),
-        _buildHistoryItem("Liner Algebra", "Mathematics", "Module - 1", 3),
-        _buildHistoryItem("Daily Streak", "Attendance", "Profile", 1),
-        _buildHistoryItem("Liner Algebra", "Mathematics", "Quiz - 2", 1),
-        _buildHistoryItem("Liner Algebra", "Mathematics", "Module - 1", 3),
+        _buildHistoryItem(L10n.getTranslatedText(context, 'Liner Algebra'),
+            "Mathematics",
+            "Module - 2", 3),
+        _buildHistoryItem(L10n.getTranslatedText(context, 'Liner Algebra'),
+            "Mathematics",
+            "Quiz - 2", 1),
+        _buildHistoryItem(L10n.getTranslatedText(context, 'Liner Algebra'),
+            "Mathematics",
+            "Module - 1", 3),
+        _buildHistoryItem(L10n.getTranslatedText(context, 'Daily Streak'),
+            "Attendance",
+            "Profile", 1),
+        _buildHistoryItem(L10n.getTranslatedText(context, 'Liner Algebra'),
+            L10n.getTranslatedText(context, 'Liner Algebra'),
+            "Quiz - 2", 1),
+        _buildHistoryItem(L10n.getTranslatedText(context, 'Liner Algebra'),
+            "Mathematics",
+            "Module - 1", 3),
       ],
     );
   }

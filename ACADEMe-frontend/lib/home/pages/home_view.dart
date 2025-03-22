@@ -890,7 +890,7 @@ class HomePage extends StatelessWidget {
                                   itemBuilder: (context, index) {
                                     return CourseCard(
                                       courses[index]["title"],
-                                      "${(index + 10) * 2} Lessons",
+                                      "${(index + 10) * 2} ${L10n.getTranslatedText(context, 'Lessons')}",
                                       repeatingColors[index % repeatingColors.length]!,
                                       onTap: () {
                                         // Debug log to confirm the courseId
@@ -917,7 +917,7 @@ class HomePage extends StatelessWidget {
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             child: Text(
-                              "Recommended",
+                              L10n.getTranslatedText(context, 'Recommended'),
                               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                           ),
@@ -929,8 +929,8 @@ class HomePage extends StatelessWidget {
                               children: [
                                 Expanded(
                                   child: CourseCard(
-                                    "Marketing",
-                                    "9 Lessons",
+                              L10n.getTranslatedText(context, 'Marketing'),
+                                    "9 ${L10n.getTranslatedText(context, 'Lessons')}",
                                     Colors.pink[100]!,
                                     onTap: () {
                                       // Navigate to TopicViewScreen with a placeholder courseId
@@ -946,8 +946,8 @@ class HomePage extends StatelessWidget {
                                 SizedBox(width: 8),
                                 Expanded(
                                   child: CourseCard(
-                                    "Trading",
-                                    "14 Lessons",
+                                    L10n.getTranslatedText(context, 'Trading'),
+                                    "14 ${L10n.getTranslatedText(context, 'Lessons')}",
                                     Colors.green[100]!,
                                     onTap: () {
                                       // Navigate to TopicViewScreen with a placeholder courseId

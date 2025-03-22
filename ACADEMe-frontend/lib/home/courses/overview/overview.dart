@@ -48,8 +48,9 @@ class _OverviewScreenState extends State<OverviewScreen>
     }
 
     // Get the target language from the app's language provider
-    final targetLanguage =
-        Provider.of<LanguageProvider>(context, listen: false).locale.languageCode;
+    final targetLanguage = Provider.of<LanguageProvider>(context, listen: false)
+        .locale
+        .languageCode;
 
     try {
       final response = await http.get(
@@ -141,7 +142,8 @@ class _OverviewScreenState extends State<OverviewScreen>
                       Row(
                         children: [
                           IconButton(
-                            icon: const Icon(Icons.arrow_back, color: Colors.black),
+                            icon: const Icon(Icons.arrow_back,
+                                color: Colors.black),
                             onPressed: () => Navigator.pop(context),
                           ),
                           Expanded(
@@ -157,35 +159,52 @@ class _OverviewScreenState extends State<OverviewScreen>
                             ),
                           ),
                           Expanded(
-                            flex: 1, // This keeps the bookmark icon slightly to the right
+                            flex:
+                                1, // This keeps the bookmark icon slightly to the right
                             child: Align(
                               alignment: Alignment.centerRight,
-                              child: const Icon(Icons.bookmark_border, color: Colors.black),
+                              child: const Icon(Icons.bookmark_border,
+                                  color: Colors.black),
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(
-                          height: height * 0.02), // 2% of screen height
-                      Text(
-                        isLoading ? "Loading..." : topicTitle,
-                        style: TextStyle(
-                          fontSize: width * 0.08, // 8% of screen width
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(
-                          height: height * 0.01), // 1% of screen height
-                      Text(
-                        isLoading
-                            ? "Fetching topic details..."
-                            : topicDescription,
-                        style: TextStyle(
-                          fontSize: width * 0.04, // 4% of screen width
-                          color: Colors.black,
-                        ),
-                      ),
+                      Expanded(
+                          child: SingleChildScrollView(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: width * 0.03),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                        height: height *
+                                            0.02), // 2% of screen height
+                                    Text(
+                                      isLoading ? "Loading..." : topicTitle,
+                                      style: TextStyle(
+                                        fontSize:
+                                            width * 0.08, // 8% of screen width
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                        height: height *
+                                            0.01), // 1% of screen height
+                                    Text(
+                                      isLoading
+                                          ? "Fetching topic details..."
+                                          : topicDescription,
+                                      style: TextStyle(
+                                        fontSize:
+                                            width * 0.04, // 4% of screen width
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ]
+                              )
+                          )
+                      )
                     ],
                   ),
                 ),
@@ -210,9 +229,7 @@ class _OverviewScreenState extends State<OverviewScreen>
                                 style: TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.bold),
                               ),
-                              SizedBox(
-                                  height:
-                                  height * 0.005), // Small spacing
+                              SizedBox(height: height * 0.005), // Small spacing
                               const Text("0/12 Modules"),
                               SizedBox(height: height * 0.01),
                               ClipRRect(
@@ -222,7 +239,7 @@ class _OverviewScreenState extends State<OverviewScreen>
                                   color: AcademeTheme.appColor,
                                   backgroundColor: const Color(0xFFE8E5FB),
                                   minHeight:
-                                  height * 0.012, // Responsive height
+                                      height * 0.012, // Responsive height
                                 ),
                               ),
                               SizedBox(height: height * 0.02),
@@ -242,8 +259,8 @@ class _OverviewScreenState extends State<OverviewScreen>
                             indicatorColor: AcademeTheme.appColor,
                             indicatorSize: TabBarIndicatorSize.tab,
                             labelStyle: TextStyle(
-                                fontSize: width *
-                                    0.045), // Responsive font size
+                                fontSize:
+                                    width * 0.045), // Responsive font size
                             tabs: const [
                               Tab(text: "Overview"),
                               Tab(text: "Q&A"),

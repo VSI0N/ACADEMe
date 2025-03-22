@@ -54,10 +54,11 @@ class _WhatsAppAudioPlayerState extends State<WhatsAppAudioPlayer> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.grey[200],
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           // Play/Pause Button
           IconButton(
@@ -80,12 +81,10 @@ class _WhatsAppAudioPlayerState extends State<WhatsAppAudioPlayer> {
               }
             },
           ),
-          const SizedBox(width: 8),
-
-          // Progress Bar
+          // Progress Bar and Duration
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Slider(
                   value: currentPosition.inSeconds.toDouble(),
@@ -100,7 +99,6 @@ class _WhatsAppAudioPlayerState extends State<WhatsAppAudioPlayer> {
                   activeColor: Colors.blueAccent,
                   inactiveColor: Colors.grey[400],
                 ),
-                // Duration display (optional, WhatsApp doesn't show but can be added)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
