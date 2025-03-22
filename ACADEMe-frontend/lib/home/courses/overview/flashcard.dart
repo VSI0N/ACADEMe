@@ -455,11 +455,7 @@ class _FlashCardState extends State<FlashCard> {
         children: [
           Expanded(
             child: SingleChildScrollView(
-              child: Text(
-                content,
-                style: const TextStyle(
-                    fontSize: 14, color: Colors.black87, height: 1.5),
-              ),
+              child: _formattedText(content), // Use markdown formatting
             ),
           ),
           if (widget.quizzes.isEmpty &&
@@ -602,7 +598,6 @@ class _FlashCardState extends State<FlashCard> {
     );
   }
 
-
   Widget _buildDocumentContent(String docUrl) {
     return buildStyledContainer(
       Column(
@@ -695,6 +690,132 @@ class _FlashCardState extends State<FlashCard> {
           ],
         ),
         child: child,
+      ),
+    );
+  }
+
+  /// **Formats raw text with bold headings, bullet points, and other markdown symbols**
+  Widget _formattedText(String text) {
+    List<Widget> formattedWidgets = [];
+    List<String> parts = text.split("\n");
+
+    for (String part in parts) {
+      if (part.trim().isEmpty) {
+        formattedWidgets.add(const SizedBox(height: 8)); // Adds spacing
+      } else if (part.startsWith("**") && part.endsWith("**")) {
+        // Bold text (double asterisks) - Treat as a key
+        formattedWidgets.add(Text(
+          part.replaceAll("**", ""),
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black87),
+        ));
+      } else if (part.startsWith("*") && part.endsWith("*")) {
+        // Bold text (single asterisks) - Treat as a key
+        formattedWidgets.add(Text(
+          part.replaceAll("*", ""),
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black87),
+        ));
+      } else if (part.startsWith("- ")) {
+        // Bullet points
+        formattedWidgets.add(_buildBulletPoint(part.replaceFirst("- ", "")));
+      } else if (part.startsWith("# ")) {
+        // Heading 1
+        formattedWidgets.add(Text(
+          part.replaceFirst("# ", ""),
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
+        ));
+      } else if (part.startsWith("## ")) {
+        // Heading 2
+        formattedWidgets.add(Text(
+          part.replaceFirst("## ", ""),
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
+        ));
+      } else if (part.startsWith("### ")) {
+        // Heading 3
+        formattedWidgets.add(Text(
+          part.replaceFirst("### ", ""),
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+        ));
+      } else if (part.startsWith(">")) {
+        // Blockquote
+        formattedWidgets.add(Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey[300]!),
+            ),
+            child: Text(
+              part.replaceFirst(">", "").trim(),
+              style: const TextStyle(fontSize: 14, color: Colors.black87),
+            ),
+          ),
+        ));
+      } else if (part.startsWith("`") && part.endsWith("`")) {
+        // Inline code
+        formattedWidgets.add(Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Text(
+            part.replaceAll("`", ""),
+            style: const TextStyle(fontFamily: 'monospace', fontSize: 14, color: Colors.black87),
+          ),
+        ));
+      } else {
+        // Regular text (with inline bold formatting)
+        formattedWidgets.add(_parseInlineBoldText(part));
+      }
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: formattedWidgets,
+    );
+  }
+
+  /// **Helper function to parse inline bold text (e.g., *bold* or **bold**)**
+  Widget _parseInlineBoldText(String text) {
+    List<InlineSpan> spans = [];
+    List<String> parts = text.split(RegExp(r'(\*\*|\*)'));
+
+    for (int i = 0; i < parts.length; i++) {
+      if (i % 2 == 1) {
+        // Odd indices are bold text (treat as keys)
+        spans.add(TextSpan(
+          text: parts[i],
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black87),
+        ));
+      } else {
+        // Even indices are regular text (treat as values)
+        spans.add(TextSpan(
+          text: parts[i],
+          style: const TextStyle(fontSize: 16, color: Colors.black87),
+        ));
+      }
+    }
+
+    return RichText(
+      text: TextSpan(children: spans),
+    );
+  }
+
+  /// **Helper function for bullet points**
+  Widget _buildBulletPoint(String text) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(Icons.check_circle, color: Colors.blue, size: 20),
+          const SizedBox(width: 8),
+          Expanded(
+            child: _parseInlineBoldText(text), // Parse bold text in bullet points
+          ),
+        ],
       ),
     );
   }
