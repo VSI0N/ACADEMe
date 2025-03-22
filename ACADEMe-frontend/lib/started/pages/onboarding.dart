@@ -1,7 +1,6 @@
 import 'package:ACADEMe/academe_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../home/pages/bottomNav.dart';
 import 'package:ACADEMe/started/pages/signup_view.dart';
 
 class OnboardingFlow extends StatefulWidget {
@@ -79,6 +78,8 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: AnimatedContainer(
         duration: Duration(milliseconds: 500),
@@ -104,7 +105,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                     Center(
                       child: Image.asset(
                         onboardingData[index]['imagePath']!,
-                        height: 250, // Adjusted height for better positioning
+                        height: height * 0.3, // Adjusted height for better positioning
                       ),
                     ),
                     const Spacer(flex: 5),
@@ -113,12 +114,14 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
               },
             ),
             Positioned(
-              bottom: 60,
-              left: 20,
-              right: 20,
+              bottom: height * 0.06,
+              left: height * 0.02,
+              right: height * 0.02,
               child: Container(
                 padding: const EdgeInsets.all(20),
-                height: 240,
+                constraints: BoxConstraints(
+                  minHeight: height * 0.22, // Give enough space even on small phones
+                ),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
@@ -130,99 +133,97 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                     ),
                   ],
                 ),
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        children: [
-                          Text(
-                            onboardingData[_currentPage]['title']!,
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            onboardingData[_currentPage]['description']!,
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                          const SizedBox(height: 15),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: List.generate(
-                              onboardingData.length,
-                                  (index) =>
-                                  buildDot(isActive: index == _currentPage),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: _currentPage == onboardingData.length - 1
-                          ? ElevatedButton(
-                        onPressed: _goToNextPage,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.yellow,
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 100),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
+                child: SingleChildScrollView(
+                  physics: BouncingScrollPhysics(),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min, // Important: makes Column wrap its content
+                    children: [
+                      Text(
+                        onboardingData[_currentPage]['title']!,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.poppins(
+                          fontSize: width * 0.047,
+                          fontWeight: FontWeight.bold,
                         ),
-                        child: Text(
-                          "Get Started",
-                          style: GoogleFonts.poppins(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                      )
-                          : Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextButton(
-                            onPressed: () => _skipToLastPage(),
-                            child: Text(
-                              "Skip",
-                              style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                          ElevatedButton(
-                            onPressed: _goToNextPage,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.yellow,
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 12, horizontal: 28),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                            ),
-                            child: Text(
-                              "Next",
-                              style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                        ],
                       ),
-                    ),
-                  ],
+                      SizedBox(height: height * 0.01),
+                      Text(
+                        onboardingData[_currentPage]['description']!,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.poppins(
+                          fontSize: width * 0.035,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                      SizedBox(height: height * 0.016),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(
+                          onboardingData.length,
+                              (index) => buildDot(isActive: index == _currentPage),
+                        ),
+                      ),
+                      SizedBox(height: height * 0.02),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: _currentPage == onboardingData.length - 1
+                            ? ElevatedButton(
+                          onPressed: _goToNextPage,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.yellow,
+                            padding: EdgeInsets.symmetric(
+                                vertical: height * 0.013, horizontal: width * 0.2),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          child: Text(
+                            "Get Started",
+                            style: GoogleFonts.poppins(
+                              fontSize: width * 0.039,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            ),
+                          ),
+                        )
+                            : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            TextButton(
+                              onPressed: _skipToLastPage,
+                              child: Text(
+                                "Skip",
+                                style: GoogleFonts.poppins(
+                                  fontSize: width * 0.04,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                            ElevatedButton(
+                              onPressed: _goToNextPage,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.yellow,
+                                padding: EdgeInsets.symmetric(
+                                    vertical: height * 0.01, horizontal: width * 0.08),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                              ),
+                              child: Text(
+                                "Next",
+                                style: GoogleFonts.poppins(
+                                  fontSize: width * 0.04,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

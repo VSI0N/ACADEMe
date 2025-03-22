@@ -94,6 +94,7 @@ class ProgressScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -256,6 +257,8 @@ class ProgressScreen extends StatelessWidget {
   }
 
   Widget _buildStudyTimeCard(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -272,12 +275,12 @@ class ProgressScreen extends StatelessWidget {
                 L10n.getTranslatedText(context, 'Average Study Time'),
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 24,
+                  fontSize: width * 0.05,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: EdgeInsets.symmetric(horizontal: width * 0.03, vertical: height * 0.01),
                 decoration: BoxDecoration(
                   color: Colors.white24, // Slightly transparent white
                   borderRadius: BorderRadius.circular(8),
@@ -287,7 +290,7 @@ class ProgressScreen extends StatelessWidget {
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 14,
+                    fontSize: width * 0.04,
                   ),
                 ),
               ),
@@ -658,8 +661,10 @@ class ProgressScreen extends StatelessWidget {
   }
 
   Widget _buildMePoints(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     return Container(
-      width: 370, // Set a fixed width
+      width: width * 0.87, // Set a fixed width
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(25),
@@ -673,7 +678,7 @@ class ProgressScreen extends StatelessWidget {
       ),
       child: Padding(
         padding:
-            EdgeInsets.symmetric(vertical: 25, horizontal: 16), // Inner padding
+            EdgeInsets.symmetric(vertical: height * 0.02, horizontal: width * 0.1), // Inner padding
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

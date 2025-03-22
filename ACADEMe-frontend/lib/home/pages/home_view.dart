@@ -1346,40 +1346,52 @@ class CourseCard extends StatelessWidget {
 
   @override
   @override
+  @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(16),
+        width: width * 0.42, // Controlled width (adjust as per grid layout)
+        height: height * 0.20, // Controlled height for consistency
+        padding: EdgeInsets.all(width * 0.04), // Dynamic padding
         decoration: BoxDecoration(
           color: color,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Icon(
               _getSubjectIcon(title),
-              size: 50,
+              size: width * 0.10, // Icon scales based on width
               color: Colors.black.withOpacity(0.8),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: height * 0.015),
 
-            /// Auto-Resizing Title
+            /// Title
             AutoSizeText(
               title,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              maxLines: 1,               // Keep in one line
-              minFontSize: 10,           // Minimum font size
-              overflow: TextOverflow.ellipsis, // Add "..." if needed
+              style: TextStyle(
+                fontSize: width * 0.045, // Scales well
+                fontWeight: FontWeight.bold,
+              ),
+              maxLines: 1,
+              minFontSize: 12,
+              overflow: TextOverflow.ellipsis,
             ),
 
-            const SizedBox(height: 4),
+            SizedBox(height: height * 0.008),
 
-            /// Auto-Resizing Subtitle (Optional)
+            /// Subtitle
             AutoSizeText(
               subtitle,
-              style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+              style: TextStyle(
+                fontSize: width * 0.035,
+                color: Colors.grey[700],
+              ),
               maxLines: 1,
               minFontSize: 10,
               overflow: TextOverflow.ellipsis,
@@ -1388,7 +1400,8 @@ class CourseCard extends StatelessWidget {
         ),
       ),
     );
-  }}
+  }
+}
 
 // Function to fetch user details from secure storage
 Future<Map<String, String?>> _getUserDetails() async {

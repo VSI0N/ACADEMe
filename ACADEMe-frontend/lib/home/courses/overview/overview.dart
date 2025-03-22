@@ -110,8 +110,8 @@ class _OverviewScreenState extends State<OverviewScreen>
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
       body: Stack(
@@ -121,7 +121,7 @@ class _OverviewScreenState extends State<OverviewScreen>
               /// **🔹 Responsive Gradient Header**
               Container(
                 width: double.infinity,
-                height: screenHeight * 0.37, // 30% of the screen height
+                height: height * 0.45, // 30% of the screen height
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     colors: [Color(0xFF967EF6), Color(0xFFE8DAF9)],
@@ -131,8 +131,8 @@ class _OverviewScreenState extends State<OverviewScreen>
                 ),
                 child: Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: screenWidth * 0.05, // 5% of screen width
-                    vertical: screenHeight * 0.05, // 5% of screen height
+                    horizontal: width * 0.05, // 5% of screen width
+                    vertical: height * 0.05, // 5% of screen height
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -166,23 +166,23 @@ class _OverviewScreenState extends State<OverviewScreen>
                         ],
                       ),
                       SizedBox(
-                          height: screenHeight * 0.02), // 2% of screen height
+                          height: height * 0.02), // 2% of screen height
                       Text(
                         isLoading ? "Loading..." : topicTitle,
                         style: TextStyle(
-                          fontSize: screenWidth * 0.08, // 8% of screen width
+                          fontSize: width * 0.08, // 8% of screen width
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       SizedBox(
-                          height: screenHeight * 0.01), // 1% of screen height
+                          height: height * 0.01), // 1% of screen height
                       Text(
                         isLoading
                             ? "Fetching topic details..."
                             : topicDescription,
                         style: TextStyle(
-                          fontSize: screenWidth * 0.04, // 4% of screen width
+                          fontSize: width * 0.04, // 4% of screen width
                           color: Colors.black,
                         ),
                       ),
@@ -201,7 +201,7 @@ class _OverviewScreenState extends State<OverviewScreen>
                         child: Container(
                           color: Colors.white,
                           padding: EdgeInsets.all(
-                              screenWidth * 0.04), // 4% of screen width
+                              width * 0.04), // 4% of screen width
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -212,9 +212,9 @@ class _OverviewScreenState extends State<OverviewScreen>
                               ),
                               SizedBox(
                                   height:
-                                  screenHeight * 0.005), // Small spacing
+                                  height * 0.005), // Small spacing
                               const Text("0/12 Modules"),
-                              SizedBox(height: screenHeight * 0.01),
+                              SizedBox(height: height * 0.01),
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: LinearProgressIndicator(
@@ -222,12 +222,12 @@ class _OverviewScreenState extends State<OverviewScreen>
                                   color: AcademeTheme.appColor,
                                   backgroundColor: const Color(0xFFE8E5FB),
                                   minHeight:
-                                  screenHeight * 0.012, // Responsive height
+                                  height * 0.012, // Responsive height
                                 ),
                               ),
-                              SizedBox(height: screenHeight * 0.02),
+                              SizedBox(height: height * 0.02),
                               const Divider(color: Colors.grey, thickness: 0.5),
-                              SizedBox(height: screenHeight * 0.005),
+                              SizedBox(height: height * 0.005),
                             ],
                           ),
                         ),
@@ -242,7 +242,7 @@ class _OverviewScreenState extends State<OverviewScreen>
                             indicatorColor: AcademeTheme.appColor,
                             indicatorSize: TabBarIndicatorSize.tab,
                             labelStyle: TextStyle(
-                                fontSize: screenWidth *
+                                fontSize: width *
                                     0.045), // Responsive font size
                             tabs: const [
                               Tab(text: "Overview"),

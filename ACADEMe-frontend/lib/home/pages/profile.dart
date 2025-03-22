@@ -317,7 +317,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   trailingWidget: DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
                       value: selectedClass,
-                      icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
+                      isDense: true,
+                      iconSize: 0, // Hides the default dropdown icon!
                       onChanged: (value) {
                         if (value != selectedClass) {
                           showDialog(
@@ -366,18 +367,40 @@ class _ProfilePageState extends State<ProfilePage> {
                           );
                         }
                       },
+                      // Actual dropdown items
                       items: [
                         const DropdownMenuItem(
                           value: 'SELECT',
                           child: Text('SELECT'),
                         ),
                         ...List.generate(
-                            12,
-                                (index) => DropdownMenuItem(
-                              value: '${index + 1}',
-                              child: Text('${index + 1}'),
-                            )),
+                          12,
+                              (index) => DropdownMenuItem(
+                            value: '${index + 1}',
+                            child: Text('${index + 1}'),
+                          ),
+                        ),
                       ],
+                      // Custom selected item
+                      selectedItemBuilder: (BuildContext context) {
+                        return [
+                          const Text('SELECT'),
+                          ...List.generate(
+                            12,
+                                (index) => Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  '${index + 1}',
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                                const SizedBox(width: 9), // control exact spacing
+                                const Icon(Icons.arrow_drop_down, size: 20, color: Colors.black),
+                              ],
+                            ),
+                          ),
+                        ];
+                      },
                     ),
                   ),
                 ),
