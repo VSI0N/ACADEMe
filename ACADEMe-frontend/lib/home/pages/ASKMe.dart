@@ -525,7 +525,7 @@ class _ASKMeState extends State<ASKMe> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    "Select Output Language",
+                    L10n.getTranslatedText(context, 'Select Output Language'),
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   Divider(),
@@ -533,7 +533,7 @@ class _ASKMeState extends State<ASKMe> {
                   // Search bar with live filtering
                   TextField(
                     decoration: InputDecoration(
-                      labelText: 'Search Languages',
+                      labelText: L10n.getTranslatedText(context,'Search Languages'),
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.search),
                     ),
@@ -696,10 +696,10 @@ class _ASKMeState extends State<ASKMe> {
                       keyboardType: TextInputType.multiline,
                       decoration: InputDecoration(
                         hintText: isConverting
-                            ? "Converting ... "
+                            ? L10n.getTranslatedText(context, 'Converting ... ')
                             : (_isRecording
-                            ? "Recording ... ${_seconds}s"
-                            : "Type a message ..."),
+                            ? L10n.getTranslatedText(context, 'Recording ... ${_seconds}s')
+                            : L10n.getTranslatedText(context, 'Type a message ...')),
                         contentPadding: EdgeInsets.only(
                             left: 20, right: 60, top: 14, bottom: 14),
                         border: OutlineInputBorder(
@@ -822,12 +822,12 @@ class _ASKMeState extends State<ASKMe> {
                   TextSpan(
                     children: [
                       TextSpan(
-                          text: 'Hey there! I am ',
+                          text: L10n.getTranslatedText(context,'Hey there! I am '),
                           style: _textStyle(Colors.black)),
                       TextSpan(
                           text: 'ASKMe', style: _textStyle(Colors.amber[700]!)),
                       TextSpan(
-                          text: ' your\npersonal tutor.',
+                          text: L10n.getTranslatedText(context, ' your\npersonal tutor.'),
                           style: _textStyle(Colors.black)),
                     ],
                   ),
@@ -841,13 +841,15 @@ class _ASKMeState extends State<ASKMe> {
               runSpacing: 12.0,
               alignment: WrapAlignment.center,
               children: [
-                _buildButton(Icons.help_outline, 'Clear Your Doubts',
+                _buildButton(Icons.help_outline, L10n.getTranslatedText(context,'Clear Your Doubts'),
                     Colors.lightBlue.shade400),
                 _buildButton(
-                    Icons.quiz, 'Explain / Quiz', Colors.orange.shade400),
-                _buildButton(Icons.upload_file, 'Upload Study Materials',
+                    Icons.quiz, L10n.getTranslatedText(context, 'Explain / Quiz'),
+                    Colors.orange.shade400),
+                _buildButton(Icons.upload_file,
+                    L10n.getTranslatedText(context, 'Upload Study Materials'),
                     Colors.green.shade500),
-                _buildButton(Icons.more_horiz, 'More', Colors.grey),
+                _buildButton(Icons.more_horiz, L10n.getTranslatedText(context, 'More'), Colors.grey),
               ],
             ),
           ],
@@ -1071,8 +1073,4 @@ class _ASKMeState extends State<ASKMe> {
       text: TextSpan(children: spans),
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(home: ASKMe(), debugShowCheckedModeBanner: false));
 }
