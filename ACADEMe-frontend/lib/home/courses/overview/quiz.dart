@@ -94,7 +94,7 @@ class _LessonQuestionPageState extends State<LessonQuestionPage> {
       return;
     }
 
-    final score = isCorrect ? 10 : 0;
+    final score = isCorrect ? 100 : 0;
     final existingProgress = _progressList.firstWhere(
           (progress) => progress["quiz_id"] == quizId,
       orElse: () => null,

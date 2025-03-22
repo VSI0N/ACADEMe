@@ -70,6 +70,8 @@ dependencies:
   audioplayers: ^6.3.0
   flutter_launcher_icons: ^0.14.3
   auto_size_text: ^3.0.0
+  connectivity_plus: ^6.1.3
+  pull_to_refresh: ^2.0.0
 
 
 
@@ -154,4 +156,4 @@ dependency_overrides:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/logo/app_logo1.png"
+  image_path: "assets/logo/academe_logo_cropped_2.png"

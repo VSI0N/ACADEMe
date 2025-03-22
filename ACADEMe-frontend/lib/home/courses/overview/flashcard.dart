@@ -274,7 +274,7 @@ class _FlashCardState extends State<FlashCard> {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          'Lesson Materials',
+          'Subtopic Materials',
           style: TextStyle(
               color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
         ),
