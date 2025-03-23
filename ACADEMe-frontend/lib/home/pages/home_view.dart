@@ -8,7 +8,6 @@ import 'dart:math';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:ACADEMe/home/pages/my_progress.dart';
 import '../../localization/l10n.dart';
-import 'package:ACADEMe/home/courses/overview/overview.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -17,8 +16,6 @@ import 'package:flutter/services.dart';
 import 'package:ACADEMe/home/pages/topic_view.dart'; // Import the TopicViewScreen
 import 'package:ACADEMe/started/pages/class.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:provider/provider.dart';
-import 'package:ACADEMe/localization/language_provider.dart';
 
 class HomePage extends StatelessWidget {
   final VoidCallback onProfileTap;

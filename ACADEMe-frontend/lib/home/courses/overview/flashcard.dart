@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:ACADEMe/academe_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -548,12 +550,20 @@ class _FlashCardState extends State<FlashCard> {
           Expanded(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: CachedNetworkImage(
-                imageUrl: imageUrl,
-                placeholder: (context, url) =>
-                const Center(child: CircularProgressIndicator()),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
-                fit: BoxFit.cover,
+              child: FutureBuilder<BoxFit>(
+                future: _getImageFit(imageUrl),
+                builder: (context, snapshot) {
+                  BoxFit fit = snapshot.data ?? BoxFit.cover; // Default cover
+                  return CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    placeholder: (context, url) =>
+                    const Center(child: CircularProgressIndicator()),
+                    errorWidget: (context, url, error) =>
+                    const Icon(Icons.error),
+                    fit: fit,
+                    alignment: Alignment.center,
+                  );
+                },
               ),
             ),
           ),
@@ -589,6 +599,38 @@ class _FlashCardState extends State<FlashCard> {
     );
   }
 
+  Future<BoxFit> _getImageFit(String imageUrl) async {
+    final Completer<ImageInfo> completer = Completer();
+    final ImageStream stream =
+    NetworkImage(imageUrl).resolve(const ImageConfiguration());
+
+    final listener = ImageStreamListener((ImageInfo info, bool _) {
+      completer.complete(info);
+    }, onError: (dynamic exception, StackTrace? stackTrace) {
+      completer.completeError(exception);
+    });
+
+    stream.addListener(listener);
+
+    try {
+      final ImageInfo imageInfo = await completer.future;
+      final int width = imageInfo.image.width;
+      final int height = imageInfo.image.height;
+      stream.removeListener(listener);
+
+      if (width > height) {
+        // Landscape
+        return BoxFit.contain; // or BoxFit.fitWidth
+      } else {
+        // Portrait
+        return BoxFit.cover;
+      }
+    } catch (e) {
+      stream.removeListener(listener);
+      return BoxFit.cover; // Default fallback
+    }
+  }
+
   Widget _buildAudioContent(String audioUrl) {
     return buildStyledContainer(
       Padding(
@@ -619,7 +661,8 @@ class _FlashCardState extends State<FlashCard> {
               padding: const EdgeInsets.all(16.0),
               child: ElevatedButton(
                 onPressed: () {
-                  print("Navigating to PDF Viewer with URL: $docUrl"); // Print URL before navigation
+                  print(
+                      "Navigating to PDF Viewer with URL: $docUrl"); // Print URL before navigation
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -706,13 +749,15 @@ class _FlashCardState extends State<FlashCard> {
         // Bold text (double asterisks) - Treat as a key
         formattedWidgets.add(Text(
           part.replaceAll("**", ""),
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black87),
+          style: const TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black87),
         ));
       } else if (part.startsWith("*") && part.endsWith("*")) {
         // Bold text (single asterisks) - Treat as a key
         formattedWidgets.add(Text(
           part.replaceAll("*", ""),
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black87),
+          style: const TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black87),
         ));
       } else if (part.startsWith("- ")) {
         // Bullet points
@@ -721,19 +766,22 @@ class _FlashCardState extends State<FlashCard> {
         // Heading 1
         formattedWidgets.add(Text(
           part.replaceFirst("# ", ""),
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
+          style: const TextStyle(
+              fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
         ));
       } else if (part.startsWith("## ")) {
         // Heading 2
         formattedWidgets.add(Text(
           part.replaceFirst("## ", ""),
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
+          style: const TextStyle(
+              fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
         ));
       } else if (part.startsWith("### ")) {
         // Heading 3
         formattedWidgets.add(Text(
           part.replaceFirst("### ", ""),
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+          style: const TextStyle(
+              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
         ));
       } else if (part.startsWith(">")) {
         // Blockquote
@@ -762,7 +810,8 @@ class _FlashCardState extends State<FlashCard> {
           ),
           child: Text(
             part.replaceAll("`", ""),
-            style: const TextStyle(fontFamily: 'monospace', fontSize: 14, color: Colors.black87),
+            style: const TextStyle(
+                fontFamily: 'monospace', fontSize: 14, color: Colors.black87),
           ),
         ));
       } else {
@@ -787,7 +836,8 @@ class _FlashCardState extends State<FlashCard> {
         // Odd indices are bold text (treat as keys)
         spans.add(TextSpan(
           text: parts[i],
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black87),
+          style: const TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black87),
         ));
       } else {
         // Even indices are regular text (treat as values)
@@ -813,7 +863,8 @@ class _FlashCardState extends State<FlashCard> {
           const Icon(Icons.check_circle, color: Colors.blue, size: 20),
           const SizedBox(width: 8),
           Expanded(
-            child: _parseInlineBoldText(text), // Parse bold text in bullet points
+            child:
+            _parseInlineBoldText(text), // Parse bold text in bullet points
           ),
         ],
       ),

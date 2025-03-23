@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import '../report.dart';
+
 class LessonQuestionPage extends StatefulWidget {
   final List<Map<String, dynamic>> quizzes;
   final Function()? onQuizComplete;

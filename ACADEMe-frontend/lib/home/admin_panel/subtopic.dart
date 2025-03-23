@@ -9,6 +9,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../academe_theme.dart';
+import '../../localization/l10n.dart';
 import 'TopicQuiz.dart'; // Import the TopicQuiz screen
 import 'material.dart'; // Import the MaterialScreen
 import 'SubTopicContent.dart';
@@ -180,17 +181,17 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
         final TextEditingController descriptionController = TextEditingController();
 
         return AlertDialog(
-          title: Text("Add Subtopic"),
+          title: Text(L10n.getTranslatedText(context, 'Add Subtopic')),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: titleController,
-                decoration: InputDecoration(labelText: "Title"),
+                decoration: InputDecoration(labelText: L10n.getTranslatedText(context, 'Title')),
               ),
               TextField(
                 controller: descriptionController,
-                decoration: InputDecoration(labelText: "Description"),
+                decoration: InputDecoration(labelText: L10n.getTranslatedText(context, 'Description')),
                 maxLines: 3,
               ),
             ],
@@ -198,7 +199,7 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text("Cancel"),
+              child: Text(L10n.getTranslatedText(context, 'Cancel')),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -213,7 +214,7 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
                   }
                 }
               },
-              child: Text("Add"),
+              child: Text(L10n.getTranslatedText(context, 'Add')),
             ),
           ],
         );
@@ -316,7 +317,7 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
                           }
                         },
                         icon: Icon(Icons.attach_file),
-                        label: Text("Attach File"),
+                        label: Text(L10n.getTranslatedText(context, 'Attach File')),
                       ),
                       if (filePath != null)
                         Padding(
@@ -326,7 +327,7 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
                     ],
                     SizedBox(height: 10),
                     TextField(
-                      decoration: InputDecoration(labelText: "Optional Text"),
+                      decoration: InputDecoration(labelText: L10n.getTranslatedText(context, 'Optional Text')),
                       onChanged: (value) => setDialogState(() => optionalText = value),
                     ),
                   ],
@@ -335,7 +336,7 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text("Cancel"),
+                  child: Text(L10n.getTranslatedText(context, 'Cancel')),
                 ),
                 ElevatedButton(
                   onPressed: () async {
@@ -363,7 +364,7 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
                       _showError("Please select type and category!");
                     }
                   },
-                  child: Text("Upload"),
+                  child: Text(L10n.getTranslatedText(context, 'Upload')),
                 ),
               ],
             );
@@ -463,11 +464,11 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
             children: [
               TextField(
                 controller: titleController,
-                decoration: InputDecoration(labelText: "Title"),
+                decoration: InputDecoration(labelText: L10n.getTranslatedText(context, 'Title')),
               ),
               TextField(
                 controller: descriptionController,
-                decoration: InputDecoration(labelText: "Description"),
+                decoration: InputDecoration(labelText: L10n.getTranslatedText(context, 'Description')),
                 maxLines: 3,
               ),
             ],
@@ -475,7 +476,7 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text("Cancel"),
+              child: Text(L10n.getTranslatedText(context, 'Cancel')),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -490,7 +491,7 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
                   }
                 }
               },
-              child: Text("Add"),
+              child: Text(L10n.getTranslatedText(context, 'Add')),
             ),
           ],
         );
@@ -555,10 +556,10 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
           controller: _tabController,
           labelColor: Colors.white, // Set tab text color to white
           unselectedLabelColor: Colors.white.withOpacity(0.5), // Set unselected tab text color
-          tabs: const [
-            Tab(text: "Subtopics"),
-            Tab(text: "Topic Materials"),
-            Tab(text: "Topic Quizzes"),
+          tabs: [
+            Tab(text: L10n.getTranslatedText(context, 'Subtopics')),
+            Tab(text: L10n.getTranslatedText(context, 'Topic Materials')),
+            Tab(text: L10n.getTranslatedText(context, 'Topic Quizzes')),
           ],
         ),
       ),
@@ -592,11 +593,11 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           if (isMenuOpen) ...[
-            _buildMenuItem("Add Subtopic", Icons.note_add, _addSubtopic),
+            _buildMenuItem(L10n.getTranslatedText(context, 'Add Subtopic'), Icons.note_add, _addSubtopic),
             SizedBox(height: 10),
-            _buildMenuItem("Add Material", Icons.upload_file, _addMaterial),
+            _buildMenuItem(L10n.getTranslatedText(context, 'Add Material'), Icons.upload_file, _addMaterial),
             SizedBox(height: 10),
-            _buildMenuItem("Add Quiz", Icons.quiz, _addQuiz),
+            _buildMenuItem(L10n.getTranslatedText(context, 'Add Quiz'), Icons.quiz, _addQuiz),
           ],
           FloatingActionButton(
             onPressed: () => setState(() => isMenuOpen = !isMenuOpen),
@@ -674,7 +675,7 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
         );
       },
     )
-        : Center(child: Text("No materials available"));
+        : Center(child: Text(L10n.getTranslatedText(context, 'No materials are available')));
   }
 
   Widget _buildQuizList() {
@@ -714,7 +715,7 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
         );
       },
     )
-        : Center(child: Text("No quizzes available"));
+        : Center(child: Text(L10n.getTranslatedText(context, 'No quizzes available')));
   }
 
   Widget _buildMenuItem(String title, IconData icon, VoidCallback onPressed) {

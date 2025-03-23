@@ -9,6 +9,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ACADEMe/localization/language_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../localization/l10n.dart';
+
 class TopicScreen extends StatefulWidget {
   final String courseId;
   final String courseTitle;
@@ -99,17 +101,17 @@ class _TopicScreenState extends State<TopicScreen> {
         final TextEditingController descriptionController = TextEditingController();
 
         return AlertDialog(
-          title: Text("Add Topic"),
+          title: Text(L10n.getTranslatedText(context, 'Add Topic')),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: titleController,
-                decoration: InputDecoration(labelText: "Topic Name"),
+                decoration: InputDecoration(labelText: L10n.getTranslatedText(context, 'Topic Name')),
               ),
               TextField(
                 controller: descriptionController,
-                decoration: InputDecoration(labelText: "Description"),
+                decoration: InputDecoration(labelText: L10n.getTranslatedText(context, 'Description')),
                 maxLines: 3,
               ),
             ],
@@ -117,7 +119,7 @@ class _TopicScreenState extends State<TopicScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text("Cancel"),
+              child: Text(L10n.getTranslatedText(context, 'Cancel')),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -140,7 +142,7 @@ class _TopicScreenState extends State<TopicScreen> {
                   print("Failed to add topic: ${response.body}");
                 }
               },
-              child: Text("Add"),
+              child: Text(L10n.getTranslatedText(context, 'Add')),
             ),
           ],
         );
@@ -167,7 +169,7 @@ class _TopicScreenState extends State<TopicScreen> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "Topic List",
+                  L10n.getTranslatedText(context, 'Topic List'),
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -212,7 +214,7 @@ class _TopicScreenState extends State<TopicScreen> {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           if (isMenuOpen) ...[
-            _buildMenuItem("Add Topic", Icons.note_add, _addTopic),
+            _buildMenuItem(L10n.getTranslatedText(context, 'Add Topic'), Icons.note_add, _addTopic),
             SizedBox(height: 10),
           ],
           FloatingActionButton(

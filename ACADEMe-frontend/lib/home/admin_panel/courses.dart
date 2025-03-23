@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../academe_theme.dart';
+import '../../localization/l10n.dart';
 import 'topic.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -71,21 +72,21 @@ class _CourseManagementScreenState extends State<CourseManagementScreen> {
         final TextEditingController descriptionController = TextEditingController();
 
         return AlertDialog(
-          title: Text("Add Course"),
+          title: Text(L10n.getTranslatedText(context, 'Add Course')),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: titleController,
-                decoration: InputDecoration(labelText: "Course Title"),
+                decoration: InputDecoration(labelText: L10n.getTranslatedText(context, 'Course Title')),
               ),
               TextField(
                 controller: classController,
-                decoration: InputDecoration(labelText: "Class Name"),
+                decoration: InputDecoration(labelText: L10n.getTranslatedText(context, 'Class Name')),
               ),
               TextField(
                 controller: descriptionController,
-                decoration: InputDecoration(labelText: "Description"),
+                decoration: InputDecoration(labelText: L10n.getTranslatedText(context, 'Description')),
                 maxLines: 3,
               ),
             ],
@@ -93,7 +94,7 @@ class _CourseManagementScreenState extends State<CourseManagementScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text("Cancel"),
+              child: Text(L10n.getTranslatedText(context, 'Cancel')),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -125,7 +126,7 @@ class _CourseManagementScreenState extends State<CourseManagementScreen> {
                   print("Failed to add course: ${response.body}");
                 }
               },
-              child: Text("Add"),
+              child: Text(L10n.getTranslatedText(context, 'Add')),
             ),
           ],
         );
@@ -147,7 +148,7 @@ class _CourseManagementScreenState extends State<CourseManagementScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AcademeTheme.appColor,
-        title: Text("Admin Panel", style: TextStyle(color: Colors.white)),
+        title: Text(L10n.getTranslatedText(context, 'Admin Panel'), style: TextStyle(color: Colors.white)),
         centerTitle: true,
       ),
       body: Padding(
@@ -159,7 +160,7 @@ class _CourseManagementScreenState extends State<CourseManagementScreen> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "Course List",
+                  L10n.getTranslatedText(context, 'Course List'),
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),

@@ -26,6 +26,7 @@ class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      // height: MediaQuery.of(context).size.height * 0.35,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -64,7 +65,7 @@ class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
               });
             },
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.yellow,
@@ -75,19 +76,61 @@ class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
             ),
             onPressed: () async {
               if (selectedClass != null && selectedClass != 'SELECT') {
-                bool success = await _updateClassInBackend(selectedClass!);
-                if (success) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Selected $selectedClass')),
-                  );
-                  widget.onClassSelected(); // Trigger callback
-                  print(
-                      "Callback triggered: Class updated to $selectedClass"); // Debug print
-                  Navigator.pop(context); // Close the bottom sheet
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Failed to update class')),
-                  );
+                // Show confirmation dialog
+                bool confirm = await showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                      title: const Text(
+                        'Are you sure you want to change your class?',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                      ),
+                      content: const Text(
+                        'All your progress data will be erased for this class.',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(false); // Return false
+                          },
+                          child: const Text(
+                            'Cancel',
+                            style: TextStyle(color: Colors.grey, fontSize: 16),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(true); // Return true
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            foregroundColor: Colors.white,
+                          ),
+                          child: const Text('Yes'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+
+                if (confirm == true) {
+                  // Call backend
+                  bool success = await _updateClassInBackend(selectedClass!);
+                  if (success) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Selected $selectedClass')),
+                    );
+                    widget.onClassSelected();
+                    print("Callback triggered: Class updated to $selectedClass");
+                    Navigator.pop(context); // Close BottomSheet
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Failed to update class')),
+                    );
+                  }
                 }
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -100,6 +143,7 @@ class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
               style: TextStyle(fontSize: 16, color: Colors.black),
             ),
           ),
+          SizedBox(height: 10,),
           if (selectedClass == null || selectedClass == 'SELECT')
             _buildImportantInfoPopup(
                 context), // Show Important Info Popup only if no class is selected

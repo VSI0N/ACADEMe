@@ -8,6 +8,8 @@ import 'package:ACADEMe/home/courses/overview/flashcard.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ACADEMe/localization/language_provider.dart';
 
+import '../report.dart';
+
 class LessonsSection extends StatefulWidget {
   final String courseId;
   final String topicId;
@@ -492,8 +494,12 @@ class _LessonsSectionState extends State<LessonsSection> {
       });
     } else {
       // No more subtopics, show a message or navigate back
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("No more subtopics available")),
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text("No more subtopics available")),
+      // );
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => TestReportScreen()),
       );
     }
   }
