@@ -746,7 +746,7 @@ class HomePage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // **Swipeable Banner**
-                          buildSwipeableBanner(_pageController),
+                          buildSwipeableBanner(_pageController, context),
 
                           SizedBox(height: 16),
 
@@ -1322,7 +1322,7 @@ class SectionHeader extends StatelessWidget {
 }
 
 // **Function for Swipeable Banner**
-Widget buildSwipeableBanner(PageController controller) {
+Widget buildSwipeableBanner(PageController controller, BuildContext context) {
   return Container(
     height: 170,
     child: Column(
@@ -1331,9 +1331,9 @@ Widget buildSwipeableBanner(PageController controller) {
           child: PageView(
             controller: controller,
             children: [
-              adContainer(Colors.purple[200]!, 'assets/images/img.png'),
-              adContainer(Colors.blue[200]!, 'assets/images/img.png'),
-              adContainer(Colors.green[200]!, 'assets/images/img.png'),
+              adContainer(Colors.purple[200]!, 'assets/images/img.png',context),
+              adContainer(Colors.blue[200]!, 'assets/images/img.png', context),
+              adContainer(Colors.green[200]!, 'assets/images/img.png',context),
             ],
           ),
         ),
@@ -1355,7 +1355,7 @@ Widget buildSwipeableBanner(PageController controller) {
 }
 
 // **Function to Create an Ad Container**
-Widget adContainer(Color color, String imagePath) {
+Widget adContainer(Color color, String imagePath, BuildContext context) {
   return Container(
     margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
     child: Stack(
@@ -1374,9 +1374,9 @@ Widget adContainer(Color color, String imagePath) {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
-                      "Clear your doubts",
+                      L10n.getTranslatedText(context, 'Clear your doubts'),
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w900,
@@ -1385,7 +1385,7 @@ Widget adContainer(Color color, String imagePath) {
                     ),
                     SizedBox(height: 6),
                     Text(
-                      "Experts ready to clear \nyour doubts anytime",
+                      "${L10n.getTranslatedText(context, 'Experts ready to clear')} \n${L10n.getTranslatedText(context, 'your doubts anytime')}",
                       style: TextStyle(
                         fontSize: 15,
                         color: Colors.black54,
