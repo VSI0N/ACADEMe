@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:ACADEMe/academe_theme.dart';
+import 'package:ACADEMe/localization/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -278,8 +279,8 @@ class _FlashCardState extends State<FlashCard> {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'Subtopic Materials',
+        title: Text(
+          L10n.getTranslatedText(context, 'Subtopic Materials'),
           style: TextStyle(
               color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
         ),

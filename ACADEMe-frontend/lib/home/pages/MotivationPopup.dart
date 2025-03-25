@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:ACADEMe/academe_theme.dart';
+import 'package:ACADEMe/localization/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -121,8 +122,8 @@ class _MotivationPopupState extends State<MotivationPopup> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              "📊 Your Progress Analysis",
+                            Text(
+                              "📊 ${L10n.getTranslatedText(context, 'Your Progress Analysis')}",
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
                             ),
@@ -157,7 +158,7 @@ class _MotivationPopupState extends State<MotivationPopup> {
                         child: TextField(
                           controller: _messageController,
                           decoration: InputDecoration(
-                            hintText: "Ask follow-up...",
+                            hintText: "${L10n.getTranslatedText(context, 'Ask follow-up')}...",
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),

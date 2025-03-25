@@ -367,8 +367,10 @@ class _LanguageSelectionBottomSheetState
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(10),
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -376,17 +378,17 @@ class _LanguageSelectionBottomSheetState
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
+          Text(
             "Select Language",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: width * 0.045, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: height * 0.02),
           DropdownButtonFormField<Locale>(
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.grey[200],
               contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              EdgeInsets.symmetric(horizontal: width * 0.03, vertical: height * 0.01),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide.none,
@@ -405,31 +407,36 @@ class _LanguageSelectionBottomSheetState
               });
             },
           ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.yellow,
-              padding:
-              const EdgeInsets.symmetric(horizontal: 150, vertical: 10),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+          SizedBox(height: height * 0.02),
+          Padding(
+            padding: EdgeInsets.symmetric( vertical: 12), // Outer padding
+            child: SizedBox(
+              width: double.infinity, // Full width
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.yellow,
+                  padding: const EdgeInsets.symmetric(vertical: 14), // Only vertical padding inside button
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onPressed: () {
+                  if (_selectedLocale != null) {
+                    widget.onLanguageSelected(_selectedLocale!);
+                    Navigator.pop(context); // Close sheet
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Please select a language')),
+                    );
+                  }
+                },
+                child: Text(
+                  "Confirm",
+                  style: TextStyle(fontSize: width * 0.04, color: Colors.black),
+                ),
               ),
             ),
-            onPressed: () {
-              if (_selectedLocale != null) {
-                widget.onLanguageSelected(_selectedLocale!);
-                Navigator.pop(context); // Close sheet
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Please select a language')),
-                );
-              }
-            },
-            child: const Text(
-              "Confirm",
-              style: TextStyle(fontSize: 16, color: Colors.black),
-            ),
-          ),
+          )
         ],
       ),
     );

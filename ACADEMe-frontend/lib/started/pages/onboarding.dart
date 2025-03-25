@@ -16,19 +16,19 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
     {
       "title": "Education is the best\nlearn ever",
       "description":
-      "It is a long established fact that a reader will be distracted by the readable content.",
+      "Empowering every learner with a dynamic, personalized, high-quality educational experienece & community support",
       "imagePath": "assets/images/books-and-apple.png",
     },
     {
       "title": "Learn Anytime, Anywhere",
       "description":
-      "With our app, learning is more flexible and accessible than ever before.",
+      "AI-driven progress tracking adapts to individual Learning needs, bridging knowledge gaps for personalized imporvement",
       "imagePath": "assets/images/growth-graph.png",
     },
     {
       "title": "Achieve Your Goals",
       "description":
-      "Our platform helps you track progress and achieve success effortlessly.",
+      "An AI Powered chatbot to help you with your quries and doubts. Takes in Images, videos and can give reponses in your native language.",
       "imagePath": "assets/images/idea.png",
     },
   ];
@@ -151,7 +151,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                         onboardingData[_currentPage]['description']!,
                         textAlign: TextAlign.center,
                         style: GoogleFonts.poppins(
-                          fontSize: width * 0.035,
+                          fontSize: width * 0.033,
                           color: Colors.grey[600],
                         ),
                       ),

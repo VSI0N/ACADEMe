@@ -18,8 +18,7 @@ class ClassSelectionBottomSheet extends StatefulWidget {
 class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
   String? selectedClass;
   final List<String> classes = [
-    'SELECT',
-    ...List.generate(12, (index) => '${index + 1}')
+    '5'
   ]; // Add "SELECT" option
   final FlutterSecureStorage _secureStorage = FlutterSecureStorage();
 
@@ -45,7 +44,7 @@ class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
               filled: true,
               fillColor: Colors.grey[200],
               contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide.none,
@@ -55,9 +54,9 @@ class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
             value: selectedClass,
             items: classes
                 .map((className) => DropdownMenuItem(
-              value: className,
-              child: Text(className),
-            ))
+                      value: className,
+                      child: Text(className),
+                    ))
                 .toList(),
             onChanged: (value) {
               setState(() {
@@ -66,87 +65,104 @@ class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
             },
           ),
           const SizedBox(height: 10),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.yellow,
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            onPressed: () async {
-              if (selectedClass != null && selectedClass != 'SELECT') {
-                // Show confirmation dialog
-                bool confirm = await showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                      title: const Text(
-                        'Are you sure you want to change your class?',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                      ),
-                      content: const Text(
-                        'All your progress data will be erased for this class.',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(false); // Return false
-                          },
-                          child: const Text(
-                            'Cancel',
-                            style: TextStyle(color: Colors.grey, fontSize: 16),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 12), // Outer padding
+            child: SizedBox(
+              width: double.infinity, // Full width
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.yellow,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onPressed: () async {
+                  if (selectedClass != null && selectedClass != 'SELECT') {
+                    // Show confirmation dialog
+                    bool confirm = await showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          title: const Text(
+                            'Are you sure you want to change your class?',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 18),
                           ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(true); // Return true
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
-                            foregroundColor: Colors.white,
+                          content: const Text(
+                            'All your progress data will be erased for this class.',
+                            style: TextStyle(fontSize: 16),
                           ),
-                          child: const Text('Yes'),
-                        ),
-                      ],
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context)
+                                    .pop(false); // Return false
+                              },
+                              child: const Text(
+                                'Cancel',
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 16),
+                              ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(true); // Return true
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                                foregroundColor: Colors.white,
+                              ),
+                              child: const Text('Yes'),
+                            ),
+                          ],
+                        );
+                      },
                     );
-                  },
-                );
 
-                if (confirm == true) {
-                  // Call backend
-                  bool success = await _updateClassInBackend(selectedClass!);
-                  if (success) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Selected $selectedClass')),
-                    );
-                    widget.onClassSelected();
-                    print("Callback triggered: Class updated to $selectedClass");
-                    Navigator.pop(context); // Close BottomSheet
+                    if (confirm == true) {
+                      // Call backend
+                      bool success =
+                          await _updateClassInBackend(selectedClass!);
+                      if (success) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Selected $selectedClass')),
+                        );
+                        widget.onClassSelected();
+                        print(
+                            "Callback triggered: Class updated to $selectedClass");
+                        Navigator.pop(context); // Close BottomSheet
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('Failed to update class')),
+                        );
+                      }
+                    }
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Failed to update class')),
+                      const SnackBar(
+                          content: Text('Please select a valid class')),
                     );
                   }
-                }
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Please select a valid class')),
-                );
-              }
-            },
-            child: const Text(
-              "Confirm",
-              style: TextStyle(fontSize: 16, color: Colors.black),
+                },
+                child: const Text(
+                  "Confirm",
+                  style: TextStyle(fontSize: 16, color: Colors.black),
+                ),
+              ),
             ),
           ),
-          SizedBox(height: 10,),
-          if (selectedClass == null || selectedClass == 'SELECT')
-            _buildImportantInfoPopup(
-                context), // Show Important Info Popup only if no class is selected
+          SizedBox(
+            height: 10,
+          ),
+          // if (selectedClass == null || selectedClass == 'SELECT')
+          //   _buildImportantInfoPopup(
+          //       context), // Show Important Info Popup only if no class is selected
         ],
       ),
     );

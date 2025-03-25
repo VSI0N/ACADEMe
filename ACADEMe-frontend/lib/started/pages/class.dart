@@ -7,15 +7,20 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class ClassSelectionBottomSheet extends StatefulWidget {
   final VoidCallback onClassSelected; // Callback when class is selected
 
-  const ClassSelectionBottomSheet({Key? key, required this.onClassSelected}) : super(key: key);
+  const ClassSelectionBottomSheet({Key? key, required this.onClassSelected})
+      : super(key: key);
 
   @override
-  _ClassSelectionBottomSheetState createState() => _ClassSelectionBottomSheetState();
+  _ClassSelectionBottomSheetState createState() =>
+      _ClassSelectionBottomSheetState();
 }
 
 class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
   String? selectedClass;
-  final List<String> classes = List.generate(12, (index) => '${index + 1}');
+  final List<String> classes = [
+  '5'
+  ];
+
   final FlutterSecureStorage _secureStorage = FlutterSecureStorage();
 
   @override
@@ -38,7 +43,8 @@ class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.grey[200],
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide.none,
@@ -47,7 +53,8 @@ class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
             hint: const Text("Select class"),
             value: selectedClass,
             items: classes
-                .map((className) => DropdownMenuItem(value: className, child: Text(className)))
+                .map((className) =>
+                    DropdownMenuItem(value: className, child: Text(className)))
                 .toList(),
             onChanged: (value) {
               setState(() {
@@ -55,49 +62,58 @@ class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
               });
             },
           ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.yellow,
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            onPressed: () async {
-              if (selectedClass != null) {
-                bool success = await _updateClassInBackend(selectedClass!);
-                if (success) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Selected $selectedClass')),
-                  );
-                  widget.onClassSelected(); // Trigger callback
-                  Navigator.pop(context); // Close the bottom sheet
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Failed to update class')),
-                  );
-                }
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Please select a class')),
-                );
-              }
-            },
-            child: const Text(
-              "Confirm",
-              style: TextStyle(fontSize: 16, color: Colors.black),
-            ),
-          ),
-          const SizedBox(height: 20),
-          _buildImportantInfoPopup(context), // Show Important Info Popup
+          const SizedBox(height: 10),
+          Padding(
+              padding: EdgeInsets.symmetric(vertical: 12), // Outer padding
+              child: SizedBox(
+                width: double.infinity, // Full width
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.yellow,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 32, vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  onPressed: () async {
+                    if (selectedClass != null) {
+                      bool success =
+                          await _updateClassInBackend(selectedClass!);
+                      if (success) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Selected $selectedClass')),
+                        );
+                        widget.onClassSelected(); // Trigger callback
+                        Navigator.pop(context); // Close the bottom sheet
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('Failed to update class')),
+                        );
+                      }
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Please select a class')),
+                      );
+                    }
+                  },
+                  child: const Text(
+                    "Confirm",
+                    style: TextStyle(fontSize: 16, color: Colors.black),
+                  ),
+                ),
+              )),
+          const SizedBox(height: 10),
+          // _buildImportantInfoPopup(context), // Show Important Info Popup
         ],
       ),
     );
   }
 
   Future<bool> _updateClassInBackend(String selectedClass) async {
-    final String backendUrl = dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
+    final String backendUrl =
+        dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
     final String? token = await _secureStorage.read(key: 'access_token');
 
     if (token == null) {
@@ -144,7 +160,8 @@ class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
   }
 
   Future<bool> _reloginUser() async {
-    final String backendUrl = dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
+    final String backendUrl =
+        dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
     final String? email = await _secureStorage.read(key: 'email');
     final String? password = await _secureStorage.read(key: 'password');
 

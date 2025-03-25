@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:ACADEMe/localization/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -93,12 +94,12 @@ class _LessonsSectionState extends State<LessonsSection> {
           isExpanded = {
             for (int i = 0; i < data.length; i++)
               "${(i + 1).toString().padLeft(2, '0')} - ${data[i]["title"]}":
-              false
+                  false
           };
           subtopicIds = {
             for (var sub in data)
               "${(data.indexOf(sub) + 1).toString().padLeft(2, '0')} - ${sub["title"]}":
-              sub["id"].toString()
+                  sub["id"].toString()
           };
         });
       } else {
@@ -182,7 +183,7 @@ class _LessonsSectionState extends State<LessonsSection> {
           if (questionsResponse.statusCode == 200) {
             // Decode the response body using UTF-8
             final String questionsBody =
-            utf8.decode(questionsResponse.bodyBytes);
+                utf8.decode(questionsResponse.bodyBytes);
             List<dynamic> questionsData = jsonDecode(questionsBody);
             for (var question in questionsData) {
               quizzesList.add({
@@ -191,10 +192,10 @@ class _LessonsSectionState extends State<LessonsSection> {
                 "difficulty": quiz["difficulty"] ?? "Unknown",
                 "question_count": questionsData.length.toString(),
                 "question_text":
-                question["question_text"] ?? "No question text available",
+                    question["question_text"] ?? "No question text available",
                 "options":
-                (question["options"] as List<dynamic>?)?.cast<String>() ??
-                    ["No options available"],
+                    (question["options"] as List<dynamic>?)?.cast<String>() ??
+                        ["No options available"],
                 "correct_option": question["correct_option"] ?? 0,
               });
             }
@@ -281,7 +282,6 @@ class _LessonsSectionState extends State<LessonsSection> {
             ),
           ),
           // **🔹 Sticky Start Course Button**
-
         ],
       ),
       bottomNavigationBar: Container(
@@ -297,8 +297,7 @@ class _LessonsSectionState extends State<LessonsSection> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => FlashCard(
-                      materials:
-                      (subtopicMaterials[firstSubtopicId] ?? [])
+                      materials: (subtopicMaterials[firstSubtopicId] ?? [])
                           .map<Map<String, String>>((material) {
                         return {
                           "type": material["type"].toString(),
@@ -327,8 +326,8 @@ class _LessonsSectionState extends State<LessonsSection> {
               borderRadius: BorderRadius.circular(10),
             ),
           ),
-          child: const Text(
-            "Start Course",
+          child: Text(
+            L10n.getTranslatedText(context, 'Start Course'),
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -386,10 +385,10 @@ class _LessonsSectionState extends State<LessonsSection> {
       category,
       _getIconForContentType(
           type), // Use the appropriate icon based on the type
-          () {
+      () {
         // Convert materials to the correct type
         List<Map<String, String>> materials =
-        (subtopicMaterials[subtopicId] ?? []).map<Map<String, String>>((m) {
+            (subtopicMaterials[subtopicId] ?? []).map<Map<String, String>>((m) {
           return {
             "type": m["type"].toString(),
             "content": m["content"].toString(),
@@ -398,7 +397,7 @@ class _LessonsSectionState extends State<LessonsSection> {
 
         if (materials.isEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("No materials available")),
+            SnackBar(content: Text(L10n.getTranslatedText(context, 'No materials available'))),
           );
           return;
         }
@@ -430,7 +429,7 @@ class _LessonsSectionState extends State<LessonsSection> {
       title,
       "$difficulty • $questionCount Questions",
       Icons.quiz,
-          () {
+      () {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -465,8 +464,8 @@ class _LessonsSectionState extends State<LessonsSection> {
       fetchMaterialsAndQuizzes(nextSubtopicId).then((_) {
         // Convert materials to the correct type
         List<Map<String, String>> nextMaterials =
-        (subtopicMaterials[nextSubtopicId] ?? [])
-            .map<Map<String, String>>((material) {
+            (subtopicMaterials[nextSubtopicId] ?? [])
+                .map<Map<String, String>>((material) {
           return {
             "type": material["type"].toString(),
             "content": material["content"].toString(),
@@ -526,15 +525,24 @@ class _LessonsSectionState extends State<LessonsSection> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              children: [
-                const SizedBox(width: 10),
-                Text(
-                  capitalizedTitle, // Use the capitalized title
-                  style: TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.w500, color: Colors.grey[700]),
-                ),
-              ],
+            Expanded( // 👈 Wrap Row with Expanded
+              child: Row(
+                children: [
+                  const SizedBox(width: 10),
+                  Expanded( // 👈 Add this Expanded here too!
+                    child: Text(
+                      capitalizedTitle,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey[700],
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                  ),
+                ],
+              ),
             ),
             Icon(
               icon,

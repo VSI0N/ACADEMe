@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:ACADEMe/localization/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
@@ -148,8 +149,8 @@ class _OverviewScreenState extends State<OverviewScreen>
                           ),
                           Expanded(
                             flex: 6, // Adjust this to move text slightly left
-                            child: const Text(
-                              "Topic details",
+                            child:  Text(
+                              L10n.getTranslatedText(context, 'Topic details'),
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.black,
@@ -224,13 +225,13 @@ class _OverviewScreenState extends State<OverviewScreen>
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                "Your Progress",
+                              Text(
+                                L10n.getTranslatedText(context, 'Your Progress'),
                                 style: TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.bold),
                               ),
                               SizedBox(height: height * 0.005), // Small spacing
-                              const Text("0/12 Modules"),
+                              Text("0/12 ${L10n.getTranslatedText(context, 'Modules')}"),
                               SizedBox(height: height * 0.01),
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
@@ -261,9 +262,9 @@ class _OverviewScreenState extends State<OverviewScreen>
                             labelStyle: TextStyle(
                                 fontSize:
                                     width * 0.045), // Responsive font size
-                            tabs: const [
-                              Tab(text: "Overview"),
-                              Tab(text: "Q&A"),
+                            tabs: [
+                              Tab(text: L10n.getTranslatedText(context, 'Overview')),
+                              Tab(text: L10n.getTranslatedText(context, 'Q&A')),
                             ],
                           ),
                         ),

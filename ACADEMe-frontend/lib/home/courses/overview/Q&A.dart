@@ -1,4 +1,5 @@
 import 'package:ACADEMe/academe_theme.dart';
+import 'package:ACADEMe/localization/l10n.dart';
 import 'package:ACADEMe/utils/constants/image_strings.dart';
 import 'package:flutter/material.dart';
 
@@ -17,14 +18,14 @@ class QASection extends StatelessWidget {
               children: [
                 buildQAItem(
                   "Thomas",
-                  "A day ago",
+                  L10n.getTranslatedText(context, 'A day ago'),
                   AImages.QnA_user,
                   23,
                   5,
                 ),
                 buildQAItem(
                   "Jenny Barry",
-                  "A day ago",
+                  L10n.getTranslatedText(context, 'A day ago'),
                   "AImages.QnA_user",
                   23,
                   5,
@@ -32,7 +33,7 @@ class QASection extends StatelessWidget {
               ],
             ),
           ),
-          buildInputField(),
+          buildInputField(context),
           SizedBox(height: 12),
         ],
       ),
@@ -103,7 +104,7 @@ class QASection extends StatelessWidget {
     );
   }
 
-  Widget buildInputField() {
+  Widget buildInputField(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(12),
       child: Row(
@@ -115,7 +116,7 @@ class QASection extends StatelessWidget {
                 contentPadding: EdgeInsets.symmetric(
                     vertical: 10,
                     horizontal: 12), // Adjust padding
-                hintText: "Write a comment",
+                hintText: L10n.getTranslatedText(context, 'Write a comment'),
                 hintStyle:
                 TextStyle(color: Colors.grey[600]),
                 filled: true,
