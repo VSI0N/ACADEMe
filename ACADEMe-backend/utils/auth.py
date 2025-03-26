@@ -1,28 +1,17 @@
 import os
-import json
 import jwt
-import base64
 import firebase_admin
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
-from firebase_admin import credentials, auth, firestore
+from firebase_admin import auth, firestore
 from fastapi import HTTPException, Depends, Security
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
-# ✅ Initialize Firebase with Service Account from Base64
-firebase_creds_base64 = os.getenv("FIREBASE_CREDENTIALS")
+# ✅ Initialize Firebase Admin (Only if not initialized)
+if not firebase_admin._apps:
+    firebase_admin.initialize_app()
 
-if not firebase_admin._apps:  # Prevent multiple initializations
-    if firebase_creds_base64:
-        firebase_creds_json = base64.b64decode(firebase_creds_base64).decode("utf-8")
-        cred_dict = json.loads(firebase_creds_json)
-        cred = credentials.Certificate(cred_dict)
-        firebase_admin.initialize_app(cred)
-    else:
-        raise RuntimeError("❌ FIREBASE_CREDENTIALS environment variable is missing!")
-
-# ✅ Firestore Client
-db = firestore.client()
+db = firestore.client()  # ✅ Move this below Firebase initialization
 
 # ✅ Environment Variables
 JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "your_secret_key_here")
