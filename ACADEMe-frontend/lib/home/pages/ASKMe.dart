@@ -361,7 +361,7 @@ class _ASKMeState extends State<ASKMe> {
         selectedLanguage, // Send the selected language for the response
       });
 
-      final mimeType = lookupMimeType(file.path) ?? "audio/wav";
+      final mimeType = lookupMimeType(file.path) ?? "audio/flac";
       print("Detected MIME type: $mimeType");
 
       request.files.add(await http.MultipartFile.fromPath(

@@ -1,41 +1,60 @@
 import os
-import whisper
-import tempfile
+from dotenv import load_dotenv
+from huggingface_hub import InferenceClient
 
-# Load the Whisper model once to optimize performance
-model = whisper.load_model("base")
+# Load environment variables from .env file
+load_dotenv()
+
+# Initialize the InferenceClient once
+client = InferenceClient(token=os.getenv("HUGGING_FACE_TOKEN"))
 
 
 def transcribe_audio(audio_bytes: bytes) -> dict:
     """
-    Transcribes an audio file using OpenAI Whisper.
+    Transcribes audio using Hugging Face's Inference API with OpenAI Whisper.
 
     Args:
-        audio_bytes (bytes): Raw audio data.
+        audio_bytes (bytes): Raw audio data in FLAC, WAV, or MP3 format.
 
     Returns:
         dict: {
             "text": Transcribed text,
-            "language": Detected language,
-            "segments": List of timestamped segments
+            "language": Detected language (if supported),
+            "segments": List of timestamped segments (if supported)
         }
     """
-
-    # Save the audio to a temporary file
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_audio:
-        temp_audio.write(audio_bytes)
-        temp_audio_path = temp_audio.name
-
     try:
-        # Transcribe the audio
-        result = model.transcribe(temp_audio_path)
-        return {
-            "text": result.get("text", ""),
-            "language": result.get("language", ""),
-            "segments": result.get("segments", []),
-        }
+        # Send audio data to the API
+        response = client.automatic_speech_recognition(
+            audio=audio_bytes,
+            model=os.getenv("STT_MODEL")
+        )
+
+        # Extract text from response
+        text = response.text
+
+        # Attempt to get language (may not be available in all API configurations)
+        language = "en"
+
+        # Process timestamp segments
+        # segments = []
+        # for chunk in response.chunks:
+        #     # Handle timestamp format variation
+        #     timestamps = chunk.get("timestamp", [None, None])
+        #     segments.append({
+        #         "start": timestamps[0],
+        #         "end": timestamps[1],
+        #         "text": chunk.get("text", "")
+        #     })
+
+        # return {
+        #     "text": text,
+        #     "language": language,
+        #     "segments": segments
+        # }
+
+        return {"text": text, "language": language}
+
     except Exception as e:
         return {"error": f"Transcription failed: {str(e)}"}
-    finally:
-        # Remove the temporary file after processing
-        os.remove(temp_audio_path)
+    
