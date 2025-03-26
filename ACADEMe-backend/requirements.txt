@@ -18,7 +18,6 @@ dnspython==2.7.0
 email_validator==2.2.0
 exceptiongroup==1.2.2
 fastapi==0.115.8
-fasttext==0.9.3
 ffmpeg-python==0.2.0
 filelock==3.17.0
 firebase-admin==6.6.0

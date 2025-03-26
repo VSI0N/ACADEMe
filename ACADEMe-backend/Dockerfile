@@ -10,6 +10,12 @@ COPY requirements.txt .
 # Install dependencies  
 RUN pip install --no-cache-dir -r requirements.txt  
 
+# Copy the Firebase service account file  
+COPY firebase/firebase_service_account.json /firebase/firebase_service_account.json 
+
+# Set the environment variable for Firebase credentials  
+ENV GOOGLE_APPLICATION_CREDENTIALS=/firebase/firebase_service_account.json  
+
 # Copy the rest of the application code  
 COPY . .  
 
