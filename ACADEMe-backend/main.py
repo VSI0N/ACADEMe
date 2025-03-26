@@ -7,6 +7,7 @@ from agents.image_agent import process_image
 from agents.audio_agent import process_audio
 from agents.video_agent import process_video
 from agents.stt_agent import process_stt
+import os
 
 app = FastAPI(title="ACADEMe API", version="1.0")
 
@@ -133,4 +134,5 @@ def home():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port, reload=True)
