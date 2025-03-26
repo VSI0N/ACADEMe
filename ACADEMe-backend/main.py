@@ -1,3 +1,24 @@
+import os
+import base64
+from pathlib import Path
+
+# Firebase credentials setup - Runs BEFORE any other imports
+FIREBASE_CREDENTIALS_PATH = Path("firebase/firebase_service_account.json")
+
+# Check if running in Railway production environment
+if os.getenv("RAILWAY_ENVIRONMENT"):
+    encoded_creds = os.getenv("FIREBASE_CREDENTIALS_BASE64")
+    if not encoded_creds:
+        raise ValueError("🚨 Missing FIREBASE_CREDENTIALS_BASE64 environment variable")
+
+    # Decode and write credentials file
+    decoded_creds = base64.b64decode(encoded_creds)
+    FIREBASE_CREDENTIALS_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with open(FIREBASE_CREDENTIALS_PATH, "wb") as creds_file:
+        creds_file.write(decoded_creds)
+    print("✅ Firebase credentials file created successfully")
+
+# Now import FastAPI and routes
 from fastapi import FastAPI, File, UploadFile, Form
 from routes import users, courses, topics, quizzes, discussions, student_progress, ai_recommendations, progress_visuals
 from agents.text_agent import process_text
@@ -7,7 +28,6 @@ from agents.image_agent import process_image
 from agents.audio_agent import process_audio
 from agents.video_agent import process_video
 from agents.stt_agent import process_stt
-import os
 
 app = FastAPI(title="ACADEMe API", version="1.0")
 
