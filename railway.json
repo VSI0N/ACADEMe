@@ -1,0 +1,9 @@
+{
+    "build": {
+      "command": "cd ACADEMe-backend && pip install -r requirements.txt"
+    },
+    "start": {
+      "command": "cd ACADEMe-backend && uvicorn main:app --host 0.0.0.0 --port $PORT"
+    }
+  }
+  
