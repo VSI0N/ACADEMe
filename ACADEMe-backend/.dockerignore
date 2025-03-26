@@ -9,7 +9,7 @@ venv/
 
 # Ignore environment and secret files  
 .env  
-firebase.py  # If this contains sensitive credentials
+# firebase.py  # If this contains sensitive credentials
 
 # Ignore Git files  
 .git  
@@ -20,7 +20,7 @@ firebase.py  # If this contains sensitive credentials
 *.log  
 
 # Ignore unnecessary assets (optional)  
-assets/  # If this is only needed for local development  
+# assets/  # If this is only needed for local development  
 
 # Ignore generated keys (if they are sensitive)  
 generate_secret_keys/  
