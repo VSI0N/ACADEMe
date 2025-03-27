@@ -3,7 +3,7 @@ import 'package:ACADEMe/localization/l10n.dart';
 import 'package:ACADEMe/utils/constants/image_strings.dart';
 import 'package:flutter/material.dart';
 
-class QASection extends StatelessWidget {
+class QSection extends StatelessWidget {
   final String userImage = "https://via.placeholder.com/50"; // Replace with actual user image URL
 
   @override

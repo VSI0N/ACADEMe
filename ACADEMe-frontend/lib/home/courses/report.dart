@@ -2,17 +2,103 @@ import 'package:ACADEMe/academe_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+class TestReportScreen extends StatefulWidget {
+  @override
+  _TestReportScreenState createState() => _TestReportScreenState();
+}
 
-class TestReportScreen extends StatelessWidget {
+class _TestReportScreenState extends State<TestReportScreen> {
+  Map<String, dynamic> visualData = {};
+  bool isLoading = true;
+  double overallAverage = 0;
+  SharedPreferences? _storage;
+  final String backendUrl = dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
+
+  @override
+  void initState() {
+    super.initState();
+    _initStorage();
+  }
+
+  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
+
+  Future<void> _initStorage() async {
+    fetchProgressData();
+  }
+
+  Future<void> fetchProgressData() async {
+    setState(() => isLoading = true);
+
+    try {
+      final String? token = await _secureStorage.read(key: 'access_token');
+      if (token == null || token.isEmpty) {
+        throw Exception('Missing access token - Please login again');
+      }
+
+      // Use the correct URL that works with your curl request
+      final response = await http.get(
+        Uri.parse('$backendUrl/api/progress-visuals/'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'accept': 'application/json', // Added accept header
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      ).timeout(const Duration(seconds: 30));
+
+      if (response.statusCode == 200) {
+        final String responseBody = utf8.decode(response.bodyBytes);
+        final Map<String, dynamic> jsonData = jsonDecode(responseBody);
+
+        setState(() {
+          visualData = jsonData;
+          overallAverage = calculateOverallAverage(jsonData['visual_data']);
+        });
+      } else {
+        throw Exception('Failed to load progress data: ${response.statusCode}');
+      }
+    } catch (e) {
+      debugPrint('❌ Error fetching progress data: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: ${e.toString()}')),
+      );
+    } finally {
+      setState(() => isLoading = false);
+    }
+  }
+
+  double calculateOverallAverage(Map<String, dynamic> visualData) {
+    double totalScore = 0;
+    int totalQuizzes = 0;
+
+    visualData.forEach((key, userData) {
+      if (userData['quizzes'] > 0) {
+        totalScore += (userData['avg_score'] as num).toDouble() *
+            (userData['quizzes'] as num).toInt();
+        totalQuizzes += (userData['quizzes'] as num).toInt();
+      }
+    });
+
+    return totalQuizzes > 0 ? totalScore / totalQuizzes : 0;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Test Report", style: GoogleFonts.poppins(fontSize: 22, color: Colors.white)),
+        title: Text("Test Report",
+            style: GoogleFonts.poppins(fontSize: 22, color: Colors.white)),
         backgroundColor: AcademeTheme.appColor,
       ),
-      body: SingleChildScrollView(
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
         padding: EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,7 +116,7 @@ class TestReportScreen extends StatelessWidget {
     );
   }
 
-  // 1. Score Summary Card
+  // 1. Score Summary Card - Updated with dynamic values
   Widget _buildScoreCard() {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -41,15 +127,23 @@ class TestReportScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Overall Score", style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white70)),
+            Text("Overall Score",
+                style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white70)),
             SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("85/100", style: GoogleFonts.poppins(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white)),
+                Text("${overallAverage.toStringAsFixed(0)}/100",
+                    style: GoogleFonts.poppins(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white)),
                 CircularProgressIndicator(
-                  value: 85 / 100,
-                  color: Colors.greenAccent,
+                  value: overallAverage / 100,
+                  color: _getProgressColor(overallAverage),
                   backgroundColor: Colors.white30,
                   strokeWidth: 6,
                 ),
@@ -61,7 +155,7 @@ class TestReportScreen extends StatelessWidget {
     );
   }
 
-  // 2. Performance Graph
+  // 2. Performance Graph - Kept exactly the same
   Widget _buildPerformanceGraph() {
     return Container(
       height: 200,
@@ -80,7 +174,9 @@ class TestReportScreen extends StatelessWidget {
             _buildBar(4, 85),
           ],
           titlesData: FlTitlesData(
-            bottomTitles: AxisTitles(sideTitles: _bottomTitles(["Loops", "OOP", "Arrays", "DBMS", "Flutter"])),
+            bottomTitles: AxisTitles(
+                sideTitles: _bottomTitles(
+                    ["Loops", "OOP", "Arrays", "DBMS", "Flutter"])),
             leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
             topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
             rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -91,7 +187,7 @@ class TestReportScreen extends StatelessWidget {
     );
   }
 
-  // Bar Chart Helper
+  // Bar Chart Helper - Kept exactly the same
   BarChartGroupData _buildBar(int x, double y) {
     return BarChartGroupData(
       x: x,
@@ -103,12 +199,13 @@ class TestReportScreen extends StatelessWidget {
     return SideTitles(
       showTitles: true,
       getTitlesWidget: (double value, TitleMeta meta) {
-        return Text(topics[value.toInt()], style: TextStyle(color: Colors.black, fontSize: 12));
+        return Text(topics[value.toInt()],
+            style: TextStyle(color: Colors.black, fontSize: 12));
       },
     );
   }
 
-  // 3. Detailed Analysis
+  // 3. Detailed Analysis - Kept exactly the same
   Widget _buildDetailedAnalysis() {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -119,10 +216,15 @@ class TestReportScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Detailed Performance", style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black)),
+            Text("Detailed Performance",
+                style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black)),
             SizedBox(height: 10),
             _buildPerformanceRow("Correct Answers", "40/50", Colors.green),
-            _buildPerformanceRow("Incorrect Answers", "10/50", Colors.redAccent),
+            _buildPerformanceRow(
+                "Incorrect Answers", "10/50", Colors.redAccent),
             _buildPerformanceRow("Skipped Questions", "5", Colors.orangeAccent),
           ],
         ),
@@ -136,19 +238,26 @@ class TestReportScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title, style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black)),
-          Text(value, style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: color)),
+          Text(title,
+              style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black)),
+          Text(value,
+              style: GoogleFonts.poppins(
+                  fontSize: 16, fontWeight: FontWeight.bold, color: color)),
         ],
       ),
     );
   }
 
-  // 4. Action Buttons (Download & Share)
+  // 4. Action Buttons (Download & Share) - Kept exactly the same
   Widget _buildActionButtons() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _buildActionButton(Icons.picture_as_pdf, "Download Report", Colors.white),
+        _buildActionButton(
+            Icons.picture_as_pdf, "Download Report", Colors.white),
         _buildActionButton(Icons.share, "Share Score", Colors.white),
       ],
     );
@@ -158,12 +267,20 @@ class TestReportScreen extends StatelessWidget {
     return ElevatedButton.icon(
       onPressed: () {},
       icon: Icon(icon, color: Colors.black),
-      label: Text(label, style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w500)),
+      label: Text(label,
+          style:
+          GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w500)),
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
+  }
+
+  Color _getProgressColor(double score) {
+    if (score >= 80) return Colors.greenAccent;
+    if (score >= 50) return Colors.orangeAccent;
+    return Colors.redAccent;
   }
 }

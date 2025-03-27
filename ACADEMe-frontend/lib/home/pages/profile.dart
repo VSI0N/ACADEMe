@@ -270,7 +270,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   text: L10n.getTranslatedText(context, 'Settings'),
                   iconColor: AcademeTheme.appColor,
                   onTap: () {
-                    print('Settings tapped');
                   },
                 ),
                 ProfileOption(
@@ -278,7 +277,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   text: L10n.getTranslatedText(context, 'Billing Details'),
                   iconColor: AcademeTheme.appColor,
                   onTap: () {
-                    print('Billing Details tapped');
                   },
                 ),
                 ProfileOption(
@@ -286,7 +284,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   text: L10n.getTranslatedText(context, 'Information'),
                   iconColor: AcademeTheme.appColor,
                   onTap: () {
-                    print('Information tapped');
                   },
                 ),
                 ProfileOption(
@@ -294,7 +291,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   text: L10n.getTranslatedText(context, 'Redeem Me Points'),
                   iconColor: AcademeTheme.appColor,
                   onTap: () {
-                    print('Redeem points tapped');
                   },
                 ),
                 ProfileOption(

@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-
 import '../academe_theme.dart';
-
-import 'package:flutter/material.dart';
 
 class ReusableProfileOption extends StatelessWidget {
   final IconData? icon;
@@ -11,12 +8,12 @@ class ReusableProfileOption extends StatelessWidget {
   final VoidCallback? onTap;
 
   const ReusableProfileOption({
-    Key? key,
+    super.key,
     this.icon,
     required this.title,
     required this.trailingWidget,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

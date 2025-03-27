@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
 class TypingIndicator extends StatefulWidget {
+
   @override
-  _TypingIndicatorState createState() => _TypingIndicatorState();
+  TypingIndicatorState createState() => TypingIndicatorState();
 }
 
-class _TypingIndicatorState extends State<TypingIndicator>
+class TypingIndicatorState extends State<TypingIndicator>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late List<Animation<double>> _animations;

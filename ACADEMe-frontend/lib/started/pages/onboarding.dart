@@ -14,19 +14,19 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
 
   final List<Map<String, String>> onboardingData = [
     {
-      "title": "Education is the best\nlearn ever",
+      "title": "Education",
       "description":
       "Empowering every learner with a dynamic, personalized, high-quality educational experienece & community support",
       "imagePath": "assets/images/books-and-apple.png",
     },
     {
-      "title": "Learn Anytime, Anywhere",
+      "title": "Progress Tracking",
       "description":
       "AI-driven progress tracking adapts to individual Learning needs, bridging knowledge gaps for personalized imporvement",
       "imagePath": "assets/images/growth-graph.png",
     },
     {
-      "title": "Achieve Your Goals",
+      "title": "ASKMe",
       "description":
       "An AI Powered chatbot to help you with your quries and doubts. Takes in Images, videos and can give reponses in your native language.",
       "imagePath": "assets/images/idea.png",

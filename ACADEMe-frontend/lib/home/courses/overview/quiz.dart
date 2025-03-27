@@ -5,16 +5,14 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import '../report.dart';
-
-class LessonQuestionPage extends StatefulWidget {
+class QuizPage extends StatefulWidget {
   final List<Map<String, dynamic>> quizzes;
   final Function()? onQuizComplete;
   final String courseId;
   final String topicId;
   final String subtopicId;
 
-  const LessonQuestionPage({
+  const QuizPage({
     super.key,
     required this.quizzes,
     this.onQuizComplete,
@@ -24,17 +22,20 @@ class LessonQuestionPage extends StatefulWidget {
   });
 
   @override
-  _LessonQuestionPageState createState() => _LessonQuestionPageState();
+  _QuizPageState createState() => _QuizPageState();
 }
 
-class _LessonQuestionPageState extends State<LessonQuestionPage> {
+class _QuizPageState extends State<QuizPage> {
   int _currentQuestionIndex = 0;
   int? _selectedAnswer;
+  bool isSubmitting = false;
   final String _baseUrl = dotenv.env['BACKEND_URL'] ??
       'http://10.0.2.2:8000'; // Replace with your API endpoint
   List<dynamic> _progressList = [];
   final FlutterSecureStorage _storage =
   const FlutterSecureStorage(); // Add FlutterSecureStorage
+
+
 
   @override
   void initState() {
@@ -218,6 +219,7 @@ class _LessonQuestionPageState extends State<LessonQuestionPage> {
       Navigator.pop(context); // Close the dialog
       if (_currentQuestionIndex < widget.quizzes.length - 1) {
         setState(() {
+          isSubmitting = false;
           _currentQuestionIndex++;
           _selectedAnswer = null;
         });
@@ -235,20 +237,20 @@ class _LessonQuestionPageState extends State<LessonQuestionPage> {
     if (widget.quizzes.isEmpty) {
       return Scaffold(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          automaticallyImplyLeading: false,
-          title: const Text(
-            'Quiz',
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            ),
-          ),
-          centerTitle: true,
-        ),
+        // appBar: AppBar(
+        //   backgroundColor: Colors.white,
+        //   elevation: 0,
+        //   automaticallyImplyLeading: false,
+        //   // title: const Text(
+        //   //   'Quiz',
+        //   //   style: TextStyle(
+        //   //     color: Colors.black,
+        //   //     fontWeight: FontWeight.bold,
+        //   //     fontSize: 18,
+        //   //   ),
+        //   // ),
+        //   centerTitle: true,
+        // ),
         body: const Center(
           child: Text(
             "No quizzes available",
@@ -269,20 +271,20 @@ class _LessonQuestionPageState extends State<LessonQuestionPage> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        title: const Text(
-          'Quiz',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-          ),
-        ),
-        centerTitle: true,
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: Colors.white,
+      //   elevation: 0,
+      //   automaticallyImplyLeading: false,
+      //   title: const Text(
+      //     'Quiz',
+      //     style: TextStyle(
+      //       color: Colors.black,
+      //       fontWeight: FontWeight.bold,
+      //       fontSize: 18,
+      //     ),
+      //   ),
+      //   centerTitle: true,
+      // ),
       body: Column(
         children: [
           Expanded(
@@ -333,9 +335,11 @@ class _LessonQuestionPageState extends State<LessonQuestionPage> {
                       itemBuilder: (context, index) {
                         return GestureDetector(
                           onTap: () {
-                            setState(() {
-                              _selectedAnswer = index;
-                            });
+                            if (!isSubmitting) {
+                              setState(() {
+                                _selectedAnswer = index;
+                              });
+                            }
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -381,10 +385,16 @@ class _LessonQuestionPageState extends State<LessonQuestionPage> {
               padding: const EdgeInsets.all(16),
               color: Colors.white,
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: isSubmitting
+                    ? null
+                    : () {
                   if (_selectedAnswer != null) {
+                    setState(() {
+                      isSubmitting = true;
+                    });
+
                     bool isCorrect = _selectedAnswer == correctOption;
-                    _showResultPopup(isCorrect, quizId); // Show result popup
+                    _showResultPopup(isCorrect, quizId);
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("Please select an answer!")),
@@ -392,14 +402,17 @@ class _LessonQuestionPageState extends State<LessonQuestionPage> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.yellow,
+                  backgroundColor: Colors.yellow, // Fixed color (won't change when disabled)
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
+                  // Ensures no overlay effect on disabled state
+                  disabledBackgroundColor: Colors.yellow, // Keep the same as enabled state
+                  disabledForegroundColor: Colors.black,  // Keep text color same
                 ),
                 child: const Text(
-                  "Submit",
+                  "Submit", // Keep the text fixed
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -407,6 +420,7 @@ class _LessonQuestionPageState extends State<LessonQuestionPage> {
                   ),
                 ),
               ),
+
             ),
           ),
         ],

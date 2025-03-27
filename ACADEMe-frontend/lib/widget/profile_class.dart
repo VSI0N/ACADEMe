@@ -7,15 +7,14 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class ClassSelectionBottomSheet extends StatefulWidget {
   final VoidCallback onClassSelected; // Callback when class is selected
 
-  const ClassSelectionBottomSheet({Key? key, required this.onClassSelected})
-      : super(key: key);
+  const ClassSelectionBottomSheet({super.key, required this.onClassSelected});
 
   @override
-  _ClassSelectionBottomSheetState createState() =>
-      _ClassSelectionBottomSheetState();
+  ClassSelectionBottomSheetState createState() =>
+      ClassSelectionBottomSheetState();
 }
 
-class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
+class ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
   String? selectedClass;
   final List<String> classes = [
     '5'
@@ -256,7 +255,6 @@ class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
         return false;
       }
     } catch (e) {
-      print("Error relogging in: $e");
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('An error occurred. Please try again.')),
       );
@@ -264,37 +262,4 @@ class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
     }
   }
 
-  Widget _buildImportantInfoPopup(BuildContext context) {
-    return Center(
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.redAccent.withOpacity(0.9),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: const [
-            Text(
-              "Important Info",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              "Please Select Class 5 as we currently created courses for Class 5",
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.white,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

@@ -4,6 +4,8 @@ import 'package:ACADEMe/academe_theme.dart';
 import 'package:ACADEMe/localization/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as storage;
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
@@ -12,6 +14,7 @@ import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../localization/language_provider.dart';
 import '../../../widget/document_preview.dart';
 import '../../../widget/whatsapp_audio.dart';
 import 'quiz.dart';
@@ -43,6 +46,7 @@ class FlashCard extends StatefulWidget {
   _FlashCardState createState() => _FlashCardState();
 }
 
+
 class _FlashCardState extends State<FlashCard> {
   VideoPlayerController? _videoController;
   ChewieController? _chewieController;
@@ -52,11 +56,15 @@ class _FlashCardState extends State<FlashCard> {
   bool _hasNavigated = false;
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
   final String backendUrl = dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
+  String topicTitle = "Loading...";
+  bool isLoading = true;
+
 
   @override
   void initState() {
     super.initState();
     _currentPage = widget.initialIndex;
+    fetchTopicDetails();
 
     if (widget.materials.isEmpty && widget.quizzes.isEmpty) {
       Future.delayed(Duration.zero, () {
@@ -67,6 +75,68 @@ class _FlashCardState extends State<FlashCard> {
     } else {
       _setupVideoController();
     }
+  }
+
+
+
+  Future<void> fetchTopicDetails() async {
+    String? token = await _storage.read(key: 'access_token');
+    if (token == null) {
+      print("❌ Missing access token");
+      return;
+    }
+
+    // Get the target language from the app's language provider
+    final targetLanguage = Provider.of<LanguageProvider>(context, listen: false)
+        .locale
+        .languageCode;
+
+    try {
+      final response = await http.get(
+        Uri.parse(
+            '$backendUrl/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/?target_language=$targetLanguage'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+
+      print("🔹 API Response: ${response.body}"); // ✅ Log the response
+
+      if (response.statusCode == 200) {
+        // Decode the response body using UTF-8
+        final String responseBody = utf8.decode(response.bodyBytes);
+        final dynamic jsonData = jsonDecode(responseBody);
+
+        if (jsonData is List) {
+          if (jsonData.isNotEmpty && jsonData[0] is Map<String, dynamic>) {
+            final Map<String, dynamic> data = jsonData[0];
+            updateTopicDetails(data);
+          } else {
+            print(
+                "❌ Unexpected JSON format (List but empty or incorrect structure)");
+          }
+        } else if (jsonData is Map<String, dynamic>) {
+          updateTopicDetails(jsonData);
+        } else {
+          print("❌ Unexpected JSON structure: ${jsonData.runtimeType}");
+        }
+      } else {
+        print("❌ Failed to fetch topic details: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("❌ Error fetching topic details: $e");
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  void updateTopicDetails(Map<String, dynamic> data) {
+    setState(() {
+      topicTitle = data["title"]?.toString() ?? "Untitled Topic";
+    });
   }
 
   void _setupVideoController() {
@@ -217,6 +287,7 @@ class _FlashCardState extends State<FlashCard> {
     return [];
   }
 
+
   void _nextMaterialOrQuiz() async {
     await _sendProgressToBackend();
 
@@ -262,7 +333,8 @@ class _FlashCardState extends State<FlashCard> {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text(
+        title:
+        Text(
           L10n.getTranslatedText(context, 'Subtopic Materials'),
           style: TextStyle(
               color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
@@ -273,7 +345,7 @@ class _FlashCardState extends State<FlashCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildProgressIndicator(),
-          _buildSubtopicTitle(_currentMaterial()["title"] ?? "Subtopic"),
+          _buildSubtopicTitle(topicTitle),
           Expanded(
             child: Align(
               alignment: Alignment.bottomCenter,
@@ -392,7 +464,7 @@ class _FlashCardState extends State<FlashCard> {
           ],
         ),
         child: Text(
-          title,
+          isLoading ? "Loading..." : topicTitle,
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -907,7 +979,7 @@ class _FlashCardState extends State<FlashCard> {
 
   Widget _buildQuizContent(Map<String, dynamic> quiz) {
     return buildStyledContainer(
-      LessonQuestionPage(
+      QuizPage(
         quizzes: [quiz],
         onQuizComplete: () {
           _nextMaterialOrQuiz();

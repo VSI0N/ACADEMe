@@ -5,16 +5,16 @@ class WhatsAppAudioPlayer extends StatefulWidget {
   final String audioUrl;
 
   const WhatsAppAudioPlayer({
-    Key? key,
+    super.key,
     required this.audioUrl,
-  }) : super(key: key);
+  });
 
   @override
-  _WhatsAppAudioPlayerState createState() => _WhatsAppAudioPlayerState();
+  WhatsAppAudioPlayerState createState() => WhatsAppAudioPlayerState();
 }
 
-class _WhatsAppAudioPlayerState extends State<WhatsAppAudioPlayer> {
-  final AudioPlayer _audioPlayer = AudioPlayer();
+class WhatsAppAudioPlayerState extends State<WhatsAppAudioPlayer> {
+  final AudioPlayer audioPlayer = AudioPlayer();
   bool isPlaying = false;
   Duration currentPosition = Duration.zero;
   Duration totalDuration = Duration.zero;
@@ -23,19 +23,19 @@ class _WhatsAppAudioPlayerState extends State<WhatsAppAudioPlayer> {
   void initState() {
     super.initState();
 
-    _audioPlayer.onPositionChanged.listen((Duration p) {
+    audioPlayer.onPositionChanged.listen((Duration p) {
       setState(() {
         currentPosition = p;
       });
     });
 
-    _audioPlayer.onDurationChanged.listen((Duration d) {
+    audioPlayer.onDurationChanged.listen((Duration d) {
       setState(() {
         totalDuration = d;
       });
     });
 
-    _audioPlayer.onPlayerComplete.listen((event) {
+    audioPlayer.onPlayerComplete.listen((event) {
       setState(() {
         isPlaying = false;
         currentPosition = Duration.zero;
@@ -45,7 +45,7 @@ class _WhatsAppAudioPlayerState extends State<WhatsAppAudioPlayer> {
 
   @override
   void dispose() {
-    _audioPlayer.dispose();
+    audioPlayer.dispose();
     super.dispose();
   }
 
@@ -69,12 +69,12 @@ class _WhatsAppAudioPlayerState extends State<WhatsAppAudioPlayer> {
             ),
             onPressed: () async {
               if (isPlaying) {
-                await _audioPlayer.pause();
+                await audioPlayer.pause();
                 setState(() {
                   isPlaying = false;
                 });
               } else {
-                await _audioPlayer.play(UrlSource(widget.audioUrl));
+                await audioPlayer.play(UrlSource(widget.audioUrl));
                 setState(() {
                   isPlaying = true;
                 });
@@ -94,7 +94,7 @@ class _WhatsAppAudioPlayerState extends State<WhatsAppAudioPlayer> {
                       : 1,
                   onChanged: (value) async {
                     final position = Duration(seconds: value.toInt());
-                    await _audioPlayer.seek(position);
+                    await audioPlayer.seek(position);
                   },
                   activeColor: Colors.blueAccent,
                   inactiveColor: Colors.grey[400],
