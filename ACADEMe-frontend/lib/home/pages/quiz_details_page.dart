@@ -2,16 +2,17 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter/foundation.dart' show debugPrint;
 
 class QuizDetailsPage extends StatefulWidget {
   final String quizId;
   const QuizDetailsPage({super.key, required this.quizId});
 
   @override
-  _QuizDetailsPageState createState() => _QuizDetailsPageState();
+  State<QuizDetailsPage> createState() => QuizDetailsPageState();
 }
 
-class _QuizDetailsPageState extends State<QuizDetailsPage> {
+class QuizDetailsPageState extends State<QuizDetailsPage> {
   final FlutterSecureStorage storage = const FlutterSecureStorage();
   final String backendUrl = 'http://10.0.2.2:8000';
   Map<String, dynamic>? quizDetails;
@@ -20,11 +21,11 @@ class _QuizDetailsPageState extends State<QuizDetailsPage> {
   @override
   void initState() {
     super.initState();
-    fetchQuizDetails();
+    _fetchQuizDetails();
   }
 
-  Future<void> fetchQuizDetails() async {
-    String? token = await storage.read(key: 'access_token');
+  Future<void> _fetchQuizDetails() async {
+    final token = await storage.read(key: 'access_token');
     if (token == null) return;
 
     try {
@@ -36,16 +37,21 @@ class _QuizDetailsPageState extends State<QuizDetailsPage> {
         },
       );
 
+      if (!mounted) return;
+
       if (response.statusCode == 200) {
         setState(() {
           quizDetails = jsonDecode(response.body);
           isLoading = false;
         });
       } else {
-        print("❌ Failed to fetch quiz details");
+        debugPrint("❌ Failed to fetch quiz details");
       }
     } catch (e) {
-      print("❌ Error fetching quiz details: $e");
+      debugPrint("❌ Error fetching quiz details: $e");
+      if (mounted) {
+        setState(() => isLoading = false);
+      }
     }
   }
 
@@ -56,29 +62,30 @@ class _QuizDetailsPageState extends State<QuizDetailsPage> {
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              quizDetails?["title"] ?? "Untitled Quiz",
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    quizDetails?["title"] ?? "Untitled Quiz",
+                    style: const TextStyle(
+                        fontSize: 22, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Number of Questions: ${quizDetails?["questions_count"] ?? "N/A"}",
+                    style: const TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Navigate to quiz attempt page (if exists)
+                    },
+                    child: const Text("Start Quiz"),
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 10),
-            Text(
-              "Number of Questions: ${quizDetails?["questions_count"] ?? "N/A"}",
-              style: const TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Navigate to quiz attempt page (if exists)
-              },
-              child: const Text("Start Quiz"),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

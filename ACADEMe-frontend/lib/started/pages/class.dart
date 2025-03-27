@@ -5,23 +5,23 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ClassSelectionBottomSheet extends StatefulWidget {
-  final VoidCallback onClassSelected; // Callback when class is selected
+  final VoidCallback onClassSelected;
 
-  const ClassSelectionBottomSheet({Key? key, required this.onClassSelected})
-      : super(key: key);
+  const ClassSelectionBottomSheet({
+    super.key,
+    required this.onClassSelected,
+  });
 
   @override
-  _ClassSelectionBottomSheetState createState() =>
+  State<ClassSelectionBottomSheet> createState() =>
       _ClassSelectionBottomSheetState();
 }
 
 class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
   String? selectedClass;
-  final List<String> classes = [
-  '5'
-  ];
-
-  final FlutterSecureStorage _secureStorage = FlutterSecureStorage();
+  final List<String> classes = ['5'];
+  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -53,8 +53,10 @@ class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
             hint: const Text("Select class"),
             value: selectedClass,
             items: classes
-                .map((className) =>
-                    DropdownMenuItem(value: className, child: Text(className)))
+                .map((className) => DropdownMenuItem(
+                      value: className,
+                      child: Text(className),
+                    ))
                 .toList(),
             onChanged: (value) {
               setState(() {
@@ -64,51 +66,63 @@ class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
           ),
           const SizedBox(height: 10),
           Padding(
-              padding: EdgeInsets.symmetric(vertical: 12), // Outer padding
-              child: SizedBox(
-                width: double.infinity, // Full width
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.yellow,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 32, vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  onPressed: () async {
-                    if (selectedClass != null) {
-                      bool success =
-                          await _updateClassInBackend(selectedClass!);
-                      if (success) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Selected $selectedClass')),
-                        );
-                        widget.onClassSelected(); // Trigger callback
-                        Navigator.pop(context); // Close the bottom sheet
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('Failed to update class')),
-                        );
-                      }
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Please select a class')),
-                      );
-                    }
-                  },
-                  child: const Text(
-                    "Confirm",
-                    style: TextStyle(fontSize: 16, color: Colors.black),
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.yellow,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-              )),
+                onPressed: _isLoading ? null : _handleClassSelection,
+                child: _isLoading
+                    ? const CircularProgressIndicator()
+                    : const Text(
+                        "Confirm",
+                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+              ),
+            ),
+          ),
           const SizedBox(height: 10),
-          // _buildImportantInfoPopup(context), // Show Important Info Popup
+          _buildImportantInfoBanner(),
         ],
       ),
     );
+  }
+
+  Future<void> _handleClassSelection() async {
+    if (selectedClass == null) {
+      if (mounted) {
+        _showSnackBar('Please select a class');
+      }
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      final success = await _updateClassInBackend(selectedClass!);
+      if (success) {
+        if (mounted) {
+          _showSnackBar('Selected $selectedClass');
+          widget.onClassSelected();
+          Navigator.pop(context);
+        }
+      } else {
+        if (mounted) {
+          _showSnackBar('Failed to update class');
+        }
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
   }
 
   Future<bool> _updateClassInBackend(String selectedClass) async {
@@ -117,14 +131,13 @@ class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
     final String? token = await _secureStorage.read(key: 'access_token');
 
     if (token == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No access token found')),
-      );
+      if (mounted) {
+        _showSnackBar('No access token found');
+      }
       return false;
     }
 
     try {
-      // Update the class
       final response = await http.patch(
         Uri.parse("$backendUrl/api/users/update_class/"),
         headers: {
@@ -137,24 +150,18 @@ class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
       );
 
       if (response.statusCode == 200) {
-        // Relogin the user
-        bool reloginSuccess = await _reloginUser();
-        if (reloginSuccess) {
-          return true;
-        } else {
-          return false;
-        }
+        return await _reloginUser();
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to update class: ${response.body}')),
-        );
+        if (mounted) {
+          _showSnackBar('Failed to update class: ${response.body}');
+        }
         return false;
       }
     } catch (e) {
-      print("Error updating class: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('An error occurred. Please try again.')),
-      );
+      debugPrint("Error updating class: $e");
+      if (mounted) {
+        _showSnackBar('An error occurred. Please try again.');
+      }
       return false;
     }
   }
@@ -166,9 +173,9 @@ class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
     final String? password = await _secureStorage.read(key: 'password');
 
     if (email == null || password == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No email or password found')),
-      );
+      if (mounted) {
+        _showSnackBar('No email or password found');
+      }
       return false;
     }
 
@@ -186,60 +193,64 @@ class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
-        final String newToken = responseData['access_token'];
-        await _secureStorage.write(key: 'access_token', value: newToken);
+        await _secureStorage.write(
+            key: 'access_token', value: responseData['access_token']);
         return true;
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to relogin: ${response.body}')),
-        );
+        if (mounted) {
+          _showSnackBar('Failed to relogin: ${response.body}');
+        }
         return false;
       }
     } catch (e) {
-      print("Error relogging in: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('An error occurred. Please try again.')),
-      );
+      debugPrint("Error relogging in: $e");
+      if (mounted) {
+        _showSnackBar('An error occurred. Please try again.');
+      }
       return false;
     }
   }
 
-  Widget _buildImportantInfoPopup(BuildContext context) {
-    return Center(
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.redAccent.withOpacity(0.9),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: const [
-            Text(
-              "Important Info",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              "Please Select Class 5 as we currently created courses for Class 5",
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.white,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
+  Widget _buildImportantInfoBanner() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.redAccent.withOpacity(0.9),
+        borderRadius: BorderRadius.circular(12),
       ),
+      child: const Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            "Important Info",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          SizedBox(height: 10),
+          Text(
+            "Please Select Class 5 as we currently created courses for Class 5",
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.white,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showSnackBar(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
     );
   }
 }
 
-// Function to show the class selection as a bottom sheet
 Future<void> showClassSelectionSheet(BuildContext context) async {
   await showModalBottomSheet(
     context: context,
@@ -249,8 +260,7 @@ Future<void> showClassSelectionSheet(BuildContext context) async {
     ),
     builder: (context) => ClassSelectionBottomSheet(
       onClassSelected: () {
-        // This callback is triggered when the user selects a class
-        print("Class selected");
+        debugPrint("Class selected");
       },
     ),
   );

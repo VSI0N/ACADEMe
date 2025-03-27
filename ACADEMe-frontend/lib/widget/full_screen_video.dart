@@ -5,13 +5,16 @@ import 'dart:io';
 class FullScreenVideo extends StatefulWidget {
   final String videoPath;
 
-  FullScreenVideo({required this.videoPath});
+  const FullScreenVideo({
+    required this.videoPath,
+    super.key, // Using super parameter syntax
+  });
 
   @override
-  _FullScreenVideoState createState() => _FullScreenVideoState();
+  State<FullScreenVideo> createState() => FullScreenVideoState();
 }
 
-class _FullScreenVideoState extends State<FullScreenVideo> {
+class FullScreenVideoState extends State<FullScreenVideo> {
   late VideoPlayerController _controller;
 
   @override
@@ -40,7 +43,7 @@ class _FullScreenVideoState extends State<FullScreenVideo> {
                 aspectRatio: _controller.value.aspectRatio,
                 child: VideoPlayer(_controller),
               )
-            : CircularProgressIndicator(),
+            : const CircularProgressIndicator(),
       ),
     );
   }

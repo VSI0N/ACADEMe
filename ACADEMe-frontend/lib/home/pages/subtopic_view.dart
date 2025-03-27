@@ -13,10 +13,14 @@ class SubtopicViewScreen extends StatefulWidget {
   final String courseId;
   final String topicId;
 
-  const SubtopicViewScreen({super.key, required this.courseId, required this.topicId});
+  const SubtopicViewScreen({
+    super.key,
+    required this.courseId,
+    required this.topicId,
+  });
 
   @override
-  _SubtopicViewScreenState createState() => _SubtopicViewScreenState();
+  State<SubtopicViewScreen> createState() => _SubtopicViewScreenState();
 }
 
 class _SubtopicViewScreenState extends State<SubtopicViewScreen>
@@ -33,7 +37,7 @@ class _SubtopicViewScreenState extends State<SubtopicViewScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    fetchSubtopics();
+    _fetchSubtopics();
   }
 
   @override
@@ -42,24 +46,22 @@ class _SubtopicViewScreenState extends State<SubtopicViewScreen>
     super.dispose();
   }
 
-  Future<void> fetchSubtopics() async {
-    setState(() {
-      isLoading = true;
-    });
+  Future<void> _fetchSubtopics() async {
+    if (!mounted) return;
 
-    String? token = await storage.read(key: 'access_token');
-
-    if (token == null) {
-      print("❌ Missing access token");
-      setState(() {
-        isLoading = false;
-      });
-      return;
-    }
+    setState(() => isLoading = true);
 
     try {
-      String targetLanguage =
-          Provider.of<LanguageProvider>(context, listen: false).locale.languageCode;
+      final token = await storage.read(key: 'access_token');
+      if (token == null) {
+        debugPrint("❌ Missing access token");
+        return;
+      }
+
+      // Get the language provider before async gap
+      final languageProvider =
+          Provider.of<LanguageProvider>(context, listen: false);
+      final targetLanguage = languageProvider.locale.languageCode;
 
       final response = await http.get(
         Uri.parse(
@@ -70,11 +72,12 @@ class _SubtopicViewScreenState extends State<SubtopicViewScreen>
         },
       );
 
-      if (response.statusCode == 200) {
-        List<dynamic> data = jsonDecode(response.body);
+      if (!mounted) return;
 
-        List<Map<String, dynamic>> allSubtopics = data.map((subtopic) {
-          double progress = (subtopic["progress"] ?? 0.0).toDouble();
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body) as List;
+        final allSubtopics = data.map((subtopic) {
+          final progress = (subtopic["progress"] ?? 0.0).toDouble();
           return {
             "id": subtopic["id"],
             "title": subtopic["title"],
@@ -85,18 +88,21 @@ class _SubtopicViewScreenState extends State<SubtopicViewScreen>
 
         setState(() {
           subtopics = allSubtopics;
-          ongoingSubtopics = allSubtopics.where((s) => s["progress"] > 0 && s["progress"] < 100).toList();
-          completedSubtopics = allSubtopics.where((s) => s["progress"] == 100).toList();
+          ongoingSubtopics = allSubtopics
+              .where((s) => s["progress"] > 0 && s["progress"] < 100)
+              .toList();
+          completedSubtopics =
+              allSubtopics.where((s) => s["progress"] == 100).toList();
         });
       } else {
-        print("❌ Failed to fetch subtopics: ${response.statusCode}");
+        debugPrint("❌ Failed to fetch subtopics: ${response.statusCode}");
       }
     } catch (e) {
-      print("❌ Error fetching subtopics: $e");
+      debugPrint("❌ Error fetching subtopics: $e");
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() => isLoading = false);
+      }
     }
   }
 
@@ -108,7 +114,11 @@ class _SubtopicViewScreenState extends State<SubtopicViewScreen>
         backgroundColor: AcademeTheme.appColor,
         title: Text(
           L10n.getTranslatedText(context, 'Subtopics'),
-          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+          style: const TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
       ),
       body: Column(
@@ -147,26 +157,20 @@ class _SubtopicViewScreenState extends State<SubtopicViewScreen>
       return const Center(child: CircularProgressIndicator(color: Colors.blue));
     }
     if (subtopicList.isEmpty) {
-      return const Center(child: Text("No subtopics available"));
+      return Center(
+          child:
+              Text(L10n.getTranslatedText(context, 'No subtopics available')));
     }
     return ListView.builder(
       padding: const EdgeInsets.all(20),
       itemCount: subtopicList.length,
-      itemBuilder: (context, index) {
-        return _buildSubtopicCard(subtopicList[index]);
-      },
+      itemBuilder: (context, index) => _buildSubtopicCard(subtopicList[index]),
     );
   }
 
   Widget _buildSubtopicCard(Map<String, dynamic> subtopic) {
     return GestureDetector(
-      onTap: () async {
-        await storage.write(key: 'subtopic_id', value: subtopic["id"]);
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => MaterialViewScreen(subtopicId: subtopic["id"])),
-        // );
-      },
+      onTap: () => _handleSubtopicTap(subtopic),
       child: Container(
         height: 100,
         margin: const EdgeInsets.only(bottom: 15),
@@ -175,7 +179,8 @@ class _SubtopicViewScreenState extends State<SubtopicViewScreen>
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
-            BoxShadow(color: Colors.grey.shade300, blurRadius: 5, spreadRadius: 2)
+            BoxShadow(
+                color: Colors.grey.shade300, blurRadius: 5, spreadRadius: 2)
           ],
         ),
         child: Row(
@@ -201,8 +206,11 @@ class _SubtopicViewScreenState extends State<SubtopicViewScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(subtopic["title"],
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  Text(
+                    subtopic["title"],
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
                   const SizedBox(height: 5),
                   LinearProgressIndicator(
                     value: (subtopic["progress"] / 100).clamp(0.0, 1.0),
@@ -216,5 +224,18 @@ class _SubtopicViewScreenState extends State<SubtopicViewScreen>
         ),
       ),
     );
+  }
+
+  Future<void> _handleSubtopicTap(Map<String, dynamic> subtopic) async {
+    await storage.write(key: 'subtopic_id', value: subtopic["id"]);
+    // Uncomment when MaterialViewScreen is ready
+    // if (mounted) {
+    //   Navigator.push(
+    //     context,
+    //     MaterialPageRoute(
+    //       builder: (context) => MaterialViewScreen(subtopicId: subtopic["id"]),
+    //     ),
+    //   );
+    // }
   }
 }

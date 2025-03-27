@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'dart:io';
 
 class AudioPlayerWidget extends StatefulWidget {
   final String audioPath;
 
-  AudioPlayerWidget({required this.audioPath});
+  const AudioPlayerWidget({
+    required this.audioPath,
+    super.key, // Added named key parameter
+  });
 
   @override
-  _AudioPlayerWidgetState createState() => _AudioPlayerWidgetState();
+  State<AudioPlayerWidget> createState() => AudioPlayerWidgetState();
 }
 
-class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
+class AudioPlayerWidgetState extends State<AudioPlayerWidget> {
   late AudioPlayer _audioPlayer;
   bool isPlaying = false;
 
@@ -27,15 +29,17 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
     super.dispose();
   }
 
-  void _togglePlayPause() {
+  Future<void> _togglePlayPause() async {
     if (isPlaying) {
-      _audioPlayer.pause();
+      await _audioPlayer.pause();
     } else {
-      _audioPlayer.play(DeviceFileSource(widget.audioPath));
+      await _audioPlayer.play(DeviceFileSource(widget.audioPath));
     }
-    setState(() {
-      isPlaying = !isPlaying;
-    });
+    if (mounted) {
+      setState(() {
+        isPlaying = !isPlaying;
+      });
+    }
   }
 
   @override
@@ -47,8 +51,11 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
           onPressed: _togglePlayPause,
         ),
         Expanded(
-            child: Text(widget.audioPath.split('/').last,
-                overflow: TextOverflow.ellipsis)),
+          child: Text(
+            widget.audioPath.split('/').last,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
       ],
     );
   }

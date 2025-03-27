@@ -1,6 +1,7 @@
 class ATexts {
   // Global texts
 
+  // Onboarding Texts
   static const String onBoardingTitle1 = "Education";
   static const String onBoardingTitle2 = "Education";
   static const String onBoardingTitle3 = "Education";
@@ -12,12 +13,15 @@ class ATexts {
   static const String onBoardingSubTitle3 =
       "AI-driven progress tracking adapts to individual learning needs bridging knowledge gaps for personalized improvement";
 
+  // Buttons
   static const String onBoardingButtonText1 = "Next";
-  static const String start_learning = "Continue Learning";
+  static const String startLearning = "Continue Learning";
 
-  static const String UI_UX_course = "UI/UX Masterclass";
-  static const String pallets_app_course = "Palletes for your App";
+  // Course Names
+  static const String uiUxCourse = "UI/UX Masterclass";
+  static const String palletsAppCourse = "Palletes for your App";
 
-  static const String your_course = "Your courses";
-  static const String same_courses = "Similar courses";
+  // Course Sections
+  static const String yourCourse = "Your courses";
+  static const String sameCourses = "Similar courses";
 }

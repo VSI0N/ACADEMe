@@ -24,79 +24,71 @@ class _LogInViewState extends State<LogInView> {
   bool _isLoading = false;
   bool _isGoogleLoading = false;
 
+  /// Shows a snackbar message
+  void _showSnackBar(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
+
   /// Handles manual login
   Future<void> _submitForm() async {
     if (!_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            L10n.getTranslatedText(
-                context, '⚠️ Please enter valid credentials'),
-          ),
-        ),
-      );
+      _showSnackBar(
+          L10n.getTranslatedText(context, '⚠️ Please enter valid credentials'));
       return;
     }
 
-    setState(() => _isLoading = true); // Show loading indicator
+    setState(() => _isLoading = true);
 
-    final (user, errorMessage) = await AuthService().signIn(
-      _emailController.text.trim(),
-      _passwordController.text.trim(),
-    );
-
-    setState(() => _isLoading = false); // Hide loading indicator
-
-    if (errorMessage != null) {
-      // ❌ Show error if login fails
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage)),
+    try {
+      final (user, errorMessage) = await AuthService().signIn(
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
       );
-      return;
-    }
 
-    if (user != null) {
-      // ✅ Store user info for later use (optional)
-      await _secureStorage.write(key: "user_id", value: user.id);
-      await _secureStorage.write(key: "user_name", value: user.name);
-      await _secureStorage.write(key: "user_email", value: user.email);
-      await _secureStorage.write(
-          key: "student_class", value: user.studentClass);
-      await _secureStorage.write(key: "photo_url", value: user.photo_url);
+      if (errorMessage != null) {
+        _showSnackBar(errorMessage);
+        return;
+      }
 
-      // ✅ Store email and password in secure storage
-      await _secureStorage.write(key: 'email', value: _emailController.text.trim());
-      await _secureStorage.write(key: 'password', value: _passwordController.text.trim());
+      if (user != null) {
+        // Store user info
+        await _secureStorage.write(key: "user_id", value: user.id);
+        await _secureStorage.write(key: "user_name", value: user.name);
+        await _secureStorage.write(key: "user_email", value: user.email);
+        await _secureStorage.write(
+            key: "student_class", value: user.studentClass);
+        await _secureStorage.write(key: "photo_url", value: user.photo_url);
 
-      // ✅ Success! Navigate to home page
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            L10n.getTranslatedText(context, '✅ Login successful!'),
+        // Store credentials
+        await _secureStorage.write(
+            key: 'email', value: _emailController.text.trim());
+        await _secureStorage.write(
+            key: 'password', value: _passwordController.text.trim());
+
+        _showSnackBar(L10n.getTranslatedText(context, '✅ Login successful!'));
+
+        // Fetch user role
+        await UserRoleManager().fetchUserRole(user.email);
+        bool isAdmin = UserRoleManager().isAdmin;
+
+        if (!mounted) return;
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BottomNav(isAdmin: isAdmin),
           ),
-        ),
-      );
-
-      // ✅ Fetch user role before navigating
-      await UserRoleManager().fetchUserRole(user.email);
-      bool isAdmin = UserRoleManager().isAdmin;
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => BottomNav(isAdmin: isAdmin),
-        ),
-      );
-    } else {
-      // ❌ Fallback error
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            L10n.getTranslatedText(
-                context, '❌ Login failed. Please try again.'),
-          ),
-        ),
-      );
+        );
+      } else {
+        _showSnackBar(L10n.getTranslatedText(
+            context, '❌ Login failed. Please try again.'));
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -104,15 +96,21 @@ class _LogInViewState extends State<LogInView> {
   Future<void> _signInWithGoogle() async {
     setState(() => _isGoogleLoading = true);
 
-    // Show a snackbar indicating that Google Sign-In is not available yet
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(L10n.getTranslatedText(
-            context, 'Google Sign-In is not available yet. Please log in manually.')),
-      ),
-    );
+    try {
+      _showSnackBar(L10n.getTranslatedText(context,
+          'Google Sign-In is not available yet. Please log in manually.'));
+    } finally {
+      if (mounted) {
+        setState(() => _isGoogleLoading = false);
+      }
+    }
+  }
 
-    setState(() => _isGoogleLoading = false);
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -213,7 +211,7 @@ class _LogInViewState extends State<LogInView> {
                                           context, 'Please enter an email');
                                     }
                                     if (!RegExp(
-                                        r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                                            r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
                                         .hasMatch(value)) {
                                       return L10n.getTranslatedText(
                                           context, 'Enter a valid email');
@@ -246,7 +244,7 @@ class _LogInViewState extends State<LogInView> {
                                       onPressed: () {
                                         setState(() {
                                           _isPasswordVisible =
-                                          !_isPasswordVisible;
+                                              !_isPasswordVisible;
                                         });
                                       },
                                     ),
@@ -285,7 +283,7 @@ class _LogInViewState extends State<LogInView> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                              const ForgotPasswordPage()),
+                                                  const ForgotPasswordPage()),
                                         );
                                       },
                                       child: Text(
@@ -307,46 +305,45 @@ class _LogInViewState extends State<LogInView> {
                                     width: double.infinity,
                                     child: ElevatedButton(
                                       onPressed:
-                                      _isLoading ? null : _submitForm,
+                                          _isLoading ? null : _submitForm,
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Colors.yellow[600],
                                         minimumSize:
-                                         Size(double.infinity, width * 0.11),
+                                            Size(double.infinity, width * 0.11),
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
-                                          BorderRadius.circular(30),
+                                              BorderRadius.circular(30),
                                         ),
                                         elevation: 0,
                                       ),
                                       child: _isLoading
                                           ? const CircularProgressIndicator(
-                                        valueColor:
-                                        AlwaysStoppedAnimation<Color>(
-                                            Color.fromARGB(
-                                                255, 193, 191, 191)),
-                                      )
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                      Color.fromARGB(
+                                                          255, 193, 191, 191)),
+                                            )
                                           : Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.center,
-                                        children: [
-                                          Image.asset(
-                                            'assets/icons/house_door.png',
-                                            height: 24,
-                                            width: 24,
-                                          ),
-                                          const SizedBox(width: 10),
-                                          Text(
-                                            L10n.getTranslatedText(
-                                                context, 'Log in'),
-                                            style: TextStyle(
-                                              fontSize:
-                                              width * 0.045,
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.black,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Image.asset(
+                                                  'assets/icons/house_door.png',
+                                                  height: 24,
+                                                  width: 24,
+                                                ),
+                                                const SizedBox(width: 10),
+                                                Text(
+                                                  L10n.getTranslatedText(
+                                                      context, 'Log in'),
+                                                  style: TextStyle(
+                                                    fontSize: width * 0.045,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ),
-                                        ],
-                                      ),
                                     ),
                                   ),
                                 ),
@@ -374,14 +371,14 @@ class _LogInViewState extends State<LogInView> {
                                           : _signInWithGoogle,
                                       icon: _isGoogleLoading
                                           ? const CircularProgressIndicator(
-                                          color: Colors.white)
+                                              color: Colors.white)
                                           : Padding(
-                                        padding: const EdgeInsets.only(
-                                            right: 7),
-                                        child: Image.asset(
-                                            'assets/icons/google_icon.png',
-                                            height: 22),
-                                      ),
+                                              padding: const EdgeInsets.only(
+                                                  right: 7),
+                                              child: Image.asset(
+                                                  'assets/icons/google_icon.png',
+                                                  height: 22),
+                                            ),
                                       label: Text(
                                         L10n.getTranslatedText(
                                             context, 'Continue with Google'),
@@ -396,11 +393,10 @@ class _LogInViewState extends State<LogInView> {
                                         elevation: 2,
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
-                                          BorderRadius.circular(30),
+                                              BorderRadius.circular(30),
                                         ),
                                         minimumSize:
-                                        Size(double.infinity, width * 0.11),
-
+                                            Size(double.infinity, width * 0.11),
                                       ),
                                     ),
                                   ),

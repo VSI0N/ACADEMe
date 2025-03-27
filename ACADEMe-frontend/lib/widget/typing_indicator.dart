@@ -1,22 +1,34 @@
 import 'package:flutter/material.dart';
 
 class TypingIndicator extends StatefulWidget {
+  final Color? bubbleColor;
+  final Color? dotColor;
+  final double? dotSize;
+  final Duration? animationDuration;
+
+  const TypingIndicator({
+    super.key,
+    this.bubbleColor,
+    this.dotColor,
+    this.dotSize,
+    this.animationDuration,
+  });
 
   @override
-  TypingIndicatorState createState() => TypingIndicatorState();
+  State<TypingIndicator> createState() => _TypingIndicatorState();
 }
 
-class TypingIndicatorState extends State<TypingIndicator>
+class _TypingIndicatorState extends State<TypingIndicator>
     with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late List<Animation<double>> _animations;
+  late final AnimationController _controller;
+  late final List<Animation<double>> _animations;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1200), // Increased for smoother effect
+      duration: widget.animationDuration ?? const Duration(milliseconds: 1200),
     )..repeat(reverse: true);
 
     _animations = List.generate(3, (index) {
@@ -38,9 +50,9 @@ class TypingIndicatorState extends State<TypingIndicator>
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
       decoration: BoxDecoration(
-        color: Colors.grey[300],
+        color: widget.bubbleColor ?? Colors.grey[300],
         borderRadius: BorderRadius.circular(13),
       ),
       child: Row(
@@ -50,19 +62,21 @@ class TypingIndicatorState extends State<TypingIndicator>
             animation: _animations[index],
             builder: (context, child) {
               return Padding(
-                padding: EdgeInsets.symmetric(horizontal: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 2),
                 child: Opacity(
-                  opacity:
-                      (1 - _animations[index].value / 6), // Subtle fade effect
+                  opacity: (1 - _animations[index].value / 6),
                   child: Container(
-                    width: 8,
-                    height: 8,
+                    width: widget.dotSize ?? 8,
+                    height: widget.dotSize ?? 8,
                     decoration: BoxDecoration(
-                      color: Colors.grey[600],
+                      color: widget.dotColor ?? Colors.grey[600],
                       shape: BoxShape.circle,
                     ),
                     transform: Matrix4.translationValues(
-                        0, -_animations[index].value, 0),
+                      0,
+                      -_animations[index].value,
+                      0,
+                    ),
                   ),
                 ),
               );

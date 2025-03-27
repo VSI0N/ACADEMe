@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import '../../../academe_theme.dart';
 
 class MaterialDetailsPage extends StatefulWidget {
   final String materialId;
@@ -57,32 +56,33 @@ class _MaterialDetailsPageState extends State<MaterialDetailsPage> {
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              materialDetails?["title"] ?? "Untitled Material",
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    materialDetails?["title"] ?? "Untitled Material",
+                    style: const TextStyle(
+                        fontSize: 22, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Type: ${materialDetails?["type"] ?? "N/A"}",
+                    style: const TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Category: ${materialDetails?["category"] ?? "N/A"}",
+                    style: const TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    materialDetails?["content"] ?? "No content available.",
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 10),
-            Text(
-              "Type: ${materialDetails?["type"] ?? "N/A"}",
-              style: const TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              "Category: ${materialDetails?["category"] ?? "N/A"}",
-              style: const TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              materialDetails?["content"] ?? "No content available.",
-              style: const TextStyle(fontSize: 16),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

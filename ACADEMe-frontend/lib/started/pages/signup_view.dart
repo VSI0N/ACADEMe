@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../../home/auth/auth_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ACADEMe/localization/l10n.dart';
-
 import '../../home/auth/role.dart';
 import '../../home/pages/bottomNav.dart';
 
@@ -31,6 +30,7 @@ class _SignUpViewState extends State<SignUpView> {
   Future<void> _submitForm() async {
     if (!_formKey.currentState!.validate()) return;
     if (!_agreeToTerms) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text(L10n.getTranslatedText(
@@ -48,6 +48,7 @@ class _SignUpViewState extends State<SignUpView> {
         "SELECT",
         "https://www.w3schools.com/w3images/avatar2.png");
 
+    if (!mounted) return;
     setState(() => _isLoading = false);
 
     // Fetch stored token
@@ -55,14 +56,17 @@ class _SignUpViewState extends State<SignUpView> {
 
     if (token != null) {
       // Store email and password in secure storage
-      await _secureStorage.write(key: 'email', value: _emailController.text.trim());
-      await _secureStorage.write(key: 'password', value: _passwordController.text.trim());
+      await _secureStorage.write(
+          key: 'email', value: _emailController.text.trim());
+      await _secureStorage.write(
+          key: 'password', value: _passwordController.text.trim());
 
-      await UserRoleManager().fetchUserRole(_emailController.text.trim()); // ✅ Fetch user role before navigating
+      await UserRoleManager().fetchUserRole(_emailController.text.trim());
+      if (!mounted) return;
       bool isAdmin = UserRoleManager().isAdmin;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Account created successfully!')),
+        const SnackBar(content: Text('Account created successfully!')),
       );
       Navigator.pushReplacement(
         context,
@@ -70,8 +74,8 @@ class _SignUpViewState extends State<SignUpView> {
           builder: (context) => BottomNav(isAdmin: isAdmin),
         ),
       );
-      // Redirect to courses
     } else {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(errorMessage ??
             L10n.getTranslatedText(context, 'Signup failed. Please try again')),
@@ -83,11 +87,11 @@ class _SignUpViewState extends State<SignUpView> {
   Future<void> _signUpWithGoogle() async {
     setState(() => _isGoogleLoading = true);
 
-    // Show a snackbar indicating that Google Sign-Up is not available yet
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(L10n.getTranslatedText(
-            context, 'Google Sign-Up is not available yet. Please sign up manually.')),
+        content: Text(L10n.getTranslatedText(context,
+            'Google Sign-Up is not available yet. Please sign up manually.')),
       ),
     );
 
@@ -111,7 +115,8 @@ class _SignUpViewState extends State<SignUpView> {
               children: [
                 Center(
                   child: Container(
-                    constraints: BoxConstraints(maxWidth: width * 0.6, maxHeight: height * 0.5),
+                    constraints: BoxConstraints(
+                        maxWidth: width * 0.6, maxHeight: height * 0.5),
                     child: Image.asset(
                       'assets/images/signUp_logo.png',
                       fit: BoxFit.contain,
@@ -127,10 +132,11 @@ class _SignUpViewState extends State<SignUpView> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(left: width * 0.09, right: width * 0.09),
+                            padding: EdgeInsets.only(
+                                left: width * 0.09, right: width * 0.09),
                             child: Text(
                               '${L10n.getTranslatedText(context, 'Create Your ')} '
-                                  '${L10n.getTranslatedText(context, 'Account')}',
+                              '${L10n.getTranslatedText(context, 'Account')}',
                               style: TextStyle(
                                 fontSize: width * 0.1,
                                 fontWeight: FontWeight.bold,
@@ -140,21 +146,20 @@ class _SignUpViewState extends State<SignUpView> {
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: height * 0.025,
-                    ),
+                    SizedBox(height: height * 0.025),
                     Padding(
-                      padding: EdgeInsets.only(left: width * 0.08, right: width * 0.08),
+                      padding: EdgeInsets.only(
+                          left: width * 0.08, right: width * 0.08),
                       child: TextFormField(
                         controller: _usernameController,
                         decoration: InputDecoration(
-                            filled: true,
-                            fillColor: AcademeTheme.notWhite,
-                            labelText:
-                            L10n.getTranslatedText(context, 'Username'),
-                            hintText: L10n.getTranslatedText(
-                                context, 'Enter a username'),
-                            prefixIcon: Icon(Icons.person),
+                          filled: true,
+                          fillColor: AcademeTheme.notWhite,
+                          labelText:
+                              L10n.getTranslatedText(context, 'Username'),
+                          hintText: L10n.getTranslatedText(
+                              context, 'Enter a username'),
+                          prefixIcon: const Icon(Icons.person),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(7),
                             borderSide: BorderSide.none,
@@ -169,7 +174,8 @@ class _SignUpViewState extends State<SignUpView> {
                               color: Colors.transparent,
                               width: 2,
                             ),
-                          ),),
+                          ),
+                        ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return L10n.getTranslatedText(
@@ -180,16 +186,19 @@ class _SignUpViewState extends State<SignUpView> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: width * 0.08, right: width * 0.08, top: height * 0.015),
+                      padding: EdgeInsets.only(
+                          left: width * 0.08,
+                          right: width * 0.08,
+                          top: height * 0.015),
                       child: TextFormField(
                         controller: _emailController,
                         decoration: InputDecoration(
-                            filled: true,
-                            fillColor: AcademeTheme.notWhite,
-                            labelText: L10n.getTranslatedText(context, 'Email'),
-                            hintText: L10n.getTranslatedText(
-                                context, 'Enter your email'),
-                            prefixIcon: Icon(Icons.email),
+                          filled: true,
+                          fillColor: AcademeTheme.notWhite,
+                          labelText: L10n.getTranslatedText(context, 'Email'),
+                          hintText: L10n.getTranslatedText(
+                              context, 'Enter your email'),
+                          prefixIcon: const Icon(Icons.email),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(7),
                             borderSide: BorderSide.none,
@@ -204,7 +213,8 @@ class _SignUpViewState extends State<SignUpView> {
                               color: Colors.transparent,
                               width: 2,
                             ),
-                          ),),
+                          ),
+                        ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return L10n.getTranslatedText(
@@ -220,7 +230,10 @@ class _SignUpViewState extends State<SignUpView> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: width * 0.08, right: width * 0.08, top: height * 0.015),
+                      padding: EdgeInsets.only(
+                          left: width * 0.08,
+                          right: width * 0.08,
+                          top: height * 0.015),
                       child: TextFormField(
                         controller: _passwordController,
                         obscureText: !_isPasswordVisible,
@@ -228,10 +241,10 @@ class _SignUpViewState extends State<SignUpView> {
                           filled: true,
                           fillColor: AcademeTheme.notWhite,
                           labelText:
-                          L10n.getTranslatedText(context, 'Password'),
+                              L10n.getTranslatedText(context, 'Password'),
                           hintText: L10n.getTranslatedText(
                               context, 'Enter your password'),
-                          prefixIcon: Icon(Icons.lock),
+                          prefixIcon: const Icon(Icons.lock),
                           suffixIcon: IconButton(
                             icon: Icon(_isPasswordVisible
                                 ? Icons.visibility
@@ -264,18 +277,17 @@ class _SignUpViewState extends State<SignUpView> {
                                 context, 'Please enter a password');
                           }
                           if (value.length < 6) {
-                            return L10n.getTranslatedText(
-                                context, 'Password must be at least 6 characters');
+                            return L10n.getTranslatedText(context,
+                                'Password must be at least 6 characters');
                           }
                           return null;
                         },
                       ),
                     ),
-                    SizedBox(
-                      height: height * 0.006,
-                    ),
+                    SizedBox(height: height * 0.006),
                     Padding(
-                      padding: EdgeInsets.only(left: width * 0.06, right: width * 0.06),
+                      padding: EdgeInsets.only(
+                          left: width * 0.06, right: width * 0.06),
                       child: Row(
                         children: [
                           Checkbox(
@@ -294,9 +306,7 @@ class _SignUpViewState extends State<SignUpView> {
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: height * 0.005,
-                    ),
+                    SizedBox(height: height * 0.005),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: width * 0.07),
                       child: SizedBox(
@@ -304,36 +314,31 @@ class _SignUpViewState extends State<SignUpView> {
                         child: ElevatedButton(
                           onPressed: _isLoading ? null : _submitForm,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                            Colors.yellow[600], // Change button color
-                            minimumSize:
-                            Size(double.infinity, width * 0.11), // Adjust button size
+                            backgroundColor: Colors.yellow[600],
+                            minimumSize: Size(double.infinity, width * 0.11),
                           ),
                           child: _isLoading
-                              ? CircularProgressIndicator(color: Colors.white)
+                              ? const CircularProgressIndicator(
+                                  color: Colors.white)
                               : Row(
-                            mainAxisAlignment: MainAxisAlignment
-                                .center, // Center the content
-                            children: [
-                              Image.asset(
-                                'assets/icons/house_door.png', // Replace with your image path
-                                height: height * 0.05, // Adjust size
-                                width: width * 0.06,
-                              ),
-                              SizedBox(
-                                  width:
-                                  width * 0.025), // Space between icon and text
-                              Text(
-                                L10n.getTranslatedText(context, 'Signup'),
-                                style: TextStyle(
-                                  fontSize: width * 0.045, // Adjust font size
-                                  fontWeight: FontWeight
-                                      .w500, // Change font weight
-                                  color: Colors.black, // Text color
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      'assets/icons/house_door.png',
+                                      height: height * 0.05,
+                                      width: width * 0.06,
+                                    ),
+                                    SizedBox(width: width * 0.025),
+                                    Text(
+                                      L10n.getTranslatedText(context, 'Signup'),
+                                      style: TextStyle(
+                                        fontSize: width * 0.045,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
-                          ),
                         ),
                       ),
                     ),
@@ -346,25 +351,22 @@ class _SignUpViewState extends State<SignUpView> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    //
-                    // SizedBox(height: 2),
-
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: width * 0.07),
                       child: SizedBox(
                         width: double.infinity,
                         child: ElevatedButton.icon(
                           onPressed:
-                          _isGoogleLoading ? null : _signUpWithGoogle,
+                              _isGoogleLoading ? null : _signUpWithGoogle,
                           icon: _isGoogleLoading
-                              ? CircularProgressIndicator(color: Colors.white)
+                              ? const CircularProgressIndicator(
+                                  color: Colors.white)
                               : Padding(
-                            padding: EdgeInsets.only(
-                                right: width * 0.02), // Adjust spacing
-                            child: Image.asset(
-                                'assets/icons/google_icon.png',
-                                height: height * 0.025),
-                          ),
+                                  padding: EdgeInsets.only(right: width * 0.02),
+                                  child: Image.asset(
+                                      'assets/icons/google_icon.png',
+                                      height: height * 0.025),
+                                ),
                           label: Text(
                             L10n.getTranslatedText(
                                 context, 'Continue with Google'),
@@ -380,16 +382,12 @@ class _SignUpViewState extends State<SignUpView> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
                             ),
-                            minimumSize:
-                            Size(double.infinity, width * 0.11),
+                            minimumSize: Size(double.infinity, width * 0.11),
                           ),
                         ),
                       ),
                     ),
-
-                    SizedBox(
-                      height: height * 0.03,
-                    ),
+                    SizedBox(height: height * 0.03),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -406,7 +404,7 @@ class _SignUpViewState extends State<SignUpView> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => LogInView()),
+                                  builder: (context) => const LogInView()),
                             );
                           },
                           child: Text(
@@ -414,15 +412,13 @@ class _SignUpViewState extends State<SignUpView> {
                             style: TextStyle(
                               fontSize: width * 0.04,
                               fontWeight: FontWeight.w500,
-                              color: AcademeTheme
-                                  .appColor, // Change color for emphasis
+                              color: AcademeTheme.appColor,
                             ),
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(
-                        height: 16), // Adds spacing before the "Sign Up" button
+                    const SizedBox(height: 16),
                   ],
                 ),
               ],

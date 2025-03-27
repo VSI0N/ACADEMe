@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,9 +7,6 @@ import 'package:ACADEMe/academe_theme.dart';
 import 'package:ACADEMe/localization/l10n.dart';
 import 'package:ACADEMe/localization/language_provider.dart';
 import 'package:ACADEMe/started/pages/login_view.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-
 import '../../widget/profile_class.dart';
 import '../../widget/profile_dropdown.dart';
 
@@ -86,7 +82,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     Future.microtask(() {
       final languageProvider =
-      Provider.of<LanguageProvider>(context, listen: false);
+          Provider.of<LanguageProvider>(context, listen: false);
       if (languageProvider.locale != newLocale) {
         languageProvider.setLocale(newLocale);
       }
@@ -159,11 +155,11 @@ class _ProfilePageState extends State<ProfilePage> {
             CircleAvatar(
               radius: 50,
               backgroundImage: userDetails?['photo_url'] != null &&
-                  userDetails!['photo_url'].isNotEmpty
+                      userDetails!['photo_url'].isNotEmpty
                   ? NetworkImage(
-                  userDetails!['photo_url']) // Use the provided photo URL
+                      userDetails!['photo_url']) // Use the provided photo URL
                   : const AssetImage('assets/design_course/userImage.png')
-              as ImageProvider, // Fallback to a local asset
+                      as ImageProvider, // Fallback to a local asset
             ),
             const SizedBox(height: 10),
             Text(
@@ -187,7 +183,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 backgroundColor: Colors.yellow,
                 foregroundColor: Colors.black,
                 padding:
-                const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                    const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
@@ -213,7 +209,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       isScrollControlled: true,
                       shape: const RoundedRectangleBorder(
                         borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(20)),
+                            BorderRadius.vertical(top: Radius.circular(20)),
                       ),
                       builder: (context) {
                         return Padding(
@@ -253,7 +249,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       context,
                       Provider.of<LanguageProvider>(context, listen: false)
                           .locale,
-                          (Locale newLocale) {
+                      (Locale newLocale) {
                         _changeLanguage(newLocale);
                       },
                     );
@@ -269,29 +265,25 @@ class _ProfilePageState extends State<ProfilePage> {
                   icon: Icons.settings,
                   text: L10n.getTranslatedText(context, 'Settings'),
                   iconColor: AcademeTheme.appColor,
-                  onTap: () {
-                  },
+                  onTap: () {},
                 ),
                 ProfileOption(
                   icon: Icons.credit_card,
                   text: L10n.getTranslatedText(context, 'Billing Details'),
                   iconColor: AcademeTheme.appColor,
-                  onTap: () {
-                  },
+                  onTap: () {},
                 ),
                 ProfileOption(
                   icon: Icons.info,
                   text: L10n.getTranslatedText(context, 'Information'),
                   iconColor: AcademeTheme.appColor,
-                  onTap: () {
-                  },
+                  onTap: () {},
                 ),
                 ProfileOption(
                   icon: Icons.card_giftcard,
                   text: L10n.getTranslatedText(context, 'Redeem Me Points'),
                   iconColor: AcademeTheme.appColor,
-                  onTap: () {
-                  },
+                  onTap: () {},
                 ),
                 ProfileOption(
                   icon: Icons.logout,
@@ -307,7 +299,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => const LogInView()),
-                              (route) => false,
+                          (route) => false,
                         );
 
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -376,15 +368,16 @@ class _LanguageSelectionBottomSheetState
         children: [
           Text(
             "Select Language",
-            style: TextStyle(fontSize: width * 0.045, fontWeight: FontWeight.bold),
+            style:
+                TextStyle(fontSize: width * 0.045, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: height * 0.02),
           DropdownButtonFormField<Locale>(
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.grey[200],
-              contentPadding:
-              EdgeInsets.symmetric(horizontal: width * 0.03, vertical: height * 0.01),
+              contentPadding: EdgeInsets.symmetric(
+                  horizontal: width * 0.03, vertical: height * 0.01),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide.none,
@@ -405,13 +398,14 @@ class _LanguageSelectionBottomSheetState
           ),
           SizedBox(height: height * 0.02),
           Padding(
-            padding: EdgeInsets.symmetric( vertical: 12), // Outer padding
+            padding: EdgeInsets.symmetric(vertical: 12), // Outer padding
             child: SizedBox(
               width: double.infinity, // Full width
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.yellow,
-                  padding: const EdgeInsets.symmetric(vertical: 14), // Only vertical padding inside button
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 14), // Only vertical padding inside button
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),

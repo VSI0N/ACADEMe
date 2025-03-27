@@ -1,14 +1,15 @@
 import 'package:ACADEMe/academe_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:ACADEMe/started/pages/signup_view.dart';
 
 class OnboardingFlow extends StatefulWidget {
+  const OnboardingFlow({super.key}); // Added named key parameter
+
   @override
-  _OnboardingFlowState createState() => _OnboardingFlowState();
+  State<OnboardingFlow> createState() => OnboardingFlowState();
 }
 
-class _OnboardingFlowState extends State<OnboardingFlow> {
+class OnboardingFlowState extends State<OnboardingFlow> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
@@ -16,19 +17,19 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
     {
       "title": "Education",
       "description":
-      "Empowering every learner with a dynamic, personalized, high-quality educational experienece & community support",
+          "Empowering every learner with a dynamic, personalized, high-quality educational experience & community support",
       "imagePath": "assets/images/books-and-apple.png",
     },
     {
       "title": "Progress Tracking",
       "description":
-      "AI-driven progress tracking adapts to individual Learning needs, bridging knowledge gaps for personalized imporvement",
+          "AI-driven progress tracking adapts to individual learning needs, bridging knowledge gaps for personalized improvement",
       "imagePath": "assets/images/growth-graph.png",
     },
     {
       "title": "ASKMe",
       "description":
-      "An AI Powered chatbot to help you with your quries and doubts. Takes in Images, videos and can give reponses in your native language.",
+          "An AI powered chatbot to help you with your queries and doubts. Takes in Images, videos and can give responses in your native language.",
       "imagePath": "assets/images/idea.png",
     },
   ];
@@ -36,38 +37,39 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
   void _goToNextPage() {
     if (_currentPage < onboardingData.length - 1) {
       _pageController.nextPage(
-          duration: Duration(milliseconds: 500), curve: Curves.ease);
+          duration: const Duration(milliseconds: 500), curve: Curves.ease);
     } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => SignUpView()),
-      );
+      _navigateToSignUp();
     }
   }
 
-  void _skipToLastPage() async {
-    for (int i = _currentPage; i < onboardingData.length; i++) {
-      setState(() => _currentPage = i);
-      _pageController.nextPage(
-        duration: Duration(milliseconds: 300), // Fast transition
-        curve: Curves.linear,
-      );
-      await Future.delayed(Duration(milliseconds: 300)); // Small delay for effect
-    }
-
-    // Navigate to SignUpView after animations complete
+  Future<void> _navigateToSignUp() async {
+    if (!mounted) return;
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => SignUpView()),
+      MaterialPageRoute(builder: (context) => const SignUpView()),
     );
   }
 
+  Future<void> _skipToLastPage() async {
+    for (int i = _currentPage; i < onboardingData.length; i++) {
+      if (!mounted) return;
+      setState(() => _currentPage = i);
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.linear,
+      );
+      await Future.delayed(const Duration(milliseconds: 300));
+    }
+
+    await _navigateToSignUp();
+  }
 
   LinearGradient _getGradientForPage(int pageIndex) {
     List<Color> gradients = [
-      Color(0xFFA898E7),
-      Color(0xFFFCB69F),
-      Color(0xFF74EBD5),
+      const Color(0xFFA898E7),
+      const Color(0xFFFCB69F),
+      const Color(0xFF74EBD5),
     ];
     return LinearGradient(
       colors: [gradients[pageIndex], Colors.white],
@@ -82,7 +84,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: AnimatedContainer(
-        duration: Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 500),
         decoration: BoxDecoration(
           gradient: _getGradientForPage(_currentPage),
         ),
@@ -105,7 +107,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                     Center(
                       child: Image.asset(
                         onboardingData[index]['imagePath']!,
-                        height: height * 0.3, // Adjusted height for better positioning
+                        height: height * 0.3,
                       ),
                     ),
                     const Spacer(flex: 5),
@@ -120,7 +122,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
               child: Container(
                 padding: const EdgeInsets.all(20),
                 constraints: BoxConstraints(
-                  minHeight: height * 0.22, // Give enough space even on small phones
+                  minHeight: height * 0.22,
                 ),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -134,25 +136,27 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                   ],
                 ),
                 child: SingleChildScrollView(
-                  physics: BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   child: Column(
-                    mainAxisSize: MainAxisSize.min, // Important: makes Column wrap its content
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
                         onboardingData[_currentPage]['title']!,
                         textAlign: TextAlign.center,
-                        style: GoogleFonts.poppins(
+                        style: TextStyle(
                           fontSize: width * 0.047,
                           fontWeight: FontWeight.bold,
+                          fontFamily: 'Poppins',
                         ),
                       ),
                       SizedBox(height: height * 0.01),
                       Text(
                         onboardingData[_currentPage]['description']!,
                         textAlign: TextAlign.center,
-                        style: GoogleFonts.poppins(
+                        style: TextStyle(
                           fontSize: width * 0.033,
                           color: Colors.grey[600],
+                          fontFamily: 'Poppins',
                         ),
                       ),
                       SizedBox(height: height * 0.016),
@@ -160,7 +164,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: List.generate(
                           onboardingData.length,
-                              (index) => buildDot(isActive: index == _currentPage),
+                          (index) => buildDot(isActive: index == _currentPage),
                         ),
                       ),
                       SizedBox(height: height * 0.02),
@@ -168,59 +172,65 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                         alignment: Alignment.bottomCenter,
                         child: _currentPage == onboardingData.length - 1
                             ? ElevatedButton(
-                          onPressed: _goToNextPage,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.yellow,
-                            padding: EdgeInsets.symmetric(
-                                vertical: height * 0.013, horizontal: width * 0.2),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                          ),
-                          child: Text(
-                            "Get Started",
-                            style: GoogleFonts.poppins(
-                              fontSize: width * 0.039,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                            ),
-                          ),
-                        )
+                                onPressed: _goToNextPage,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.yellow,
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: height * 0.013,
+                                      horizontal: width * 0.2),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                                child: Text(
+                                  "Get Started",
+                                  style: TextStyle(
+                                    fontSize: width * 0.039,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black,
+                                    fontFamily: 'Poppins',
+                                  ),
+                                ),
+                              )
                             : Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            TextButton(
-                              onPressed: _skipToLastPage,
-                              child: Text(
-                                "Skip",
-                                style: GoogleFonts.poppins(
-                                  fontSize: width * 0.04,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.black,
-                                ),
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  TextButton(
+                                    onPressed: _skipToLastPage,
+                                    child: Text(
+                                      "Skip",
+                                      style: TextStyle(
+                                        fontSize: width * 0.04,
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.black,
+                                        fontFamily: 'Poppins',
+                                      ),
+                                    ),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: _goToNextPage,
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.yellow,
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: height * 0.01,
+                                          horizontal: width * 0.08),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      "Next",
+                                      style: TextStyle(
+                                        fontSize: width * 0.04,
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.black,
+                                        fontFamily: 'Poppins',
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            ElevatedButton(
-                              onPressed: _goToNextPage,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.yellow,
-                                padding: EdgeInsets.symmetric(
-                                    vertical: height * 0.01, horizontal: width * 0.08),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                              ),
-                              child: Text(
-                                "Next",
-                                style: GoogleFonts.poppins(
-                                  fontSize: width * 0.04,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
                       ),
                     ],
                   ),

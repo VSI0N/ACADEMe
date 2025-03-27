@@ -1,7 +1,5 @@
 import 'package:ACADEMe/academe_theme.dart';
 import 'package:ACADEMe/home/pages/bottomNav.dart';
-import 'package:ACADEMe/home/pages/home_view.dart';
-import 'package:ACADEMe/introduction_page.dart';
 import 'package:flutter/material.dart';
 
 import '../../home/auth/role.dart';
@@ -20,11 +18,31 @@ class SelectCourseScreen extends StatefulWidget {
 
 class _SelectCourseScreenState extends State<SelectCourseScreen> {
   List<String> allCourses = [
-    "Computer Science", "Mathematics", "Physics", "AI & ML", "Data Science", "Cyber Security",
-    "Business Analytics", "Software Engineering", "Blockchain", "Internet of Things", "Game Development",
-    "Digital Marketing", "Cloud Computing", "Embedded Systems", "Bioinformatics", "Robotics", "Astronomy",
-    "Machine Learning", "Quantum Computing", "Neuroscience", "Philosophy", "Economics", "Psychology",
-    "Statistics", "Medical Science"
+    "Computer Science",
+    "Mathematics",
+    "Physics",
+    "AI & ML",
+    "Data Science",
+    "Cyber Security",
+    "Business Analytics",
+    "Software Engineering",
+    "Blockchain",
+    "Internet of Things",
+    "Game Development",
+    "Digital Marketing",
+    "Cloud Computing",
+    "Embedded Systems",
+    "Bioinformatics",
+    "Robotics",
+    "Astronomy",
+    "Machine Learning",
+    "Quantum Computing",
+    "Neuroscience",
+    "Philosophy",
+    "Economics",
+    "Psychology",
+    "Statistics",
+    "Medical Science"
   ];
 
   List<String> filteredCourses = [];
@@ -49,8 +67,8 @@ class _SelectCourseScreenState extends State<SelectCourseScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Select Course", style: TextStyle(fontWeight: FontWeight.w600,
-        color: Colors.white)),
+        title: Text("Select Course",
+            style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white)),
         centerTitle: true,
         backgroundColor: AcademeTheme.appColor,
       ),
@@ -80,14 +98,16 @@ class _SelectCourseScreenState extends State<SelectCourseScreen> {
                     padding: EdgeInsets.all(8.0),
                     child: TextField(
                       controller: searchController,
-                      onChanged: (value) => filterCourses(value), // Live update results
+                      onChanged: (value) =>
+                          filterCourses(value), // Live update results
                       decoration: InputDecoration(
                         hintText: "Search course...",
                         prefixIcon: Icon(Icons.search),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       ),
                     ),
                   ),
@@ -100,7 +120,8 @@ class _SelectCourseScreenState extends State<SelectCourseScreen> {
                         return ListTile(
                           title: Text(filteredCourses[index]),
                           onTap: () {
-                            if (!selectedCourses.contains(filteredCourses[index])) {
+                            if (!selectedCourses
+                                .contains(filteredCourses[index])) {
                               setState(() {
                                 selectedCourses.add(filteredCourses[index]);
                               });
@@ -139,13 +160,16 @@ class _SelectCourseScreenState extends State<SelectCourseScreen> {
               onPressed: () {
                 if (selectedCourses.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Please select at least one course")),
+                    SnackBar(
+                        content: Text("Please select at least one course")),
                   );
                 } else {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => BottomNav(isAdmin: UserRoleManager().isAdmin,),
+                      builder: (context) => BottomNav(
+                        isAdmin: UserRoleManager().isAdmin,
+                      ),
                     ),
                   );
                 }
@@ -153,10 +177,12 @@ class _SelectCourseScreenState extends State<SelectCourseScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AcademeTheme.appColor,
                 padding: EdgeInsets.symmetric(vertical: 12),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
               ),
               child: Center(
-                child: Text("Continue", style: TextStyle(fontSize: 16, color: Colors.white)),
+                child: Text("Continue",
+                    style: TextStyle(fontSize: 16, color: Colors.white)),
               ),
             ),
           ],

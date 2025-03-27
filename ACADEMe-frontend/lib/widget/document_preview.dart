@@ -14,6 +14,7 @@ class DocumentPreviewScreen extends StatefulWidget {
 
 class _DocumentPreviewScreenState extends State<DocumentPreviewScreen> {
   String? localPath;
+  String? _errorMessage;
 
   @override
   void initState() {
@@ -24,17 +25,27 @@ class _DocumentPreviewScreenState extends State<DocumentPreviewScreen> {
   Future<void> downloadFile() async {
     try {
       final response = await http.get(Uri.parse(widget.docUrl));
-      final bytes = response.bodyBytes;
+      if (response.statusCode != 200) {
+        throw Exception('Failed to download file: ${response.statusCode}');
+      }
 
+      final bytes = response.bodyBytes;
       final dir = await getApplicationDocumentsDirectory();
       final file = File('${dir.path}/temp_doc.pdf');
 
       await file.writeAsBytes(bytes, flush: true);
-      setState(() {
-        localPath = file.path;
-      });
+      if (mounted) {
+        setState(() {
+          localPath = file.path;
+          _errorMessage = null;
+        });
+      }
     } catch (e) {
-      print("Error downloading file: $e");
+      if (mounted) {
+        setState(() {
+          _errorMessage = 'Failed to load document: ${e.toString()}';
+        });
+      }
     }
   }
 
@@ -42,14 +53,16 @@ class _DocumentPreviewScreenState extends State<DocumentPreviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Document Preview')),
-      body: localPath != null
-          ? PDFView(
-        filePath: localPath,
-        autoSpacing: true,
-        swipeHorizontal: false,
-        pageSnap: true,
-      )
-          : const Center(child: CircularProgressIndicator()),
+      body: _errorMessage != null
+          ? Center(child: Text(_errorMessage!))
+          : localPath != null
+              ? PDFView(
+                  filePath: localPath,
+                  autoSpacing: true,
+                  swipeHorizontal: false,
+                  pageSnap: true,
+                )
+              : const Center(child: CircularProgressIndicator()),
     );
   }
 }

@@ -123,7 +123,8 @@ class _GetStartedViewState extends State<GetStartedView>
                       padding:
                           const EdgeInsets.only(left: 64, right: 64, top: 10),
                       child: Text(
-                        L10n.getTranslatedText(context, 'Level up your learning!'),
+                        L10n.getTranslatedText(
+                            context, 'Level up your learning!'),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 20.0,
@@ -226,7 +227,8 @@ class _GetStartedViewState extends State<GetStartedView>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    L10n.getTranslatedText(context, 'Level Up!'),
+                                    L10n.getTranslatedText(
+                                        context, 'Level Up!'),
                                     style: TextStyle(
                                       fontSize: 40,
                                       color: Colors.black87,

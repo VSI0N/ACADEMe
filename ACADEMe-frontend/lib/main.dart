@@ -8,15 +8,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'firebase_options.dart';
 import 'dart:io';
 import 'home/auth/role.dart';
-import 'home/auth/auth_wrapper.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import './home/auth/auth_service.dart';
 import 'academe_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kIsWeb, debugPrint;
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ACADEMe/providers/bottom_nav_provider.dart';
@@ -27,9 +23,9 @@ void main() async {
   /// 🔹 Load environment variables
   try {
     await dotenv.load(fileName: "assets/.env");
-    print("✅ .env Loaded Successfully");
+    debugPrint("✅ .env Loaded Successfully");
   } catch (e) {
-    print("❌ .env Load Error: $e");
+    debugPrint("❌ .env Load Error: $e");
   }
 
   /// 🔹 Initialize Firebase safely
@@ -37,9 +33,9 @@ void main() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    print("✅ Firebase Initialized Successfully");
+    debugPrint("✅ Firebase Initialized Successfully");
   } catch (e) {
-    print("❌ Firebase Initialization Error: $e");
+    debugPrint("❌ Firebase Initialization Error: $e");
   }
 
   /// 🔹 Fetch admin emails first (blocking)
@@ -65,7 +61,7 @@ void main() async {
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.dark,
     statusBarBrightness:
-    !kIsWeb && Platform.isAndroid ? Brightness.dark : Brightness.light,
+        !kIsWeb && Platform.isAndroid ? Brightness.dark : Brightness.light,
     systemNavigationBarColor: Colors.white,
     systemNavigationBarDividerColor: Colors.transparent,
     systemNavigationBarIconBrightness: Brightness.dark,
@@ -75,8 +71,10 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => LanguageProvider()), // Language provider
-        ChangeNotifierProvider(create: (context) => BottomNavProvider()), // BottomNav provider
+        ChangeNotifierProvider(
+            create: (context) => LanguageProvider()), // Language provider
+        ChangeNotifierProvider(
+            create: (context) => BottomNavProvider()), // BottomNav provider
       ],
       child: const MyApp(),
     ),

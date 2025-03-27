@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ACADEMe/home/auth/auth_service.dart';
-import 'package:ACADEMe/introduction_page.dart';
 import 'package:ACADEMe/home/pages/course_view.dart';
-import 'package:ACADEMe/home/pages/profile.dart';
 import 'package:ACADEMe/home/pages/ASKMe.dart';
-import '../../academe_theme.dart';
 import 'package:ACADEMe/home/pages/my_progress.dart';
 import 'package:ACADEMe/localization/l10n.dart';
 import '../started/pages/login_view.dart';
@@ -16,10 +13,10 @@ class HomepageDrawer extends StatelessWidget {
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
   const HomepageDrawer({
-    Key? key,
+    super.key,
     required this.onClose,
-    required this.onProfileTap, // Add this parameter
-  }) : super(key: key);
+    required this.onProfileTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +24,8 @@ class HomepageDrawer extends StatelessWidget {
       future: _getUserDetails(),
       builder: (context, snapshot) {
         final String name = snapshot.data?['name'] ?? 'User';
-        final String photoUrl = snapshot.data?['photo_url'] ?? 'assets/design_course/userImage.png';
+        final String photoUrl =
+            snapshot.data?['photo_url'] ?? 'assets/design_course/userImage.png';
 
         return Container(
           width: MediaQuery.of(context).size.width * 0.75,
@@ -61,34 +59,36 @@ class HomepageDrawer extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               // Drawer Items with Navigation
-              _buildDrawerItem(Icons.bookmark, L10n.getTranslatedText(context, 'Bookmarks'), () {
+              _buildDrawerItem(
+                  Icons.bookmark, L10n.getTranslatedText(context, 'Bookmarks'),
+                  () {
                 // Navigator.push(
                 //   context,
                 //   MaterialPageRoute(
-                //     builder: (context) =>
-                //         const BookmarksScreen(), // Directly navigate to BookmarksScreen
+                //     builder: (context) => const BookmarksScreen(),
                 //   ),
                 // );
               }),
-              _buildDrawerItem(Icons.person, L10n.getTranslatedText(context, 'Profile'), () {
-                onProfileTap(); // Trigger the callback
-                onClose(); // Close the drawer
+              _buildDrawerItem(
+                  Icons.person, L10n.getTranslatedText(context, 'Profile'), () {
+                onProfileTap();
+                onClose();
               }),
-              _buildDrawerItem(Icons.menu_book, L10n.getTranslatedText(context, 'My Courses'), () {
+              _buildDrawerItem(Icons.menu_book,
+                  L10n.getTranslatedText(context, 'My Courses'), () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                    const CourseListScreen(), // Directly navigate to CourseListScreen
+                    builder: (context) => const CourseListScreen(),
                   ),
                 );
               }),
-              _buildDrawerItem(Icons.show_chart, L10n.getTranslatedText(context, 'My Progress'), () {
+              _buildDrawerItem(Icons.show_chart,
+                  L10n.getTranslatedText(context, 'My Progress'), () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        ProgressScreen(), // Directly navigate to ProgressScreen
+                    builder: (context) => ProgressScreen(),
                   ),
                 );
               }),
@@ -96,46 +96,45 @@ class HomepageDrawer extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        ASKMe(), // Directly navigate to AskMeScreen
+                    builder: (context) => ASKMe(),
                   ),
                 );
               }),
-              _buildDrawerItem(Icons.settings, L10n.getTranslatedText(context, 'Settings'), () {
+              _buildDrawerItem(
+                  Icons.settings, L10n.getTranslatedText(context, 'Settings'),
+                  () {
                 // Navigator.push(
                 //   context,
                 //   MaterialPageRoute(
-                //     builder: (context) =>
-                //         const SettingsScreen(), // Directly navigate to SettingsScreen
+                //     builder: (context) => const SettingsScreen(),
                 //   ),
                 // );
               }),
-              _buildDrawerItem(Icons.help_outline, L10n.getTranslatedText(context, 'Get Help'), () {
+              _buildDrawerItem(Icons.help_outline,
+                  L10n.getTranslatedText(context, 'Get Help'), () {
                 // Navigator.push(
                 //   context,
                 //   MaterialPageRoute(
-                //     builder: (context) =>
-                //         const HelpScreen(), // Directly navigate to HelpScreen
+                //     builder: (context) => const HelpScreen(),
                 //   ),
                 // );
               }),
-              // Spacer to push user section to the bottom
               const Spacer(),
               // User Profile Section
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: Row(
                   children: [
-                    // Circular Avatar with Border
                     GestureDetector(
                       onTap: () {
-                        onProfileTap(); // Trigger the callback
-                        onClose(); // Close the drawer
+                        onProfileTap();
+                        onClose();
                       },
                       child: Container(
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(color: Colors.blueAccent, width: 3),
+                          border:
+                              Border.all(color: Colors.blueAccent, width: 3),
                         ),
                         child: CircleAvatar(
                           radius: 25,
@@ -148,25 +147,14 @@ class HomepageDrawer extends StatelessWidget {
                     const SizedBox(width: 12),
                     Text(
                       name,
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 20),
                     ),
                     const Spacer(),
                     IconButton(
                       icon: const Icon(Icons.logout,
                           color: Colors.redAccent, size: 28),
-                      onPressed: () async {
-                        try {
-                          await AuthService().signOut();
-                          print('✅ User signed out successfully');
-                          // Navigate to the introduction screen after logout
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                                builder: (context) => const LogInView()),
-                          );
-                        } catch (e) {
-                          print('❌ Error during logout: $e');
-                        }
-                      },
+                      onPressed: () => _handleLogout(context),
                     ),
                   ],
                 ),
@@ -178,13 +166,31 @@ class HomepageDrawer extends StatelessWidget {
     );
   }
 
+  Future<void> _handleLogout(BuildContext context) async {
+    try {
+      await AuthService().signOut();
+      if (context.mounted) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const LogInView()),
+        );
+      }
+    } catch (e) {
+      // Error handling without print statements
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Logout failed: ${e.toString()}')),
+        );
+      }
+    }
+  }
+
   Widget _buildDrawerItem(IconData icon, String title, VoidCallback onTap) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: onTap, // Handle onTap action here
+          onTap: onTap,
           borderRadius: BorderRadius.circular(10),
           splashColor: const Color.fromARGB(255, 214, 238, 242),
           highlightColor: const Color.fromARGB(255, 166, 221, 239),
@@ -200,7 +206,6 @@ class HomepageDrawer extends StatelessWidget {
     );
   }
 
-  // Function to fetch user details from secure storage
   Future<Map<String, String?>> _getUserDetails() async {
     final String? name = await _secureStorage.read(key: 'name');
     final String? photoUrl = await _secureStorage.read(key: 'photo_url');
