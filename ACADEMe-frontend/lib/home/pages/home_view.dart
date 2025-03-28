@@ -24,7 +24,7 @@ class HomePage extends StatelessWidget {
   final int selectedIndex; // Add selectedIndex
   final PageController _pageController = PageController();
   final ValueNotifier<bool> _showSearchUI =
-  ValueNotifier(false); // Use ValueNotifier
+      ValueNotifier(false); // Use ValueNotifier
   List<dynamic> courses = [];
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
@@ -78,7 +78,7 @@ class HomePage extends StatelessWidget {
 
     if (response.statusCode == 200) {
       final List<dynamic> data =
-      jsonDecode(utf8.decode(response.bodyBytes)); // Ensure UTF-8 encoding
+          jsonDecode(utf8.decode(response.bodyBytes)); // Ensure UTF-8 encoding
       return data; // Return all courses
     } else {
       throw Exception("❌ Failed to fetch courses: ${response.statusCode}");
@@ -126,11 +126,13 @@ class HomePage extends StatelessWidget {
 
   Future<void> _checkAndShowClassSelection(BuildContext context) async {
     final String? studentClass =
-    await _secureStorage.read(key: 'student_class');
+        await _secureStorage.read(key: 'student_class');
+
     if (studentClass == null ||
         int.tryParse(studentClass) == null ||
         int.parse(studentClass) < 1 ||
         int.parse(studentClass) > 12) {
+      if (!context.mounted) return; // ✅ Ensure context is valid before use
       await showClassSelectionSheet(context);
     }
   }
@@ -260,13 +262,13 @@ class HomePage extends StatelessWidget {
                             children: results
                                 .map(
                                   (title) => ListTile(
-                                leading: Icon(Icons.book),
-                                title: Text(title),
-                                onTap: () {
-                                  debugPrint("Selected: $title");
-                                },
-                              ),
-                            )
+                                    leading: Icon(Icons.book),
+                                    title: Text(title),
+                                    onTap: () {
+                                      debugPrint("Selected: $title");
+                                    },
+                                  ),
+                                )
                                 .toList(),
                           );
                         },
@@ -307,6 +309,8 @@ class HomePage extends StatelessWidget {
     // Fetch and store user details when the page loads
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await _fetchAndStoreUserDetails();
+
+      if (!context.mounted) return; // ✅ Ensure context is valid
       await _checkAndShowClassSelection(context);
     });
 
@@ -330,7 +334,7 @@ class HomePage extends StatelessWidget {
             leading: Container(), // Remove default hamburger
             flexibleSpace: Padding(
               padding:
-              const EdgeInsets.only(top: 15.0), // Adjust top padding here
+                  const EdgeInsets.only(top: 15.0), // Adjust top padding here
               child: FutureBuilder<Map<String, String?>>(
                 future: _getUserDetails(),
                 builder: (context, snapshot) {
@@ -344,7 +348,7 @@ class HomePage extends StatelessWidget {
                         'assets/design_course/userImage.png';
                     return getAppBarUI(
                       onProfileTap,
-                          () {
+                      () {
                         scaffoldKey.currentState
                             ?.openDrawer(); // Open drawer when custom button is clicked
                       },
@@ -382,7 +386,7 @@ class HomePage extends StatelessWidget {
                     // Search Bar
                     Padding(
                       padding:
-                      const EdgeInsets.only(top: 10.0), // Upper padding
+                          const EdgeInsets.only(top: 10.0), // Upper padding
                       child: TextField(
                         onTap: () {
                           _showSearchUI.value = true; // Update state properly
@@ -394,7 +398,7 @@ class HomePage extends StatelessWidget {
                                 left: 12.0, right: 8.0), // Spacing
                             child: Transform.rotate(
                               angle:
-                              -1.57, // Rotate 90 degrees counterclockwise
+                                  -1.57, // Rotate 90 degrees counterclockwise
                               child: const Icon(
                                   Icons.tune), // Rotated Tune Icon (Vertical)
                             ),
@@ -402,7 +406,7 @@ class HomePage extends StatelessWidget {
                           suffixIcon: const Padding(
                             padding: EdgeInsets.only(right: 12.0),
                             child:
-                            Icon(Icons.search), // Search icon on the right
+                                Icon(Icons.search), // Search icon on the right
                           ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(26.0),
@@ -427,8 +431,7 @@ class HomePage extends StatelessWidget {
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color:
-                            Colors.black.withAlpha(30), // Subtle shadow
+                            color: Colors.black.withAlpha(30), // Subtle shadow
                             blurRadius: 8,
                             spreadRadius: 2,
                             offset: Offset(0, 4),
@@ -507,7 +510,7 @@ class HomePage extends StatelessWidget {
                                       hintText: L10n.getTranslatedText(
                                           context, 'ASKMe Anything...'),
                                       hintStyle:
-                                      TextStyle(color: Colors.grey[600]),
+                                          TextStyle(color: Colors.grey[600]),
                                       filled: true,
                                       fillColor: Colors.white,
                                       border: OutlineInputBorder(
@@ -583,7 +586,7 @@ class HomePage extends StatelessWidget {
                             .indigoAccent, // Background color similar to the image
                         shape: RoundedRectangleBorder(
                           borderRadius:
-                          BorderRadius.circular(12.0), // Rounded edges
+                              BorderRadius.circular(12.0), // Rounded edges
                         ),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
@@ -703,7 +706,7 @@ class HomePage extends StatelessWidget {
                               courses.length > 3
                                   ? 3
                                   : courses.length, // Show only 3 courses
-                                  (index) => Column(
+                              (index) => Column(
                                 children: [
                                   learningCard(
                                     courses[index]["title"],
@@ -713,8 +716,8 @@ class HomePage extends StatelessWidget {
                                     predefinedColors.length > index
                                         ? predefinedColors[index]!
                                         : Colors.primaries[index %
-                                        Colors.primaries.length][100]!,
-                                        () {
+                                            Colors.primaries.length][100]!,
+                                    () {
                                       // Debug log to confirm the courseId
                                       debugPrint(
                                           "Course ID: ${courses[index]["id"]}");
@@ -723,7 +726,7 @@ class HomePage extends StatelessWidget {
                                         MaterialPageRoute(
                                           builder: (context) => TopicViewScreen(
                                             courseId: courses[index]
-                                            ["id"], // Pass the courseId
+                                                ["id"], // Pass the courseId
                                           ),
                                         ),
                                       );
@@ -794,7 +797,7 @@ class HomePage extends StatelessWidget {
                                             horizontal: 10), // Reduced height
                                         decoration: BoxDecoration(
                                           borderRadius:
-                                          BorderRadius.circular(22),
+                                              BorderRadius.circular(22),
                                           border: Border.all(
                                               color: Colors.red, width: 1.5),
                                         ),
@@ -805,8 +808,7 @@ class HomePage extends StatelessWidget {
                                                   4), // Smaller circle
                                               decoration: BoxDecoration(
                                                 shape: BoxShape.circle,
-                                                color:
-                                                Colors.red.withAlpha(50),
+                                                color: Colors.red.withAlpha(50),
                                               ),
                                               child: Icon(Icons.book,
                                                   size: 16, color: Colors.red),
@@ -818,7 +820,7 @@ class HomePage extends StatelessWidget {
                                                 style: TextStyle(
                                                     fontSize: 14,
                                                     fontWeight:
-                                                    FontWeight.w500)),
+                                                        FontWeight.w500)),
                                           ],
                                         ),
                                       ),
@@ -830,7 +832,7 @@ class HomePage extends StatelessWidget {
                                             vertical: 6, horizontal: 10),
                                         decoration: BoxDecoration(
                                           borderRadius:
-                                          BorderRadius.circular(20),
+                                              BorderRadius.circular(20),
                                           border: Border.all(
                                               color: Colors.orange, width: 1.5),
                                         ),
@@ -840,8 +842,8 @@ class HomePage extends StatelessWidget {
                                               padding: EdgeInsets.all(4),
                                               decoration: BoxDecoration(
                                                 shape: BoxShape.circle,
-                                                color: Colors.orange
-                                                    .withAlpha(50),
+                                                color:
+                                                    Colors.orange.withAlpha(50),
                                               ),
                                               child: Icon(Icons.calculate,
                                                   size: 16,
@@ -854,7 +856,7 @@ class HomePage extends StatelessWidget {
                                                 style: TextStyle(
                                                     fontSize: 14,
                                                     fontWeight:
-                                                    FontWeight.w500)),
+                                                        FontWeight.w500)),
                                           ],
                                         ),
                                       ),
@@ -870,7 +872,7 @@ class HomePage extends StatelessWidget {
                                             vertical: 6, horizontal: 10),
                                         decoration: BoxDecoration(
                                           borderRadius:
-                                          BorderRadius.circular(20),
+                                              BorderRadius.circular(20),
                                           border: Border.all(
                                               color: Colors.blue, width: 1.5),
                                         ),
@@ -880,8 +882,8 @@ class HomePage extends StatelessWidget {
                                               padding: EdgeInsets.all(4),
                                               decoration: BoxDecoration(
                                                 shape: BoxShape.circle,
-                                                color: Colors.blue
-                                                    .withAlpha(50),
+                                                color:
+                                                    Colors.blue.withAlpha(50),
                                               ),
                                               child: Icon(Icons.language,
                                                   size: 16, color: Colors.blue),
@@ -893,7 +895,7 @@ class HomePage extends StatelessWidget {
                                                 style: TextStyle(
                                                     fontSize: 14,
                                                     fontWeight:
-                                                    FontWeight.w500)),
+                                                        FontWeight.w500)),
                                           ],
                                         ),
                                       ),
@@ -905,7 +907,7 @@ class HomePage extends StatelessWidget {
                                             vertical: 6, horizontal: 10),
                                         decoration: BoxDecoration(
                                           borderRadius:
-                                          BorderRadius.circular(20),
+                                              BorderRadius.circular(20),
                                           border: Border.all(
                                               color: Colors.green, width: 1.5),
                                         ),
@@ -915,8 +917,8 @@ class HomePage extends StatelessWidget {
                                               padding: EdgeInsets.all(4),
                                               decoration: BoxDecoration(
                                                 shape: BoxShape.circle,
-                                                color: Colors.green
-                                                    .withAlpha(50),
+                                                color:
+                                                    Colors.green.withAlpha(50),
                                               ),
                                               child: Icon(Icons.science,
                                                   size: 16,
@@ -929,7 +931,7 @@ class HomePage extends StatelessWidget {
                                                 style: TextStyle(
                                                     fontSize: 14,
                                                     fontWeight:
-                                                    FontWeight.w500)),
+                                                        FontWeight.w500)),
                                           ],
                                         ),
                                       ),
@@ -994,12 +996,12 @@ class HomePage extends StatelessWidget {
                                   shrinkWrap: true,
                                   physics: const NeverScrollableScrollPhysics(),
                                   gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                      SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 2, // 2 cards per row
                                     crossAxisSpacing: 8,
                                     mainAxisSpacing: 8,
                                     childAspectRatio:
-                                    1.2, // Adjust aspect ratio for better layout
+                                        1.2, // Adjust aspect ratio for better layout
                                   ),
                                   itemCount: courses.length,
                                   itemBuilder: (context, index) {
@@ -1007,7 +1009,7 @@ class HomePage extends StatelessWidget {
                                       courses[index]["title"],
                                       "${(index + 10) * 2} ${L10n.getTranslatedText(context, 'Lessons')}",
                                       repeatingColors[
-                                      index % repeatingColors.length]!,
+                                          index % repeatingColors.length]!,
                                       onTap: () {
                                         // Debug log to confirm the courseId
                                         debugPrint(
@@ -1017,9 +1019,9 @@ class HomePage extends StatelessWidget {
                                           MaterialPageRoute(
                                             builder: (context) =>
                                                 TopicViewScreen(
-                                                  courseId: courses[index]
+                                              courseId: courses[index]
                                                   ["id"], // Pass the courseId
-                                                ),
+                                            ),
                                           ),
                                         );
                                       },
@@ -1107,7 +1109,7 @@ class HomePage extends StatelessWidget {
         drawerEdgeDragWidth: double
             .infinity, // Make drawer full-width and allow dragging from anywhere
         endDrawerEnableOpenDragGesture:
-        true, // Allow drag to open the drawer from the right
+            true, // Allow drag to open the drawer from the right
       ),
     );
   }
@@ -1188,14 +1190,14 @@ Widget learningCard(String title, int completed, int total, int percentage,
 
 // AppBar UI with the Hamburger icon inside a circular button
 Widget getAppBarUI(
-    VoidCallback onProfileTap,
-    VoidCallback onHamburgerTap,
-    BuildContext context,
-    String name,
-    String photoUrl,
-    PageController pageController,
-    int selectedIndex,
-    ) {
+  VoidCallback onProfileTap,
+  VoidCallback onHamburgerTap,
+  BuildContext context,
+  String name,
+  String photoUrl,
+  PageController pageController,
+  int selectedIndex,
+) {
   return Container(
     height: 100, // Increased height for the AppBar
     padding: const EdgeInsets.only(top: 38.0, left: 18, right: 18, bottom: 5),
@@ -1274,7 +1276,7 @@ Widget getAppBarUI(
                                 .pop(); // Close drawer manually
                           },
                           onProfileTap:
-                          onProfileTap, // Pass the onProfileTap callback here
+                              onProfileTap, // Pass the onProfileTap callback here
                         ),
                       ),
                     ),
@@ -1332,9 +1334,10 @@ Widget buildSwipeableBanner(PageController controller, BuildContext context) {
           child: PageView(
             controller: controller,
             children: [
-              adContainer(Colors.purple[200]!, 'assets/images/img.png',context),
+              adContainer(
+                  Colors.purple[200]!, 'assets/images/img.png', context),
               adContainer(Colors.blue[200]!, 'assets/images/img.png', context),
-              adContainer(Colors.green[200]!, 'assets/images/img.png',context),
+              adContainer(Colors.green[200]!, 'assets/images/img.png', context),
             ],
           ),
         ),
@@ -1483,12 +1486,12 @@ class CourseCard extends StatelessWidget {
   final VoidCallback onTap; // Add this line
 
   const CourseCard(
-      this.title,
-      this.subtitle,
-      this.color, {
-        super.key,
-        required this.onTap, // Add this line
-      });
+    this.title,
+    this.subtitle,
+    this.color, {
+    super.key,
+    required this.onTap, // Add this line
+  });
 
   /// **Function to Get Subject-Specific Icons**
   IconData _getSubjectIcon(String title) {

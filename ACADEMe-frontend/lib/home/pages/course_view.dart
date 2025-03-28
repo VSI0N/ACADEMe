@@ -41,6 +41,8 @@ class CourseListScreenState extends State<CourseListScreen>
   }
 
   Future<void> fetchCourses() async {
+    if (!mounted) return; // ✅ Ensure widget is still active
+
     setState(() {
       isLoading = true; // Show loading indicator
     });
@@ -48,17 +50,23 @@ class CourseListScreenState extends State<CourseListScreen>
     String? token = await storage.read(key: 'access_token');
     if (token == null) {
       debugPrint("No access token found");
-      setState(() {
-        isLoading = false; // Hide loading indicator
-      });
+
+      if (mounted) {
+        setState(() {
+          isLoading = false; // Hide loading indicator
+        });
+      }
       return;
     }
 
     try {
+      if (!mounted) return; // ✅ Ensure widget is still active
+
       String targetLanguage =
           Provider.of<LanguageProvider>(context, listen: false)
               .locale
               .languageCode;
+
       final response = await http.get(
         Uri.parse('$backendUrl/api/courses/?target_language=$targetLanguage'),
         headers: {
@@ -67,27 +75,32 @@ class CourseListScreenState extends State<CourseListScreen>
         },
       );
 
-      if (response.statusCode == 200) {
-        // Decode the response body using UTF-8 encoding
-        List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
-        setState(() {
-          courses = data
-              .map((course) => {
-                    "id": course["id"],
-                    "title": course["title"],
-                    "progress": 0.0,
-                  })
-              .toList();
-        });
-      } else {
-        debugPrint("Failed to fetch courses: ${response.statusCode}");
+      if (mounted) {
+        if (response.statusCode == 200) {
+          List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
+
+          setState(() {
+            courses = data
+                .map((course) => {
+                      "id": course["id"],
+                      "title": course["title"],
+                      "progress": 0.0,
+                    })
+                .toList();
+          });
+        } else {
+          debugPrint("Failed to fetch courses: ${response.statusCode}");
+        }
       }
     } catch (e) {
       debugPrint("Error fetching courses: $e");
     } finally {
-      setState(() {
-        isLoading = false; // Hide loading indicator
-      });
+      // ✅ Only call setState() if mounted
+      if (mounted) {
+        setState(() {
+          isLoading = false; // Hide loading indicator
+        });
+      }
     }
   }
 
@@ -226,11 +239,15 @@ class CourseListScreenState extends State<CourseListScreen>
 
         try {
           await storage.write(key: 'course_id', value: selectedCourseId);
+
+          if (!mounted) {
+            return; // ✅ Ensure widget is still mounted before using context
+          }
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) =>
-                    TopicViewScreen(courseId: selectedCourseId)),
+              builder: (context) => TopicViewScreen(courseId: selectedCourseId),
+            ),
           );
         } catch (error) {
           debugPrint("Error storing course ID: $error");
@@ -289,21 +306,20 @@ class CourseListScreenState extends State<CourseListScreen>
                   SizedBox(height: 5),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Align(
+                    children: [
+                      Align(
                           alignment: Alignment.centerLeft,
-                          child: Text("0/12 ${L10n.getTranslatedText(context, 'Modules')}")
-                        ),
-                        Align(
+                          child: Text(
+                              "0/12 ${L10n.getTranslatedText(context, 'Modules')}")),
+                      Align(
                         alignment: Alignment.centerRight,
                         child: Text(
                           "${(course["progress"].clamp(0.0, 1.0) * 100).toInt()}% ",
                           style: TextStyle(fontSize: 12, color: Colors.black54),
                         ),
                       )
-                      ],
+                    ],
                   )
-
                 ],
               ),
             ),

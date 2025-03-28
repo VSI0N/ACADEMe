@@ -14,7 +14,8 @@ class TopicQuizScreen extends StatefulWidget {
   final String quizTitle;
   final String targetLanguage;
 
-  const TopicQuizScreen({super.key,
+  const TopicQuizScreen({
+    super.key,
     required this.courseId,
     required this.topicId,
     required this.quizId,
@@ -54,12 +55,14 @@ class TopicQuizScreenState extends State<TopicQuizScreen> {
         url,
         headers: {
           "Authorization": "Bearer $token",
-          "Content-Type": "application/json; charset=UTF-8", // Ensure UTF-8 encoding
+          "Content-Type":
+              "application/json; charset=UTF-8", // Ensure UTF-8 encoding
         },
       );
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(utf8.decode(response.bodyBytes)); // Decode with UTF-8
+        final List<dynamic> data =
+            json.decode(utf8.decode(response.bodyBytes)); // Decode with UTF-8
         setState(() {
           questions = data.cast<Map<String, dynamic>>();
           isLoading = false;
@@ -76,7 +79,8 @@ class TopicQuizScreenState extends State<TopicQuizScreen> {
     showDialog(
       context: context,
       builder: (context) {
-        final TextEditingController questionController = TextEditingController();
+        final TextEditingController questionController =
+            TextEditingController();
         List<TextEditingController> optionControllers = [
           TextEditingController(),
           TextEditingController(),
@@ -106,7 +110,8 @@ class TopicQuizScreenState extends State<TopicQuizScreen> {
                     ...List.generate(optionControllers.length, (index) {
                       return TextField(
                         controller: optionControllers[index],
-                        decoration: InputDecoration(labelText: "Option ${index + 1}"),
+                        decoration:
+                            InputDecoration(labelText: "Option ${index + 1}"),
                       );
                     }),
                     if (optionControllers.length < 4)
@@ -139,12 +144,16 @@ class TopicQuizScreenState extends State<TopicQuizScreen> {
                 ElevatedButton(
                   onPressed: () async {
                     if (questionController.text.isNotEmpty &&
-                        optionControllers.every((controller) => controller.text.isNotEmpty)) {
+                        optionControllers.every(
+                            (controller) => controller.text.isNotEmpty)) {
                       final success = await _submitQuestion(
                         question: questionController.text,
                         options: optionControllers.map((c) => c.text).toList(),
                         correctOption: correctOption,
                       );
+                      if (!context.mounted) {
+                        return; // Now properly wrapped in a block
+                      }
 
                       if (success) {
                         Navigator.pop(context);
@@ -181,7 +190,8 @@ class TopicQuizScreenState extends State<TopicQuizScreen> {
         url,
         headers: {
           "Authorization": "Bearer $token",
-          "Content-Type": "application/json; charset=UTF-8", // Ensure UTF-8 encoding
+          "Content-Type":
+              "application/json; charset=UTF-8", // Ensure UTF-8 encoding
         },
         body: json.encode({
           "question_text": question,
@@ -192,7 +202,8 @@ class TopicQuizScreenState extends State<TopicQuizScreen> {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final responseData = json.decode(utf8.decode(response.bodyBytes)); // Decode with UTF-8
+        final responseData =
+            json.decode(utf8.decode(response.bodyBytes)); // Decode with UTF-8
         debugPrint("✅ Question added successfully: ${responseData["message"]}");
         return true;
       } else {
@@ -227,59 +238,62 @@ class TopicQuizScreenState extends State<TopicQuizScreen> {
         child: isLoading
             ? Center(child: CircularProgressIndicator())
             : questions.isEmpty
-            ? Center(child: Text("No questions added yet."))
-            : ListView.builder(
-          itemCount: questions.length,
-          itemBuilder: (context, index) {
-            final question = questions[index];
-            return Card(
-              margin: EdgeInsets.symmetric(vertical: 8),
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "${index + 1}. ${question["question_text"]}",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 8),
-                    Column(
-                      children: (question["options"] as List<dynamic>)
-                          .asMap()
-                          .entries
-                          .map((entry) {
-                        int idx = entry.key;
-                        String optionText = entry.value;
-
-                        return Container(
-                          margin: EdgeInsets.symmetric(vertical: 4),
-                          padding: EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: question["correct_option"] == idx
-                                ? Colors.green.withAlpha(20)
-                                : Colors.grey.withAlpha(10),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Row(
+                ? Center(child: Text("No questions added yet."))
+                : ListView.builder(
+                    itemCount: questions.length,
+                    itemBuilder: (context, index) {
+                      final question = questions[index];
+                      return Card(
+                        margin: EdgeInsets.symmetric(vertical: 8),
+                        elevation: 4,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(12),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("${idx + 1}) ", style: TextStyle(fontWeight: FontWeight.bold)),
-                              Expanded(child: Text(optionText)),
+                              Text(
+                                "${index + 1}. ${question["question_text"]}",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(height: 8),
+                              Column(
+                                children: (question["options"] as List<dynamic>)
+                                    .asMap()
+                                    .entries
+                                    .map((entry) {
+                                  int idx = entry.key;
+                                  String optionText = entry.value;
+
+                                  return Container(
+                                    margin: EdgeInsets.symmetric(vertical: 4),
+                                    padding: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: question["correct_option"] == idx
+                                          ? Colors.green.withAlpha(20)
+                                          : Colors.grey.withAlpha(10),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Text("${idx + 1}) ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)),
+                                        Expanded(child: Text(optionText)),
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
                             ],
                           ),
-                        );
-                      }).toList(),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
+                        ),
+                      );
+                    },
+                  ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addQuestion,

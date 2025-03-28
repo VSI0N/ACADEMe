@@ -4,7 +4,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:ACADEMe/home/pages/forgot_password.dart';
 
-
 class EditProfilePage extends StatefulWidget {
   final ScrollController scrollController;
 

@@ -59,6 +59,9 @@ class _TopicViewScreenState extends State<TopicViewScreen>
       }
       return;
     }
+    if (!mounted) {
+      return; // Ensure widget is still active before using context
+    }
 
     try {
       final languageProvider =

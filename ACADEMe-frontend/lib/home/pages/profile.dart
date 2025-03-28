@@ -81,6 +81,9 @@ class _ProfilePageState extends State<ProfilePage> {
     final newLocale = Locale(langCode);
 
     Future.microtask(() {
+      if (!mounted) {
+        return; // Ensure widget is still active before using context
+      }
       final languageProvider =
           Provider.of<LanguageProvider>(context, listen: false);
       if (languageProvider.locale != newLocale) {
@@ -100,6 +103,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('language', locale.languageCode);
+      if (!mounted) {
+        return; // Ensure widget is still active before using context
+      }
 
       Provider.of<LanguageProvider>(context, listen: false).setLocale(locale);
     }
@@ -293,6 +299,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     try {
                       await AuthService().signOut();
                       debugPrint('✅ User signed out successfully');
+                      if (!context.mounted) {
+                        return; // Now properly wrapped in a block
+                      }
 
                       if (mounted) {
                         Navigator.pushAndRemoveUntil(

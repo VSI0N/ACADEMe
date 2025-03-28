@@ -57,6 +57,9 @@ class _SubtopicViewScreenState extends State<SubtopicViewScreen>
         debugPrint("❌ Missing access token");
         return;
       }
+      if (!mounted) {
+        return; // Ensure widget is still active before using context
+      }
 
       // Get the language provider before async gap
       final languageProvider =

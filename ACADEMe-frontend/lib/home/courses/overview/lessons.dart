@@ -70,6 +70,9 @@ class LessonsSectionState extends State<LessonsSection> {
       });
       return;
     }
+    if (!mounted) {
+      return; // Ensure widget is still active before using context
+    }
 
     // Get the target language from the app's language provider
     final targetLanguage = Provider.of<LanguageProvider>(context, listen: false)
@@ -95,12 +98,12 @@ class LessonsSectionState extends State<LessonsSection> {
           isExpanded = {
             for (int i = 0; i < data.length; i++)
               "${(i + 1).toString().padLeft(2, '0')} - ${data[i]["title"]}":
-              false
+                  false
           };
           subtopicIds = {
             for (var sub in data)
               "${(data.indexOf(sub) + 1).toString().padLeft(2, '0')} - ${sub["title"]}":
-              sub["id"].toString()
+                  sub["id"].toString()
           };
         });
       } else {
@@ -118,6 +121,9 @@ class LessonsSectionState extends State<LessonsSection> {
   Future<void> fetchMaterialsAndQuizzes(String subtopicId) async {
     String? token = await storage.read(key: 'access_token');
     if (token == null) return;
+    if (!mounted) {
+      return; // Ensure widget is still active before using context
+    }
 
     // Get the target language from the app's language provider
     final targetLanguage = Provider.of<LanguageProvider>(context, listen: false)
@@ -150,7 +156,8 @@ class LessonsSectionState extends State<LessonsSection> {
           };
         }).toList();
       } else {
-        debugPrint("❌ Failed to fetch materials: ${materialsResponse.statusCode}");
+        debugPrint(
+            "❌ Failed to fetch materials: ${materialsResponse.statusCode}");
       }
 
       // Fetch Quizzes
@@ -184,7 +191,7 @@ class LessonsSectionState extends State<LessonsSection> {
           if (questionsResponse.statusCode == 200) {
             // Decode the response body using UTF-8
             final String questionsBody =
-            utf8.decode(questionsResponse.bodyBytes);
+                utf8.decode(questionsResponse.bodyBytes);
             List<dynamic> questionsData = jsonDecode(questionsBody);
             for (var question in questionsData) {
               quizzesList.add({
@@ -193,10 +200,10 @@ class LessonsSectionState extends State<LessonsSection> {
                 "difficulty": quiz["difficulty"] ?? "Unknown",
                 "question_count": questionsData.length.toString(),
                 "question_text":
-                question["question_text"] ?? "No question text available",
+                    question["question_text"] ?? "No question text available",
                 "options":
-                (question["options"] as List<dynamic>?)?.cast<String>() ??
-                    ["No options available"],
+                    (question["options"] as List<dynamic>?)?.cast<String>() ??
+                        ["No options available"],
                 "correct_option": question["correct_option"] ?? 0,
               });
             }
@@ -292,42 +299,48 @@ class LessonsSectionState extends State<LessonsSection> {
           onPressed: isNavigating
               ? null // ✅ Disable button while navigating
               : () {
-            if (subtopicIds.isNotEmpty) {
-              setState(() {
-                isNavigating = true; // ✅ Disable button immediately
-              });
+                  if (subtopicIds.isNotEmpty) {
+                    setState(() {
+                      isNavigating = true; // ✅ Disable button immediately
+                    });
 
-              final firstSubtopicId = subtopicIds.values.first;
-              fetchMaterialsAndQuizzes(firstSubtopicId).then((_) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FlashCard(
-                      materials: (subtopicMaterials[firstSubtopicId] ?? [])
-                          .map<Map<String, String>>((material) {
-                        return {
-                          "type": material["type"].toString(),
-                          "content": material["content"].toString(),
-                        };
-                      }).toList(),
-                      quizzes: subtopicQuizzes[firstSubtopicId] ?? [],
-                      onQuizComplete: () {
-                        _navigateToNextSubtopic(firstSubtopicId);
-                      },
-                      initialIndex: 0,
-                      courseId: widget.courseId,
-                      topicId: widget.topicId,
-                      subtopicId: firstSubtopicId,
-                    ),
-                  ),
-                ).then((_) {
-                  setState(() {
-                    isNavigating = false; // ✅ Re-enable button when returning
-                  });
-                });
-              });
-            }
-          },
+                    final firstSubtopicId = subtopicIds.values.first;
+                    fetchMaterialsAndQuizzes(firstSubtopicId).then((_) {
+                      if (!context.mounted) {
+                        return; // Ensure context is valid before navigation
+                      }
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FlashCard(
+                            materials:
+                                (subtopicMaterials[firstSubtopicId] ?? [])
+                                    .map<Map<String, String>>((material) {
+                              return {
+                                "type": material["type"].toString(),
+                                "content": material["content"].toString(),
+                              };
+                            }).toList(),
+                            quizzes: subtopicQuizzes[firstSubtopicId] ?? [],
+                            onQuizComplete: () {
+                              _navigateToNextSubtopic(firstSubtopicId);
+                            },
+                            initialIndex: 0,
+                            courseId: widget.courseId,
+                            topicId: widget.topicId,
+                            subtopicId: firstSubtopicId,
+                          ),
+                        ),
+                      ).then((_) {
+                        if (mounted) {
+                          setState(() {
+                            isNavigating = false; // ✅ Re-enable button safely
+                          });
+                        }
+                      });
+                    });
+                  }
+                },
           style: ElevatedButton.styleFrom(
             backgroundColor: AcademeTheme.appColor,
             minimumSize: const Size(double.infinity, 50),
@@ -336,7 +349,9 @@ class LessonsSectionState extends State<LessonsSection> {
             ),
           ),
           child: Text(
-            isNavigating ? 'Start Course' : L10n.getTranslatedText(context, 'Start Course'),
+            isNavigating
+                ? 'Start Course'
+                : L10n.getTranslatedText(context, 'Start Course'),
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -394,10 +409,10 @@ class LessonsSectionState extends State<LessonsSection> {
       category,
       _getIconForContentType(
           type), // Use the appropriate icon based on the type
-          () {
+      () {
         // Convert materials to the correct type
         List<Map<String, String>> materials =
-        (subtopicMaterials[subtopicId] ?? []).map<Map<String, String>>((m) {
+            (subtopicMaterials[subtopicId] ?? []).map<Map<String, String>>((m) {
           return {
             "type": m["type"].toString(),
             "content": m["content"].toString(),
@@ -406,7 +421,9 @@ class LessonsSectionState extends State<LessonsSection> {
 
         if (materials.isEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(L10n.getTranslatedText(context, 'No materials available'))),
+            SnackBar(
+                content: Text(
+                    L10n.getTranslatedText(context, 'No materials available'))),
           );
           return;
         }
@@ -438,7 +455,7 @@ class LessonsSectionState extends State<LessonsSection> {
       title,
       "$difficulty • $questionCount Questions",
       Icons.quiz,
-          () {
+      () {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -473,14 +490,16 @@ class LessonsSectionState extends State<LessonsSection> {
       fetchMaterialsAndQuizzes(nextSubtopicId).then((_) {
         // Convert materials to the correct type
         List<Map<String, String>> nextMaterials =
-        (subtopicMaterials[nextSubtopicId] ?? [])
-            .map<Map<String, String>>((material) {
+            (subtopicMaterials[nextSubtopicId] ?? [])
+                .map<Map<String, String>>((material) {
           return {
             "type": material["type"].toString(),
             "content": material["content"].toString(),
           };
         }).toList();
-
+        if (!mounted) {
+          return; // Ensure widget is still active before using context
+        }
         // Open the next subtopic in the FlashCard
         Navigator.push(
           context,
@@ -534,11 +553,13 @@ class LessonsSectionState extends State<LessonsSection> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded( // 👈 Wrap Row with Expanded
+            Expanded(
+              // 👈 Wrap Row with Expanded
               child: Row(
                 children: [
                   const SizedBox(width: 10),
-                  Expanded( // 👈 Add this Expanded here too!
+                  Expanded(
+                    // 👈 Add this Expanded here too!
                     child: Text(
                       capitalizedTitle,
                       style: TextStyle(

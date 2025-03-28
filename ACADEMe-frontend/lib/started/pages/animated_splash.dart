@@ -31,6 +31,9 @@ class AnimatedSplashScreenState extends State<AnimatedSplashScreen>
     );
 
     Future.delayed(const Duration(milliseconds: 2000), () {
+      if (!mounted) {
+        return; // Ensure widget is still active before using context
+      }
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
           pageBuilder: (_, __, ___) => AuthWrapper(),

@@ -35,8 +35,10 @@ class _LogInViewState extends State<LogInView> {
   /// Handles manual login
   Future<void> _submitForm() async {
     if (!_formKey.currentState!.validate()) {
-      _showSnackBar(
-          L10n.getTranslatedText(context, '⚠️ Please enter valid credentials'));
+      if (mounted) {
+        _showSnackBar(L10n.getTranslatedText(
+            context, '⚠️ Please enter valid credentials'));
+      }
       return;
     }
 
@@ -48,6 +50,9 @@ class _LogInViewState extends State<LogInView> {
         _passwordController.text.trim(),
       );
 
+      if (!mounted) {
+        return; // Ensure widget is still active before using context
+      }
       if (errorMessage != null) {
         _showSnackBar(errorMessage);
         return;
@@ -68,13 +73,16 @@ class _LogInViewState extends State<LogInView> {
         await _secureStorage.write(
             key: 'password', value: _passwordController.text.trim());
 
-        _showSnackBar(L10n.getTranslatedText(context, '✅ Login successful!'));
+        if (mounted) {
+          _showSnackBar(L10n.getTranslatedText(context, '✅ Login successful!'));
+        }
 
         // Fetch user role
         await UserRoleManager().fetchUserRole(user.email);
         bool isAdmin = UserRoleManager().isAdmin;
 
-        if (!mounted) return;
+        if (!mounted) return; // Ensure the widget is still active
+
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -82,8 +90,10 @@ class _LogInViewState extends State<LogInView> {
           ),
         );
       } else {
-        _showSnackBar(L10n.getTranslatedText(
-            context, '❌ Login failed. Please try again.'));
+        if (mounted) {
+          _showSnackBar(L10n.getTranslatedText(
+              context, '❌ Login failed. Please try again.'));
+        }
       }
     } finally {
       if (mounted) {

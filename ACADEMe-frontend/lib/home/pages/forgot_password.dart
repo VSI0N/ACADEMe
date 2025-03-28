@@ -28,6 +28,9 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
     try {
       await _authService.sendPasswordResetEmail(email);
+      if (!mounted) {
+        return; // Ensure widget is still active before using context
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text(L10n.getTranslatedText(context, 'Reset Email Sent'))),
@@ -95,8 +98,8 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
                             ),
                             SizedBox(height: 4),
                             Text(
-                              L10n.getTranslatedText(
-                                  context, 'No worries! Enter your email below and we’ll send you a reset link.'),
+                              L10n.getTranslatedText(context,
+                                  'No worries! Enter your email below and we’ll send you a reset link.'),
                               style: TextStyle(
                                   fontSize: 16, color: Colors.black54),
                             ),

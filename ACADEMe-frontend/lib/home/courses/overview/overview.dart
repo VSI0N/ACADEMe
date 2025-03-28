@@ -53,6 +53,9 @@ class OverviewScreenState extends State<OverviewScreen>
       debugPrint("❌ Missing access token");
       return;
     }
+    if (!mounted) {
+      return; // Ensure widget is still active before using context
+    }
 
     final targetLanguage = Provider.of<LanguageProvider>(context, listen: false)
         .locale
@@ -76,7 +79,7 @@ class OverviewScreenState extends State<OverviewScreen>
 
         if (jsonData is List) {
           final topic = jsonData.firstWhere(
-                (topic) => topic['id'] == widget.topicId,
+            (topic) => topic['id'] == widget.topicId,
             orElse: () => null,
           );
           if (topic != null) {
@@ -95,7 +98,9 @@ class OverviewScreenState extends State<OverviewScreen>
       debugPrint("❌ Missing access token");
       return;
     }
-
+    if (!mounted) {
+      return; // Ensure widget is still active before using context
+    }
     final targetLanguage = Provider.of<LanguageProvider>(context, listen: false)
         .locale
         .languageCode;
@@ -193,7 +198,7 @@ class OverviewScreenState extends State<OverviewScreen>
                       Expanded(
                         child: SingleChildScrollView(
                           padding:
-                          EdgeInsets.symmetric(horizontal: width * 0.03),
+                              EdgeInsets.symmetric(horizontal: width * 0.03),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -288,8 +293,8 @@ class OverviewScreenState extends State<OverviewScreen>
                     children: [
                       hasSubtopicData
                           ? LessonsSection(
-                          courseId: widget.courseId,
-                          topicId: widget.topicId)
+                              courseId: widget.courseId,
+                              topicId: widget.topicId)
                           : Center(child: CircularProgressIndicator()),
                       QSection(),
                     ],

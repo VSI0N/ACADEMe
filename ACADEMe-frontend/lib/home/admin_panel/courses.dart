@@ -29,7 +29,8 @@ class CourseManagementScreenState extends State<CourseManagementScreen> {
   Future<void> _loadLanguageAndCourses() async {
     // Fetch the app's language from SharedPreferences
     final prefs = await SharedPreferences.getInstance();
-    _targetLanguage = prefs.getString('language') ?? 'en'; // Default to 'en' if not set
+    _targetLanguage =
+        prefs.getString('language') ?? 'en'; // Default to 'en' if not set
 
     // Load courses after fetching the language
     _loadCourses();
@@ -43,22 +44,27 @@ class CourseManagementScreenState extends State<CourseManagementScreen> {
     }
 
     final response = await http.get(
-      Uri.parse('${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/?target_language=$_targetLanguage'),
+      Uri.parse(
+          '${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/?target_language=$_targetLanguage'),
       headers: {
         "Authorization": "Bearer $token",
-        "Content-Type": "application/json; charset=UTF-8", // Ensure UTF-8 encoding
+        "Content-Type":
+            "application/json; charset=UTF-8", // Ensure UTF-8 encoding
       },
     );
 
     if (response.statusCode == 200) {
-      List<dynamic> data = json.decode(utf8.decode(response.bodyBytes)); // Decode with UTF-8
+      List<dynamic> data =
+          json.decode(utf8.decode(response.bodyBytes)); // Decode with UTF-8
       setState(() {
-        courses = data.map((item) => {
-          "id": item["id"].toString(),
-          "title": item["title"],
-          "class_name": item["class_name"],
-          "description": item["description"],
-        }).toList();
+        courses = data
+            .map((item) => {
+                  "id": item["id"].toString(),
+                  "title": item["title"],
+                  "class_name": item["class_name"],
+                  "description": item["description"],
+                })
+            .toList();
       });
     } else {
       debugPrint("Failed to fetch courses: ${response.body}");
@@ -71,7 +77,8 @@ class CourseManagementScreenState extends State<CourseManagementScreen> {
       builder: (context) {
         final TextEditingController titleController = TextEditingController();
         final TextEditingController classController = TextEditingController();
-        final TextEditingController descriptionController = TextEditingController();
+        final TextEditingController descriptionController =
+            TextEditingController();
 
         return AlertDialog(
           title: Text(L10n.getTranslatedText(context, 'Add Course')),
@@ -80,15 +87,18 @@ class CourseManagementScreenState extends State<CourseManagementScreen> {
             children: [
               TextField(
                 controller: titleController,
-                decoration: InputDecoration(labelText: L10n.getTranslatedText(context, 'Course Title')),
+                decoration: InputDecoration(
+                    labelText: L10n.getTranslatedText(context, 'Course Title')),
               ),
               TextField(
                 controller: classController,
-                decoration: InputDecoration(labelText: L10n.getTranslatedText(context, 'Class Name')),
+                decoration: InputDecoration(
+                    labelText: L10n.getTranslatedText(context, 'Class Name')),
               ),
               TextField(
                 controller: descriptionController,
-                decoration: InputDecoration(labelText: L10n.getTranslatedText(context, 'Description')),
+                decoration: InputDecoration(
+                    labelText: L10n.getTranslatedText(context, 'Description')),
                 maxLines: 3,
               ),
             ],
@@ -107,10 +117,12 @@ class CourseManagementScreenState extends State<CourseManagementScreen> {
                 }
 
                 final response = await http.post(
-                  Uri.parse('${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/'),
+                  Uri.parse(
+                      '${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/'),
                   headers: {
                     "Authorization": "Bearer $token",
-                    "Content-Type": "application/json; charset=UTF-8", // Ensure UTF-8 encoding
+                    "Content-Type":
+                        "application/json; charset=UTF-8", // Ensure UTF-8 encoding
                   },
                   body: json.encode({
                     "title": titleController.text,
@@ -118,6 +130,10 @@ class CourseManagementScreenState extends State<CourseManagementScreen> {
                     "description": descriptionController.text,
                   }),
                 );
+
+                if (!context.mounted) {
+                  return; // Now properly wrapped in a block
+                }
 
                 if (response.statusCode == 200 || response.statusCode == 201) {
                   Navigator.pop(context);
@@ -140,7 +156,8 @@ class CourseManagementScreenState extends State<CourseManagementScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => TopicScreen(courseId: courseId, courseTitle: courseTitle),
+        builder: (context) =>
+            TopicScreen(courseId: courseId, courseTitle: courseTitle),
       ),
     );
   }
@@ -150,7 +167,8 @@ class CourseManagementScreenState extends State<CourseManagementScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AcademeTheme.appColor,
-        title: Text(L10n.getTranslatedText(context, 'Admin Panel'), style: TextStyle(color: Colors.white)),
+        title: Text(L10n.getTranslatedText(context, 'Admin Panel'),
+            style: TextStyle(color: Colors.white)),
         centerTitle: true,
       ),
       body: Padding(
@@ -170,20 +188,23 @@ class CourseManagementScreenState extends State<CourseManagementScreen> {
             Expanded(
               child: courses.isEmpty
                   ? Center(
-                child: CircularProgressIndicator(
-                  color: AcademeTheme.appColor, // Custom color
-                ),
-              )
+                      child: CircularProgressIndicator(
+                        color: AcademeTheme.appColor, // Custom color
+                      ),
+                    )
                   : ListView(
-                children: courses.map((course) => Card(
-                  margin: EdgeInsets.only(bottom: 10),
-                  child: ListTile(
-                    title: Text(course["title"]!),
-                    subtitle: Text(course["description"]!),
-                    onTap: () => _navigateToTopics(course["id"]!, course["title"]!),
-                  ),
-                )).toList(),
-              ),
+                      children: courses
+                          .map((course) => Card(
+                                margin: EdgeInsets.only(bottom: 10),
+                                child: ListTile(
+                                  title: Text(course["title"]!),
+                                  subtitle: Text(course["description"]!),
+                                  onTap: () => _navigateToTopics(
+                                      course["id"]!, course["title"]!),
+                                ),
+                              ))
+                          .toList(),
+                    ),
             ),
           ],
         ),

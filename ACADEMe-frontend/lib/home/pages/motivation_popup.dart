@@ -43,19 +43,25 @@ class MotivationPopupState extends State<MotivationPopup> {
 
   /// **Fetch recommendations from the backend**
   Future<String> _fetchRecommendations() async {
-    final String backendUrl = dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
+    final String backendUrl =
+        dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
     final String? token = await _storage.read(key: 'access_token');
+    if (!mounted) {
+      return ''; // ✅ Ensure widget is still mounted before using context
+    }
 
     if (token == null) {
       throw Exception("❌ No access token found");
     }
 
     // Get the target language from the app's language provider
-    final targetLanguage =
-        Provider.of<LanguageProvider>(context, listen: false).locale.languageCode;
+    final targetLanguage = Provider.of<LanguageProvider>(context, listen: false)
+        .locale
+        .languageCode;
 
     final response = await http.get(
-      Uri.parse("$backendUrl/api/recommendations/?target_language=$targetLanguage"),
+      Uri.parse(
+          "$backendUrl/api/recommendations/?target_language=$targetLanguage"),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json; charset=UTF-8',
@@ -68,7 +74,8 @@ class MotivationPopupState extends State<MotivationPopup> {
       final data = jsonDecode(responseBody);
       return data["recommendations"];
     } else {
-      throw Exception("❌ Failed to fetch recommendations: ${response.statusCode}");
+      throw Exception(
+          "❌ Failed to fetch recommendations: ${response.statusCode}");
     }
   }
 
@@ -79,12 +86,16 @@ class MotivationPopupState extends State<MotivationPopup> {
       try {
         recommendationText = await _recommendationFuture;
       } catch (error) {
-        recommendationText = "⚠️ Error fetching recommendation. Please try again.";
+        recommendationText =
+            "⚠️ Error fetching recommendation. Please try again.";
       }
 
       // Combine Recommendation + Follow-up
-      String fullMessage = "📊 Recommendation: \n$recommendationText\n\n🗨️ Follow-up: $followUpMessage";
-
+      String fullMessage =
+          "📊 Recommendation: \n$recommendationText\n\n🗨️ Follow-up: $followUpMessage";
+      if (!mounted) {
+        return; // Ensure widget is still active before using context
+      }
       // Navigate to Chatbot Screen with message
       Navigator.push(
         context,
@@ -125,7 +136,9 @@ class MotivationPopupState extends State<MotivationPopup> {
                             Text(
                               "📊 ${L10n.getTranslatedText(context, 'Your Progress Analysis')}",
                               style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87),
                             ),
                             const SizedBox(height: 10),
                             _formattedText(snapshot.data!),
@@ -158,7 +171,8 @@ class MotivationPopupState extends State<MotivationPopup> {
                         child: TextField(
                           controller: _messageController,
                           decoration: InputDecoration(
-                            hintText: "${L10n.getTranslatedText(context, 'Ask follow-up')}...",
+                            hintText:
+                                "${L10n.getTranslatedText(context, 'Ask follow-up')}...",
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -171,8 +185,10 @@ class MotivationPopupState extends State<MotivationPopup> {
 
                       // **Send Button**
                       IconButton(
-                        icon: const Icon(Icons.send, color: AcademeTheme.appColor),
-                        onPressed: _sendFollowUpToChatbot, // Directly call the function
+                        icon: const Icon(Icons.send,
+                            color: AcademeTheme.appColor),
+                        onPressed:
+                            _sendFollowUpToChatbot, // Directly call the function
                       ),
                     ],
                   ),
@@ -211,13 +227,15 @@ class MotivationPopupState extends State<MotivationPopup> {
         // Bold text (double asterisks) - Treat as a key
         formattedWidgets.add(Text(
           part.replaceAll("**", ""),
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black87),
+          style: const TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black87),
         ));
       } else if (part.startsWith("*") && part.endsWith("*")) {
         // Bold text (single asterisks) - Treat as a key
         formattedWidgets.add(Text(
           part.replaceAll("*", ""),
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black87),
+          style: const TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black87),
         ));
       } else if (part.startsWith("- ")) {
         // Bullet points
@@ -226,19 +244,22 @@ class MotivationPopupState extends State<MotivationPopup> {
         // Heading 1
         formattedWidgets.add(Text(
           part.replaceFirst("# ", ""),
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
+          style: const TextStyle(
+              fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
         ));
       } else if (part.startsWith("## ")) {
         // Heading 2
         formattedWidgets.add(Text(
           part.replaceFirst("## ", ""),
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
+          style: const TextStyle(
+              fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
         ));
       } else if (part.startsWith("### ")) {
         // Heading 3
         formattedWidgets.add(Text(
           part.replaceFirst("### ", ""),
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+          style: const TextStyle(
+              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
         ));
       } else if (part.startsWith(">")) {
         // Blockquote
@@ -267,7 +288,8 @@ class MotivationPopupState extends State<MotivationPopup> {
           ),
           child: Text(
             part.replaceAll("`", ""),
-            style: const TextStyle(fontFamily: 'monospace', fontSize: 14, color: Colors.black87),
+            style: const TextStyle(
+                fontFamily: 'monospace', fontSize: 14, color: Colors.black87),
           ),
         ));
       } else {
@@ -292,7 +314,8 @@ class MotivationPopupState extends State<MotivationPopup> {
         // Odd indices are bold text (treat as keys)
         spans.add(TextSpan(
           text: parts[i],
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black87),
+          style: const TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black87),
         ));
       } else {
         // Even indices are regular text (treat as values)
@@ -318,7 +341,8 @@ class MotivationPopupState extends State<MotivationPopup> {
           const Icon(Icons.check_circle, color: Colors.blue, size: 20),
           const SizedBox(width: 8),
           Expanded(
-            child: _parseInlineBoldText(text), // Parse bold text in bullet points
+            child:
+                _parseInlineBoldText(text), // Parse bold text in bullet points
           ),
         ],
       ),

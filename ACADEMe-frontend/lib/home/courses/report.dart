@@ -65,6 +65,9 @@ class TestReportScreenState extends State<TestReportScreen> {
         throw Exception('Failed to load progress data: ${response.statusCode}');
       }
     } catch (e) {
+      if (!mounted) {
+        return; // ✅ Ensure widget is still mounted before using context
+      }
       debugPrint('❌ Error fetching progress data: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: ${e.toString()}')),
@@ -100,20 +103,20 @@ class TestReportScreenState extends State<TestReportScreen> {
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildScoreCard(),
-            SizedBox(height: 16),
-            _buildPerformanceGraph(),
-            SizedBox(height: 16),
-            _buildDetailedAnalysis(),
-            SizedBox(height: 16),
-            _buildActionButtons(),
-          ],
-        ),
-      ),
+              padding: EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildScoreCard(),
+                  SizedBox(height: 16),
+                  _buildPerformanceGraph(),
+                  SizedBox(height: 16),
+                  _buildDetailedAnalysis(),
+                  SizedBox(height: 16),
+                  _buildActionButtons(),
+                ],
+              ),
+            ),
     );
   }
 
@@ -270,7 +273,7 @@ class TestReportScreenState extends State<TestReportScreen> {
       icon: Icon(icon, color: Colors.black),
       label: Text(label,
           style:
-          GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w500)),
+              GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w500)),
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),

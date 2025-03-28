@@ -15,7 +15,8 @@ class SubTopicQuizScreen extends StatefulWidget {
   final String subtopicTitle;
   final String targetLanguage;
 
-  const SubTopicQuizScreen({super.key,
+  const SubTopicQuizScreen({
+    super.key,
     required this.courseId,
     required this.topicId,
     required this.subtopicId,
@@ -57,12 +58,14 @@ class SubTopicQuizScreenState extends State<SubTopicQuizScreen> {
         url,
         headers: {
           "Authorization": "Bearer $token",
-          "Content-Type": "application/json; charset=UTF-8", // Ensure UTF-8 encoding
+          "Content-Type":
+              "application/json; charset=UTF-8", // Ensure UTF-8 encoding
         },
       );
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(utf8.decode(response.bodyBytes)); // Decode with UTF-8
+        final List<dynamic> data =
+            json.decode(utf8.decode(response.bodyBytes)); // Decode with UTF-8
         setState(() {
           quizQuestions = data.cast<Map<String, dynamic>>();
           isLoading = false;
@@ -79,7 +82,8 @@ class SubTopicQuizScreenState extends State<SubTopicQuizScreen> {
     showDialog(
       context: context,
       builder: (context) {
-        final TextEditingController questionController = TextEditingController();
+        final TextEditingController questionController =
+            TextEditingController();
         List<TextEditingController> optionControllers = [
           TextEditingController(),
           TextEditingController(),
@@ -109,7 +113,8 @@ class SubTopicQuizScreenState extends State<SubTopicQuizScreen> {
                     ...List.generate(optionControllers.length, (index) {
                       return TextField(
                         controller: optionControllers[index],
-                        decoration: InputDecoration(labelText: "Option ${index + 1}"),
+                        decoration:
+                            InputDecoration(labelText: "Option ${index + 1}"),
                       );
                     }),
                     if (optionControllers.length < 4)
@@ -142,12 +147,18 @@ class SubTopicQuizScreenState extends State<SubTopicQuizScreen> {
                 ElevatedButton(
                   onPressed: () async {
                     if (questionController.text.isNotEmpty &&
-                        optionControllers.every((controller) => controller.text.isNotEmpty)) {
+                        optionControllers.every(
+                            (controller) => controller.text.isNotEmpty)) {
                       final success = await _submitQuizQuestion(
                         question: questionController.text,
-                        options: optionControllers.map((controller) => controller.text).toList(),
+                        options: optionControllers
+                            .map((controller) => controller.text)
+                            .toList(),
                         correctOption: correctOption,
                       );
+                      if (!context.mounted) {
+                        return; // Now properly wrapped in a block
+                      }
                       if (success) {
                         Navigator.pop(context);
                         _fetchQuizQuestions();
@@ -183,7 +194,8 @@ class SubTopicQuizScreenState extends State<SubTopicQuizScreen> {
         url,
         headers: {
           "Authorization": "Bearer $token",
-          "Content-Type": "application/json; charset=UTF-8", // Ensure UTF-8 encoding
+          "Content-Type":
+              "application/json; charset=UTF-8", // Ensure UTF-8 encoding
         },
         body: json.encode({
           "title": "New Quiz",
@@ -195,8 +207,10 @@ class SubTopicQuizScreenState extends State<SubTopicQuizScreen> {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final responseData = json.decode(utf8.decode(response.bodyBytes)); // Decode with UTF-8
-        debugPrint("✅ Quiz question added successfully: ${responseData["message"]}");
+        final responseData =
+            json.decode(utf8.decode(response.bodyBytes)); // Decode with UTF-8
+        debugPrint(
+            "✅ Quiz question added successfully: ${responseData["message"]}");
         return true;
       } else {
         _showError("❌ Failed to add quiz question: ${response.body}");
@@ -230,56 +244,60 @@ class SubTopicQuizScreenState extends State<SubTopicQuizScreen> {
         child: isLoading
             ? Center(child: CircularProgressIndicator())
             : quizQuestions.isEmpty
-            ? Center(child: Text("No quiz questions added yet."))
-            : ListView.builder(
-          itemCount: quizQuestions.length,
-          itemBuilder: (context, index) {
-            final question = quizQuestions[index];
-            final options = question["options"] as List<dynamic>? ?? [];
-            return Card(
-              margin: EdgeInsets.symmetric(vertical: 8),
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "${index + 1}. ${question["question_text"]}",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 8),
-                    Column(
-                      children: options.asMap().entries.map((entry) {
-                        final idx = entry.key;
-                        final optionText = entry.value.toString();
-                        return Container(
-                          margin: EdgeInsets.symmetric(vertical: 4),
-                          padding: EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: question["correct_option"] == idx
-                                ? Colors.green.withValues()
-                                : Colors.grey.withValues(),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Row(
+                ? Center(child: Text("No quiz questions added yet."))
+                : ListView.builder(
+                    itemCount: quizQuestions.length,
+                    itemBuilder: (context, index) {
+                      final question = quizQuestions[index];
+                      final options =
+                          question["options"] as List<dynamic>? ?? [];
+                      return Card(
+                        margin: EdgeInsets.symmetric(vertical: 8),
+                        elevation: 4,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(12),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("${idx + 1}) ", style: TextStyle(fontWeight: FontWeight.bold)),
-                              Expanded(child: Text(optionText)),
+                              Text(
+                                "${index + 1}. ${question["question_text"]}",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(height: 8),
+                              Column(
+                                children: options.asMap().entries.map((entry) {
+                                  final idx = entry.key;
+                                  final optionText = entry.value.toString();
+                                  return Container(
+                                    margin: EdgeInsets.symmetric(vertical: 4),
+                                    padding: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: question["correct_option"] == idx
+                                          ? Colors.green.withValues()
+                                          : Colors.grey.withValues(),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Text("${idx + 1}) ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)),
+                                        Expanded(child: Text(optionText)),
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
                             ],
                           ),
-                        );
-                      }).toList(),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
+                        ),
+                      );
+                    },
+                  ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addQuizQuestion,

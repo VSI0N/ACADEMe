@@ -43,7 +43,6 @@ class FlashCard extends StatefulWidget {
   FlashCardState createState() => FlashCardState();
 }
 
-
 class FlashCardState extends State<FlashCard> {
   VideoPlayerController? _videoController;
   ChewieController? _chewieController;
@@ -54,7 +53,6 @@ class FlashCardState extends State<FlashCard> {
   final String backendUrl = dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
   String topicTitle = "Loading...";
   bool isLoading = true;
-
 
   @override
   void initState() {
@@ -73,13 +71,14 @@ class FlashCardState extends State<FlashCard> {
     }
   }
 
-
-
   Future<void> fetchTopicDetails() async {
     String? token = await _storage.read(key: 'access_token');
     if (token == null) {
       debugPrint("❌ Missing access token");
       return;
+    }
+    if (!mounted) {
+      return; // Ensure widget is still active before using context
     }
 
     // Get the target language from the app's language provider
@@ -208,7 +207,7 @@ class FlashCardState extends State<FlashCard> {
 
     final progressList = await _fetchProgressList();
     final progressExists = progressList.any((progress) =>
-    progress["material_id"] == materialId &&
+        progress["material_id"] == materialId &&
         progress["activity_type"] == "reading");
 
     if (progressExists) {
@@ -283,7 +282,6 @@ class FlashCardState extends State<FlashCard> {
     return [];
   }
 
-
   void _nextMaterialOrQuiz() async {
     await _sendProgressToBackend();
 
@@ -329,8 +327,7 @@ class FlashCardState extends State<FlashCard> {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title:
-        Text(
+        title: Text(
           L10n.getTranslatedText(context, 'Subtopic Materials'),
           style: TextStyle(
               color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
@@ -377,14 +374,14 @@ class FlashCardState extends State<FlashCard> {
                               bottomLeft: Radius.circular(0),
                               bottomRight: Radius.circular(0),
                             ),
-                            child: _buildMaterial(
-                                index < widget.materials.length
+                            child:
+                                _buildMaterial(index < widget.materials.length
                                     ? widget.materials[index]
                                     : {
-                                  "type": "quiz",
-                                  "quiz": widget.quizzes[
-                                  index - widget.materials.length],
-                                }),
+                                        "type": "quiz",
+                                        "quiz": widget.quizzes[
+                                            index - widget.materials.length],
+                                      }),
                           ),
                           AnimatedOpacity(
                             opacity: _currentPage == index ? 0.0 : 0.2,
@@ -504,9 +501,8 @@ class FlashCardState extends State<FlashCard> {
 
   Widget _buildTextContent(String content) {
     // Convert escaped newlines and handle markdown symbols
-    String processedContent = content
-        .replaceAll(r'\n', '\n')
-        .replaceAll('<br>', '\n');
+    String processedContent =
+        content.replaceAll(r'\n', '\n').replaceAll('<br>', '\n');
 
     return buildStyledContainer(
       Column(
@@ -586,7 +582,8 @@ class FlashCardState extends State<FlashCard> {
     );
   }
 
-  Widget _parseInlineFormatting(String text, {bool isHeading = false, int level = 1}) {
+  Widget _parseInlineFormatting(String text,
+      {bool isHeading = false, int level = 1}) {
     final spans = <InlineSpan>[];
     int lastIndex = 0;
 
@@ -608,7 +605,8 @@ class FlashCardState extends State<FlashCard> {
         ));
       }
 
-      final matchedText = text.substring(lastIndex + match.start, lastIndex + match.end);
+      final matchedText =
+          text.substring(lastIndex + match.start, lastIndex + match.end);
       lastIndex += match.end;
 
       // Handle different markdown symbols
@@ -642,7 +640,7 @@ class FlashCardState extends State<FlashCard> {
           break;
 
         case '`':
-        // Code block
+          // Code block
           final endMatch = text.indexOf('`', lastIndex);
           if (endMatch != -1) {
             spans.add(TextSpan(
@@ -657,7 +655,7 @@ class FlashCardState extends State<FlashCard> {
           break;
 
         case '[':
-        // Link handling
+          // Link handling
           final linkRegex = RegExp(r'\[(.*?)\]\((.*?)\)');
           final linkMatch = linkRegex.firstMatch(text.substring(lastIndex - 1));
           if (linkMatch != null) {
@@ -709,10 +707,14 @@ class FlashCardState extends State<FlashCard> {
 
   double _getHeadingSize(int level) {
     switch (level) {
-      case 1: return 24;
-      case 2: return 20;
-      case 3: return 18;
-      default: return 16;
+      case 1:
+        return 24;
+      case 2:
+        return 20;
+      case 3:
+        return 18;
+      default:
+        return 16;
     }
   }
 
@@ -778,18 +780,18 @@ class FlashCardState extends State<FlashCard> {
         children: [
           Expanded(
             child: _chewieController == null ||
-                _videoController == null ||
-                !_videoController!.value.isInitialized
+                    _videoController == null ||
+                    !_videoController!.value.isInitialized
                 ? const Center(child: CircularProgressIndicator())
                 : GestureDetector(
-              onTap: () {
-                setState(() {});
-              },
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Chewie(controller: _chewieController!),
-              ),
-            ),
+                    onTap: () {
+                      setState(() {});
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Chewie(controller: _chewieController!),
+                    ),
+                  ),
           ),
           if (widget.quizzes.isEmpty &&
               _currentPage == widget.materials.length - 1)
@@ -837,9 +839,9 @@ class FlashCardState extends State<FlashCard> {
                   return CachedNetworkImage(
                     imageUrl: imageUrl,
                     placeholder: (context, url) =>
-                    const Center(child: CircularProgressIndicator()),
+                        const Center(child: CircularProgressIndicator()),
                     errorWidget: (context, url, error) =>
-                    const Icon(Icons.error),
+                        const Icon(Icons.error),
                     fit: fit,
                     alignment: Alignment.center,
                   );
@@ -882,7 +884,7 @@ class FlashCardState extends State<FlashCard> {
   Future<BoxFit> _getImageFit(String imageUrl) async {
     final Completer<ImageInfo> completer = Completer();
     final ImageStream stream =
-    NetworkImage(imageUrl).resolve(const ImageConfiguration());
+        NetworkImage(imageUrl).resolve(const ImageConfiguration());
 
     final listener = ImageStreamListener((ImageInfo info, bool _) {
       completer.complete(info);
@@ -943,11 +945,10 @@ class FlashCardState extends State<FlashCard> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) =>
-                          Scaffold(
-                            appBar: AppBar(title: const Text("Document")),
-                            body: SfPdfViewer.network(docUrl),
-                          ),
+                      builder: (_) => Scaffold(
+                        appBar: AppBar(title: const Text("Document")),
+                        body: SfPdfViewer.network(docUrl),
+                      ),
                     ),
                   );
                 },
@@ -988,10 +989,7 @@ class FlashCardState extends State<FlashCard> {
   }
 
   Widget buildStyledContainer(Widget child) {
-    final height = MediaQuery
-        .of(context)
-        .size
-        .height;
+    final height = MediaQuery.of(context).size.height;
     return Center(
       child: Container(
         width: double.infinity,
