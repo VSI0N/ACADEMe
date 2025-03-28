@@ -14,6 +14,7 @@ import 'package:flutter/services.dart';
 import 'package:ACADEMe/home/pages/topic_view.dart'; // Import the TopicViewScreen
 import 'package:ACADEMe/started/pages/class.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ACADEMe/home/pages/course_view.dart';
 
 import '../components/askme_button.dart';
 import 'ask_me.dart';
@@ -670,17 +671,44 @@ class HomePage extends StatelessWidget {
                         Text(
                           L10n.getTranslatedText(context, 'Continue Learning'),
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 20),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
                         ),
-                        Text(
-                          L10n.getTranslatedText(context, 'See All'),
-                          style: TextStyle(color: Colors.blue),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Scaffold(
+                                  appBar: AppBar(
+                                    title: Text(L10n.getTranslatedText(
+                                        context, 'All Courses')),
+                                    backgroundColor: AcademeTheme.appColor,
+                                  ),
+                                  body: CourseListScreen(),
+                                ),
+                              ),
+                            );
+                          },
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          child: Text(
+                            L10n.getTranslatedText(context, 'See All'),
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 17,
+                            ),
+                          ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 16),
                     FutureBuilder<List<dynamic>>(
-                      future: _fetchCourses(), // Fetching courses
+                      future: _fetchCourses(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
@@ -691,7 +719,6 @@ class HomePage extends StatelessWidget {
                             child: Text(
                               "❌ Error: ${snapshot.error}",
                               style: TextStyle(color: Colors.red),
-                              textAlign: TextAlign.center,
                             ),
                           );
                         } else if (!snapshot.hasData ||
@@ -700,41 +727,48 @@ class HomePage extends StatelessWidget {
                               child: Text("No courses available"));
                         } else {
                           final courses = snapshot.data!;
+                          debugPrint(
+                              "Courses loaded: ${courses.length} items"); // Debug
 
                           return Column(
                             children: List.generate(
-                              courses.length > 3
-                                  ? 3
-                                  : courses.length, // Show only 3 courses
-                              (index) => Column(
-                                children: [
-                                  learningCard(
-                                    courses[index]["title"],
-                                    4, // Placeholder values
-                                    9,
-                                    34,
-                                    predefinedColors.length > index
-                                        ? predefinedColors[index]!
-                                        : Colors.primaries[index %
-                                            Colors.primaries.length][100]!,
-                                    () {
-                                      // Debug log to confirm the courseId
-                                      debugPrint(
-                                          "Course ID: ${courses[index]["id"]}");
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => TopicViewScreen(
-                                            courseId: courses[index]
-                                                ["id"], // Pass the courseId
+                              courses.length > 3 ? 3 : courses.length,
+                              (index) {
+                                final course = courses[index];
+                                debugPrint(
+                                    "Course $index ID: ${course["id"]}"); // Verify ID
+
+                                return Column(
+                                  children: [
+                                    learningCard(
+                                      course["title"],
+                                      4, // Placeholder values (modules)
+                                      9, // Placeholder values (completed)
+                                      34, // Placeholder values (total)
+                                      predefinedColors.length > index
+                                          ? predefinedColors[index]!
+                                          : Colors.primaries[index %
+                                              Colors.primaries.length][100]!,
+                                      () {
+                                        // Navigation with verified ID
+                                        debugPrint(
+                                            "Tapped Course ID: ${course["id"]}");
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                TopicViewScreen(
+                                              courseId: course["id"]
+                                                  .toString(), // Ensure String
+                                            ),
                                           ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  const SizedBox(height: 12),
-                                ],
-                              ),
+                                        );
+                                      },
+                                    ),
+                                    const SizedBox(height: 12),
+                                  ],
+                                );
+                              },
                             ),
                           );
                         }
@@ -769,7 +803,27 @@ class HomePage extends StatelessWidget {
                                 ),
                                 TextButton(
                                   onPressed: () {
-                                    // Handle 'See All' action
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => Scaffold(
+                                          appBar: AppBar(
+                                            backgroundColor:
+                                                AcademeTheme.appColor,
+                                            title: Text(
+                                              L10n.getTranslatedText(
+                                                  context, 'All Courses'),
+                                              style: TextStyle(
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                          body: CourseListScreen(),
+                                        ),
+                                      ),
+                                    );
                                   },
                                   child: Text(
                                     L10n.getTranslatedText(context, 'See All'),
@@ -953,17 +1007,33 @@ class HomePage extends StatelessWidget {
                                 Text(
                                   L10n.getTranslatedText(context, 'My Courses'),
                                   style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold),
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                                 TextButton(
                                   onPressed: () {
-                                    // Handle 'See All' action
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => Scaffold(
+                                          appBar: AppBar(
+                                            title: Text(L10n.getTranslatedText(
+                                                context, 'All Courses')),
+                                            backgroundColor:
+                                                AcademeTheme.appColor,
+                                          ),
+                                          body: CourseListScreen(),
+                                        ),
+                                      ),
+                                    );
                                   },
                                   child: Text(
                                     L10n.getTranslatedText(context, 'See All'),
                                     style: TextStyle(
-                                        fontSize: 16, color: Colors.blue),
+                                      fontSize: 16,
+                                      color: Colors.blue,
+                                    ),
                                   ),
                                 ),
                               ],

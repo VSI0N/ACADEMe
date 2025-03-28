@@ -142,8 +142,8 @@ class FlashCardState extends State<FlashCard> {
 
     if (_currentPage < widget.materials.length &&
         widget.materials[_currentPage]["type"] == "video") {
-      _videoController = VideoPlayerController.networkUrl(
-          widget.materials[_currentPage]["content"]! as Uri);
+      _videoController = VideoPlayerController.network(
+          widget.materials[_currentPage]["content"]!);
 
       _videoController!.initialize().then((_) {
         if (!mounted) return;
@@ -782,14 +782,30 @@ class FlashCardState extends State<FlashCard> {
             child: _chewieController == null ||
                     _videoController == null ||
                     !_videoController!.value.isInitialized
-                ? const Center(child: CircularProgressIndicator())
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const CircularProgressIndicator(),
+                      const SizedBox(height: 16),
+                      Text(
+                        "Loading video...",
+                        style: TextStyle(
+                          color: AcademeTheme.appColor,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  )
                 : GestureDetector(
                     onTap: () {
                       setState(() {});
                     },
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(12),
-                      child: Chewie(controller: _chewieController!),
+                      child: AspectRatio(
+                        aspectRatio: _videoController!.value.aspectRatio,
+                        child: Chewie(controller: _chewieController!),
+                      ),
                     ),
                   ),
           ),
