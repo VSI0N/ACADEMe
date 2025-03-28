@@ -2,7 +2,6 @@ import 'package:ACADEMe/academe_theme.dart';
 import 'package:ACADEMe/localization/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
 import 'package:http/http.dart' as http;
@@ -20,15 +19,15 @@ import 'package:ACADEMe/widget/audio_payer_widget.dart';
 import 'package:ACADEMe/widget/full_screen_video.dart';
 import 'package:ACADEMe/widget/typing_indicator.dart';
 
-class ASKMe extends StatefulWidget {
+class AskMe extends StatefulWidget {
   String? initialMessage;
-  ASKMe({Key? key, this.initialMessage}) : super(key: key);
+  AskMe({super.key, this.initialMessage});
 
   @override
-  _ASKMeState createState() => _ASKMeState();
+  AskMeState createState() => AskMeState();
 }
 
-class _ASKMeState extends State<ASKMe> {
+class AskMeState extends State<AskMe> {
   final ScrollController _scrollController = ScrollController();
   String selectedLanguage = "en"; // Default: English
   List<Map<String, dynamic>> chatMessages = [];
@@ -54,19 +53,6 @@ class _ASKMeState extends State<ASKMe> {
     {'name': 'Japanese', 'code': 'ja'},
     {'name': 'Bengali', 'code': 'bn'},
   ];
-
-  List<Map<String, String>> _getFilteredLanguages() {
-    if (searchQuery.isEmpty) {
-      return languages; // If search query is empty, show all languages
-    } else {
-      return languages
-          .where((language) => language['name']!
-          .toLowerCase()
-          .contains(searchQuery.toLowerCase()))
-          .toList(); // Filter the languages based on the search query
-    }
-  }
-
   void _scrollToBottom() {
     if (_scrollController.hasClients) {
       _scrollController.animateTo(
@@ -79,9 +65,8 @@ class _ASKMeState extends State<ASKMe> {
 
   // For the chat history
 
-
   void _loadChatSession(ChatSession chat) {
-    print("Selected chat: ${chat.title}");
+    debugPrint("Selected chat: ${chat.title}");
   }
 
   @override
@@ -102,7 +87,7 @@ class _ASKMeState extends State<ASKMe> {
   Future<void> _initRecorder() async {
     bool hasPermission = await _audioRecorder.hasPermission();
     if (!hasPermission) {
-      print("Recording permission not granted.");
+      debugPrint("Recording permission not granted.");
     }
   }
 
@@ -169,7 +154,7 @@ class _ASKMeState extends State<ASKMe> {
         type = FileType.audio;
         break;
       default:
-        print("❌ Invalid file type.");
+        debugPrint("❌ Invalid file type.");
         return;
     }
 
@@ -183,7 +168,7 @@ class _ASKMeState extends State<ASKMe> {
       File file = File(result.files.single.path!);
       _showPromptDialog(file, fileType);
     } else {
-      print("❌ File selection canceled.");
+      debugPrint("❌ File selection canceled.");
     }
   }
 
@@ -280,23 +265,23 @@ class _ASKMeState extends State<ASKMe> {
 
       if (path != null) {
         File file = File(path);
-        print(
+        debugPrint(
             "Audio file path: $path, Size: ${file.existsSync() ? file.lengthSync() : 'File not found'} bytes");
 
         if (file.existsSync()) {
-          print("File exists, uploading...");
+          debugPrint("File exists, uploading...");
           await _uploadSpeech(file);
         } else {
-          print("File does NOT exist. Path: $path");
+          debugPrint("File does NOT exist. Path: $path");
         }
       } else {
-        print("Recording path is null.");
+        debugPrint("Recording path is null.");
       }
     } else {
       // Request microphone permission
       PermissionStatus micStatus = await Permission.microphone.request();
       if (!micStatus.isGranted) {
-        print("Microphone permission not granted.");
+        debugPrint("Microphone permission not granted.");
 
         return;
       }
@@ -308,7 +293,7 @@ class _ASKMeState extends State<ASKMe> {
 
       try {
         // Start recording with WAV format
-        print("Starting recording at path: $filePath");
+        debugPrint("Starting recording at path: $filePath");
         await _audioRecorder.start(
           const RecordConfig(encoder: AudioEncoder.wav), // WAV format
           path: filePath,
@@ -326,7 +311,7 @@ class _ASKMeState extends State<ASKMe> {
           });
         });
       } catch (e) {
-        print("Error starting recording: $e");
+        debugPrint("Error starting recording: $e");
       }
     }
   }
@@ -335,10 +320,10 @@ class _ASKMeState extends State<ASKMe> {
   Future<void> _uploadSpeech(File file) async {
     try {
       if (!file.existsSync() || file.lengthSync() == 0) {
-        print("❌ File does not exist or is empty.");
+        debugPrint("❌ File does not exist or is empty.");
         return;
       }
-      print("File size: ${file.lengthSync()} bytes");
+      debugPrint("File size: ${file.lengthSync()} bytes");
 
       setState(() {
         isConverting = true;
@@ -352,7 +337,7 @@ class _ASKMeState extends State<ASKMe> {
 
       // Ensure the selected language is not empty
       selectedLanguage = selectedLanguage.isNotEmpty ? selectedLanguage : "hi";
-      print("Selected target language: $selectedLanguage");
+      debugPrint("Selected target language: $selectedLanguage");
 
       request.fields.addAll({
         'prompt': 'इस ऑडियो को हिंदी में लिखो',
@@ -362,7 +347,7 @@ class _ASKMeState extends State<ASKMe> {
       });
 
       final mimeType = lookupMimeType(file.path) ?? "audio/flac";
-      print("Detected MIME type: $mimeType");
+      debugPrint("Detected MIME type: $mimeType");
 
       request.files.add(await http.MultipartFile.fromPath(
         'file',
@@ -373,16 +358,16 @@ class _ASKMeState extends State<ASKMe> {
       var response = await request.send();
       String responseBody = await response.stream.bytesToString();
 
-      print("Server response: $responseBody");
+      debugPrint("Server response: $responseBody");
 
       if (response.statusCode == 200) {
-        print("✅ Audio uploaded successfully!");
+        debugPrint("✅ Audio uploaded successfully!");
 
         var decodedResponse = jsonDecode(responseBody);
 
         // Fix: Extract detected language correctly
         String detectedLang = decodedResponse['language'] ?? 'unknown';
-        print("Detected Language: $detectedLang");
+        debugPrint("Detected Language: $detectedLang");
 
         // If the detected language is Hindi and user hasn't explicitly chosen another language
         if (detectedLang == 'hi' && selectedLanguage == "auto") {
@@ -390,14 +375,14 @@ class _ASKMeState extends State<ASKMe> {
             selectedLanguage =
             'hi'; // Update language to Hindi if detected language is Hindi
           });
-          print("✅ Updated selected language to Hindi");
+          debugPrint("✅ Updated selected language to Hindi");
         }
 
         // Proceed with handling the server response (your AI response)
         await _handleServerResponse(decodedResponse);
       } else {
-        print("❌ Upload failed with status: ${response.statusCode}");
-        print("Server response: $responseBody");
+        debugPrint("❌ Upload failed with status: ${response.statusCode}");
+        debugPrint("Server response: $responseBody");
 
         setState(() {
           chatMessages.add({
@@ -407,7 +392,7 @@ class _ASKMeState extends State<ASKMe> {
         });
       }
     } catch (e) {
-      print("❌ Error uploading audio: $e");
+      debugPrint("❌ Error uploading audio: $e");
       setState(() {
         chatMessages.add({
           "role": "assistant",
@@ -430,10 +415,10 @@ class _ASKMeState extends State<ASKMe> {
         // Update the input field with the 'text' part of the response
         _textController.text = responseText;
       } else {
-        print("❌ No text key in server response");
+        debugPrint("❌ No text key in server response");
       }
     } catch (e) {
-      print("❌ Error handling server response: $e");
+      debugPrint("❌ Error handling server response: $e");
     }
   }
 
@@ -504,7 +489,7 @@ class _ASKMeState extends State<ASKMe> {
 
   void _showLanguageSelection() {
     showModalBottomSheet(
-      context: this.context,
+      context: context,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -533,7 +518,8 @@ class _ASKMeState extends State<ASKMe> {
                   // Search bar with live filtering
                   TextField(
                     decoration: InputDecoration(
-                      labelText: L10n.getTranslatedText(context,'Search Languages'),
+                      labelText:
+                      L10n.getTranslatedText(context, 'Search Languages'),
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.search),
                     ),
@@ -570,13 +556,14 @@ class _ASKMeState extends State<ASKMe> {
 
   @override
   Widget build(BuildContext context) {
-
     List<ChatSession> chatHistory = [
-    ChatSession(title: L10n.getTranslatedText(context, 'Chat with AI'),
-        timestamp: "Feb 22, 2025"),
-    ChatSession(title: L10n.getTranslatedText(context, 'Math Help'), timestamp: "Feb 21, 2025"),
-  ];
-
+      ChatSession(
+          title: L10n.getTranslatedText(context, 'Chat with AI'),
+          timestamp: "Feb 22, 2025"),
+      ChatSession(
+          title: L10n.getTranslatedText(context, 'Math Help'),
+          timestamp: "Feb 21, 2025"),
+    ];
 
     return Scaffold(
       key: _scaffoldKey, // Attach key to control drawer
@@ -642,7 +629,7 @@ class _ASKMeState extends State<ASKMe> {
           padding: EdgeInsets.all(10),
           child: Row(
             children: [
-              Container(
+              SizedBox(
                 width: 40,
                 height: 40,
                 child: IconButton(
@@ -698,8 +685,10 @@ class _ASKMeState extends State<ASKMe> {
                         hintText: isConverting
                             ? L10n.getTranslatedText(context, 'Converting ... ')
                             : (_isRecording
-                            ? L10n.getTranslatedText(context, 'Recording ... ${_seconds}s')
-                            : L10n.getTranslatedText(context, 'Type a message ...')),
+                            ? L10n.getTranslatedText(
+                            context, 'Recording ... ${_seconds}s')
+                            : L10n.getTranslatedText(
+                            context, 'Type a message ...')),
                         contentPadding: EdgeInsets.only(
                             left: 20, right: 60, top: 14, bottom: 14),
                         border: OutlineInputBorder(
@@ -734,7 +723,7 @@ class _ASKMeState extends State<ASKMe> {
                 ),
               ),
               SizedBox(width: 12),
-              Container(
+              SizedBox(
                 width: 42,
                 height: 42,
                 child: IconButton(
@@ -822,12 +811,14 @@ class _ASKMeState extends State<ASKMe> {
                   TextSpan(
                     children: [
                       TextSpan(
-                          text: L10n.getTranslatedText(context,'Hey there! I am '),
+                          text: L10n.getTranslatedText(
+                              context, 'Hey there! I am '),
                           style: _textStyle(Colors.black)),
                       TextSpan(
                           text: 'ASKMe', style: _textStyle(Colors.amber[700]!)),
                       TextSpan(
-                          text: L10n.getTranslatedText(context, ' your\npersonal tutor.'),
+                          text: L10n.getTranslatedText(
+                              context, ' your\npersonal tutor.'),
                           style: _textStyle(Colors.black)),
                     ],
                   ),
@@ -841,15 +832,20 @@ class _ASKMeState extends State<ASKMe> {
               runSpacing: 12.0,
               alignment: WrapAlignment.center,
               children: [
-                _buildButton(Icons.help_outline, L10n.getTranslatedText(context,'Clear Your Doubts'),
+                _buildButton(
+                    Icons.help_outline,
+                    L10n.getTranslatedText(context, 'Clear Your Doubts'),
                     Colors.lightBlue.shade400),
                 _buildButton(
-                    Icons.quiz, L10n.getTranslatedText(context, 'Explain / Quiz'),
+                    Icons.quiz,
+                    L10n.getTranslatedText(context, 'Explain / Quiz'),
                     Colors.orange.shade400),
-                _buildButton(Icons.upload_file,
+                _buildButton(
+                    Icons.upload_file,
                     L10n.getTranslatedText(context, 'Upload Study Materials'),
                     Colors.green.shade500),
-                _buildButton(Icons.more_horiz, L10n.getTranslatedText(context, 'More'), Colors.grey),
+                _buildButton(Icons.more_horiz,
+                    L10n.getTranslatedText(context, 'More'), Colors.grey),
               ],
             ),
           ],
@@ -995,14 +991,15 @@ class _ASKMeState extends State<ASKMe> {
                   boxShadow: isUser
                       ? [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.15),
+                      color: Colors.black.withAlpha(15),
                       blurRadius: 6,
                       offset: Offset(2, 4),
                     ),
                   ]
                       : [],
                 ),
-                child: _parseInlineBoldText(message["text"], isUser), // Parse Gemini response
+                child: _parseInlineBoldText(
+                    message["text"], isUser), // Parse Gemini response
               ),
 
             // Typing Indicator

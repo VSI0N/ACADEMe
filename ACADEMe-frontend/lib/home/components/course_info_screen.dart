@@ -5,10 +5,10 @@ class CourseInfoScreen extends StatefulWidget {
   const CourseInfoScreen({super.key});
 
   @override
-  _CourseInfoScreenState createState() => _CourseInfoScreenState();
+  CourseInfoScreenState createState() => CourseInfoScreenState();
 }
 
-class _CourseInfoScreenState extends State<CourseInfoScreen>
+class CourseInfoScreenState extends State<CourseInfoScreen>
     with TickerProviderStateMixin {
   final double infoHeight = 364.0;
   AnimationController? animationController;
@@ -75,7 +75,7 @@ class _CourseInfoScreenState extends State<CourseInfoScreen>
                       topRight: Radius.circular(32.0)),
                   boxShadow: <BoxShadow>[
                     BoxShadow(
-                        color: AcademeTheme.grey.withOpacity(0.2),
+                        color: AcademeTheme.grey.withAlpha(20),
                         offset: const Offset(1.1, 1.1),
                         blurRadius: 10.0),
                   ],
@@ -124,26 +124,24 @@ class _CourseInfoScreenState extends State<CourseInfoScreen>
                                     color: AcademeTheme.nearlyBlue,
                                   ),
                                 ),
-                                Container(
-                                  child: Row(
-                                    children: <Widget>[
-                                      Text(
-                                        '4.3',
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w200,
-                                          fontSize: 22,
-                                          letterSpacing: 0.27,
-                                          color: AcademeTheme.grey,
-                                        ),
+                                Row(
+                                  children: <Widget>[
+                                    Text(
+                                      '4.3',
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w200,
+                                        fontSize: 22,
+                                        letterSpacing: 0.27,
+                                        color: AcademeTheme.grey,
                                       ),
-                                      Icon(
-                                        Icons.star,
-                                        color: AcademeTheme.nearlyBlue,
-                                        size: 24,
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                    Icon(
+                                      Icons.star,
+                                      color: AcademeTheme.nearlyBlue,
+                                      size: 24,
+                                    ),
+                                  ],
                                 )
                               ],
                             ),
@@ -205,7 +203,7 @@ class _CourseInfoScreenState extends State<CourseInfoScreen>
                                         ),
                                         border: Border.all(
                                             color: AcademeTheme.grey
-                                                .withOpacity(0.2)),
+                                                .withAlpha(20)),
                                       ),
                                       child: Icon(
                                         Icons.add,
@@ -228,7 +226,7 @@ class _CourseInfoScreenState extends State<CourseInfoScreen>
                                         boxShadow: <BoxShadow>[
                                           BoxShadow(
                                               color: AcademeTheme.nearlyBlue
-                                                  .withOpacity(0.5),
+                                                  .withAlpha(50),
                                               offset: const Offset(1.1, 1.1),
                                               blurRadius: 10.0),
                                         ],
@@ -323,7 +321,7 @@ class _CourseInfoScreenState extends State<CourseInfoScreen>
           borderRadius: const BorderRadius.all(Radius.circular(16.0)),
           boxShadow: <BoxShadow>[
             BoxShadow(
-                color: AcademeTheme.grey.withOpacity(0.2),
+                color: AcademeTheme.grey.withAlpha(20),
                 offset: const Offset(1.1, 1.1),
                 blurRadius: 8.0),
           ],

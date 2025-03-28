@@ -1,5 +1,5 @@
 import 'package:ACADEMe/academe_theme.dart';
-import 'package:ACADEMe/home/pages/bottomNav.dart';
+import 'package:ACADEMe/home/pages/bottom_nav.dart';
 import 'package:flutter/material.dart';
 
 import '../../home/auth/role.dart';
@@ -12,11 +12,13 @@ void main() {
 }
 
 class SelectCourseScreen extends StatefulWidget {
+  const SelectCourseScreen({super.key});
+
   @override
-  _SelectCourseScreenState createState() => _SelectCourseScreenState();
+  SelectCourseScreenState createState() => SelectCourseScreenState();
 }
 
-class _SelectCourseScreenState extends State<SelectCourseScreen> {
+class SelectCourseScreenState extends State<SelectCourseScreen> {
   List<String> allCourses = [
     "Computer Science",
     "Mathematics",

@@ -15,13 +15,13 @@ class TopicScreen extends StatefulWidget {
   final String courseId;
   final String courseTitle;
 
-  TopicScreen({required this.courseId, required this.courseTitle});
+  const TopicScreen({super.key, required this.courseId, required this.courseTitle});
 
   @override
-  _TopicScreenState createState() => _TopicScreenState();
+  TopicScreenState createState() => TopicScreenState();
 }
 
-class _TopicScreenState extends State<TopicScreen> {
+class TopicScreenState extends State<TopicScreen> {
   List<Map<String, dynamic>> topics = [];
   bool isMenuOpen = false;
   final _storage = FlutterSecureStorage();
@@ -90,7 +90,7 @@ class _TopicScreenState extends State<TopicScreen> {
   void _addTopic() async {
     String? token = await _storage.read(key: "access_token");
     if (token == null) {
-      print("No access token found");
+      debugPrint("No access token found");
       return;
     }
 
@@ -139,7 +139,7 @@ class _TopicScreenState extends State<TopicScreen> {
                   Navigator.pop(context);
                   _loadTopics(); // Refresh topics
                 } else {
-                  print("Failed to add topic: ${response.body}");
+                  debugPrint("Failed to add topic: ${response.body}");
                 }
               },
               child: Text(L10n.getTranslatedText(context, 'Add')),

@@ -22,10 +22,10 @@ class QuizPage extends StatefulWidget {
   });
 
   @override
-  _QuizPageState createState() => _QuizPageState();
+  QuizPageState createState() => QuizPageState();
 }
 
-class _QuizPageState extends State<QuizPage> {
+class QuizPageState extends State<QuizPage> {
   int _currentQuestionIndex = 0;
   int? _selectedAnswer;
   bool isSubmitting = false;

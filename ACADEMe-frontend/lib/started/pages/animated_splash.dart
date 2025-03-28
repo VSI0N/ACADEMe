@@ -3,11 +3,13 @@ import 'package:ACADEMe/home/auth/auth_wrapper.dart';
 import 'package:ACADEMe/academe_theme.dart';
 
 class AnimatedSplashScreen extends StatefulWidget {
+  const AnimatedSplashScreen({super.key});
+
   @override
-  _AnimatedSplashScreenState createState() => _AnimatedSplashScreenState();
+  AnimatedSplashScreenState createState() => AnimatedSplashScreenState();
 }
 
-class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
+class AnimatedSplashScreenState extends State<AnimatedSplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _opacity; // Animation for the fade-in effect

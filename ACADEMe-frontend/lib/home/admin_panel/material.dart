@@ -21,7 +21,7 @@ class MaterialScreen extends StatefulWidget {
   final String? textContent;
   final String? fileUrl;
 
-  MaterialScreen({
+  const MaterialScreen({super.key, 
     required this.courseId,
     required this.topicId,
     this.subtopicId,
@@ -34,10 +34,10 @@ class MaterialScreen extends StatefulWidget {
   });
 
   @override
-  _MaterialScreenState createState() => _MaterialScreenState();
+  MaterialScreenState createState() => MaterialScreenState();
 }
 
-class _MaterialScreenState extends State<MaterialScreen> {
+class MaterialScreenState extends State<MaterialScreen> {
   final _storage = FlutterSecureStorage();
   bool isLoading = true;
   Map<String, dynamic>? materialDetails;
@@ -112,7 +112,7 @@ class _MaterialScreenState extends State<MaterialScreen> {
   }
 
   void _initializeVideoPlayer(String videoUrl) {
-    _videoPlayerController = VideoPlayerController.network(videoUrl)
+    _videoPlayerController = VideoPlayerController.networkUrl(videoUrl as Uri)
       ..initialize().then((_) {
         setState(() {
           _chewieController = ChewieController(
@@ -129,12 +129,12 @@ class _MaterialScreenState extends State<MaterialScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message)),
     );
-    print(message);
+    debugPrint(message);
   }
 
   Future<void> _launchFile(String fileUrl) async {
-    if (await canLaunch(fileUrl)) {
-      await launch(fileUrl);
+    if (await canLaunchUrl(fileUrl as Uri)) {
+      await launchUrl(fileUrl as Uri);
     } else {
       _showError("Could not launch file: $fileUrl");
     }
@@ -147,7 +147,7 @@ class _MaterialScreenState extends State<MaterialScreen> {
 
     final type = materialDetails!["type"];
     final content = materialDetails!["content"];
-    final optionalText = materialDetails!["optional_text"];
+    // final optionalText = materialDetails!["optional_text"];
 
     switch (type) {
       case "text":
@@ -214,7 +214,7 @@ class _MaterialScreenState extends State<MaterialScreen> {
       margin: EdgeInsets.all(8),
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.5),
+        color: Colors.black.withAlpha(20),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(

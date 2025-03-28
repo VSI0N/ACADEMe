@@ -8,10 +8,10 @@ class MaterialDetailsPage extends StatefulWidget {
   const MaterialDetailsPage({super.key, required this.materialId});
 
   @override
-  _MaterialDetailsPageState createState() => _MaterialDetailsPageState();
+  MaterialDetailsPageState createState() => MaterialDetailsPageState();
 }
 
-class _MaterialDetailsPageState extends State<MaterialDetailsPage> {
+class MaterialDetailsPageState extends State<MaterialDetailsPage> {
   final FlutterSecureStorage storage = const FlutterSecureStorage();
   final String backendUrl = 'http://10.0.2.2:8000';
   Map<String, dynamic>? materialDetails;
@@ -42,10 +42,10 @@ class _MaterialDetailsPageState extends State<MaterialDetailsPage> {
           isLoading = false;
         });
       } else {
-        print("❌ Failed to fetch material details");
+        debugPrint("❌ Failed to fetch material details");
       }
     } catch (e) {
-      print("❌ Error fetching material details: $e");
+      debugPrint("❌ Error fetching material details: $e");
     }
   }
 

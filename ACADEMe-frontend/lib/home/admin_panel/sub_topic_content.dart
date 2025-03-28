@@ -7,7 +7,7 @@ import 'dart:convert';
 import 'package:file_picker/file_picker.dart'; // For file picking
 import 'package:http_parser/http_parser.dart'; // For multipart requests
 import 'material.dart'; // Import the MaterialScreen
-import 'SubtopicQuiz.dart'; // Import the SubTopicQuiz screen
+import 'subtopic_quiz.dart'; // Import the SubTopicQuiz screen
 import 'package:provider/provider.dart';
 import '../../localization/language_provider.dart'; // Import the LanguageProvider
 
@@ -19,7 +19,7 @@ class SubTopicContent extends StatefulWidget {
   final String topicTitle;
   final String subtopicTitle;
 
-  SubTopicContent({
+  const SubTopicContent({super.key,
     required this.courseId,
     required this.topicId,
     required this.subtopicId,
@@ -29,10 +29,10 @@ class SubTopicContent extends StatefulWidget {
   });
 
   @override
-  _SubTopicContentState createState() => _SubTopicContentState();
+  SubTopicContentState createState() => SubTopicContentState();
 }
 
-class _SubTopicContentState extends State<SubTopicContent> with SingleTickerProviderStateMixin {
+class SubTopicContentState extends State<SubTopicContent> with SingleTickerProviderStateMixin {
   List<Map<String, dynamic>> subtopicMaterials = [];
   List<Map<String, dynamic>> subtopicQuizzes = [];
   bool isLoading = true;
@@ -141,7 +141,7 @@ class _SubTopicContentState extends State<SubTopicContent> with SingleTickerProv
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message)),
     );
-    print(message);
+    debugPrint(message);
   }
 
   void _addSubtopicMaterial() {
@@ -198,7 +198,7 @@ class _SubTopicContentState extends State<SubTopicContent> with SingleTickerProv
                             setDialogState(() {
                               filePath = result.files.single.path!;
                             });
-                            print("✅ File picked: $filePath");
+                            debugPrint("✅ File picked: $filePath");
                           }
                         },
                         icon: Icon(Icons.attach_file),
@@ -301,7 +301,7 @@ class _SubTopicContentState extends State<SubTopicContent> with SingleTickerProv
       final responseBody = await response.stream.bytesToString();
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        print("✅ Material uploaded successfully!");
+        debugPrint("✅ Material uploaded successfully!");
         await _fetchSubtopicMaterials(); // Refresh the materials list
       } else {
         _showError("Failed to upload material: ${response.statusCode} - $responseBody");
@@ -392,7 +392,7 @@ class _SubTopicContentState extends State<SubTopicContent> with SingleTickerProv
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final responseData = json.decode(utf8.decode(response.bodyBytes));
-        print("✅ Quiz added successfully: ${responseData["message"]}");
+        debugPrint("✅ Quiz added successfully: ${responseData["message"]}");
         return true;
       } else {
         _showError("Failed to add quiz: ${response.body}");
@@ -418,7 +418,7 @@ class _SubTopicContentState extends State<SubTopicContent> with SingleTickerProv
         bottom: TabBar(
           controller: _tabController,
           labelColor: Colors.white, // Set tab text color to white
-          unselectedLabelColor: Colors.white.withOpacity(0.5), // Set unselected tab text color
+          unselectedLabelColor: Colors.white.withValues(), // Set unselected tab text color
           tabs: const [
             Tab(text: "Subtopic Materials"),
             Tab(text: "Subtopic Quizzes"),

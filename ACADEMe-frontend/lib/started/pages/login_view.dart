@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:ACADEMe/home/auth/auth_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../home/auth/role.dart';
-import '../../home/pages/bottomNav.dart';
+import '../../home/pages/bottom_nav.dart';
 import '../../home/pages/forgot_password.dart';
 
 class LogInView extends StatefulWidget {
@@ -60,7 +60,7 @@ class _LogInViewState extends State<LogInView> {
         await _secureStorage.write(key: "user_email", value: user.email);
         await _secureStorage.write(
             key: "student_class", value: user.studentClass);
-        await _secureStorage.write(key: "photo_url", value: user.photo_url);
+        await _secureStorage.write(key: "photo_url", value: user.photoUrl);
 
         // Store credentials
         await _secureStorage.write(
@@ -211,7 +211,7 @@ class _LogInViewState extends State<LogInView> {
                                           context, 'Please enter an email');
                                     }
                                     if (!RegExp(
-                                            r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                                            r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$')
                                         .hasMatch(value)) {
                                       return L10n.getTranslatedText(
                                           context, 'Enter a valid email');

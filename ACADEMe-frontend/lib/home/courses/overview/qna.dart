@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 
 class QSection extends StatelessWidget {
   final String userImage =
-      "https://via.placeholder.com/50"; // Replace with actual user image URL
+      "https://via.placeholder.com/50";
+
+  const QSection({super.key}); // Replace with actual user image URL
 
   @override
   Widget build(BuildContext context) {

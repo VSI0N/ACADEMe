@@ -1,11 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 
 class FullScreenImage extends StatelessWidget {
   final String imagePath;
-  const FullScreenImage({Key? key, required this.imagePath}) : super(key: key);
+  const FullScreenImage({super.key, required this.imagePath});
 
   @override
   Widget build(BuildContext context) {

@@ -4,21 +4,22 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class TestReportScreen extends StatefulWidget {
+  const TestReportScreen({super.key});
+
   @override
-  _TestReportScreenState createState() => _TestReportScreenState();
+  TestReportScreenState createState() => TestReportScreenState();
 }
 
-class _TestReportScreenState extends State<TestReportScreen> {
+class TestReportScreenState extends State<TestReportScreen> {
   Map<String, dynamic> visualData = {};
   bool isLoading = true;
   double overallAverage = 0;
-  SharedPreferences? _storage;
+  // SharedPreferences? _storage;
   final String backendUrl = dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
 
   @override

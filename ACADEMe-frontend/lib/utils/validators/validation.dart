@@ -4,7 +4,7 @@ class AValidation {
       return "Email is required.";
     }
     // Regulae Expression for email validation
-    final emailRegExp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    final emailRegExp = RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$');
 
     if (!emailRegExp.hasMatch(value)) {
       return "Invalid email address.";

@@ -1,5 +1,5 @@
 import 'package:ACADEMe/home/auth/role.dart';
-import 'package:ACADEMe/home/pages/bottomNav.dart';
+import 'package:ACADEMe/home/pages/bottom_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ACADEMe/introduction_page.dart';
@@ -8,10 +8,10 @@ class AuthWrapper extends StatefulWidget {
   const AuthWrapper({super.key});
 
   @override
-  _AuthWrapperState createState() => _AuthWrapperState();
+  AuthWrapperState createState() => AuthWrapperState();
 }
 
-class _AuthWrapperState extends State<AuthWrapper> {
+class AuthWrapperState extends State<AuthWrapper> {
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
   bool? isUserLoggedIn;
   bool? isAdmin;

@@ -7,10 +7,10 @@ class GetStartedView extends StatefulWidget {
   const GetStartedView({super.key});
 
   @override
-  _GetStartedViewState createState() => _GetStartedViewState();
+  GetStartedViewState createState() => GetStartedViewState();
 }
 
-class _GetStartedViewState extends State<GetStartedView>
+class GetStartedViewState extends State<GetStartedView>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _bigCircleAnimation;

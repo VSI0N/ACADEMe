@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:file_picker/file_picker.dart';
@@ -7,12 +6,11 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../academe_theme.dart';
 import '../../localization/l10n.dart';
-import 'TopicQuiz.dart'; // Import the TopicQuiz screen
+import 'topic_quiz.dart'; // Import the TopicQuiz screen
 import 'material.dart'; // Import the MaterialScreen
-import 'SubTopicContent.dart';
+import 'sub_topic_content.dart';
 import '../../localization/language_provider.dart'; // Import the LanguageProvider
 
 class SubtopicScreen extends StatefulWidget {
@@ -22,7 +20,7 @@ class SubtopicScreen extends StatefulWidget {
   final String topicTitle;
   final String targetLanguage;
 
-  SubtopicScreen({
+  const SubtopicScreen({super.key, 
     required this.courseId,
     required this.topicId,
     required this.courseTitle,
@@ -31,10 +29,10 @@ class SubtopicScreen extends StatefulWidget {
   });
 
   @override
-  _SubtopicScreenState createState() => _SubtopicScreenState();
+  SubtopicScreenState createState() => SubtopicScreenState();
 }
 
-class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProviderStateMixin {
+class SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProviderStateMixin {
   List<Map<String, dynamic>> subtopics = [];
   List<Map<String, dynamic>> materials = [];
   List<Map<String, dynamic>> quizzes = [];
@@ -247,7 +245,7 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final responseData = json.decode(utf8.decode(response.bodyBytes));
-        print("✅ Subtopic added successfully: ${responseData["message"]}");
+        debugPrint("✅ Subtopic added successfully: ${responseData["message"]}");
         return true;
       } else {
         _showError("Failed to add subtopic: ${response.body}");
@@ -313,7 +311,7 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
                             setDialogState(() {
                               filePath = result.files.single.path!;
                             });
-                            print("✅ File picked: $filePath");
+                            debugPrint("✅ File picked: $filePath");
                           }
                         },
                         icon: Icon(Icons.attach_file),
@@ -416,7 +414,7 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
       final responseBody = await response.stream.bytesToString();
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        print("✅ Material uploaded successfully!");
+        debugPrint("✅ Material uploaded successfully!");
         await _fetchMaterials();
       } else {
         _showError("Failed to upload material: ${response.statusCode} - $responseBody");
@@ -524,7 +522,7 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final responseData = json.decode(utf8.decode(response.bodyBytes));
-        print("✅ Quiz added successfully: ${responseData["message"]}");
+        debugPrint("✅ Quiz added successfully: ${responseData["message"]}");
         return true;
       } else {
         _showError("Failed to add quiz: ${response.body}");
@@ -540,7 +538,7 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message)),
     );
-    print(message);
+    debugPrint(message);
   }
 
   @override
@@ -555,7 +553,7 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
         bottom: TabBar(
           controller: _tabController,
           labelColor: Colors.white, // Set tab text color to white
-          unselectedLabelColor: Colors.white.withOpacity(0.5), // Set unselected tab text color
+          unselectedLabelColor: Colors.white.withValues(), // Set unselected tab text color
           tabs: [
             Tab(text: L10n.getTranslatedText(context, 'Subtopics')),
             Tab(text: L10n.getTranslatedText(context, 'Topic Materials')),
@@ -725,9 +723,5 @@ class _SubtopicScreenState extends State<SubtopicScreen> with SingleTickerProvid
       label: Text(title, style: TextStyle(color: Colors.white)),
       backgroundColor: AcademeTheme.appColor,
     );
-  }
-
-  void _handleFileClick(String fileUrl, String fileType) {
-    print("📂 Opening file: $fileUrl");
   }
 }

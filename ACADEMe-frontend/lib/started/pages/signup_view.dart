@@ -5,7 +5,7 @@ import '../../home/auth/auth_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ACADEMe/localization/l10n.dart';
 import '../../home/auth/role.dart';
-import '../../home/pages/bottomNav.dart';
+import '../../home/pages/bottom_nav.dart';
 
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});
@@ -220,7 +220,7 @@ class _SignUpViewState extends State<SignUpView> {
                             return L10n.getTranslatedText(
                                 context, 'Please enter an email');
                           }
-                          if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                          if (!RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$')
                               .hasMatch(value)) {
                             return L10n.getTranslatedText(
                                 context, 'Enter a valid email');

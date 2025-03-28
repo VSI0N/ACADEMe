@@ -4,8 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ACADEMe/academe_theme.dart';
-import 'package:ACADEMe/home/pages/ASKMe.dart';
-import 'package:ACADEMe/home/components/ASKMe_button.dart';
+import 'package:ACADEMe/home/pages/ask_me.dart';
+import 'package:ACADEMe/home/components/askme_button.dart';
 import 'package:ACADEMe/localization/l10n.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
@@ -16,10 +16,10 @@ class CourseListScreen extends StatefulWidget {
   const CourseListScreen({super.key});
 
   @override
-  _CourseListScreenState createState() => _CourseListScreenState();
+  CourseListScreenState createState() => CourseListScreenState();
 }
 
-class _CourseListScreenState extends State<CourseListScreen>
+class CourseListScreenState extends State<CourseListScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   bool isLoading = true;
@@ -47,7 +47,7 @@ class _CourseListScreenState extends State<CourseListScreen>
 
     String? token = await storage.read(key: 'access_token');
     if (token == null) {
-      print("No access token found");
+      debugPrint("No access token found");
       setState(() {
         isLoading = false; // Hide loading indicator
       });
@@ -80,10 +80,10 @@ class _CourseListScreenState extends State<CourseListScreen>
               .toList();
         });
       } else {
-        print("Failed to fetch courses: ${response.statusCode}");
+        debugPrint("Failed to fetch courses: ${response.statusCode}");
       }
     } catch (e) {
-      print("Error fetching courses: $e");
+      debugPrint("Error fetching courses: $e");
     } finally {
       setState(() {
         isLoading = false; // Hide loading indicator
@@ -123,7 +123,7 @@ class _CourseListScreenState extends State<CourseListScreen>
       onFABPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ASKMe()),
+          MaterialPageRoute(builder: (context) => AskMe()),
         );
       },
       child: Scaffold(
@@ -222,7 +222,7 @@ class _CourseListScreenState extends State<CourseListScreen>
     return GestureDetector(
       onTap: () async {
         String selectedCourseId = course["id"];
-        print("Selected Course ID: $selectedCourseId");
+        debugPrint("Selected Course ID: $selectedCourseId");
 
         try {
           await storage.write(key: 'course_id', value: selectedCourseId);
@@ -233,7 +233,7 @@ class _CourseListScreenState extends State<CourseListScreen>
                     TopicViewScreen(courseId: selectedCourseId)),
           );
         } catch (error) {
-          print("Error storing course ID: $error");
+          debugPrint("Error storing course ID: $error");
         }
       },
       child: Container(

@@ -215,7 +215,7 @@ class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.redAccent.withOpacity(0.9),
+        color: Colors.redAccent.withAlpha(90),
         borderRadius: BorderRadius.circular(12),
       ),
       child: const Column(

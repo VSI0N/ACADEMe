@@ -1,47 +1,50 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import '../../academe_theme.dart';
 
-class TopicQuizScreen extends StatefulWidget {
+class SubTopicQuizScreen extends StatefulWidget {
   final String courseId;
   final String topicId;
+  final String subtopicId;
   final String quizId;
   final String courseTitle;
   final String topicTitle;
-  final String quizTitle;
+  final String subtopicTitle;
   final String targetLanguage;
 
-  TopicQuizScreen({
+  const SubTopicQuizScreen({super.key,
     required this.courseId,
     required this.topicId,
+    required this.subtopicId,
     required this.quizId,
     required this.courseTitle,
     required this.topicTitle,
-    required this.quizTitle,
+    required this.subtopicTitle,
     required this.targetLanguage,
   });
 
   @override
-  _TopicQuizScreenState createState() => _TopicQuizScreenState();
+  SubTopicQuizScreenState createState() => SubTopicQuizScreenState();
 }
 
-class _TopicQuizScreenState extends State<TopicQuizScreen> {
-  List<Map<String, dynamic>> questions = [];
-  bool isLoading = true;
+class SubTopicQuizScreenState extends State<SubTopicQuizScreen> {
   final _storage = FlutterSecureStorage();
+  List<Map<String, dynamic>> quizQuestions = [];
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _fetchQuestions();
+    debugPrint("📌 Quiz ID: ${widget.quizId}");
+    _fetchQuizQuestions();
   }
 
-  Future<void> _fetchQuestions() async {
+  Future<void> _fetchQuizQuestions() async {
     final url = Uri.parse(
-        "${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/${widget.courseId}/topics/${widget.topicId}/quizzes/${widget.quizId}/questions/?target_language=${widget.targetLanguage}");
+        "${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/${widget.subtopicId}/quizzes/${widget.quizId}/questions/?target_language=${widget.targetLanguage}");
 
     try {
       String? token = await _storage.read(key: "access_token");
@@ -61,18 +64,18 @@ class _TopicQuizScreenState extends State<TopicQuizScreen> {
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(utf8.decode(response.bodyBytes)); // Decode with UTF-8
         setState(() {
-          questions = data.cast<Map<String, dynamic>>();
+          quizQuestions = data.cast<Map<String, dynamic>>();
           isLoading = false;
         });
       } else {
-        _showError("Failed to fetch questions: ${response.statusCode}");
+        _showError("Failed to fetch quiz questions: ${response.statusCode}");
       }
     } catch (e) {
-      _showError("Error fetching questions: $e");
+      _showError("Error fetching quiz questions: $e");
     }
   }
 
-  void _addQuestion() {
+  void _addQuizQuestion() {
     showDialog(
       context: context,
       builder: (context) {
@@ -94,7 +97,7 @@ class _TopicQuizScreenState extends State<TopicQuizScreen> {
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
-              title: Text("Add Question"),
+              title: Text("Add Quiz Question"),
               content: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -140,15 +143,14 @@ class _TopicQuizScreenState extends State<TopicQuizScreen> {
                   onPressed: () async {
                     if (questionController.text.isNotEmpty &&
                         optionControllers.every((controller) => controller.text.isNotEmpty)) {
-                      final success = await _submitQuestion(
+                      final success = await _submitQuizQuestion(
                         question: questionController.text,
-                        options: optionControllers.map((c) => c.text).toList(),
+                        options: optionControllers.map((controller) => controller.text).toList(),
                         correctOption: correctOption,
                       );
-
                       if (success) {
                         Navigator.pop(context);
-                        _fetchQuestions();
+                        _fetchQuizQuestions();
                       }
                     }
                   },
@@ -162,13 +164,13 @@ class _TopicQuizScreenState extends State<TopicQuizScreen> {
     );
   }
 
-  Future<bool> _submitQuestion({
+  Future<bool> _submitQuizQuestion({
     required String question,
     required List<String> options,
     required int correctOption,
   }) async {
     final url = Uri.parse(
-        "${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/${widget.courseId}/topics/${widget.topicId}/quizzes/${widget.quizId}/questions/");
+        "${dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'}/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/${widget.subtopicId}/quizzes/${widget.quizId}/questions/");
 
     try {
       String? token = await _storage.read(key: "access_token");
@@ -184,23 +186,24 @@ class _TopicQuizScreenState extends State<TopicQuizScreen> {
           "Content-Type": "application/json; charset=UTF-8", // Ensure UTF-8 encoding
         },
         body: json.encode({
+          "title": "New Quiz",
           "question_text": question,
           "options": options,
           "correct_option": correctOption,
-          "target_language": widget.targetLanguage, // Include target_language
+          "target_language": widget.targetLanguage,
         }),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final responseData = json.decode(utf8.decode(response.bodyBytes)); // Decode with UTF-8
-        print("✅ Question added successfully: ${responseData["message"]}");
+        debugPrint("✅ Quiz question added successfully: ${responseData["message"]}");
         return true;
       } else {
-        _showError("Failed to add question: ${response.body}");
+        _showError("❌ Failed to add quiz question: ${response.body}");
         return false;
       }
     } catch (e) {
-      _showError("Error submitting question: $e");
+      _showError("🚨 Error submitting quiz question: $e");
       return false;
     }
   }
@@ -209,7 +212,7 @@ class _TopicQuizScreenState extends State<TopicQuizScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message)),
     );
-    print(message);
+    debugPrint(message);
   }
 
   @override
@@ -218,7 +221,7 @@ class _TopicQuizScreenState extends State<TopicQuizScreen> {
       appBar: AppBar(
         backgroundColor: AcademeTheme.appColor,
         title: Text(
-          "${widget.courseTitle} > ${widget.topicTitle} > ${widget.quizTitle}",
+          "${widget.courseTitle} > ${widget.topicTitle} > ${widget.subtopicTitle} > Quiz",
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -226,12 +229,13 @@ class _TopicQuizScreenState extends State<TopicQuizScreen> {
         padding: EdgeInsets.all(16.0),
         child: isLoading
             ? Center(child: CircularProgressIndicator())
-            : questions.isEmpty
-            ? Center(child: Text("No questions added yet."))
+            : quizQuestions.isEmpty
+            ? Center(child: Text("No quiz questions added yet."))
             : ListView.builder(
-          itemCount: questions.length,
+          itemCount: quizQuestions.length,
           itemBuilder: (context, index) {
-            final question = questions[index];
+            final question = quizQuestions[index];
+            final options = question["options"] as List<dynamic>? ?? [];
             return Card(
               margin: EdgeInsets.symmetric(vertical: 8),
               elevation: 4,
@@ -249,20 +253,16 @@ class _TopicQuizScreenState extends State<TopicQuizScreen> {
                     ),
                     SizedBox(height: 8),
                     Column(
-                      children: (question["options"] as List<dynamic>)
-                          .asMap()
-                          .entries
-                          .map((entry) {
-                        int idx = entry.key;
-                        String optionText = entry.value;
-
+                      children: options.asMap().entries.map((entry) {
+                        final idx = entry.key;
+                        final optionText = entry.value.toString();
                         return Container(
                           margin: EdgeInsets.symmetric(vertical: 4),
                           padding: EdgeInsets.all(8),
                           decoration: BoxDecoration(
                             color: question["correct_option"] == idx
-                                ? Colors.green.withOpacity(0.2)
-                                : Colors.grey.withOpacity(0.1),
+                                ? Colors.green.withValues()
+                                : Colors.grey.withValues(),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Row(
@@ -282,7 +282,7 @@ class _TopicQuizScreenState extends State<TopicQuizScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _addQuestion,
+        onPressed: _addQuizQuestion,
         backgroundColor: AcademeTheme.appColor,
         child: Icon(Icons.add, color: Colors.white),
       ),

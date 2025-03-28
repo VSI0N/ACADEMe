@@ -4,18 +4,15 @@ import 'package:ACADEMe/academe_theme.dart';
 import 'package:ACADEMe/localization/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:http/http.dart' as storage;
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../localization/language_provider.dart';
-import '../../../widget/document_preview.dart';
 import '../../../widget/whatsapp_audio.dart';
 import 'quiz.dart';
 import 'package:http/http.dart' as http;
@@ -43,15 +40,14 @@ class FlashCard extends StatefulWidget {
   });
 
   @override
-  _FlashCardState createState() => _FlashCardState();
+  FlashCardState createState() => FlashCardState();
 }
 
 
-class _FlashCardState extends State<FlashCard> {
+class FlashCardState extends State<FlashCard> {
   VideoPlayerController? _videoController;
   ChewieController? _chewieController;
   int _currentPage = 0;
-  late YoutubePlayerController _youtubeController;
   final AudioPlayer _audioPlayer = AudioPlayer();
   bool _hasNavigated = false;
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
@@ -82,7 +78,7 @@ class _FlashCardState extends State<FlashCard> {
   Future<void> fetchTopicDetails() async {
     String? token = await _storage.read(key: 'access_token');
     if (token == null) {
-      print("❌ Missing access token");
+      debugPrint("❌ Missing access token");
       return;
     }
 
@@ -101,7 +97,7 @@ class _FlashCardState extends State<FlashCard> {
         },
       );
 
-      print("🔹 API Response: ${response.body}"); // ✅ Log the response
+      debugPrint("🔹 API Response: ${response.body}"); // ✅ Log the response
 
       if (response.statusCode == 200) {
         // Decode the response body using UTF-8
@@ -113,19 +109,19 @@ class _FlashCardState extends State<FlashCard> {
             final Map<String, dynamic> data = jsonData[0];
             updateTopicDetails(data);
           } else {
-            print(
+            debugPrint(
                 "❌ Unexpected JSON format (List but empty or incorrect structure)");
           }
         } else if (jsonData is Map<String, dynamic>) {
           updateTopicDetails(jsonData);
         } else {
-          print("❌ Unexpected JSON structure: ${jsonData.runtimeType}");
+          debugPrint("❌ Unexpected JSON structure: ${jsonData.runtimeType}");
         }
       } else {
-        print("❌ Failed to fetch topic details: ${response.statusCode}");
+        debugPrint("❌ Failed to fetch topic details: ${response.statusCode}");
       }
     } catch (e) {
-      print("❌ Error fetching topic details: $e");
+      debugPrint("❌ Error fetching topic details: $e");
     } finally {
       setState(() {
         isLoading = false;
@@ -147,8 +143,8 @@ class _FlashCardState extends State<FlashCard> {
 
     if (_currentPage < widget.materials.length &&
         widget.materials[_currentPage]["type"] == "video") {
-      _videoController = VideoPlayerController.network(
-          widget.materials[_currentPage]["content"]!);
+      _videoController = VideoPlayerController.networkUrl(
+          widget.materials[_currentPage]["content"]! as Uri);
 
       _videoController!.initialize().then((_) {
         if (!mounted) return;
@@ -177,7 +173,7 @@ class _FlashCardState extends State<FlashCard> {
           }
         });
       }).catchError((error) {
-        print("Error initializing video: $error");
+        debugPrint("Error initializing video: $error");
       });
     }
   }
@@ -196,19 +192,19 @@ class _FlashCardState extends State<FlashCard> {
   Future<void> _sendProgressToBackend() async {
     String? token = await _storage.read(key: 'access_token');
     if (token == null) {
-      print("❌ Missing access token");
+      debugPrint("❌ Missing access token");
       return;
     }
 
     final material = _currentMaterial();
-    final materialId = material["id"] ?? "material_${_currentPage}";
+    final materialId = material["id"] ?? "material_$_currentPage";
 
     if (materialId == null) {
-      print("❌ Material ID is null");
+      debugPrint("❌ Material ID is null");
       return;
     }
 
-    print("✅ Material ID: $materialId");
+    debugPrint("✅ Material ID: $materialId");
 
     final progressList = await _fetchProgressList();
     final progressExists = progressList.any((progress) =>
@@ -216,7 +212,7 @@ class _FlashCardState extends State<FlashCard> {
         progress["activity_type"] == "reading");
 
     if (progressExists) {
-      print("✅ Progress already exists for material ID: $materialId");
+      debugPrint("✅ Progress already exists for material ID: $materialId");
       return;
     }
 
@@ -244,19 +240,19 @@ class _FlashCardState extends State<FlashCard> {
       );
 
       if (response.statusCode == 200) {
-        print("✅ Progress updated successfully");
+        debugPrint("✅ Progress updated successfully");
       } else {
-        print("❌ Failed to update progress: ${response.statusCode}");
+        debugPrint("❌ Failed to update progress: ${response.statusCode}");
       }
     } catch (e) {
-      print("❌ Error updating progress: $e");
+      debugPrint("❌ Error updating progress: $e");
     }
   }
 
   Future<List<dynamic>> _fetchProgressList() async {
     String? token = await _storage.read(key: 'access_token');
     if (token == null) {
-      print("❌ Missing access token");
+      debugPrint("❌ Missing access token");
       return [];
     }
 
@@ -276,13 +272,13 @@ class _FlashCardState extends State<FlashCard> {
           return responseBody["progress"];
         }
       } else if (response.statusCode == 404) {
-        print("✅ No progress records found, returning empty list");
+        debugPrint("✅ No progress records found, returning empty list");
         return [];
       } else {
-        print("❌ Failed to fetch progress: ${response.statusCode}");
+        debugPrint("❌ Failed to fetch progress: ${response.statusCode}");
       }
     } catch (e) {
-      print("❌ Error fetching progress: $e");
+      debugPrint("❌ Error fetching progress: $e");
     }
     return [];
   }
@@ -397,7 +393,7 @@ class _FlashCardState extends State<FlashCard> {
                               ignoring: true,
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.black.withOpacity(0.4),
+                                  color: Colors.black.withAlpha(40),
                                   borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(20),
                                     topRight: Radius.circular(20),
@@ -930,7 +926,7 @@ class _FlashCardState extends State<FlashCard> {
             child: Center(
               child: ElevatedButton(
                 onPressed: () {
-                  print("Document URL: $docUrl");
+                  debugPrint("Document URL: $docUrl");
                   launchUrl(Uri.parse(docUrl));
                 },
                 child: const Text("Open Document"),
@@ -943,7 +939,7 @@ class _FlashCardState extends State<FlashCard> {
               padding: const EdgeInsets.all(16.0),
               child: ElevatedButton(
                 onPressed: () {
-                  print("Navigating to PDF Viewer with URL: $docUrl");
+                  debugPrint("Navigating to PDF Viewer with URL: $docUrl");
                   Navigator.push(
                     context,
                     MaterialPageRoute(

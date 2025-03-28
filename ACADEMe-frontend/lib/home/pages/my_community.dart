@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../academe_theme.dart';
-import 'package:ACADEMe/home/components/ASKMe_button.dart';
-import 'package:ACADEMe/home/pages/ASKMe.dart';
+import 'package:ACADEMe/home/components/askme_button.dart';
+import 'package:ACADEMe/home/pages/ask_me.dart';
 import 'package:ACADEMe/localization/l10n.dart';
 
 class Mycommunity extends StatelessWidget {
@@ -14,7 +14,7 @@ class Mycommunity extends StatelessWidget {
       onFABPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ASKMe()),
+          MaterialPageRoute(builder: (context) => AskMe()),
         );
       },
       child: DefaultTabController(
@@ -66,7 +66,7 @@ class Mycommunity extends StatelessWidget {
                     borderRadius: BorderRadius.circular(30),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
+                        color: Colors.grey.withAlpha(20),
                         blurRadius: 5,
                         spreadRadius: 1,
                         offset: const Offset(0, 2),

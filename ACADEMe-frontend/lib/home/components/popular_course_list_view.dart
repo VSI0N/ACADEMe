@@ -8,10 +8,10 @@ class PopularCourseListView extends StatefulWidget {
 
   final Function()? callBack;
   @override
-  _PopularCourseListViewState createState() => _PopularCourseListViewState();
+  PopularCourseListViewState createState() => PopularCourseListViewState();
 }
 
-class _PopularCourseListViewState extends State<PopularCourseListView>
+class PopularCourseListViewState extends State<PopularCourseListView>
     with TickerProviderStateMixin {
   AnimationController? animationController;
   @override
@@ -106,128 +106,120 @@ class CategoryView extends StatelessWidget {
                 child: Stack(
                   alignment: AlignmentDirectional.bottomCenter,
                   children: <Widget>[
-                    Container(
-                      child: Column(
-                        children: <Widget>[
-                          Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: HexColor('#F8FAFB'),
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(16.0)),
-                                // border: new Border.all(
-                                //     color: AcademeTheme.notWhite),
-                              ),
-                              child: Column(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Container(
-                                      child: Column(
-                                        children: <Widget>[
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 16, left: 16, right: 16),
-                                            child: Text(
-                                              category!.title,
+                    Column(
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: HexColor('#F8FAFB'),
+                              borderRadius: const BorderRadius.all(
+                                  Radius.circular(16.0)),
+                              // border: new Border.all(
+                              //     color: AcademeTheme.notWhite),
+                            ),
+                            child: Column(
+                              children: <Widget>[
+                                Expanded(
+                                  child: Column(
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 16, left: 16, right: 16),
+                                        child: Text(
+                                          category!.title,
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 16,
+                                            letterSpacing: 0.27,
+                                            color: AcademeTheme.darkerText,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 8,
+                                            left: 16,
+                                            right: 16,
+                                            bottom: 8),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: <Widget>[
+                                            Text(
+                                              '${category!.lessonCount} lesson',
                                               textAlign: TextAlign.left,
                                               style: TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 16,
+                                                fontWeight: FontWeight.w200,
+                                                fontSize: 12,
                                                 letterSpacing: 0.27,
-                                                color: AcademeTheme.darkerText,
+                                                color: AcademeTheme.grey,
                                               ),
                                             ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 8,
-                                                left: 16,
-                                                right: 16,
-                                                bottom: 8),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
+                                            Row(
                                               children: <Widget>[
                                                 Text(
-                                                  '${category!.lessonCount} lesson',
-                                                  textAlign: TextAlign.left,
+                                                  '${category!.rating}',
+                                                  textAlign:
+                                                      TextAlign.left,
                                                   style: TextStyle(
-                                                    fontWeight: FontWeight.w200,
-                                                    fontSize: 12,
+                                                    fontWeight:
+                                                        FontWeight.w200,
+                                                    fontSize: 18,
                                                     letterSpacing: 0.27,
-                                                    color: AcademeTheme.grey,
+                                                    color:
+                                                        AcademeTheme.grey,
                                                   ),
                                                 ),
-                                                Container(
-                                                  child: Row(
-                                                    children: <Widget>[
-                                                      Text(
-                                                        '${category!.rating}',
-                                                        textAlign:
-                                                            TextAlign.left,
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w200,
-                                                          fontSize: 18,
-                                                          letterSpacing: 0.27,
-                                                          color:
-                                                              AcademeTheme.grey,
-                                                        ),
-                                                      ),
-                                                      Icon(
-                                                        Icons.star,
-                                                        color: AcademeTheme
-                                                            .nearlyBlue,
-                                                        size: 20,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                )
+                                                Icon(
+                                                  Icons.star,
+                                                  color: AcademeTheme
+                                                      .nearlyBlue,
+                                                  size: 20,
+                                                ),
                                               ],
-                                            ),
-                                          ),
-                                        ],
+                                            )
+                                          ],
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                  const SizedBox(
-                                    width: 48,
-                                  ),
-                                ],
-                              ),
+                                ),
+                                const SizedBox(
+                                  width: 48,
+                                ),
+                              ],
                             ),
                           ),
-                          const SizedBox(
-                            height: 48,
-                          ),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(
+                          height: 48,
+                        ),
+                      ],
                     ),
-                    Container(
-                      child: Padding(
-                        padding:
-                            const EdgeInsets.only(top: 24, right: 16, left: 16),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(16.0)),
-                            boxShadow: <BoxShadow>[
-                              BoxShadow(
-                                  color: AcademeTheme.grey.withOpacity(0.2),
-                                  offset: const Offset(0.0, 0.0),
-                                  blurRadius: 6.0),
-                            ],
-                          ),
-                          child: ClipRRect(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(16.0)),
-                            child: AspectRatio(
-                                aspectRatio: 1.28,
-                                child: Image.asset(category!.imagePath)),
-                          ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(top: 24, right: 16, left: 16),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(16.0)),
+                          boxShadow: <BoxShadow>[
+                            BoxShadow(
+                                color: AcademeTheme.grey.withAlpha(20),
+                                offset: const Offset(0.0, 0.0),
+                                blurRadius: 6.0),
+                          ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(16.0)),
+                          child: AspectRatio(
+                              aspectRatio: 1.28,
+                              child: Image.asset(category!.imagePath)),
                         ),
                       ),
                     ),

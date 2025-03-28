@@ -4,16 +4,17 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:ACADEMe/home/pages/forgot_password.dart';
 
+
 class EditProfilePage extends StatefulWidget {
   final ScrollController scrollController;
 
   const EditProfilePage({required this.scrollController, super.key});
 
   @override
-  _EditProfilePageState createState() => _EditProfilePageState();
+  EditProfilePageState createState() => EditProfilePageState();
 }
 
-class _EditProfilePageState extends State<EditProfilePage> {
+class EditProfilePageState extends State<EditProfilePage> {
   File? _image;
   final picker = ImagePicker();
 
@@ -72,7 +73,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     onTap: _pickImage,
                     child: CircleAvatar(
                       radius: 60,
-                      backgroundColor: Colors.blue.withOpacity(0.2),
+                      backgroundColor: Colors.blue.withAlpha(20),
                       backgroundImage:
                           _image != null ? FileImage(_image!) : null,
                       child: _image == null

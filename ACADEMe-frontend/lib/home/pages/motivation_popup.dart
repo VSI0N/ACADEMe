@@ -8,7 +8,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:ACADEMe/localization/language_provider.dart';
 
-import 'ASKMe.dart';
+import 'ask_me.dart';
 
 void showMotivationPopup(BuildContext context) {
   showModalBottomSheet(
@@ -24,13 +24,13 @@ void showMotivationPopup(BuildContext context) {
 }
 
 class MotivationPopup extends StatefulWidget {
-  const MotivationPopup({Key? key}) : super(key: key);
+  const MotivationPopup({super.key});
 
   @override
-  _MotivationPopupState createState() => _MotivationPopupState();
+  MotivationPopupState createState() => MotivationPopupState();
 }
 
-class _MotivationPopupState extends State<MotivationPopup> {
+class MotivationPopupState extends State<MotivationPopup> {
   late Future<String> _recommendationFuture;
   final TextEditingController _messageController = TextEditingController();
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
@@ -89,7 +89,7 @@ class _MotivationPopupState extends State<MotivationPopup> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ASKMe(initialMessage: fullMessage),
+          builder: (context) => AskMe(initialMessage: fullMessage),
         ),
       );
 

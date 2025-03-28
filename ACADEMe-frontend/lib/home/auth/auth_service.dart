@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -11,14 +10,14 @@ class AppUser {
   final String email;
   final String name;
   final String studentClass;
-  final String photo_url;
+  final String photoUrl;
 
   AppUser({
     required this.id,
     required this.email,
     required this.name,
     required this.studentClass,
-    required this.photo_url,
+    required this.photoUrl,
   });
 
   factory AppUser.fromJson(Map<String, dynamic> json) {
@@ -27,14 +26,14 @@ class AppUser {
       email: json["email"],
       name: json["name"],
       studentClass: json["student_class"],
-      photo_url: json["photo_url"],
+      photoUrl: json["photo_url"],
     );
   }
 }
 
 class AuthService {
   final firebase_auth.FirebaseAuth _auth = firebase_auth.FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  // final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
@@ -42,7 +41,7 @@ class AuthService {
 
   /// ✅ Sign up user via backend & store access token securely
   Future<(AppUser?, String?)> signUp(String email, String password, String name,
-      String studentClass, String photo_url) async {
+      String studentClass, String photoUrl) async {
     try {
       final response = await http.post(
         Uri.parse("$_baseUrl/api/users/signup"),
@@ -52,7 +51,7 @@ class AuthService {
           "password": password,
           "name": name,
           "student_class": studentClass,
-          "photo_url": photo_url,
+          "photo_url": photoUrl,
         }),
       );
 
@@ -92,7 +91,7 @@ class AuthService {
         final String name = responseData["name"] ?? "Unknown";
         final String userEmail = responseData["email"] ?? "";
         final String studentClass = responseData["student_class"] ?? "SELECT";
-        final String photo_url = responseData["photo_url"] ??
+        final String photoUrl = responseData["photo_url"] ??
             "https://www.w3schools.com/w3images/avatar2.png";
 
         // ✅ Store token securely
@@ -103,7 +102,7 @@ class AuthService {
         await _secureStorage.write(key: "user_name", value: name);
         await _secureStorage.write(key: "user_email", value: userEmail);
         await _secureStorage.write(key: "student_class", value: studentClass);
-        await _secureStorage.write(key: "photo_url", value: photo_url);
+        await _secureStorage.write(key: "photo_url", value: photoUrl);
 
         // ✅ Return the AppUser object with `id`
         return (
@@ -112,7 +111,7 @@ class AuthService {
             name: name,
             email: userEmail,
             studentClass: studentClass,
-            photo_url: photo_url,
+            photoUrl: photoUrl,
           ),
           null
         );
@@ -146,11 +145,12 @@ class AuthService {
 
       final String email = firebaseUser.email ?? "";
       final String name = firebaseUser.displayName ?? "Google User";
-      final String photo_url = firebaseUser.photoURL ??
+      final String photoUrl = firebaseUser.photoURL ??
           "https://www.w3schools.com/w3images/avatar2.png"; // ✅ Default avatar URL
 
-      if (email.isEmpty)
+      if (email.isEmpty) {
         return (null, '❌ Google authentication failed: Email not found');
+      }
 
       const String defaultPassword = "GOOGLE_AUTH_ACADEMe";
       const String defaultClass = "SELECT";
@@ -161,7 +161,7 @@ class AuthService {
       if (!userExists) {
         // ✅ Register user using ACADEMe-backend
         final (_, String? signupError) =
-            await signUp(email, defaultPassword, name, defaultClass, photo_url);
+            await signUp(email, defaultPassword, name, defaultClass, photoUrl);
         if (signupError != null) return (null, "❌ Signup failed: $signupError");
       }
 
@@ -175,7 +175,7 @@ class AuthService {
             email: email,
             name: name,
             studentClass: defaultClass,
-            photo_url: photo_url),
+            photoUrl: photoUrl),
         null
       );
     } catch (e) {
@@ -225,7 +225,7 @@ class AuthService {
     try {
       await _auth.sendPasswordResetEmail(email: email);
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 

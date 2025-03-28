@@ -59,7 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
         });
       }
     } catch (e) {
-      print('Error loading user details from storage: $e');
+      debugPrint('Error loading user details from storage: $e');
       if (mounted) {
         setState(() {
           isLoading = false;
@@ -292,7 +292,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   onTap: () async {
                     try {
                       await AuthService().signOut();
-                      print('✅ User signed out successfully');
+                      debugPrint('✅ User signed out successfully');
 
                       if (mounted) {
                         Navigator.pushAndRemoveUntil(
@@ -312,7 +312,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         );
                       }
                     } catch (e) {
-                      print('❌ Error during logout: $e');
+                      debugPrint('❌ Error during logout: $e');
                     }
                   },
                   showTrailing: false,
@@ -333,17 +333,17 @@ class LanguageSelectionBottomSheet extends StatefulWidget {
   final Function(Locale) onLanguageSelected;
 
   const LanguageSelectionBottomSheet({
-    Key? key,
+    super.key,
     required this.selectedLocale,
     required this.onLanguageSelected,
-  }) : super(key: key);
+  });
 
   @override
-  _LanguageSelectionBottomSheetState createState() =>
-      _LanguageSelectionBottomSheetState();
+  LanguageSelectionBottomSheetState createState() =>
+      LanguageSelectionBottomSheetState();
 }
 
-class _LanguageSelectionBottomSheetState
+class LanguageSelectionBottomSheetState
     extends State<LanguageSelectionBottomSheet> {
   Locale? _selectedLocale;
 

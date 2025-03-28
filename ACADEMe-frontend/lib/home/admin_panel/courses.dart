@@ -9,11 +9,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CourseManagementScreen extends StatefulWidget {
+  const CourseManagementScreen({super.key});
+
   @override
-  _CourseManagementScreenState createState() => _CourseManagementScreenState();
+  CourseManagementScreenState createState() => CourseManagementScreenState();
 }
 
-class _CourseManagementScreenState extends State<CourseManagementScreen> {
+class CourseManagementScreenState extends State<CourseManagementScreen> {
   List<Map<String, dynamic>> courses = [];
   final _storage = FlutterSecureStorage();
   String? _targetLanguage;
@@ -36,7 +38,7 @@ class _CourseManagementScreenState extends State<CourseManagementScreen> {
   void _loadCourses() async {
     String? token = await _storage.read(key: "access_token");
     if (token == null) {
-      print("No access token found");
+      debugPrint("No access token found");
       return;
     }
 
@@ -59,7 +61,7 @@ class _CourseManagementScreenState extends State<CourseManagementScreen> {
         }).toList();
       });
     } else {
-      print("Failed to fetch courses: ${response.body}");
+      debugPrint("Failed to fetch courses: ${response.body}");
     }
   }
 
@@ -100,7 +102,7 @@ class _CourseManagementScreenState extends State<CourseManagementScreen> {
               onPressed: () async {
                 String? token = await _storage.read(key: "access_token");
                 if (token == null) {
-                  print("No access token found");
+                  debugPrint("No access token found");
                   return;
                 }
 
@@ -123,7 +125,7 @@ class _CourseManagementScreenState extends State<CourseManagementScreen> {
                     _loadCourses();
                   });
                 } else {
-                  print("Failed to add course: ${response.body}");
+                  debugPrint("Failed to add course: ${response.body}");
                 }
               },
               child: Text(L10n.getTranslatedText(context, 'Add')),

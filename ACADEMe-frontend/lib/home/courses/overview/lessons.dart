@@ -22,10 +22,10 @@ class LessonsSection extends StatefulWidget {
   });
 
   @override
-  _LessonsSectionState createState() => _LessonsSectionState();
+  LessonsSectionState createState() => LessonsSectionState();
 }
 
-class _LessonsSectionState extends State<LessonsSection> {
+class LessonsSectionState extends State<LessonsSection> {
   final FlutterSecureStorage storage = const FlutterSecureStorage();
   final String backendUrl = dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
 
@@ -64,7 +64,7 @@ class _LessonsSectionState extends State<LessonsSection> {
 
     String? token = await storage.read(key: 'access_token');
     if (token == null) {
-      print("❌ Missing access token");
+      debugPrint("❌ Missing access token");
       setState(() {
         isLoading = false;
       });
@@ -104,10 +104,10 @@ class _LessonsSectionState extends State<LessonsSection> {
           };
         });
       } else {
-        print("❌ Failed to fetch subtopics: ${response.statusCode}");
+        debugPrint("❌ Failed to fetch subtopics: ${response.statusCode}");
       }
     } catch (e) {
-      print("❌ Error fetching subtopics: $e");
+      debugPrint("❌ Error fetching subtopics: $e");
     } finally {
       setState(() {
         isLoading = false;
@@ -150,7 +150,7 @@ class _LessonsSectionState extends State<LessonsSection> {
           };
         }).toList();
       } else {
-        print("❌ Failed to fetch materials: ${materialsResponse.statusCode}");
+        debugPrint("❌ Failed to fetch materials: ${materialsResponse.statusCode}");
       }
 
       // Fetch Quizzes
@@ -201,25 +201,25 @@ class _LessonsSectionState extends State<LessonsSection> {
               });
             }
           } else {
-            print(
+            debugPrint(
                 "❌ Failed to fetch questions for quiz $quizId: ${questionsResponse.statusCode}");
           }
         }
 
         // Print quizzes data for debugging
-        print("✅ Quizzes fetched successfully:");
+        debugPrint("✅ Quizzes fetched successfully:");
         for (var quiz in quizzesList) {
-          print("Quiz ID: ${quiz["id"]}");
-          print("Title: ${quiz["title"]}");
-          print("Difficulty: ${quiz["difficulty"]}");
-          print("Question Count: ${quiz["question_count"]}");
-          print("Question Text: ${quiz["question_text"]}");
-          print("Options: ${quiz["options"]}");
-          print("Correct Option: ${quiz["correct_option"]}");
-          print("-----------------------------");
+          debugPrint("Quiz ID: ${quiz["id"]}");
+          debugPrint("Title: ${quiz["title"]}");
+          debugPrint("Difficulty: ${quiz["difficulty"]}");
+          debugPrint("Question Count: ${quiz["question_count"]}");
+          debugPrint("Question Text: ${quiz["question_text"]}");
+          debugPrint("Options: ${quiz["options"]}");
+          debugPrint("Correct Option: ${quiz["correct_option"]}");
+          debugPrint("-----------------------------");
         }
       } else {
-        print("❌ Failed to fetch quizzes: ${quizzesResponse.statusCode}");
+        debugPrint("❌ Failed to fetch quizzes: ${quizzesResponse.statusCode}");
       }
 
       setState(() {
@@ -227,7 +227,7 @@ class _LessonsSectionState extends State<LessonsSection> {
         subtopicQuizzes[subtopicId] = quizzesList;
       });
     } catch (e) {
-      print("❌ Error fetching materials/quizzes: $e");
+      debugPrint("❌ Error fetching materials/quizzes: $e");
     }
   }
 
@@ -278,7 +278,7 @@ class _LessonsSectionState extends State<LessonsSection> {
                         _buildLessonsAndQuizzes(subtopicIds[section]!),
                     ],
                   );
-                }).toList(),
+                }),
               ],
             ),
           ),
@@ -467,7 +467,7 @@ class _LessonsSectionState extends State<LessonsSection> {
     // Check if there is a next subtopic
     if (currentIndex < subtopicIds.length - 1) {
       String nextSubtopicId = subtopicIds.values.toList()[currentIndex + 1];
-      String nextSubtopicTitle = subtopicIds.keys.toList()[currentIndex + 1];
+      // String nextSubtopicTitle = subtopicIds.keys.toList()[currentIndex + 1];
 
       // Fetch materials and quizzes for the next subtopic
       fetchMaterialsAndQuizzes(nextSubtopicId).then((_) {

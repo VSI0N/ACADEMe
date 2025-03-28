@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:ACADEMe/academe_theme.dart';
-import 'package:ACADEMe/home/pages/MotivationPopup.dart';
+import 'package:ACADEMe/home/pages/motivation_popup.dart';
 import 'package:ACADEMe/localization/l10n.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -90,7 +90,7 @@ class ProgressScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
+    // final width = MediaQuery.of(context).size.width;
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -358,7 +358,7 @@ class ProgressScreen extends StatelessWidget {
         gridData: FlGridData(
           show: true,
           getDrawingHorizontalLine: (value) =>
-              FlLine(color: Colors.white.withOpacity(0.2), strokeWidth: 1),
+              FlLine(color: Colors.white.withAlpha(20), strokeWidth: 1),
           drawVerticalLine: false,
         ),
         borderData: FlBorderData(
@@ -411,7 +411,7 @@ class ProgressScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
+                              color: Colors.black.withAlpha(10),
                               blurRadius: 6,
                               offset: const Offset(0, 4),
                             ),
@@ -439,7 +439,7 @@ class ProgressScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
+                              color: Colors.black.withAlpha(10),
                               blurRadius: 6,
                               offset: const Offset(0, 4),
                             ),
@@ -469,7 +469,7 @@ class ProgressScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
+                        color: Colors.black.withAlpha(10),
                         blurRadius: 6,
                         offset: const Offset(0, 4),
                       ),
@@ -745,7 +745,7 @@ class ProgressScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
+            color: Colors.grey.withAlpha(20),
             blurRadius: 5,
             spreadRadius: 2,
             offset: Offset(0, 3),

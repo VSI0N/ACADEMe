@@ -1,4 +1,3 @@
-import 'package:ACADEMe/academe_theme.dart';
 import 'package:flutter/material.dart';
 
 class ASKMeButton extends StatelessWidget {
@@ -10,8 +9,8 @@ class ASKMeButton extends StatelessWidget {
     required this.child,
     this.showFAB = true,
     this.onFABPressed, // Accepting the callback
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

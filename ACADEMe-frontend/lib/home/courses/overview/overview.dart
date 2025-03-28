@@ -18,10 +18,10 @@ class OverviewScreen extends StatefulWidget {
       {super.key, required this.courseId, required this.topicId});
 
   @override
-  _OverviewScreenState createState() => _OverviewScreenState();
+  OverviewScreenState createState() => OverviewScreenState();
 }
 
-class _OverviewScreenState extends State<OverviewScreen>
+class OverviewScreenState extends State<OverviewScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   late ScrollController _scrollController;
@@ -50,7 +50,7 @@ class _OverviewScreenState extends State<OverviewScreen>
   Future<void> fetchTopicDetails() async {
     String? token = await storage.read(key: 'access_token');
     if (token == null) {
-      print("❌ Missing access token");
+      debugPrint("❌ Missing access token");
       return;
     }
 
@@ -68,7 +68,7 @@ class _OverviewScreenState extends State<OverviewScreen>
         },
       );
 
-      print("🔹 Topic API Response: ${response.body}");
+      debugPrint("🔹 Topic API Response: ${response.body}");
 
       if (response.statusCode == 200) {
         final String responseBody = utf8.decode(response.bodyBytes);
@@ -85,14 +85,14 @@ class _OverviewScreenState extends State<OverviewScreen>
         }
       }
     } catch (e) {
-      print("❌ Error fetching topic details: $e");
+      debugPrint("❌ Error fetching topic details: $e");
     }
   }
 
   Future<void> fetchSubtopicData() async {
     String? token = await storage.read(key: 'access_token');
     if (token == null) {
-      print("❌ Missing access token");
+      debugPrint("❌ Missing access token");
       return;
     }
 
@@ -116,7 +116,7 @@ class _OverviewScreenState extends State<OverviewScreen>
         });
       }
     } catch (e) {
-      print("❌ Error fetching subtopic data: $e");
+      debugPrint("❌ Error fetching subtopic data: $e");
     } finally {
       setState(() {
         isLoading = false;
