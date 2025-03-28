@@ -62,6 +62,8 @@ class L10n {
     Locale('hi', ''),
     Locale('es', ''),
     Locale('fr', ''),
+    Locale('zh', ''),
+    Locale('de', ''),
   ];
 
   /// Get the supported locale, defaulting to English if not found
@@ -83,6 +85,10 @@ class L10n {
         return "Español (Spanish)";
       case 'fr':
         return "Français (French)";
+      case 'zh':
+        return "中文 (Chinese)";
+      case 'de':
+        return "Deutsch (German)";
       default:
         return "English";
     }
