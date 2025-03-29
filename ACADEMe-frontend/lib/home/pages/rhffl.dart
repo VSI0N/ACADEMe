@@ -572,42 +572,54 @@ class AskMeState extends State<AskMe> {
         backgroundColor: AcademeTheme.appColor,
         elevation: 2,
         iconTheme: IconThemeData(color: Colors.white),
-        leading: IconButton(
-          icon: Icon(Icons.menu,
-              size: 28, color: Colors.white), // Custom hamburger icon
-          onPressed: () {
-            _scaffoldKey.currentState?.openDrawer(); // Open the drawer
-          },
-        ),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Text(
-                'ASKMe',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-              ),
-            ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(icon: newChatIcon(), onPressed: () {}),
-                IconButton(
-                  icon: Icon(Icons.translate, size: 28, color: Colors.white),
+        automaticallyImplyLeading: false, // Removes the reserved space for the menu
+        title: SizedBox(
+          height: kToolbarHeight, // Ensures full height usage
+          child: Stack(
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: IconButton(
+                  icon: Icon(Icons.menu, size: 28, color: Colors.white), // Custom menu icon
                   onPressed: () {
-                    _showLanguageSelection();
+                    _scaffoldKey.currentState?.openDrawer(); // Open the drawer
                   },
                 ),
-              ],
-            ),
-          ],
+              ),
+              Center(
+                child: Text(
+                  'ASKMe',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(icon: newChatIcon(), onPressed: () {}),
+                    IconButton(
+                      icon: Icon(Icons.translate, size: 28, color: Colors.white),
+                      onPressed: () {
+                        _showLanguageSelection();
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
+
+
+
+
+
 
       // Drawer for chat history
       drawer: ChatHistoryDrawer(
@@ -654,17 +666,17 @@ class AskMeState extends State<AskMe> {
                               _buildAttachmentOption(
                                   context,
                                   Icons.insert_drive_file,
-                                L10n.getTranslatedText(context, 'Document'),
+                                  L10n.getTranslatedText(context, 'Document'),
                                   Colors.green,
                                   'Document'),
                               _buildAttachmentOption(
                                   context,
                                   Icons.video_library,
-                                L10n.getTranslatedText(context, 'Video'),
+                                  L10n.getTranslatedText(context, 'Video'),
                                   Colors.orange,
                                   'Video'),
                               _buildAttachmentOption(context, Icons.audiotrack,
-                        L10n.getTranslatedText(context, 'Audio'), Colors.purple, 'Audio'),
+                                  L10n.getTranslatedText(context, 'Audio'), Colors.purple, 'Audio'),
                             ],
                           ),
                         );
@@ -1019,9 +1031,10 @@ class AskMeState extends State<AskMe> {
                 ],
               ),
             if (!isUser && message["isTyping"] != true)
-              if (!isUser && message["isTyping"] != true)
-                Row(
-                  mainAxisSize: MainAxisSize.min,
+              Positioned(
+                bottom: -10,
+                left: 0,
+                child: Row(
                   children: [
                     IconButton(
                       icon: Icon(Icons.flag, color: Colors.grey[600], size: 18),
@@ -1032,7 +1045,8 @@ class AskMeState extends State<AskMe> {
                     IconButton(
                       icon: Icon(Icons.content_copy, size: 18),
                       onPressed: () {
-                        Clipboard.setData(ClipboardData(text: message["text"]));
+                        Clipboard.setData(
+                            ClipboardData(text: message["text"]));
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text('Copied to clipboard'),
@@ -1043,6 +1057,7 @@ class AskMeState extends State<AskMe> {
                     ),
                   ],
                 ),
+              ),
 
             // Typing Indicator
             if (message["isTyping"] == true) TypingIndicator(),
@@ -1059,18 +1074,17 @@ class AskMeState extends State<AskMe> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Report Message"),
+          title: Text(L10n.getTranslatedText(context, 'Report Message')),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text("Please describe the issue:"),
               SizedBox(height: 10),
               TextField(
                 controller: reportController,
                 maxLines: 3,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: "Enter your reason for reporting...",
+                  hintText: "${L10n.getTranslatedText(context, 'Enter your reason for reporting')}...",
                 ),
               ),
             ],
@@ -1078,14 +1092,14 @@ class AskMeState extends State<AskMe> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text("Cancel"),
+              child: Text(L10n.getTranslatedText(context, 'Cancel')),
             ),
             TextButton(
               onPressed: () {
                 _submitReport(message, reportController.text);
                 Navigator.pop(context);
               },
-              child: Text("Send"),
+              child: Text(L10n.getTranslatedText(context, 'Send')),
             ),
           ],
         );
@@ -1102,6 +1116,8 @@ class AskMeState extends State<AskMe> {
       ),
     );
   }
+
+
   Widget newChatIcon() {
     return Stack(
       clipBehavior: Clip.none,
