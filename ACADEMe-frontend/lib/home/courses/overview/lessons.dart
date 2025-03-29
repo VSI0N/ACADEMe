@@ -82,7 +82,7 @@ class LessonsSectionState extends State<LessonsSection> {
     try {
       final response = await http.get(
         Uri.parse(
-            '$backendUrl/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/?target_language=$targetLanguage'),
+            '$backendUrl/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/?target_language=$targetLanguage&order_by=created_at'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json; charset=UTF-8',
@@ -134,7 +134,7 @@ class LessonsSectionState extends State<LessonsSection> {
       // Fetch Materials
       final materialsResponse = await http.get(
         Uri.parse(
-            '$backendUrl/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/$subtopicId/materials/?target_language=$targetLanguage'),
+            '$backendUrl/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/$subtopicId/materials/?target_language=$targetLanguage&order_by=created_at'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json; charset=UTF-8',
@@ -153,6 +153,7 @@ class LessonsSectionState extends State<LessonsSection> {
             "type": m["type"] ?? "Unknown",
             "category": m["category"] ?? "Unknown",
             "optional_text": m["optional_text"] ?? "",
+            "created_at": m["created_at"] ?? "",
           };
         }).toList();
       } else {
@@ -163,7 +164,7 @@ class LessonsSectionState extends State<LessonsSection> {
       // Fetch Quizzes
       final quizzesResponse = await http.get(
         Uri.parse(
-            '$backendUrl/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/$subtopicId/quizzes/?target_language=$targetLanguage'),
+            '$backendUrl/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/$subtopicId/quizzes/?target_language=$targetLanguage&order_by=created_at'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json; charset=UTF-8',
@@ -181,7 +182,7 @@ class LessonsSectionState extends State<LessonsSection> {
           final quizId = quiz["id"]?.toString() ?? "N/A";
           final questionsResponse = await http.get(
             Uri.parse(
-                '$backendUrl/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/$subtopicId/quizzes/$quizId/questions/?target_language=$targetLanguage'),
+                '$backendUrl/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/$subtopicId/quizzes/$quizId/questions/?target_language=$targetLanguage&order_by=created_at'),
             headers: {
               'Authorization': 'Bearer $token',
               'Content-Type': 'application/json; charset=UTF-8',
@@ -205,6 +206,7 @@ class LessonsSectionState extends State<LessonsSection> {
                     (question["options"] as List<dynamic>?)?.cast<String>() ??
                         ["No options available"],
                 "correct_option": question["correct_option"] ?? 0,
+                "created_at": quiz["created_at"] ?? "",
               });
             }
           } else {
@@ -223,6 +225,7 @@ class LessonsSectionState extends State<LessonsSection> {
           debugPrint("Question Text: ${quiz["question_text"]}");
           debugPrint("Options: ${quiz["options"]}");
           debugPrint("Correct Option: ${quiz["correct_option"]}");
+          debugPrint("Created At: ${quiz["created_at"]}");
           debugPrint("-----------------------------");
         }
       } else {

@@ -12,7 +12,7 @@ async def create_course(course: CourseCreate, user: dict = Depends(get_current_u
     if user["role"] != "admin":
         raise HTTPException(status_code=403, detail="Permission denied: Admins only")
 
-    created_course = await CourseService.create_course(course)  # ✅ Pass course model directly
+    created_course = await CourseService.create_course(course)
 
     if not created_course:
         raise HTTPException(status_code=400, detail="Course creation failed")
@@ -23,4 +23,11 @@ async def create_course(course: CourseCreate, user: dict = Depends(get_current_u
 async def get_courses(target_language: str = "en", user: dict = Depends(get_current_user)):
     """Fetches all courses in the specified language."""
     all_courses = CourseService.get_courses(target_language)
-    return filter_courses_by_class(all_courses, user["student_class"])
+    filtered_courses = filter_courses_by_class(all_courses, user["student_class"])
+    
+    # Convert Pydantic models to dictionaries if needed
+    if filtered_courses and hasattr(filtered_courses[0], 'dict'):
+        filtered_courses = [course.dict() for course in filtered_courses]
+    
+    # Sort courses by created_at in ascending order (oldest first)
+    return sorted(filtered_courses, key=lambda x: x['created_at'])

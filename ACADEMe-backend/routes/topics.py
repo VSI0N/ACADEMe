@@ -24,8 +24,9 @@ async def add_topic(course_id: str, topic: TopicCreate, user: dict = Depends(get
 @router.get("/{course_id}/topics/", response_model=list)
 async def fetch_topics(course_id: str, target_language: str = Query("en"), user: dict = Depends(get_current_user)):
     """Fetches all topics under a specific course in the requested language."""
-    return await TopicService.get_all_topics(course_id, target_language)
-
+    topics = await TopicService.get_all_topics(course_id, target_language)
+    # Sort topics by created_at in ascending order (oldest first)
+    return sorted(topics, key=lambda x: x['created_at'])
 
 ### 📌 SUBTOPIC ROUTES ###
 
@@ -39,10 +40,16 @@ async def add_subtopic(course_id: str, topic_id: str, subtopic: SubtopicCreate, 
     return await TopicService.create_subtopic(course_id, topic_id, subtopic_id, subtopic)
 
 @router.get("/{course_id}/topics/{topic_id}/subtopics/", response_model=list)
-async def fetch_subtopics(course_id: str, topic_id: str, target_language: str = Query("en"), user: dict = Depends(get_current_user)):
+async def fetch_subtopics(
+    course_id: str, 
+    topic_id: str, 
+    target_language: str = Query("en"), 
+    user: dict = Depends(get_current_user)
+):
     """Fetches all subtopics under a topic in the requested language."""
-    return await TopicService.get_subtopics_by_topic(course_id, topic_id, target_language)
-
+    subtopics = await TopicService.get_subtopics_by_topic(course_id, topic_id, target_language)
+    # Sort subtopics by created_at in ascending order (oldest first)
+    return sorted(subtopics, key=lambda x: x['created_at'])
 
 ### 📌 STUDY MATERIAL ROUTES (FOR TOPICS & SUBTOPICS) ###
 
@@ -61,11 +68,9 @@ async def add_material_to_topic(
     if user["role"] != "admin":
         raise HTTPException(status_code=403, detail="Permission denied: Admins only")
     
-    """Handles material upload (text, image, video, audio, document) under a topic."""
-
     material_data = await handle_material_upload(course_id, topic_id, None, type, category, optional_text, text_content, file)
 
-    if not material_data:  # ✅ Ensure material_data is valid
+    if not material_data:
         raise HTTPException(status_code=500, detail="Material data processing failed.")
 
     return await MaterialService.add_material(course_id, topic_id, material_data)
@@ -78,8 +83,9 @@ async def fetch_materials_from_topic(
     user: dict = Depends(get_current_user)
 ):
     """Fetches all study materials under a topic in the requested language."""
-    return await MaterialService.get_materials(course_id, topic_id, target_language=target_language)
-
+    materials = await MaterialService.get_materials(course_id, topic_id, target_language=target_language)
+    # Sort materials by created_at in ascending order (oldest first)
+    return sorted(materials, key=lambda x: x.created_at)
 
 @router.post("/{course_id}/topics/{topic_id}/subtopics/{subtopic_id}/materials/", response_model=MaterialResponse)
 async def add_material_to_subtopic(
@@ -97,16 +103,11 @@ async def add_material_to_subtopic(
     if user["role"] != "admin":
         raise HTTPException(status_code=403, detail="Permission denied: Admins only")
     
-    """Adds a study material under a subtopic."""
-
-    # ✅ Process material data
     material_data = await handle_material_upload(course_id, topic_id, subtopic_id, type, category, optional_text, text_content, file)
 
-    # ✅ Ensure material_data is valid
     if not material_data:
         raise HTTPException(status_code=500, detail="Material data processing failed.")
 
-    # ✅ Correctly pass topic_id and subtopic_id
     return await MaterialService.add_material(course_id, topic_id, material_data, is_subtopic=True, subtopic_id=subtopic_id)
 
 @router.get("/{course_id}/topics/{topic_id}/subtopics/{subtopic_id}/materials/", response_model=list[MaterialResponse])
@@ -118,7 +119,9 @@ async def fetch_materials_from_subtopic(
     user: dict = Depends(get_current_user)
 ):
     """Fetches all study materials under a subtopic in the requested language."""
-    return await MaterialService.get_materials(course_id, topic_id, target_language=target_language, subtopic_id=subtopic_id, is_subtopic=True)
+    materials = await MaterialService.get_materials(course_id, topic_id, target_language=target_language, subtopic_id=subtopic_id, is_subtopic=True)
+    # Sort materials by created_at in ascending order (oldest first)
+    return sorted(materials, key=lambda x: x.created_at)
 
 ### 📌 Utility Function to Handle File Uploads ###
 async def handle_material_upload(
@@ -129,18 +132,17 @@ async def handle_material_upload(
     type = type.lower()
     category = category.lower()
     
-    file_url = None  # Initialize file_url
+    file_url = None
 
     if type == "text":
         if not content:
             raise HTTPException(status_code=422, detail="Text content is required for 'text' type materials.")
-        file_url = content  # ✅ Store text directly
+        file_url = content
 
     elif type in ["image", "video", "audio", "document"]:  
         if not file:
             raise HTTPException(status_code=422, detail=f"File is required for '{type}' type materials.")
 
-        # ✅ Validate File MIME Type
         allowed_types = {
             "image": ["image/jpeg", "image/png", "image/webp"],
             "video": ["video/mp4", "video/mkv", "video/avi"],
@@ -150,7 +152,6 @@ async def handle_material_upload(
         if file.content_type not in allowed_types.get(type, []):
             raise HTTPException(status_code=415, detail=f"Invalid file type '{file.content_type}' for {type} materials.")
 
-        # ✅ Upload to Cloudinary
         try:
             file_url = await CloudinaryService.upload_file(file, "materials")
             if not file_url:
@@ -161,16 +162,14 @@ async def handle_material_upload(
     else:
         raise HTTPException(status_code=400, detail="Invalid request: Provide a valid type (text, image, video, audio, document).")
 
-    # ✅ Ensure `file_url` or `content` is not None
     if not file_url:
         raise HTTPException(status_code=500, detail="Failed to process material content.")
 
-    # ✅ Construct material response
     material_response = MaterialResponse(
         id=str(uuid.uuid4()),
         course_id=course_id,
-        topic_id=topic_id,  # `None` for subtopics
-        subtopic_id=subtopic_id,  # `None` for topics
+        topic_id=topic_id,
+        subtopic_id=subtopic_id,
         type=type,
         category=category,
         content=file_url,
@@ -179,4 +178,4 @@ async def handle_material_upload(
         updated_at=datetime.utcnow().isoformat(),
     )
 
-    return material_response.model_dump()  # ✅ Convert to dict
+    return material_response.model_dump()
