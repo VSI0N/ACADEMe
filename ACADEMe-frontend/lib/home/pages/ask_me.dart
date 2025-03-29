@@ -2,6 +2,7 @@ import 'package:ACADEMe/academe_theme.dart';
 import 'package:ACADEMe/localization/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
 import 'package:http/http.dart' as http;
@@ -571,42 +572,54 @@ class AskMeState extends State<AskMe> {
         backgroundColor: AcademeTheme.appColor,
         elevation: 2,
         iconTheme: IconThemeData(color: Colors.white),
-        leading: IconButton(
-          icon: Icon(Icons.menu,
-              size: 28, color: Colors.white), // Custom hamburger icon
-          onPressed: () {
-            _scaffoldKey.currentState?.openDrawer(); // Open the drawer
-          },
-        ),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Text(
-                'ASKMe',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-              ),
-            ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(icon: newChatIcon(), onPressed: () {}),
-                IconButton(
-                  icon: Icon(Icons.translate, size: 28, color: Colors.white),
+        automaticallyImplyLeading: false, // Removes the reserved space for the menu
+        title: SizedBox(
+          height: kToolbarHeight, // Ensures full height usage
+          child: Stack(
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: IconButton(
+                  icon: Icon(Icons.menu, size: 28, color: Colors.white), // Custom menu icon
                   onPressed: () {
-                    _showLanguageSelection();
+                    _scaffoldKey.currentState?.openDrawer(); // Open the drawer
                   },
                 ),
-              ],
-            ),
-          ],
+              ),
+              Center(
+                child: Text(
+                  'ASKMe',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(icon: newChatIcon(), onPressed: () {}),
+                    IconButton(
+                      icon: Icon(Icons.translate, size: 28, color: Colors.white),
+                      onPressed: () {
+                        _showLanguageSelection();
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
+
+
+
+
+
 
       // Drawer for chat history
       drawer: ChatHistoryDrawer(
@@ -649,21 +662,21 @@ class AskMeState extends State<AskMe> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               _buildAttachmentOption(context, Icons.image,
-                                  "Image", Colors.blue, 'Image'),
+                                  L10n.getTranslatedText(context, 'Image'), Colors.blue, 'Image'),
                               _buildAttachmentOption(
                                   context,
                                   Icons.insert_drive_file,
-                                  "Document",
+                                L10n.getTranslatedText(context, 'Document'),
                                   Colors.green,
                                   'Document'),
                               _buildAttachmentOption(
                                   context,
                                   Icons.video_library,
-                                  "Video",
+                                L10n.getTranslatedText(context, 'Video'),
                                   Colors.orange,
                                   'Video'),
                               _buildAttachmentOption(context, Icons.audiotrack,
-                                  "Audio", Colors.purple, 'Audio'),
+                        L10n.getTranslatedText(context, 'Audio'), Colors.purple, 'Audio'),
                             ],
                           ),
                         );
@@ -970,36 +983,80 @@ class AskMeState extends State<AskMe> {
 
             // Chat Message Bubble
             if (message.containsKey("text") && message["isTyping"] != true)
-              Container(
-                constraints: BoxConstraints(
-                  maxWidth: isUser
-                      ? MediaQuery.of(context).size.width * 0.60
-                      : MediaQuery.of(context).size.width * 0.80,
-                ),
-                padding: EdgeInsets.all(15),
-                margin: EdgeInsets.symmetric(vertical: 5),
-                decoration: BoxDecoration(
-                  gradient: isUser
-                      ? LinearGradient(
-                    colors: [Colors.blue[300]!, Colors.blue[700]!],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  )
-                      : null,
-                  color: isUser ? null : Colors.grey[300]!,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: isUser
-                      ? [
-                    BoxShadow(
-                      color: Colors.black.withAlpha(15),
-                      blurRadius: 6,
-                      offset: Offset(2, 4),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Stack(
+                    children: [
+                      Container(
+                        constraints: BoxConstraints(
+                          maxWidth: isUser
+                              ? MediaQuery.of(context).size.width * 0.60
+                              : MediaQuery.of(context).size.width * 0.80,
+                        ),
+                        padding: EdgeInsets.all(15),
+                        margin: EdgeInsets.symmetric(vertical: 5),
+                        decoration: BoxDecoration(
+                          gradient: isUser
+                              ? LinearGradient(
+                            colors: [
+                              Colors.blue[300]!,
+                              Colors.blue[700]!
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          )
+                              : null,
+                          color: isUser ? null : Colors.grey[300]!,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: isUser
+                              ? [
+                            BoxShadow(
+                              color: Colors.black.withAlpha(15),
+                              blurRadius: 6,
+                              offset: Offset(2, 4),
+                            ),
+                          ]
+                              : [],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _parseInlineBoldText(message["text"], isUser),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            if (!isUser && message["isTyping"] != true)
+              Positioned(
+                bottom: -10,
+                left: 0,
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.flag, color: Colors.grey[600], size: 18),
+                      onPressed: () {
+                        _showReportDialog(context, message);
+                      },
                     ),
-                  ]
-                      : [],
+                    IconButton(
+                      icon: Icon(Icons.content_copy, size: 18),
+                      onPressed: () {
+                        Clipboard.setData(
+                            ClipboardData(text: message["text"]));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Copied to clipboard'),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 ),
-                child: _parseInlineBoldText(
-                    message["text"], isUser), // Parse Gemini response
               ),
 
             // Typing Indicator
@@ -1009,6 +1066,57 @@ class AskMeState extends State<AskMe> {
       },
     );
   }
+
+  void _showReportDialog(BuildContext context, Map<String, dynamic> message) {
+    TextEditingController reportController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(L10n.getTranslatedText(context, 'Report Message')),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(height: 10),
+              TextField(
+                controller: reportController,
+                maxLines: 3,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: "${L10n.getTranslatedText(context, 'Enter your reason for reporting')}...",
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(L10n.getTranslatedText(context, 'Cancel')),
+            ),
+            TextButton(
+              onPressed: () {
+                _submitReport(message, reportController.text);
+                Navigator.pop(context);
+              },
+              child: Text(L10n.getTranslatedText(context, 'Send')),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _submitReport(Map<String, dynamic> message, String reportReason) {
+    print("Reported message: ${message["text"]} | Reason: $reportReason");
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Report submitted."),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
 
   Widget newChatIcon() {
     return Stack(

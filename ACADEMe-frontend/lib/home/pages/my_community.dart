@@ -95,9 +95,10 @@ class Mycommunity extends StatelessWidget {
               Container(
                 color: Colors.white,
                 child: TabBar(
-                  indicatorColor: Colors.black,
-                  labelColor: Colors.black,
+                  indicatorColor: Colors.blue,
+                  labelColor: Colors.blue,
                   unselectedLabelColor: Colors.black,
+                  indicatorSize: TabBarIndicatorSize.tab,
                   tabs: [
                     Tab(text: L10n.getTranslatedText(context, 'Forums')),
                     Tab(text: L10n.getTranslatedText(context, 'Groups')),

@@ -1,4 +1,5 @@
 import 'package:ACADEMe/academe_theme.dart';
+import 'package:ACADEMe/localization/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -165,7 +166,7 @@ class SubTopicContentState extends State<SubTopicContent>
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
-              title: Text("Add Subtopic Material"),
+              title: Text(L10n.getTranslatedText(context, 'Add Subtopic Material')),
               content: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -225,7 +226,7 @@ class SubTopicContentState extends State<SubTopicContent>
                     ],
                     SizedBox(height: 10),
                     TextField(
-                      decoration: InputDecoration(labelText: "Optional Text"),
+                      decoration: InputDecoration(labelText: L10n.getTranslatedText(context, 'Optional Text')),
                       onChanged: (value) =>
                           setDialogState(() => optionalText = value),
                     ),
@@ -235,7 +236,7 @@ class SubTopicContentState extends State<SubTopicContent>
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text("Cancel"),
+                  child: Text(L10n.getTranslatedText(context, 'Cancel')),
                 ),
                 ElevatedButton(
                   onPressed: () async {
@@ -269,7 +270,7 @@ class SubTopicContentState extends State<SubTopicContent>
                       _showError("Please select type and category!");
                     }
                   },
-                  child: Text("Upload"),
+                  child: Text(L10n.getTranslatedText(context, 'Upload')),
                 ),
               ],
             );
@@ -343,17 +344,17 @@ class SubTopicContentState extends State<SubTopicContent>
             TextEditingController();
 
         return AlertDialog(
-          title: Text("Add Subtopic Quiz"),
+          title: Text(L10n.getTranslatedText(context, 'Add Subtopic Quiz')),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: titleController,
-                decoration: InputDecoration(labelText: "Title"),
+                decoration: InputDecoration(labelText: L10n.getTranslatedText(context, 'Title')),
               ),
               TextField(
                 controller: descriptionController,
-                decoration: InputDecoration(labelText: "Description"),
+                decoration: InputDecoration(labelText: L10n.getTranslatedText(context, 'Description')),
                 maxLines: 3,
               ),
             ],
@@ -361,7 +362,7 @@ class SubTopicContentState extends State<SubTopicContent>
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text("Cancel"),
+              child: Text(L10n.getTranslatedText(context, 'Cancel')),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -380,7 +381,7 @@ class SubTopicContentState extends State<SubTopicContent>
                   }
                 }
               },
-              child: Text("Add"),
+              child: Text(L10n.getTranslatedText(context, 'Add')),
             ),
           ],
         );
@@ -449,9 +450,9 @@ class SubTopicContentState extends State<SubTopicContent>
           labelColor: Colors.white, // Set tab text color to white
           unselectedLabelColor:
               Colors.white.withValues(), // Set unselected tab text color
-          tabs: const [
-            Tab(text: "Subtopic Materials"),
-            Tab(text: "Subtopic Quizzes"),
+          tabs: [
+            Tab(text: L10n.getTranslatedText(context, 'Subtopic Materials')),
+            Tab(text: L10n.getTranslatedText(context, 'Subtopic Quizzes')),
           ],
         ),
       ),
@@ -479,10 +480,14 @@ class SubTopicContentState extends State<SubTopicContent>
         children: [
           if (isMenuOpen) ...[
             _buildMenuItem(
-                "Add Subtopic Materials", Icons.note_add, _addSubtopicMaterial),
+                L10n.getTranslatedText(context, 'Add Subtopic Materials'),
+                Icons.note_add,
+                _addSubtopicMaterial),
             SizedBox(height: 10),
             _buildMenuItem(
-                "Add Subtopic Quizzes", Icons.quiz, _addSubtopicQuestion),
+                L10n.getTranslatedText(context, 'Add Subtopic Quizzes'),
+                Icons.quiz,
+                _addSubtopicQuestion),
           ],
           FloatingActionButton(
             onPressed: () => setState(() => isMenuOpen = !isMenuOpen),

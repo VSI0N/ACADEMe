@@ -196,7 +196,7 @@ class HomePage extends StatelessWidget {
                 autofocus: true,
                 onChanged: searchCourses,
                 decoration: InputDecoration(
-                  hintText: 'Search...',
+                  hintText: "${L10n.getTranslatedText(context, 'Search')}...",
                   prefixIcon: Icon(Icons.search),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(26.0),
@@ -215,7 +215,7 @@ class HomePage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Popular Searches",
+                        L10n.getTranslatedText(context, 'Popular Searches'),
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
@@ -224,25 +224,25 @@ class HomePage extends StatelessWidget {
                         spacing: 8.0,
                         children: [
                           ActionChip(
-                            label: Text("Machine Learning"),
+                            label: Text(L10n.getTranslatedText(context, 'Machine Learning')),
                             onPressed: () {
                               debugPrint("Machine Learning clicked");
                             },
                           ),
                           ActionChip(
-                            label: Text("Data Science"),
+                            label: Text(L10n.getTranslatedText(context, 'Data Science')),
                             onPressed: () {
                               debugPrint("Data Science clicked");
                             },
                           ),
                           ActionChip(
-                            label: Text("Flutter"),
+                            label: Text(L10n.getTranslatedText(context, 'Flutter')),
                             onPressed: () {
                               debugPrint("Flutter clicked");
                             },
                           ),
                           ActionChip(
-                            label: Text("Linear Algebra"),
+                            label: Text(L10n.getTranslatedText(context, 'Linear Algebra')),
                             onPressed: () {
                               debugPrint("Linear Algebra clicked");
                             },
@@ -251,7 +251,7 @@ class HomePage extends StatelessWidget {
                       ),
                       SizedBox(height: 20),
                       Text(
-                        "Search Results",
+                        L10n.getTranslatedText(context, 'Search Results'),
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
@@ -276,19 +276,19 @@ class HomePage extends StatelessWidget {
                       ),
                       SizedBox(height: 20),
                       Text(
-                        "Recent Searches",
+                        L10n.getTranslatedText(context, 'Recent Searches'),
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       SizedBox(height: 10),
                       ListTile(
                         leading: Icon(Icons.history),
-                        title: Text("Advanced Python"),
+                        title: Text(L10n.getTranslatedText(context, 'Advanced Python')),
                         onTap: () {},
                       ),
                       ListTile(
                         leading: Icon(Icons.history),
-                        title: Text("Cyber Security"),
+                        title: Text(L10n.getTranslatedText(context, 'Cyber Security')),
                         onTap: () {},
                       ),
                     ],

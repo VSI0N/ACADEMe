@@ -255,6 +255,7 @@ class ProgressScreen extends StatelessWidget {
   Widget _buildStudyTimeCard(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -264,8 +265,10 @@ class ProgressScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Wrap( // Wrap ensures proper line breaking
+            spacing: 8, // Space between items
+            runSpacing: 8, // Space between lines when wrapped
+            alignment: WrapAlignment.spaceBetween,
             children: [
               Text(
                 L10n.getTranslatedText(context, 'Average Study Time'),
@@ -292,6 +295,7 @@ class ProgressScreen extends StatelessWidget {
               ),
             ],
           ),
+          SizedBox(height: 8), // Added space if text wraps
           Text(
             "2h 45m",
             style: TextStyle(
@@ -301,7 +305,7 @@ class ProgressScreen extends StatelessWidget {
             ),
           ),
           SizedBox(height: 18),
-          SizedBox(height: 170, width: 1000, child: _buildBarChart()),
+          SizedBox(height: 170, width: double.infinity, child: _buildBarChart()), // Ensure full width
         ],
       ),
     );
