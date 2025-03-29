@@ -56,7 +56,7 @@ Ensure you have the following installed before getting started:
 ```bash
 # Clone the repository
 git clone https://github.com/VSION/ACADEMe.git
-cd ACADEMe
+cd ACADEMe/ACADEMe-frontend
 
 # Install dependencies
 flutter pub get
