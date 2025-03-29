@@ -50,6 +50,7 @@ class _TopicViewScreenState extends State<TopicViewScreen>
     try {
       final token = await storage.read(key: 'access_token');
       if (token == null) throw Exception("No access token found");
+      if (!mounted) return;
 
       final languageProvider =
           Provider.of<LanguageProvider>(context, listen: false);

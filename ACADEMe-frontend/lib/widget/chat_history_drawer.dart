@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ACADEMe/academe_theme.dart';
 import 'package:ACADEMe/localization/l10n.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ChatSession {
   final String title;
@@ -12,9 +13,10 @@ class ChatSession {
 class ChatHistoryDrawer extends StatelessWidget {
   final List<ChatSession> chatHistory;
   final Function(ChatSession) onSelectChat;
+  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
   const ChatHistoryDrawer({
-    super.key, // Using super parameter syntax
+    super.key,
     required this.chatHistory,
     required this.onSelectChat,
   });
@@ -22,7 +24,6 @@ class ChatHistoryDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      // Using SizedBox instead of Container for width
       width: MediaQuery.of(context).size.width * 0.8,
       child: Drawer(
         child: Column(
@@ -39,55 +40,88 @@ class ChatHistoryDrawer extends StatelessWidget {
               ),
               child: Padding(
                 padding: const EdgeInsets.only(top: 50, left: 20, right: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Row for Profile Picture and Username
-                    Row(
+                child: FutureBuilder<Map<String, String?>>(
+                  future: _getUserDetails(),
+                  builder: (context, snapshot) {
+                    final String name = snapshot.data?['name'] ?? 'User';
+                    final String? photoUrl = snapshot.data?['photo_url'];
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Profile Picture
-                        CircleAvatar(
-                          radius: 30,
-                          backgroundColor: Colors.white,
-                          child: Icon(Icons.person,
-                              size: 35, color: AcademeTheme.appColor),
+                        // Row for Profile Picture and Username
+                        Row(
+                          children: [
+                            // Profile Picture
+                            Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 2,
+                                ),
+                              ),
+                              child: ClipOval(
+                                child: SizedBox(
+                                  width: 60,
+                                  height: 60,
+                                  child: photoUrl != null && photoUrl.isNotEmpty
+                                      ? Image.network(
+                                          photoUrl,
+                                          fit: BoxFit.cover,
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                            return Image.asset(
+                                              'assets/design_course/userImage.png',
+                                              fit: BoxFit.cover,
+                                            );
+                                          },
+                                        )
+                                      : Image.asset(
+                                          'assets/design_course/userImage.png',
+                                          fit: BoxFit.cover,
+                                        ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                            // Username
+                            Text(
+                              name,
+                              style: TextStyle(
+                                fontFamily: 'poppins',
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 27,
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 20), // Using SizedBox for spacing
-                        // Username
-                        Text(
-                          "Atomic",
-                          style: TextStyle(
-                            fontFamily: 'poppins',
+                        const SizedBox(height: 20),
+                        // Search Bar
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          decoration: BoxDecoration(
                             color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 27,
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          child: TextField(
+                            decoration: InputDecoration(
+                              hintText: L10n.getTranslatedText(
+                                  context, 'Search Chat History...'),
+                              border: InputBorder.none,
+                              icon: Icon(Icons.search,
+                                  color: AcademeTheme.appColor),
+                            ),
                           ),
                         ),
                       ],
-                    ),
-                    const SizedBox(height: 20), // Using SizedBox for spacing
-                    // Search Bar
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: L10n.getTranslatedText(
-                              context, 'Search Chat History...'),
-                          border: InputBorder.none,
-                          icon:
-                              Icon(Icons.search, color: AcademeTheme.appColor),
-                        ),
-                      ),
-                    ),
-                  ],
+                    );
+                  },
                 ),
               ),
             ),
-            // Navigation Links Section
+            // Rest of your existing code...
             Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
@@ -141,5 +175,14 @@ class ChatHistoryDrawer extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<Map<String, String?>> _getUserDetails() async {
+    final String? name = await _secureStorage.read(key: 'name');
+    final String? photoUrl = await _secureStorage.read(key: 'photo_url');
+    return {
+      'name': name,
+      'photo_url': photoUrl,
+    };
   }
 }
