@@ -38,19 +38,18 @@
 ## 🛠️ Technology Stack  
 
 | Component       | Technology Used |
-|----------------|----------------|
-| **Frontend**   | Flutter        |
-| **Backend**    | Firebase       |
-| **Database**   | Firestore      |
-| **AI/ML**      | Google Gemini  |
-| **DevOps**     | GitHub Actions |
+|----------------|-----------------|
+| **Frontend**   | Flutter         |
+| **Backend**    | FastAPI         |
+| **Database**   | Firebase        |
+| **AI/ML**      | Google Gemini   |
+| **DevOps**     | Railway         |
 
 ## 💻 Installation Guide  
 ### Prerequisites  
 Ensure you have the following installed before getting started:  
 - ✅ **Flutter SDK** (v3.0+)  
-- ✅ **Android Studio / Xcode** (for mobile development)  
-- ✅ **Google Cloud account** (for AI features)  
+- ✅ **Android Studio** (for mobile development)
 
 ### 🚀 Quick Start  
 ```bash
@@ -65,7 +64,7 @@ flutter pub get
 ## 📱 Running the App on Emulator/Device  
 
 ### Prerequisites  
-- 🖥️ **Android Studio** (for Android) or **Xcode** (for iOS)  
+- 🖥️ **Android Studio** (for Android)
 - 📱 **Virtual device** configured or physical device connected  
 - ⚙️ **Flutter SDK** properly set up  
 
@@ -74,7 +73,7 @@ flutter pub get
 ```bash
 # Open Android Studio
 # Navigate to: Tools → Device Manager → Create Device
-# Select a device definition (e.g., Pixel 6)
+# Select a device definition (e.g., Pixel 9)
 # Download the recommended system image
 # Complete setup
 ```

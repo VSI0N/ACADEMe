@@ -284,7 +284,7 @@ class QuizPageState extends State<QuizPage> {
         (currentQuiz["options"] as List<dynamic>?)?.cast<String>() ??
             ["No options available"];
     final correctOption = currentQuiz["correct_option"] as int? ?? 0;
-    final quizId = currentQuiz["quiz_id"] as String? ?? "";
+    final quizId = currentQuiz["id"] as String? ?? "";
 
     return Scaffold(
       backgroundColor: Colors.white,
