@@ -572,40 +572,47 @@ class AskMeState extends State<AskMe> {
         backgroundColor: AcademeTheme.appColor,
         elevation: 2,
         iconTheme: IconThemeData(color: Colors.white),
-        leading: IconButton(
-          icon: Icon(Icons.menu,
-              size: 28, color: Colors.white), // Custom hamburger icon
-          onPressed: () {
-            _scaffoldKey.currentState?.openDrawer(); // Open the drawer
-          },
-        ),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Text(
-                'ASKMe',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-              ),
-            ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(icon: newChatIcon(), onPressed: () {}),
-                IconButton(
-                  icon: Icon(Icons.translate, size: 28, color: Colors.white),
+        automaticallyImplyLeading: false, // Removes the reserved space for the menu
+        title: SizedBox(
+          height: kToolbarHeight, // Ensures full height usage
+          child: Stack(
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: IconButton(
+                  icon: Icon(Icons.menu, size: 28, color: Colors.white), // Custom menu icon
                   onPressed: () {
-                    _showLanguageSelection();
+                    _scaffoldKey.currentState?.openDrawer(); // Open the drawer
                   },
                 ),
-              ],
-            ),
-          ],
+              ),
+              Center(
+                child: Text(
+                  'ASKMe',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(icon: newChatIcon(), onPressed: () {}),
+                    IconButton(
+                      icon: Icon(Icons.translate, size: 28, color: Colors.white),
+                      onPressed: () {
+                        _showLanguageSelection();
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
 
@@ -797,6 +804,8 @@ class AskMeState extends State<AskMe> {
   }
 
   Widget _buildInitialUI() {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     return Center(
       child: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -806,8 +815,8 @@ class AskMeState extends State<AskMe> {
             Column(
               children: [
                 Image.asset('assets/icons/ASKMe_dark.png',
-                    width: 120.0, height: 120.0),
-                SizedBox(height: 15),
+                    width: width * 0.3, height: height * 0.09),
+                SizedBox(height: height * 0.01),
                 Text.rich(
                   TextSpan(
                     children: [
@@ -827,10 +836,10 @@ class AskMeState extends State<AskMe> {
                 ),
               ],
             ),
-            SizedBox(height: 40),
+            SizedBox(height: height * 0.03),
             Wrap(
-              spacing: 12.0,
-              runSpacing: 12.0,
+              spacing: width * 0.03,
+              runSpacing: height * 0.01,
               alignment: WrapAlignment.center,
               children: [
                 _buildButton(

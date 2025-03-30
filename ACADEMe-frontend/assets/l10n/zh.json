@@ -234,5 +234,18 @@
   "Add Subtopic Material": "添加子主题材料",
   "Add Subtopic Quiz": "添加子主题测验",
   "Report Message": "举报消息",
-  "Enter your reason for reporting": "输入举报原因"
+  "Enter your reason for reporting": "输入举报原因",
+  "Add Topic Material": "添加主题材料",
+  "No materials are available": "没有可用的材料",
+  "No content available": "没有可用的内容",
+  "Material Details": "材料详情",
+  "Add Quiz Question": "添加测验问题",
+  "No items available": "没有可用的项目",
+  "Question": "问题",
+  "Option": "选项",
+  "Add Another Option": "添加另一个选项",
+  "Correct Option": "正确选项",
+  "No quiz questions added yet.": "尚未添加测验问题。",
+  "Add Question": "添加问题",
+  "No questions added yet.": "尚未添加问题。"
 }

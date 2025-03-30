@@ -1,4 +1,5 @@
 import 'package:ACADEMe/academe_theme.dart';
+import 'package:ACADEMe/localization/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -142,7 +143,7 @@ class MaterialScreenState extends State<MaterialScreen> {
 
   Widget _buildMaterialContent() {
     if (materialDetails == null) {
-      return Center(child: Text("No content available"));
+      return Center(child: Text(L10n.getTranslatedText(context, 'No content available')));
     }
 
     final type = materialDetails!["type"];
@@ -156,7 +157,7 @@ class MaterialScreenState extends State<MaterialScreen> {
           child: Padding(
             padding: EdgeInsets.all(16),
             child: Text(
-              content ?? "No content available",
+              content ?? L10n.getTranslatedText(context, 'No content available'),
               style: TextStyle(fontSize: 16),
             ),
           ),
@@ -229,7 +230,7 @@ class MaterialScreenState extends State<MaterialScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Material Details",
+          L10n.getTranslatedText(context, 'Material Details'),
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AcademeTheme.white),
         ),
         backgroundColor: AcademeTheme.appColor,
@@ -245,11 +246,11 @@ class MaterialScreenState extends State<MaterialScreen> {
               margin: EdgeInsets.all(8),
               child: ListTile(
                 title: Text(
-                  "Type: ${materialDetails?["type"] ?? widget.materialType}",
+                  "${L10n.getTranslatedText(context, 'Type')}: ${materialDetails?["type"] ?? widget.materialType}",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 subtitle: Text(
-                  "Category: ${materialDetails?["category"] ?? widget.materialCategory}",
+                  "${L10n.getTranslatedText(context, 'Category')}: ${materialDetails?["category"] ?? widget.materialCategory}",
                   style: TextStyle(fontSize: 16),
                 ),
               ),

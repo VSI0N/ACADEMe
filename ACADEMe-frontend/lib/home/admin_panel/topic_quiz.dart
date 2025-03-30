@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:ACADEMe/localization/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -98,33 +99,33 @@ class TopicQuizScreenState extends State<TopicQuizScreen> {
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
-              title: Text("Add Question"),
+              title: Text(L10n.getTranslatedText(context, 'Add Question')),
               content: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TextField(
                       controller: questionController,
-                      decoration: InputDecoration(labelText: "Question"),
+                      decoration: InputDecoration(labelText: L10n.getTranslatedText(context, 'Question')),
                     ),
                     ...List.generate(optionControllers.length, (index) {
                       return TextField(
                         controller: optionControllers[index],
                         decoration:
-                            InputDecoration(labelText: "Option ${index + 1}"),
+                            InputDecoration(labelText: "${L10n.getTranslatedText(context, 'Option')} ${index + 1}"),
                       );
                     }),
                     if (optionControllers.length < 4)
                       TextButton(
                         onPressed: () => addOption(setDialogState),
-                        child: Text("Add Another Option"),
+                        child: Text(L10n.getTranslatedText(context, 'Add Another Option')),
                       ),
                     DropdownButtonFormField<int>(
                       value: correctOption,
                       items: List.generate(optionControllers.length, (index) {
                         return DropdownMenuItem<int>(
                           value: index,
-                          child: Text("Correct Option: ${index + 1}"),
+                          child: Text("${L10n.getTranslatedText(context, 'Correct Option')}: ${index + 1}"),
                         );
                       }),
                       onChanged: (value) {
@@ -139,7 +140,7 @@ class TopicQuizScreenState extends State<TopicQuizScreen> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text("Cancel"),
+                  child: Text(L10n.getTranslatedText(context, 'Cancel')),
                 ),
                 ElevatedButton(
                   onPressed: () async {
@@ -161,7 +162,7 @@ class TopicQuizScreenState extends State<TopicQuizScreen> {
                       }
                     }
                   },
-                  child: Text("Add"),
+                  child: Text(L10n.getTranslatedText(context, 'Add')),
                 ),
               ],
             );
@@ -238,7 +239,7 @@ class TopicQuizScreenState extends State<TopicQuizScreen> {
         child: isLoading
             ? Center(child: CircularProgressIndicator())
             : questions.isEmpty
-                ? Center(child: Text("No questions added yet."))
+                ? Center(child: Text(L10n.getTranslatedText(context, 'No questions added yet')))
                 : ListView.builder(
                     itemCount: questions.length,
                     itemBuilder: (context, index) {

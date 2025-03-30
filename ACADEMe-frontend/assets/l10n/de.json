@@ -234,5 +234,18 @@
   "Add Subtopic Material": "Unterthemenmaterial hinzufügen",
   "Add Subtopic Quiz": "Unterthemen-Quiz hinzufügen",
   "Report Message": "Nachricht melden",
-  "Enter your reason for reporting": "Geben Sie Ihren Grund für die Meldung ein"
+  "Enter your reason for reporting": "Geben Sie Ihren Grund für die Meldung ein",
+  "Add Topic Material": "Themenmaterial hinzufügen",
+  "No materials are available": "Keine Materialien verfügbar",
+  "No content available": "Kein Inhalt verfügbar",
+  "Material Details": "Materialdetails",
+  "Add Quiz Question": "Quizfrage hinzufügen",
+  "No items available": "Keine Artikel verfügbar",
+  "Question": "Frage",
+  "Option": "Option",
+  "Add Another Option": "Eine weitere Option hinzufügen",
+  "Correct Option": "Richtige Option",
+  "No quiz questions added yet.": "Noch keine Quizfragen hinzugefügt.",
+  "Add Question": "Frage hinzufügen",
+  "No questions added yet.": "Noch keine Fragen hinzugefügt."
 }

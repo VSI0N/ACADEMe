@@ -1,3 +1,4 @@
+import 'package:ACADEMe/localization/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -101,33 +102,33 @@ class SubTopicQuizScreenState extends State<SubTopicQuizScreen> {
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
-              title: Text("Add Quiz Question"),
+              title: Text(L10n.getTranslatedText(context, 'Add Quiz Question')),
               content: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TextField(
                       controller: questionController,
-                      decoration: InputDecoration(labelText: "Question"),
+                      decoration: InputDecoration(labelText: L10n.getTranslatedText(context, 'Question')),
                     ),
                     ...List.generate(optionControllers.length, (index) {
                       return TextField(
                         controller: optionControllers[index],
                         decoration:
-                            InputDecoration(labelText: "Option ${index + 1}"),
+                            InputDecoration(labelText: "${L10n.getTranslatedText(context, 'Option')} ${index + 1}"),
                       );
                     }),
                     if (optionControllers.length < 4)
                       TextButton(
                         onPressed: () => addOption(setDialogState),
-                        child: Text("Add Another Option"),
+                        child: Text(L10n.getTranslatedText(context, 'Add Another Option')),
                       ),
                     DropdownButtonFormField<int>(
                       value: correctOption,
                       items: List.generate(optionControllers.length, (index) {
                         return DropdownMenuItem<int>(
                           value: index,
-                          child: Text("Correct Option: ${index + 1}"),
+                          child: Text("${L10n.getTranslatedText(context, 'Correct Option')}: ${index + 1}"),
                         );
                       }),
                       onChanged: (value) {
@@ -142,7 +143,7 @@ class SubTopicQuizScreenState extends State<SubTopicQuizScreen> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text("Cancel"),
+                  child: Text(L10n.getTranslatedText(context, 'Cancel')),
                 ),
                 ElevatedButton(
                   onPressed: () async {
@@ -165,7 +166,7 @@ class SubTopicQuizScreenState extends State<SubTopicQuizScreen> {
                       }
                     }
                   },
-                  child: Text("Add"),
+                  child: Text(L10n.getTranslatedText(context, 'Add')),
                 ),
               ],
             );
@@ -244,7 +245,7 @@ class SubTopicQuizScreenState extends State<SubTopicQuizScreen> {
         child: isLoading
             ? Center(child: CircularProgressIndicator())
             : quizQuestions.isEmpty
-                ? Center(child: Text("No quiz questions added yet."))
+                ? Center(child: Text(L10n.getTranslatedText(context, 'No quiz questions added yet.')))
                 : ListView.builder(
                     itemCount: quizQuestions.length,
                     itemBuilder: (context, index) {

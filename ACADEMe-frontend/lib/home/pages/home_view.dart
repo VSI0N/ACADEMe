@@ -683,14 +683,7 @@ class HomePage extends StatelessWidget {
                         ),
                         TextButton(
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Scaffold(
-                                  body: CourseListScreen(),
-                                ),
-                              ),
-                            );
+                            onAskMeTap();
                           },
                           style: TextButton.styleFrom(
                             padding: EdgeInsets.zero,
@@ -804,14 +797,7 @@ class HomePage extends StatelessWidget {
                                 ),
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => Scaffold(
-                                          body: CourseListScreen(),
-                                        ),
-                                      ),
-                                    );
+                                    onAskMeTap();
                                   },
                                   child: Text(
                                     L10n.getTranslatedText(context, 'See All'),
@@ -1001,14 +987,7 @@ class HomePage extends StatelessWidget {
                                 ),
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => Scaffold(
-                                          body: CourseListScreen(),
-                                        ),
-                                      ),
-                                    );
+                                    onAskMeTap();
                                   },
                                   child: Text(
                                     L10n.getTranslatedText(context, 'See All'),
@@ -1573,8 +1552,6 @@ class CourseCard extends StatelessWidget {
     }
   }
 
-  @override
-  @override
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;

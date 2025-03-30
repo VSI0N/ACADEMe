@@ -172,7 +172,7 @@ class SubTopicContentState extends State<SubTopicContent>
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     DropdownButtonFormField<String>(
-                      decoration: InputDecoration(labelText: "Type"),
+                      decoration: InputDecoration(labelText: L10n.getTranslatedText(context, 'Type')),
                       items: ["text", "video", "image", "audio", "document"]
                           .map((type) => DropdownMenuItem(
                                 value: type,
@@ -183,7 +183,7 @@ class SubTopicContentState extends State<SubTopicContent>
                           setDialogState(() => selectedType = value ?? ""),
                     ),
                     DropdownButtonFormField<String>(
-                      decoration: InputDecoration(labelText: "Category"),
+                      decoration: InputDecoration(labelText: L10n.getTranslatedText(context, 'Category')),
                       items: ["Notes", "Reference Links", "Practice Questions"]
                           .map((type) => DropdownMenuItem(
                                 value: type,
@@ -470,7 +470,7 @@ class SubTopicContentState extends State<SubTopicContent>
           isLoading
               ? Center(child: CircularProgressIndicator())
               : SingleChildScrollView(
-                  child: _buildQuizList(targetLanguage),
+                  child: _buildQuizList(targetLanguage, context),
                 ),
         ],
       ),
@@ -488,6 +488,7 @@ class SubTopicContentState extends State<SubTopicContent>
                 L10n.getTranslatedText(context, 'Add Subtopic Quizzes'),
                 Icons.quiz,
                 _addSubtopicQuestion),
+            SizedBox(height: 10),
           ],
           FloatingActionButton(
             onPressed: () => setState(() => isMenuOpen = !isMenuOpen),
@@ -539,7 +540,7 @@ class SubTopicContentState extends State<SubTopicContent>
         : Center(child: Text("No materials available"));
   }
 
-  Widget _buildQuizList(String targetLanguage) {
+  Widget _buildQuizList(String targetLanguage, BuildContext context) {
     return subtopicQuizzes.isNotEmpty
         ? ListView.builder(
             shrinkWrap: true,
@@ -577,7 +578,7 @@ class SubTopicContentState extends State<SubTopicContent>
               );
             },
           )
-        : Center(child: Text("No quizzes available"));
+        : Center(child: Text(L10n.getTranslatedText(context, 'No quizzes available')));
   }
 
   Widget _buildMenuItem(String title, IconData icon, VoidCallback onPressed) {

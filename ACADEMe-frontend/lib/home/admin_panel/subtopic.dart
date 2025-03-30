@@ -287,13 +287,13 @@ class SubtopicScreenState extends State<SubtopicScreen>
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
-              title: Text("Add Topic Material"),
+              title: Text(L10n.getTranslatedText(context, 'Add Topic Material')),
               content: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     DropdownButtonFormField<String>(
-                      decoration: InputDecoration(labelText: "Type"),
+                      decoration: InputDecoration(labelText: L10n.getTranslatedText(context, 'Type')),
                       items: ["text", "video", "image", "audio", "document"]
                           .map((type) => DropdownMenuItem(
                                 value: type,
@@ -304,7 +304,7 @@ class SubtopicScreenState extends State<SubtopicScreen>
                           setDialogState(() => selectedType = value ?? ""),
                     ),
                     DropdownButtonFormField<String>(
-                      decoration: InputDecoration(labelText: "Category"),
+                      decoration: InputDecoration(labelText: L10n.getTranslatedText(context, 'Category')),
                       items: ["Notes", "Reference Links", "Practice Questions"]
                           .map((type) => DropdownMenuItem(
                                 value: type,
@@ -492,7 +492,7 @@ class SubtopicScreenState extends State<SubtopicScreen>
             TextEditingController();
 
         return AlertDialog(
-          title: Text("Add Topic Quiz"),
+          title: Text(L10n.getTranslatedText(context, 'Add Topic Quiz')),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -645,6 +645,7 @@ class SubtopicScreenState extends State<SubtopicScreen>
             SizedBox(height: 10),
             _buildMenuItem(L10n.getTranslatedText(context, 'Add Quiz'),
                 Icons.quiz, _addQuiz),
+            SizedBox(height: 10),
           ],
           FloatingActionButton(
             onPressed: () => setState(() => isMenuOpen = !isMenuOpen),
@@ -675,7 +676,7 @@ class SubtopicScreenState extends State<SubtopicScreen>
               );
             }).toList(),
           )
-        : Center(child: Text("No items available"));
+        : Center(child: Text(L10n.getTranslatedText(context, 'No items available')));
   }
 
   Widget _buildSubtopicContent(Map<String, dynamic> item) {
