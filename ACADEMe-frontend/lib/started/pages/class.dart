@@ -89,7 +89,6 @@ class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
             ),
           ),
           const SizedBox(height: 10),
-          _buildImportantInfoBanner(),
         ],
       ),
     );
@@ -209,38 +208,6 @@ class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
       }
       return false;
     }
-  }
-
-  Widget _buildImportantInfoBanner() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.redAccent.withAlpha(90),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: const Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            "Important Info",
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-          SizedBox(height: 10),
-          Text(
-            "Please Select Class 5 as we currently created courses for Class 5",
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.white,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
   }
 
   void _showSnackBar(String message) {

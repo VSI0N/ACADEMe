@@ -143,7 +143,8 @@ class FlashCardState extends State<FlashCard> {
     if (_currentPage < widget.materials.length &&
         widget.materials[_currentPage]["type"] == "video") {
       _videoController = VideoPlayerController.network(
-          widget.materials[_currentPage]["content"]!);
+        widget.materials[_currentPage]["content"]!,
+      );
 
       _videoController!.initialize().then((_) {
         if (!mounted) return;
@@ -159,21 +160,23 @@ class FlashCardState extends State<FlashCard> {
 
         setState(() {});
 
-        _videoController!.addListener(() {
-          if (!_hasNavigated &&
-              _videoController!.value.isInitialized &&
-              _videoController!.value.position >=
-                  _videoController!.value.duration) {
-            _hasNavigated = true;
-            Future.delayed(const Duration(milliseconds: 500), () {
-              _hasNavigated = false;
-              _nextMaterialOrQuiz();
-            });
-          }
-        });
+        // Add listener for video completion
+        _videoController!.addListener(_videoListener);
       }).catchError((error) {
         debugPrint("Error initializing video: $error");
       });
+    }
+  }
+
+  void _videoListener() {
+    if (_videoController!.value.isInitialized &&
+        !_videoController!.value.isPlaying &&
+        _videoController!.value.position >= _videoController!.value.duration) {
+      // Remove listener to prevent multiple triggers
+      _videoController!.removeListener(_videoListener);
+
+      // Navigate to next material
+      _nextMaterialOrQuiz();
     }
   }
 
@@ -286,14 +289,15 @@ class FlashCardState extends State<FlashCard> {
     await _sendProgressToBackend();
 
     if (_currentPage < widget.materials.length + widget.quizzes.length - 1) {
+      // Remove current listener before changing page
+      _videoController?.removeListener(_videoListener);
+
       setState(() {
         _currentPage++;
-        _hasNavigated = false;
       });
 
-      Future.delayed(const Duration(milliseconds: 300), () {
-        _setupVideoController();
-      });
+      // Setup new controller for next page
+      _setupVideoController();
     } else {
       if (widget.onQuizComplete != null) {
         widget.onQuizComplete!();
@@ -303,6 +307,7 @@ class FlashCardState extends State<FlashCard> {
 
   @override
   void dispose() {
+    _videoController?.removeListener(_videoListener);
     _videoController?.dispose();
     _chewieController?.dispose();
     _audioPlayer.dispose();

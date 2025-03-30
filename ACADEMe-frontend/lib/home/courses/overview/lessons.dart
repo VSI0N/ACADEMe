@@ -98,12 +98,12 @@ class LessonsSectionState extends State<LessonsSection> {
           isExpanded = {
             for (int i = 0; i < data.length; i++)
               "${(i + 1).toString().padLeft(2, '0')} - ${data[i]["title"]}":
-              false
+                  false
           };
           subtopicIds = {
             for (var sub in data)
               "${(data.indexOf(sub) + 1).toString().padLeft(2, '0')} - ${sub["title"]}":
-              sub["id"].toString()
+                  sub["id"].toString()
           };
         });
       } else {
@@ -192,7 +192,7 @@ class LessonsSectionState extends State<LessonsSection> {
           if (questionsResponse.statusCode == 200) {
             // Decode the response body using UTF-8
             final String questionsBody =
-            utf8.decode(questionsResponse.bodyBytes);
+                utf8.decode(questionsResponse.bodyBytes);
             List<dynamic> questionsData = jsonDecode(questionsBody);
             for (var question in questionsData) {
               quizzesList.add({
@@ -201,10 +201,10 @@ class LessonsSectionState extends State<LessonsSection> {
                 "difficulty": quiz["difficulty"] ?? "Unknown",
                 "question_count": questionsData.length.toString(),
                 "question_text":
-                question["question_text"] ?? "No question text available",
+                    question["question_text"] ?? "No question text available",
                 "options":
-                (question["options"] as List<dynamic>?)?.cast<String>() ??
-                    ["No options available"],
+                    (question["options"] as List<dynamic>?)?.cast<String>() ??
+                        ["No options available"],
                 "correct_option": question["correct_option"] ?? 0,
                 "created_at": quiz["created_at"] ?? "",
               });
@@ -264,7 +264,9 @@ class LessonsSectionState extends State<LessonsSection> {
                         title: Text(
                           section,
                           style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 17),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 17,
+                          ),
                         ),
                         trailing: Icon(
                           isExpanded[section]!
@@ -301,37 +303,40 @@ class LessonsSectionState extends State<LessonsSection> {
           onPressed: isNavigating
               ? null
               : () {
-            if (subtopicIds.isNotEmpty) {
-              setState(() => isNavigating = true);
-              final firstSubtopicId = subtopicIds.values.first;
-              fetchMaterialsAndQuizzes(firstSubtopicId).then((_) {
-                if (!context.mounted) return;
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FlashCard(
-                      materials: (subtopicMaterials[firstSubtopicId] ?? [])
-                          .map<Map<String, String>>((material) {
-                        return {
-                          "id": material["id"]?.toString() ?? "",
-                          "type": material["type"]?.toString() ?? "",
-                          "content": material["content"]?.toString() ?? "",
-                        };
-                      }).toList(),
-                      quizzes: subtopicQuizzes[firstSubtopicId] ?? [],
-                      onQuizComplete: () => _navigateToNextSubtopic(firstSubtopicId),
-                      initialIndex: 0,
-                      courseId: widget.courseId,
-                      topicId: widget.topicId,
-                      subtopicId: firstSubtopicId,
-                    ),
-                  ),
-                ).then((_) {
-                  if (mounted) setState(() => isNavigating = false);
-                });
-              });
-            }
-          },
+                  if (subtopicIds.isNotEmpty) {
+                    setState(() => isNavigating = true);
+                    final firstSubtopicId = subtopicIds.values.first;
+                    fetchMaterialsAndQuizzes(firstSubtopicId).then((_) {
+                      if (!context.mounted) return;
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FlashCard(
+                            materials:
+                                (subtopicMaterials[firstSubtopicId] ?? [])
+                                    .map<Map<String, String>>((material) {
+                              return {
+                                "id": material["id"]?.toString() ?? "",
+                                "type": material["type"]?.toString() ?? "",
+                                "content":
+                                    material["content"]?.toString() ?? "",
+                              };
+                            }).toList(),
+                            quizzes: subtopicQuizzes[firstSubtopicId] ?? [],
+                            onQuizComplete: () =>
+                                _navigateToNextSubtopic(firstSubtopicId),
+                            initialIndex: 0,
+                            courseId: widget.courseId,
+                            topicId: widget.topicId,
+                            subtopicId: firstSubtopicId,
+                          ),
+                        ),
+                      ).then((_) {
+                        if (mounted) setState(() => isNavigating = false);
+                      });
+                    });
+                  }
+                },
           style: ElevatedButton.styleFrom(
             backgroundColor: AcademeTheme.appColor,
             minimumSize: const Size(double.infinity, 50),
@@ -340,7 +345,9 @@ class LessonsSectionState extends State<LessonsSection> {
             ),
           ),
           child: Text(
-            isNavigating ? 'Start Course' : L10n.getTranslatedText(context, 'Start Course'),
+            isNavigating
+                ? 'Start Course'
+                : L10n.getTranslatedText(context, 'Start Course'),
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -397,9 +404,9 @@ class LessonsSectionState extends State<LessonsSection> {
       type,
       category,
       _getIconForContentType(type),
-          () {
+      () {
         List<Map<String, String>> materials =
-        (subtopicMaterials[subtopicId] ?? []).map<Map<String, String>>((m) {
+            (subtopicMaterials[subtopicId] ?? []).map<Map<String, String>>((m) {
           return {
             "id": m["id"]?.toString() ?? "",
             "type": m["type"]?.toString() ?? "",
@@ -409,7 +416,9 @@ class LessonsSectionState extends State<LessonsSection> {
 
         if (materials.isEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(L10n.getTranslatedText(context, 'No materials available'))),
+            SnackBar(
+                content: Text(
+                    L10n.getTranslatedText(context, 'No materials available'))),
           );
           return;
         }
@@ -438,7 +447,7 @@ class LessonsSectionState extends State<LessonsSection> {
       title,
       "$difficulty • $questionCount Questions",
       Icons.quiz,
-          () {
+      () {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -466,8 +475,8 @@ class LessonsSectionState extends State<LessonsSection> {
       String nextSubtopicId = subtopicIds.values.toList()[currentIndex + 1];
       fetchMaterialsAndQuizzes(nextSubtopicId).then((_) {
         List<Map<String, String>> nextMaterials =
-        (subtopicMaterials[nextSubtopicId] ?? [])
-            .map<Map<String, String>>((material) {
+            (subtopicMaterials[nextSubtopicId] ?? [])
+                .map<Map<String, String>>((material) {
           return {
             "id": material["id"]?.toString() ?? "",
             "type": material["type"]?.toString() ?? "",

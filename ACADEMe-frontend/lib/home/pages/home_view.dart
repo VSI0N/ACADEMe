@@ -224,25 +224,29 @@ class HomePage extends StatelessWidget {
                         spacing: 8.0,
                         children: [
                           ActionChip(
-                            label: Text(L10n.getTranslatedText(context, 'Machine Learning')),
+                            label: Text(L10n.getTranslatedText(
+                                context, 'Machine Learning')),
                             onPressed: () {
                               debugPrint("Machine Learning clicked");
                             },
                           ),
                           ActionChip(
-                            label: Text(L10n.getTranslatedText(context, 'Data Science')),
+                            label: Text(L10n.getTranslatedText(
+                                context, 'Data Science')),
                             onPressed: () {
                               debugPrint("Data Science clicked");
                             },
                           ),
                           ActionChip(
-                            label: Text(L10n.getTranslatedText(context, 'Flutter')),
+                            label: Text(
+                                L10n.getTranslatedText(context, 'Flutter')),
                             onPressed: () {
                               debugPrint("Flutter clicked");
                             },
                           ),
                           ActionChip(
-                            label: Text(L10n.getTranslatedText(context, 'Linear Algebra')),
+                            label: Text(L10n.getTranslatedText(
+                                context, 'Linear Algebra')),
                             onPressed: () {
                               debugPrint("Linear Algebra clicked");
                             },
@@ -283,12 +287,14 @@ class HomePage extends StatelessWidget {
                       SizedBox(height: 10),
                       ListTile(
                         leading: Icon(Icons.history),
-                        title: Text(L10n.getTranslatedText(context, 'Advanced Python')),
+                        title: Text(
+                            L10n.getTranslatedText(context, 'Advanced Python')),
                         onTap: () {},
                       ),
                       ListTile(
                         leading: Icon(Icons.history),
-                        title: Text(L10n.getTranslatedText(context, 'Cyber Security')),
+                        title: Text(
+                            L10n.getTranslatedText(context, 'Cyber Security')),
                         onTap: () {},
                       ),
                     ],
@@ -681,11 +687,6 @@ class HomePage extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => Scaffold(
-                                  appBar: AppBar(
-                                    title: Text(L10n.getTranslatedText(
-                                        context, 'All Courses')),
-                                    backgroundColor: AcademeTheme.appColor,
-                                  ),
                                   body: CourseListScreen(),
                                 ),
                               ),
@@ -807,19 +808,6 @@ class HomePage extends StatelessWidget {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => Scaffold(
-                                          appBar: AppBar(
-                                            backgroundColor:
-                                                AcademeTheme.appColor,
-                                            title: Text(
-                                              L10n.getTranslatedText(
-                                                  context, 'All Courses'),
-                                              style: TextStyle(
-                                                fontSize: 22,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
                                           body: CourseListScreen(),
                                         ),
                                       ),
@@ -1017,12 +1005,6 @@ class HomePage extends StatelessWidget {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => Scaffold(
-                                          appBar: AppBar(
-                                            title: Text(L10n.getTranslatedText(
-                                                context, 'All Courses')),
-                                            backgroundColor:
-                                                AcademeTheme.appColor,
-                                          ),
                                           body: CourseListScreen(),
                                         ),
                                       ),
