@@ -98,12 +98,12 @@ class LessonsSectionState extends State<LessonsSection> {
           isExpanded = {
             for (int i = 0; i < data.length; i++)
               "${(i + 1).toString().padLeft(2, '0')} - ${data[i]["title"]}":
-                  false
+              false
           };
           subtopicIds = {
             for (var sub in data)
               "${(data.indexOf(sub) + 1).toString().padLeft(2, '0')} - ${sub["title"]}":
-                  sub["id"].toString()
+              sub["id"].toString()
           };
         });
       } else {
@@ -192,7 +192,7 @@ class LessonsSectionState extends State<LessonsSection> {
           if (questionsResponse.statusCode == 200) {
             // Decode the response body using UTF-8
             final String questionsBody =
-                utf8.decode(questionsResponse.bodyBytes);
+            utf8.decode(questionsResponse.bodyBytes);
             List<dynamic> questionsData = jsonDecode(questionsBody);
             for (var question in questionsData) {
               quizzesList.add({
@@ -201,10 +201,10 @@ class LessonsSectionState extends State<LessonsSection> {
                 "difficulty": quiz["difficulty"] ?? "Unknown",
                 "question_count": questionsData.length.toString(),
                 "question_text":
-                    question["question_text"] ?? "No question text available",
+                question["question_text"] ?? "No question text available",
                 "options":
-                    (question["options"] as List<dynamic>?)?.cast<String>() ??
-                        ["No options available"],
+                (question["options"] as List<dynamic>?)?.cast<String>() ??
+                    ["No options available"],
                 "correct_option": question["correct_option"] ?? 0,
                 "created_at": quiz["created_at"] ?? "",
               });
@@ -292,7 +292,6 @@ class LessonsSectionState extends State<LessonsSection> {
               ],
             ),
           ),
-          // **🔹 Sticky Start Course Button**
         ],
       ),
       bottomNavigationBar: Container(
@@ -300,50 +299,39 @@ class LessonsSectionState extends State<LessonsSection> {
         color: Colors.white,
         child: ElevatedButton(
           onPressed: isNavigating
-              ? null // ✅ Disable button while navigating
+              ? null
               : () {
-                  if (subtopicIds.isNotEmpty) {
-                    setState(() {
-                      isNavigating = true; // ✅ Disable button immediately
-                    });
-
-                    final firstSubtopicId = subtopicIds.values.first;
-                    fetchMaterialsAndQuizzes(firstSubtopicId).then((_) {
-                      if (!context.mounted) {
-                        return; // Ensure context is valid before navigation
-                      }
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => FlashCard(
-                            materials:
-                                (subtopicMaterials[firstSubtopicId] ?? [])
-                                    .map<Map<String, String>>((material) {
-                              return {
-                                "type": material["type"].toString(),
-                                "content": material["content"].toString(),
-                              };
-                            }).toList(),
-                            quizzes: subtopicQuizzes[firstSubtopicId] ?? [],
-                            onQuizComplete: () {
-                              _navigateToNextSubtopic(firstSubtopicId);
-                            },
-                            initialIndex: 0,
-                            courseId: widget.courseId,
-                            topicId: widget.topicId,
-                            subtopicId: firstSubtopicId,
-                          ),
-                        ),
-                      ).then((_) {
-                        if (mounted) {
-                          setState(() {
-                            isNavigating = false; // ✅ Re-enable button safely
-                          });
-                        }
-                      });
-                    });
-                  }
-                },
+            if (subtopicIds.isNotEmpty) {
+              setState(() => isNavigating = true);
+              final firstSubtopicId = subtopicIds.values.first;
+              fetchMaterialsAndQuizzes(firstSubtopicId).then((_) {
+                if (!context.mounted) return;
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FlashCard(
+                      materials: (subtopicMaterials[firstSubtopicId] ?? [])
+                          .map<Map<String, String>>((material) {
+                        return {
+                          "id": material["id"]?.toString() ?? "",
+                          "type": material["type"]?.toString() ?? "",
+                          "content": material["content"]?.toString() ?? "",
+                        };
+                      }).toList(),
+                      quizzes: subtopicQuizzes[firstSubtopicId] ?? [],
+                      onQuizComplete: () => _navigateToNextSubtopic(firstSubtopicId),
+                      initialIndex: 0,
+                      courseId: widget.courseId,
+                      topicId: widget.topicId,
+                      subtopicId: firstSubtopicId,
+                    ),
+                  ),
+                ).then((_) {
+                  if (mounted) setState(() => isNavigating = false);
+                });
+              });
+            }
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: AcademeTheme.appColor,
             minimumSize: const Size(double.infinity, 50),
@@ -352,10 +340,8 @@ class LessonsSectionState extends State<LessonsSection> {
             ),
           ),
           child: Text(
-            isNavigating
-                ? 'Start Course'
-                : L10n.getTranslatedText(context, 'Start Course'),
-            style: TextStyle(
+            isNavigating ? 'Start Course' : L10n.getTranslatedText(context, 'Start Course'),
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -410,23 +396,20 @@ class LessonsSectionState extends State<LessonsSection> {
     return _buildTile(
       type,
       category,
-      _getIconForContentType(
-          type), // Use the appropriate icon based on the type
-      () {
-        // Convert materials to the correct type
+      _getIconForContentType(type),
+          () {
         List<Map<String, String>> materials =
-            (subtopicMaterials[subtopicId] ?? []).map<Map<String, String>>((m) {
+        (subtopicMaterials[subtopicId] ?? []).map<Map<String, String>>((m) {
           return {
-            "type": m["type"].toString(),
-            "content": m["content"].toString(),
+            "id": m["id"]?.toString() ?? "",
+            "type": m["type"]?.toString() ?? "",
+            "content": m["content"]?.toString() ?? "",
           };
         }).toList();
 
         if (materials.isEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content: Text(
-                    L10n.getTranslatedText(context, 'No materials available'))),
+            SnackBar(content: Text(L10n.getTranslatedText(context, 'No materials available'))),
           );
           return;
         }
@@ -435,16 +418,13 @@ class LessonsSectionState extends State<LessonsSection> {
           context,
           MaterialPageRoute(
             builder: (context) => FlashCard(
-              materials: materials, // Pass the converted list
+              materials: materials,
               quizzes: subtopicQuizzes[subtopicId] ?? [],
-              onQuizComplete: () {
-                // Move to next subtopic after quizzes are completed
-                _navigateToNextSubtopic(subtopicId);
-              },
-              initialIndex: index, // Start from the clicked material
+              onQuizComplete: () => _navigateToNextSubtopic(subtopicId),
+              initialIndex: index,
               courseId: widget.courseId,
               topicId: widget.topicId,
-              subtopicId: subtopicId, // Pass subtopicId
+              subtopicId: subtopicId,
             ),
           ),
         );
@@ -458,7 +438,7 @@ class LessonsSectionState extends State<LessonsSection> {
       title,
       "$difficulty • $questionCount Questions",
       Icons.quiz,
-      () {
+          () {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -481,52 +461,36 @@ class LessonsSectionState extends State<LessonsSection> {
   }
 
   void _navigateToNextSubtopic(String currentSubtopicId) {
-    // Find the index of the current subtopic
     int currentIndex = subtopicIds.values.toList().indexOf(currentSubtopicId);
-
-    // Check if there is a next subtopic
     if (currentIndex < subtopicIds.length - 1) {
       String nextSubtopicId = subtopicIds.values.toList()[currentIndex + 1];
-      // String nextSubtopicTitle = subtopicIds.keys.toList()[currentIndex + 1];
-
-      // Fetch materials and quizzes for the next subtopic
       fetchMaterialsAndQuizzes(nextSubtopicId).then((_) {
-        // Convert materials to the correct type
         List<Map<String, String>> nextMaterials =
-            (subtopicMaterials[nextSubtopicId] ?? [])
-                .map<Map<String, String>>((material) {
+        (subtopicMaterials[nextSubtopicId] ?? [])
+            .map<Map<String, String>>((material) {
           return {
-            "type": material["type"].toString(),
-            "content": material["content"].toString(),
+            "id": material["id"]?.toString() ?? "",
+            "type": material["type"]?.toString() ?? "",
+            "content": material["content"]?.toString() ?? "",
           };
         }).toList();
-        if (!mounted) {
-          return; // Ensure widget is still active before using context
-        }
-        // Open the next subtopic in the FlashCard
+        if (!mounted) return;
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => FlashCard(
-              materials: nextMaterials, // Pass the converted list
+              materials: nextMaterials,
               quizzes: subtopicQuizzes[nextSubtopicId] ?? [],
-              onQuizComplete: () {
-                // Move to next subtopic after quizzes are completed
-                _navigateToNextSubtopic(nextSubtopicId);
-              },
-              initialIndex: 0, // Start from the first item
+              onQuizComplete: () => _navigateToNextSubtopic(nextSubtopicId),
+              initialIndex: 0,
               courseId: widget.courseId,
               topicId: widget.topicId,
-              subtopicId: nextSubtopicId, // Pass subtopicId
+              subtopicId: nextSubtopicId,
             ),
           ),
         );
       });
     } else {
-      // No more subtopics, show a message or navigate back
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   const SnackBar(content: Text("No more subtopics available")),
-      // );
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => TestReportScreen()),
@@ -557,12 +521,10 @@ class LessonsSectionState extends State<LessonsSection> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              // 👈 Wrap Row with Expanded
               child: Row(
                 children: [
                   const SizedBox(width: 10),
                   Expanded(
-                    // 👈 Add this Expanded here too!
                     child: Text(
                       capitalizedTitle,
                       style: TextStyle(
