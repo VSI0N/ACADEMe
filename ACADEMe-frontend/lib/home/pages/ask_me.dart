@@ -1,5 +1,6 @@
 import 'package:ACADEMe/academe_theme.dart';
 import 'package:ACADEMe/localization/l10n.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
@@ -760,19 +761,33 @@ class AskMeState extends State<AskMe> {
     return TextStyle(color: color, fontSize: 18, fontWeight: FontWeight.w600);
   }
 
-  Widget _buildButton(IconData icon, String text, Color color) {
+  Widget _buildButton(IconData icon, String text, Color color, double width) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+
     return ElevatedButton.icon(
       onPressed: () {},
       style: ElevatedButton.styleFrom(
         foregroundColor: Colors.white,
         backgroundColor: color,
-        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+        padding: EdgeInsets.symmetric(horizontal: width * 0.03, vertical: height * 0.01),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       ),
-      icon: Icon(icon, size: 20),
-      label: Text(text),
+      icon: Icon(icon, size: width * 0.05),
+      label: SizedBox(
+        width: width * 0.25, // Set a fixed width for better text control
+        child: AutoSizeText(
+          text,
+          maxLines: 1, // Ensures text stays in a single line
+          minFontSize: 10, // Minimum text size to avoid overflow
+          stepGranularity: 1, // Smoothly adjusts font size
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 16), // Default font size
+        ),
+      ),
     );
   }
+
 
   Widget _buildAttachmentOption(BuildContext context, IconData icon,
       String label, Color color, String fileType) {
@@ -842,22 +857,45 @@ class AskMeState extends State<AskMe> {
               runSpacing: height * 0.01,
               alignment: WrapAlignment.center,
               children: [
-                _buildButton(
-                    Icons.help_outline,
-                    L10n.getTranslatedText(context, 'Clear Your Doubts'),
-                    Colors.lightBlue.shade400),
-                _buildButton(
-                    Icons.quiz,
-                    L10n.getTranslatedText(context, 'Explain / Quiz'),
-                    Colors.orange.shade400),
-                _buildButton(
-                    Icons.upload_file,
-                    L10n.getTranslatedText(context, 'Upload Study Materials'),
-                    Colors.green.shade500),
-                _buildButton(Icons.more_horiz,
-                    L10n.getTranslatedText(context, 'More'), Colors.grey),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildButton(
+                      Icons.help_outline,
+                      L10n.getTranslatedText(context, 'Clear Your Doubts'),
+                      Colors.lightBlue.shade400,
+                      width,
+                    ),
+                    SizedBox(width: width * 0.03),
+                    _buildButton(
+                      Icons.quiz,
+                      L10n.getTranslatedText(context, 'Explain / Quiz'),
+                      Colors.orange.shade400,
+                      width,
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildButton(
+                      Icons.upload_file,
+                      L10n.getTranslatedText(context, 'Upload Study Materials'),
+                      Colors.green.shade500,
+                      width,
+                    ),
+                    SizedBox(width: width * 0.03),
+                    _buildButton(
+                      Icons.more_horiz,
+                      L10n.getTranslatedText(context, 'More'),
+                      Colors.grey,
+                      width,
+                    ),
+                  ],
+                ),
               ],
-            ),
+            )
+
           ],
         ),
       ),

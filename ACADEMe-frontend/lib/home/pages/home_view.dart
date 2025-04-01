@@ -309,6 +309,10 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildMainUI(BuildContext context) {
+
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+
     // GlobalKey for controlling the Scaffold state (drawer)
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     TextEditingController messageController = TextEditingController();
@@ -459,13 +463,11 @@ class HomePage extends StatelessWidget {
                                   color: Colors.black,
                                 ),
                                 child: Padding(
-                                  padding: EdgeInsets.all(
-                                      7), // Adjust padding to reduce image size
+                                  padding: EdgeInsets.all(7), // Adjust padding to reduce image size
                                   child: ClipOval(
                                     child: Image.asset(
                                       "assets/icons/ASKMe.png",
-                                      fit: BoxFit
-                                          .contain, // Ensures the image fits within the padding
+                                      fit: BoxFit.contain, // Ensures the image fits within the padding
                                     ),
                                   ),
                                 ),
@@ -473,33 +475,34 @@ class HomePage extends StatelessWidget {
 
                               const SizedBox(width: 12),
 
-                              // Texts
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    L10n.getTranslatedText(
-                                        context, 'Your Personal Tutor'),
-                                    style: TextStyle(
-                                      color: Color.fromARGB(255, 10, 10, 10),
-                                      fontSize: 24,
-                                      fontWeight: FontWeight
-                                          .w800, // Even bolder than FontWeight.bold
-                                      fontFamily: "Roboto", // Use built-in font
+                              // Flexible Texts
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      L10n.getTranslatedText(context, 'Your Personal Tutor'),
+                                      style: TextStyle(
+                                        color: Color.fromARGB(255, 10, 10, 10),
+                                        fontSize: width * 0.06,
+                                        fontWeight: FontWeight.w800, // Extra bold
+                                        fontFamily: "Roboto",
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(height: 4),
-                                  Text(
-                                    "ASKMe",
-                                    style: TextStyle(
-                                      color: Color.fromARGB(255, 9, 9, 9),
-                                      fontSize: 16,
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      "ASKMe",
+                                      style: TextStyle(
+                                        color: Color.fromARGB(255, 9, 9, 9),
+                                        fontSize: 16,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ],
                           ),
+
                           const SizedBox(height: 16),
 
                           // Input Field with Send Icon

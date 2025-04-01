@@ -346,7 +346,7 @@ class LessonsSectionState extends State<LessonsSection> {
           ),
           child: Text(
             isNavigating
-                ? 'Start Course'
+                ? L10n.getTranslatedText(context,'Start Course')
                 : L10n.getTranslatedText(context, 'Start Course'),
             style: const TextStyle(
               fontSize: 18,
