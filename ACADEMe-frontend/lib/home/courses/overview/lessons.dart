@@ -306,6 +306,7 @@ class LessonsSectionState extends State<LessonsSection> {
                   if (subtopicIds.isNotEmpty) {
                     setState(() => isNavigating = true);
                     final firstSubtopicId = subtopicIds.values.first;
+                    final firstSubtopicTitle = subtopicIds.keys.first;
                     fetchMaterialsAndQuizzes(firstSubtopicId).then((_) {
                       if (!context.mounted) return;
                       Navigator.push(
@@ -329,6 +330,7 @@ class LessonsSectionState extends State<LessonsSection> {
                             courseId: widget.courseId,
                             topicId: widget.topicId,
                             subtopicId: firstSubtopicId,
+                            subtopicTitle: firstSubtopicTitle,
                           ),
                         ),
                       ).then((_) {
@@ -346,7 +348,7 @@ class LessonsSectionState extends State<LessonsSection> {
           ),
           child: Text(
             isNavigating
-                ? L10n.getTranslatedText(context,'Start Course')
+                ? L10n.getTranslatedText(context, 'Start Course')
                 : L10n.getTranslatedText(context, 'Start Course'),
             style: const TextStyle(
               fontSize: 18,
@@ -400,6 +402,11 @@ class LessonsSectionState extends State<LessonsSection> {
 
   Widget _buildMaterialTile(String id, String type, String category,
       String content, String subtopicId, int index) {
+    // Get the title from subtopicIds map
+    String subtopicTitle = subtopicIds.entries
+        .firstWhere((entry) => entry.value == subtopicId)
+        .key;
+
     return _buildTile(
       type,
       category,
@@ -434,6 +441,7 @@ class LessonsSectionState extends State<LessonsSection> {
               courseId: widget.courseId,
               topicId: widget.topicId,
               subtopicId: subtopicId,
+              subtopicTitle: subtopicTitle, // Pass the title
             ),
           ),
         );
@@ -443,6 +451,11 @@ class LessonsSectionState extends State<LessonsSection> {
 
   Widget _buildQuizTile(String id, String title, String difficulty,
       String questionCount, String subtopicId, int index) {
+    // Get the title from subtopicIds map
+    String subtopicTitle = subtopicIds.entries
+        .firstWhere((entry) => entry.value == subtopicId)
+        .key;
+
     return _buildTile(
       title,
       "$difficulty • $questionCount Questions",
@@ -461,7 +474,8 @@ class LessonsSectionState extends State<LessonsSection> {
               initialIndex: index, // Start from the clicked quiz
               courseId: widget.courseId,
               topicId: widget.topicId,
-              subtopicId: subtopicId, // Pass subtopicId
+              subtopicId: subtopicId,
+              subtopicTitle: subtopicTitle, // Pass the title
             ),
           ),
         );
@@ -471,8 +485,11 @@ class LessonsSectionState extends State<LessonsSection> {
 
   void _navigateToNextSubtopic(String currentSubtopicId) {
     int currentIndex = subtopicIds.values.toList().indexOf(currentSubtopicId);
+    // In _navigateToNextSubtopic method:
     if (currentIndex < subtopicIds.length - 1) {
       String nextSubtopicId = subtopicIds.values.toList()[currentIndex + 1];
+      String nextSubtopicTitle = subtopicIds.keys.toList()[currentIndex + 1];
+
       fetchMaterialsAndQuizzes(nextSubtopicId).then((_) {
         List<Map<String, String>> nextMaterials =
             (subtopicMaterials[nextSubtopicId] ?? [])
@@ -483,7 +500,9 @@ class LessonsSectionState extends State<LessonsSection> {
             "content": material["content"]?.toString() ?? "",
           };
         }).toList();
+
         if (!mounted) return;
+
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -495,6 +514,7 @@ class LessonsSectionState extends State<LessonsSection> {
               courseId: widget.courseId,
               topicId: widget.topicId,
               subtopicId: nextSubtopicId,
+              subtopicTitle: nextSubtopicTitle, // Pass the new title
             ),
           ),
         );

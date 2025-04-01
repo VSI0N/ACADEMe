@@ -27,6 +27,7 @@ class FlashCard extends StatefulWidget {
   final String courseId;
   final String topicId;
   final String subtopicId;
+  final String subtopicTitle;
 
   const FlashCard({
     super.key,
@@ -37,6 +38,7 @@ class FlashCard extends StatefulWidget {
     required this.courseId,
     required this.topicId,
     required this.subtopicId,
+    required this.subtopicTitle,
   });
 
   @override
@@ -365,8 +367,8 @@ class FlashCardState extends State<FlashCard> {
                       if (_currentPage != index) {
                         setState(() {
                           _currentPage = index;
-                          _setupVideoController();
                         });
+                        _setupVideoController();
 
                         if (index < widget.materials.length) {
                           _sendProgressToBackend();
@@ -466,7 +468,8 @@ class FlashCardState extends State<FlashCard> {
           ],
         ),
         child: Text(
-          isLoading ? "Loading..." : topicTitle,
+          widget
+              .subtopicTitle, // Use the passed title instead of state variable
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
