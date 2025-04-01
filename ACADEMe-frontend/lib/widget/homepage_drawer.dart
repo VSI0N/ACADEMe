@@ -11,11 +11,13 @@ class HomepageDrawer extends StatelessWidget {
   final VoidCallback onClose;
   final VoidCallback onProfileTap; // Callback for profile navigation
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
+  final VoidCallback onAskMeTap;
 
   const HomepageDrawer({
     super.key,
     required this.onClose,
     required this.onProfileTap,
+    required this.onAskMeTap,
   });
 
   @override
@@ -74,15 +76,13 @@ class HomepageDrawer extends StatelessWidget {
                 onProfileTap();
                 onClose();
               }),
-              _buildDrawerItem(Icons.menu_book,
-                  L10n.getTranslatedText(context, 'My Courses'), () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const CourseListScreen(),
-                  ),
-                );
-              }),
+              _buildDrawerItem(
+                Icons.menu_book,
+                L10n.getTranslatedText(context, 'My Courses'),
+                () {
+                  onAskMeTap(); // Navigates to the function you want
+                },
+              ),
               _buildDrawerItem(Icons.show_chart,
                   L10n.getTranslatedText(context, 'My Progress'), () {
                 Navigator.push(

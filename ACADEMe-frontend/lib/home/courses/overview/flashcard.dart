@@ -135,8 +135,11 @@ class FlashCardState extends State<FlashCard> {
   }
 
   void _setupVideoController() {
+    // Dispose previous controllers and remove listener
+    _videoController?.removeListener(_videoListener); // Add this line
     _videoController?.dispose();
     _chewieController?.dispose();
+
     _videoController = null;
     _chewieController = null;
 
@@ -169,14 +172,17 @@ class FlashCardState extends State<FlashCard> {
   }
 
   void _videoListener() {
-    if (_videoController!.value.isInitialized &&
+    if (_videoController != null &&
+        _videoController!.value.isInitialized &&
         !_videoController!.value.isPlaying &&
         _videoController!.value.position >= _videoController!.value.duration) {
-      // Remove listener to prevent multiple triggers
       _videoController!.removeListener(_videoListener);
 
-      // Navigate to next material
-      _nextMaterialOrQuiz();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _nextMaterialOrQuiz();
+        }
+      });
     }
   }
 
@@ -285,18 +291,15 @@ class FlashCardState extends State<FlashCard> {
     return [];
   }
 
-  void _nextMaterialOrQuiz() async {
+  Future<void> _nextMaterialOrQuiz() async {
     await _sendProgressToBackend();
 
     if (_currentPage < widget.materials.length + widget.quizzes.length - 1) {
-      // Remove current listener before changing page
-      _videoController?.removeListener(_videoListener);
-
       setState(() {
         _currentPage++;
       });
 
-      // Setup new controller for next page
+      // Force the Swiper to update by using a key and rebuilding it
       _setupVideoController();
     } else {
       if (widget.onQuizComplete != null) {
@@ -350,6 +353,7 @@ class FlashCardState extends State<FlashCard> {
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   return Swiper(
+                    key: ValueKey<int>(_currentPage),
                     itemWidth: constraints.maxWidth,
                     itemHeight: constraints.maxHeight,
                     loop: false,

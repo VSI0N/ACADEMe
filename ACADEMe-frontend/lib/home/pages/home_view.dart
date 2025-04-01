@@ -1134,7 +1134,8 @@ class HomePage extends StatelessWidget {
           onClose: () {
             Navigator.of(context).pop(); // Close the drawer when tapped
           },
-          onProfileTap: onProfileTap, // Pass the onProfileTap callback here
+          onProfileTap: onProfileTap, onAskMeTap: onAskMeTap,
+          // Pass the onProfileTap callback here
         ),
 // Modify drawerEdgeDragWidth to make it open from the right
         drawerEdgeDragWidth: double
@@ -1306,8 +1307,12 @@ Widget getAppBarUI(
                             Navigator.of(context)
                                 .pop(); // Close drawer manually
                           },
-                          onProfileTap:
-                              onProfileTap, // Pass the onProfileTap callback here
+                          onProfileTap: onProfileTap,
+                          onAskMeTap: () {
+                            Navigator.of(context).pop(); // Close the drawer
+                            onHamburgerTap(); // Call the function to open Ask Me
+                          },
+                          // Pass the onProfileTap callback here
                         ),
                       ),
                     ),
