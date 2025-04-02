@@ -67,20 +67,20 @@ class ChatHistoryDrawer extends StatelessWidget {
                                   height: 60,
                                   child: photoUrl != null && photoUrl.isNotEmpty
                                       ? Image.network(
-                                          photoUrl,
-                                          fit: BoxFit.cover,
-                                          errorBuilder:
-                                              (context, error, stackTrace) {
-                                            return Image.asset(
-                                              'assets/design_course/userImage.png',
-                                              fit: BoxFit.cover,
-                                            );
-                                          },
-                                        )
+                                    photoUrl,
+                                    fit: BoxFit.cover,
+                                    errorBuilder:
+                                        (context, error, stackTrace) {
+                                      return Image.asset(
+                                        'assets/design_course/userImage.png',
+                                        fit: BoxFit.cover,
+                                      );
+                                    },
+                                  )
                                       : Image.asset(
-                                          'assets/design_course/userImage.png',
-                                          fit: BoxFit.cover,
-                                        ),
+                                    'assets/design_course/userImage.png',
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                             ),
@@ -124,10 +124,10 @@ class ChatHistoryDrawer extends StatelessWidget {
             // Rest of your existing code...
             Padding(
               padding:
-                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
+              const EdgeInsets.symmetric(vertical: 0.0, horizontal: 20),
               child: ListTile(
                 leading:
-                    Icon(Icons.chat, color: AcademeTheme.appColor, size: 25),
+                Icon(Icons.chat, color: AcademeTheme.appColor, size: 25),
                 title: Text(
                   L10n.getTranslatedText(context, 'Chat History'),
                   style: TextStyle(
@@ -145,6 +145,7 @@ class ChatHistoryDrawer extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: ListView.builder(
+                  padding: EdgeInsets.zero,
                   itemCount: chatHistory.length,
                   itemBuilder: (context, index) {
                     return Padding(

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -26,6 +27,8 @@ class CourseListScreenState extends State<CourseListScreen>
   List<Map<String, dynamic>> courses = [];
   String backendUrl = dotenv.env['BACKEND_URL'] ?? '';
   final storage = FlutterSecureStorage();
+
+  final AutoSizeGroup _tabTextGroup = AutoSizeGroup();
 
   @override
   void initState() {
@@ -82,10 +85,10 @@ class CourseListScreenState extends State<CourseListScreen>
           setState(() {
             courses = data
                 .map((course) => {
-                      "id": course["id"],
-                      "title": course["title"],
-                      "progress": 0.0,
-                    })
+              "id": course["id"],
+              "title": course["title"],
+              "progress": 0.0,
+            })
                 .toList();
           });
         } else {
@@ -132,6 +135,7 @@ class CourseListScreenState extends State<CourseListScreen>
 
   @override
   Widget build(BuildContext context) {
+
     return ASKMeButton(
       onFABPressed: () {
         Navigator.push(
@@ -162,16 +166,14 @@ class CourseListScreenState extends State<CourseListScreen>
                 controller: _tabController,
                 labelColor: Colors.blue,
                 unselectedLabelColor: Colors.black54,
-                labelStyle:
-                    TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
                 indicatorSize: TabBarIndicatorSize.tab,
                 indicator: UnderlineTabIndicator(
-                  borderSide: BorderSide(width: 4, color: Colors.blue),
+                  borderSide: BorderSide(width: 2, color: Colors.blue),
                 ),
                 tabs: [
-                  Tab(text: L10n.getTranslatedText(context, 'ALL')),
-                  Tab(text: L10n.getTranslatedText(context, 'ON GOING')),
-                  Tab(text: L10n.getTranslatedText(context, 'COMPLETED')),
+                  _buildSynchronizedTab(context, 'ALL'),
+                  _buildSynchronizedTab(context, 'ON GOING'),
+                  _buildSynchronizedTab(context, 'COMPLETED'),
                 ],
               ),
             ),
@@ -190,6 +192,23 @@ class CourseListScreenState extends State<CourseListScreen>
       ),
     );
   }
+
+
+  Widget _buildSynchronizedTab(BuildContext context, String labelKey) {
+    return Expanded(
+      child: Tab(
+        child: AutoSizeText(
+          L10n.getTranslatedText(context, labelKey),
+          maxLines: 1,
+          group: _tabTextGroup, // Ensures all tabs scale together
+          style: TextStyle(fontSize: 16),
+          minFontSize: 12, // Prevents text from becoming unreadable
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
+
 
   Widget _buildCourseList() {
     if (isLoading) {

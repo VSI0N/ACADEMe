@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import '../../academe_theme.dart';
 import 'package:ACADEMe/home/components/askme_button.dart';
@@ -9,6 +10,7 @@ class Mycommunity extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AutoSizeGroup tabTextGroup = AutoSizeGroup();
     return ASKMeButton(
       showFAB: true, // Show floating action button
       onFABPressed: () {
@@ -100,9 +102,9 @@ class Mycommunity extends StatelessWidget {
                   unselectedLabelColor: Colors.black,
                   indicatorSize: TabBarIndicatorSize.tab,
                   tabs: [
-                    Tab(text: L10n.getTranslatedText(context, 'Forums')),
-                    Tab(text: L10n.getTranslatedText(context, 'Groups')),
-                    Tab(text: L10n.getTranslatedText(context, 'Communities')),
+                    _buildSynchronizedTab(context, 'Forums', tabTextGroup),
+                    _buildSynchronizedTab(context, 'Groups', tabTextGroup),
+                    _buildSynchronizedTab(context, 'Communities', tabTextGroup),
                   ],
                 ),
               ),
@@ -123,6 +125,19 @@ class Mycommunity extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget _buildSynchronizedTab(BuildContext context, String labelKey, AutoSizeGroup group) {
+  return Tab(
+    child: AutoSizeText(
+      L10n.getTranslatedText(context, labelKey),
+      maxLines: 1,
+      group: group, // Ensures all tabs shrink together
+      style: TextStyle(fontSize: 16),
+      minFontSize: 12, // Prevents text from becoming unreadable
+      textAlign: TextAlign.center,
+    ),
+  );
 }
 
 class CommunityList extends StatelessWidget {

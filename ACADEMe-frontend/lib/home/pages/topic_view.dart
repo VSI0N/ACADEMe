@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -27,6 +28,8 @@ class _TopicViewScreenState extends State<TopicViewScreen>
   bool isLoading = true;
   final String backendUrl = dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
   final FlutterSecureStorage storage = const FlutterSecureStorage();
+  final AutoSizeGroup _tabTextGroup = AutoSizeGroup();
+
 
   @override
   void initState() {
@@ -53,7 +56,7 @@ class _TopicViewScreenState extends State<TopicViewScreen>
       if (!mounted) return;
 
       final languageProvider =
-          Provider.of<LanguageProvider>(context, listen: false);
+      Provider.of<LanguageProvider>(context, listen: false);
       final targetLanguage = languageProvider.locale.languageCode;
 
       final response = await http.get(
@@ -121,19 +124,22 @@ class _TopicViewScreenState extends State<TopicViewScreen>
       ),
       body: Column(
         children: [
-          TabBar(
-            controller: _tabController,
-            labelColor: Colors.blue,
-            unselectedLabelColor: Colors.black54,
-            labelStyle: const TextStyle(fontSize: 16),
-            indicator: const UnderlineTabIndicator(
-              borderSide: BorderSide(width: 4, color: Colors.blue),
+          Container(
+            color: Colors.white,
+            child: TabBar(
+              controller: _tabController,
+              labelColor: Colors.blue,
+              unselectedLabelColor: Colors.black54,
+              indicatorSize: TabBarIndicatorSize.tab,
+              indicator: UnderlineTabIndicator(
+                borderSide: BorderSide(width: 2, color: Colors.blue),
+              ),
+              tabs: [
+                _buildSynchronizedTab(context, 'ALL'),
+                _buildSynchronizedTab(context, 'ON GOING'),
+                _buildSynchronizedTab(context, 'COMPLETED'),
+              ],
             ),
-            tabs: [
-              Tab(text: L10n.getTranslatedText(context, 'ALL')),
-              Tab(text: L10n.getTranslatedText(context, 'ON GOING')),
-              Tab(text: L10n.getTranslatedText(context, 'COMPLETED')),
-            ],
           ),
           Expanded(
             child: TabBarView(
@@ -146,6 +152,21 @@ class _TopicViewScreenState extends State<TopicViewScreen>
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSynchronizedTab(BuildContext context, String labelKey) {
+    return Expanded(
+      child: Tab(
+        child: AutoSizeText(
+          L10n.getTranslatedText(context, labelKey),
+          maxLines: 1,
+          group: _tabTextGroup, // Ensures all tabs scale together
+          style: TextStyle(fontSize: 16),
+          minFontSize: 12, // Prevents text from becoming unreadable
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }

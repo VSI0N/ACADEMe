@@ -1124,40 +1124,52 @@ class AskMeState extends State<AskMe> {
 
   void _showReportDialog(BuildContext context, Map<String, dynamic> message) {
     TextEditingController reportController = TextEditingController();
+    bool isButtonEnabled = false;
 
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text("Report Message"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text("Please describe the issue:"),
-              SizedBox(height: 10),
-              TextField(
-                controller: reportController,
-                maxLines: 3,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: "Enter your reason for reporting...",
-                ),
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text("Report Message"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text("Please describe the issue:"),
+                  SizedBox(height: 10),
+                  TextField(
+                    controller: reportController,
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: "Enter your reason for reporting...",
+                    ),
+                    onChanged: (text) {
+                      setState(() {
+                        isButtonEnabled = text.trim().isNotEmpty;
+                      });
+                    },
+                  ),
+                ],
               ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text("Cancel"),
-            ),
-            TextButton(
-              onPressed: () {
-                _submitReport(message, reportController.text);
-                Navigator.pop(context);
-              },
-              child: Text("Send"),
-            ),
-          ],
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text("Cancel"),
+                ),
+                TextButton(
+                  onPressed: isButtonEnabled
+                      ? () {
+                    _submitReport(message, reportController.text);
+                    Navigator.pop(context);
+                  }
+                      : null, // Disable button when empty
+                  child: Text("Send"),
+                ),
+              ],
+            );
+          },
         );
       },
     );
