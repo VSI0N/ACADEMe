@@ -42,7 +42,7 @@ class AskMeState extends State<AskMe> {
   bool isConverting = false; // To track the loading state
 
   final GlobalKey<ScaffoldState> _scaffoldKey =
-  GlobalKey<ScaffoldState>(); // Key for the drawer
+      GlobalKey<ScaffoldState>(); // Key for the drawer
 
   String searchQuery = "";
   List<Map<String, String>> languages = [
@@ -63,6 +63,16 @@ class AskMeState extends State<AskMe> {
         curve: Curves.easeOut,
       );
     }
+  }
+
+  void _startNewChat() {
+    setState(() {
+      chatMessages.clear(); // Clear all messages
+      _textController.clear(); // Clear any text input
+      _isRecording = false; // Stop any ongoing recording
+      _timer?.cancel(); // Cancel recording timer if active
+      _seconds = 0; // Reset recording timer
+    });
   }
 
   // For the chat history
@@ -108,7 +118,7 @@ class AskMeState extends State<AskMe> {
               leading: Icon(Icons.attach_file),
               title: Text(file.path.split('/').last),
               subtitle:
-              Text("${(file.lengthSync() / 1024).toStringAsFixed(1)}KB"),
+                  Text("${(file.lengthSync() / 1024).toStringAsFixed(1)}KB"),
             ),
             TextField(
               controller: promptController,
@@ -163,7 +173,7 @@ class AskMeState extends State<AskMe> {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: type,
       allowedExtensions:
-      (type == FileType.custom) ? allowedExtensions : null, // ✅ Fix
+          (type == FileType.custom) ? allowedExtensions : null, // ✅ Fix
     );
 
     if (result != null && result.files.single.path != null) {
@@ -189,7 +199,7 @@ class AskMeState extends State<AskMe> {
     String fileFieldName = (fileType == 'Image') ? 'image' : 'file';
     String? mimeType = lookupMimeType(file.path);
     mimeType ??=
-    (fileType == 'Video') ? 'video/mp4' : 'application/octet-stream';
+        (fileType == 'Video') ? 'video/mp4' : 'application/octet-stream';
 
     request.files.add(await http.MultipartFile.fromPath(
       fileFieldName,
@@ -345,7 +355,7 @@ class AskMeState extends State<AskMe> {
         'prompt': 'इस ऑडियो को हिंदी में लिखो',
         'source_lang': 'auto', // Let the server detect the source language
         'target_lang':
-        selectedLanguage, // Send the selected language for the response
+            selectedLanguage, // Send the selected language for the response
       });
 
       final mimeType = lookupMimeType(file.path) ?? "audio/flac";
@@ -375,7 +385,7 @@ class AskMeState extends State<AskMe> {
         if (detectedLang == 'hi' && selectedLanguage == "auto") {
           setState(() {
             selectedLanguage =
-            'hi'; // Update language to Hindi if detected language is Hindi
+                'hi'; // Update language to Hindi if detected language is Hindi
           });
           debugPrint("✅ Updated selected language to Hindi");
         }
@@ -482,7 +492,7 @@ class AskMeState extends State<AskMe> {
         chatMessages[chatMessages.length - 1] = {
           "role": "ai",
           "text":
-          "Error connecting to the server. Please check your internet connection.",
+              "Error connecting to the server. Please check your internet connection.",
           "isTyping": false
         };
       });
@@ -502,8 +512,8 @@ class AskMeState extends State<AskMe> {
           builder: (context, setModalState) {
             List<Map<String, String>> filteredLanguages = languages
                 .where((language) => language['name']!
-                .toLowerCase()
-                .startsWith(searchQuery.toLowerCase()))
+                    .toLowerCase()
+                    .startsWith(searchQuery.toLowerCase()))
                 .toList();
 
             return Padding(
@@ -521,7 +531,7 @@ class AskMeState extends State<AskMe> {
                   TextField(
                     decoration: InputDecoration(
                       labelText:
-                      L10n.getTranslatedText(context, 'Search Languages'),
+                          L10n.getTranslatedText(context, 'Search Languages'),
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.search),
                     ),
@@ -573,7 +583,8 @@ class AskMeState extends State<AskMe> {
         backgroundColor: AcademeTheme.appColor,
         elevation: 2,
         iconTheme: IconThemeData(color: Colors.white),
-        automaticallyImplyLeading: false, // Removes the reserved space for the menu
+        automaticallyImplyLeading:
+            false, // Removes the reserved space for the menu
         title: SizedBox(
           height: kToolbarHeight, // Ensures full height usage
           child: Stack(
@@ -581,7 +592,8 @@ class AskMeState extends State<AskMe> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: IconButton(
-                  icon: Icon(Icons.menu, size: 28, color: Colors.white), // Custom menu icon
+                  icon: Icon(Icons.menu,
+                      size: 28, color: Colors.white), // Custom menu icon
                   onPressed: () {
                     _scaffoldKey.currentState?.openDrawer(); // Open the drawer
                   },
@@ -602,9 +614,13 @@ class AskMeState extends State<AskMe> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    IconButton(icon: newChatIcon(), onPressed: () {}),
                     IconButton(
-                      icon: Icon(Icons.translate, size: 28, color: Colors.white),
+                      icon: newChatIcon(),
+                      onPressed: _startNewChat, // Use the new function here
+                    ),
+                    IconButton(
+                      icon:
+                          Icon(Icons.translate, size: 28, color: Colors.white),
                       onPressed: () {
                         _showLanguageSelection();
                       },
@@ -649,7 +665,7 @@ class AskMeState extends State<AskMe> {
                       context: context,
                       shape: RoundedRectangleBorder(
                         borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(20)),
+                            BorderRadius.vertical(top: Radius.circular(20)),
                       ),
                       builder: (BuildContext context) {
                         return Padding(
@@ -657,22 +673,30 @@ class AskMeState extends State<AskMe> {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              _buildAttachmentOption(context, Icons.image,
-                                  L10n.getTranslatedText(context, 'Image'), Colors.blue, 'Image'),
+                              _buildAttachmentOption(
+                                  context,
+                                  Icons.image,
+                                  L10n.getTranslatedText(context, 'Image'),
+                                  Colors.blue,
+                                  'Image'),
                               _buildAttachmentOption(
                                   context,
                                   Icons.insert_drive_file,
-                                L10n.getTranslatedText(context, 'Document'),
+                                  L10n.getTranslatedText(context, 'Document'),
                                   Colors.green,
                                   'Document'),
                               _buildAttachmentOption(
                                   context,
                                   Icons.video_library,
-                                L10n.getTranslatedText(context, 'Video'),
+                                  L10n.getTranslatedText(context, 'Video'),
                                   Colors.orange,
                                   'Video'),
-                              _buildAttachmentOption(context, Icons.audiotrack,
-                        L10n.getTranslatedText(context, 'Audio'), Colors.purple, 'Audio'),
+                              _buildAttachmentOption(
+                                  context,
+                                  Icons.audiotrack,
+                                  L10n.getTranslatedText(context, 'Audio'),
+                                  Colors.purple,
+                                  'Audio'),
                             ],
                           ),
                         );
@@ -694,26 +718,26 @@ class AskMeState extends State<AskMe> {
                         hintText: isConverting
                             ? L10n.getTranslatedText(context, 'Converting ... ')
                             : (_isRecording
-                            ? L10n.getTranslatedText(
-                            context, 'Recording ... ${_seconds}s')
-                            : L10n.getTranslatedText(
-                            context, 'Type a message ...')),
+                                ? L10n.getTranslatedText(
+                                    context, 'Recording ... ${_seconds}s')
+                                : L10n.getTranslatedText(
+                                    context, 'Type a message ...')),
                         contentPadding: EdgeInsets.only(
                             left: 20, right: 60, top: 14, bottom: 14),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),
                           borderSide:
-                          BorderSide(color: Colors.grey, width: 1.5),
+                              BorderSide(color: Colors.grey, width: 1.5),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),
                           borderSide:
-                          BorderSide(color: Colors.grey, width: 1.5),
+                              BorderSide(color: Colors.grey, width: 1.5),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),
                           borderSide:
-                          BorderSide(color: Colors.grey[300]!, width: 1.5),
+                              BorderSide(color: Colors.grey[300]!, width: 1.5),
                         ),
                       ),
                     ),
@@ -737,7 +761,7 @@ class AskMeState extends State<AskMe> {
                 height: 42,
                 child: IconButton(
                   icon:
-                  Icon(Icons.send, color: AcademeTheme.appColor, size: 25),
+                      Icon(Icons.send, color: AcademeTheme.appColor, size: 25),
                   onPressed: () {
                     String message = _textController.text.trim();
                     _sendMessage(message);
@@ -770,7 +794,8 @@ class AskMeState extends State<AskMe> {
       style: ElevatedButton.styleFrom(
         foregroundColor: Colors.white,
         backgroundColor: color,
-        padding: EdgeInsets.symmetric(horizontal: width * 0.03, vertical: height * 0.01),
+        padding: EdgeInsets.symmetric(
+            horizontal: width * 0.03, vertical: height * 0.01),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       ),
       icon: Icon(icon, size: width * 0.05),
@@ -787,7 +812,6 @@ class AskMeState extends State<AskMe> {
       ),
     );
   }
-
 
   Widget _buildAttachmentOption(BuildContext context, IconData icon,
       String label, Color color, String fileType) {
@@ -895,7 +919,6 @@ class AskMeState extends State<AskMe> {
                 ),
               ],
             )
-
           ],
         ),
       ),
@@ -915,7 +938,7 @@ class AskMeState extends State<AskMe> {
 
         return Column(
           crossAxisAlignment:
-          isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
             // Display Image
             if (message.containsKey("fileType") &&
@@ -1034,24 +1057,24 @@ class AskMeState extends State<AskMe> {
                         decoration: BoxDecoration(
                           gradient: isUser
                               ? LinearGradient(
-                            colors: [
-                              Colors.blue[300]!,
-                              Colors.blue[700]!
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          )
+                                  colors: [
+                                    Colors.blue[300]!,
+                                    Colors.blue[700]!
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                )
                               : null,
                           color: isUser ? null : Colors.grey[300]!,
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: isUser
                               ? [
-                            BoxShadow(
-                              color: Colors.black.withAlpha(15),
-                              blurRadius: 6,
-                              offset: Offset(2, 4),
-                            ),
-                          ]
+                                  BoxShadow(
+                                    color: Colors.black.withAlpha(15),
+                                    blurRadius: 6,
+                                    offset: Offset(2, 4),
+                                  ),
+                                ]
                               : [],
                         ),
                         child: Column(
@@ -1149,6 +1172,7 @@ class AskMeState extends State<AskMe> {
       ),
     );
   }
+
   Widget newChatIcon() {
     return Stack(
       clipBehavior: Clip.none,
@@ -1170,7 +1194,7 @@ class AskMeState extends State<AskMe> {
                 shape: BoxShape.circle,
                 border: Border.all(color: Colors.white, width: 2)),
             child:
-            Center(child: Icon(Icons.add, size: 12, color: Colors.white)),
+                Center(child: Icon(Icons.add, size: 12, color: Colors.white)),
           ),
         ),
       ],
