@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ACADEMe/home/auth/auth_service.dart';
-import 'package:ACADEMe/home/pages/course_view.dart';
 import 'package:ACADEMe/home/pages/ask_me.dart';
 import 'package:ACADEMe/home/pages/my_progress.dart';
 import 'package:ACADEMe/localization/l10n.dart';
@@ -63,14 +62,14 @@ class HomepageDrawer extends StatelessWidget {
               // Drawer Items with Navigation
               _buildDrawerItem(
                   Icons.bookmark, L10n.getTranslatedText(context, 'Bookmarks'),
-                      () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => const BookmarksScreen(),
-                    //   ),
-                    // );
-                  }),
+                  () {
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => const BookmarksScreen(),
+                //   ),
+                // );
+              }),
               _buildDrawerItem(
                   Icons.person, L10n.getTranslatedText(context, 'Profile'), () {
                 onProfileTap();
@@ -79,20 +78,20 @@ class HomepageDrawer extends StatelessWidget {
               _buildDrawerItem(
                 Icons.menu_book,
                 L10n.getTranslatedText(context, 'My Courses'),
-                    () {
+                () {
                   onCourseTap(); // Navigates to the function you want
                   onClose();
                 },
               ),
               _buildDrawerItem(Icons.show_chart,
                   L10n.getTranslatedText(context, 'My Progress'), () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ProgressScreen(),
-                      ),
-                    );
-                  }),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProgressScreen(),
+                  ),
+                );
+              }),
               _buildDrawerItem(Icons.headset_mic, "ASKMe", () {
                 Navigator.push(
                   context,
@@ -103,23 +102,23 @@ class HomepageDrawer extends StatelessWidget {
               }),
               _buildDrawerItem(
                   Icons.settings, L10n.getTranslatedText(context, 'Settings'),
-                      () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => const SettingsScreen(),
-                    //   ),
-                    // );
-                  }),
+                  () {
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => const SettingsScreen(),
+                //   ),
+                // );
+              }),
               _buildDrawerItem(Icons.help_outline,
                   L10n.getTranslatedText(context, 'Get Help'), () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => const HelpScreen(),
-                    //   ),
-                    // );
-                  }),
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => const HelpScreen(),
+                //   ),
+                // );
+              }),
               const Spacer(),
               // User Profile Section
               Padding(
@@ -135,7 +134,7 @@ class HomepageDrawer extends StatelessWidget {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border:
-                          Border.all(color: Colors.blueAccent, width: 3),
+                              Border.all(color: Colors.blueAccent, width: 3),
                         ),
                         child: CircleAvatar(
                           radius: 25,

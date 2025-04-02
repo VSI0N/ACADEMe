@@ -51,7 +51,6 @@ class FlashCardState extends State<FlashCard> {
   ChewieController? _chewieController;
   int _currentPage = 0;
   final AudioPlayer _audioPlayer = AudioPlayer();
-  bool _hasNavigated = false;
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
   final String backendUrl = dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
   String topicTitle = "Loading...";
@@ -437,21 +436,21 @@ class FlashCardState extends State<FlashCard> {
                             ),
                           ),
                           if (index == 0 && _showSwipeHint)
-                          IgnorePointer(
-                            child: Positioned.fill(
-                              child: Container(
-                                color: Colors.transparent,
-                                child: Center(
-                                  child: Image.asset(
-                                    'assets/images/swipe_left_no_bg.gif',
-                                    width: 200,
-                                    height: 200,
-                                    fit: BoxFit.contain,
+                            IgnorePointer(
+                              child: Positioned.fill(
+                                child: Container(
+                                  color: Colors.transparent,
+                                  child: Center(
+                                    child: Image.asset(
+                                      'assets/images/swipe_left_no_bg.gif',
+                                      width: 200,
+                                      height: 200,
+                                      fit: BoxFit.contain,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
                         ],
                       );
                     },

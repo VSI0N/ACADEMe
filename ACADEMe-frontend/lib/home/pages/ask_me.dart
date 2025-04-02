@@ -1161,9 +1161,9 @@ class AskMeState extends State<AskMe> {
                 TextButton(
                   onPressed: isButtonEnabled
                       ? () {
-                    _submitReport(message, reportController.text);
-                    Navigator.pop(context);
-                  }
+                          _submitReport(message, reportController.text);
+                          Navigator.pop(context);
+                        }
                       : null, // Disable button when empty
                   child: Text("Send"),
                 ),
