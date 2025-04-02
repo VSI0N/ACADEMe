@@ -18,6 +18,7 @@ import 'quiz.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FlashCard extends StatefulWidget {
   final List<Map<String, String>> materials;
@@ -54,12 +55,14 @@ class FlashCardState extends State<FlashCard> {
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
   final String backendUrl = dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
   String topicTitle = "Loading...";
+  bool _showSwipeHint = false;
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
     _currentPage = widget.initialIndex;
+    _loadSwipeHintState();
     fetchTopicDetails();
 
     if (widget.materials.isEmpty && widget.quizzes.isEmpty) {
@@ -71,6 +74,24 @@ class FlashCardState extends State<FlashCard> {
     } else {
       _setupVideoController();
     }
+  }
+
+  Future<void> _loadSwipeHintState() async {
+    final prefs = await SharedPreferences.getInstance();
+    bool hasSwiped = prefs.getBool('hasSwipedLeft') ?? false;
+    if (!hasSwiped && widget.initialIndex == 0) {
+      setState(() {
+        _showSwipeHint = true;
+      });
+    }
+  }
+
+  Future<void> _saveSwipeHintState() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('hasSwipedLeft', true);
+    setState(() {
+      _showSwipeHint = false;
+    });
   }
 
   Future<void> fetchTopicDetails() async {
@@ -365,6 +386,9 @@ class FlashCardState extends State<FlashCard> {
                     index: _currentPage,
                     onIndexChanged: (index) {
                       if (_currentPage != index) {
+                        if (_currentPage == 0 && index == 1 && _showSwipeHint) {
+                          _saveSwipeHintState();
+                        }
                         setState(() {
                           _currentPage = index;
                         });
@@ -407,6 +431,22 @@ class FlashCardState extends State<FlashCard> {
                                     topRight: Radius.circular(20),
                                     bottomLeft: Radius.circular(0),
                                     bottomRight: Radius.circular(0),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          if (index == 0 && _showSwipeHint)
+                          IgnorePointer(
+                            child: Positioned.fill(
+                              child: Container(
+                                color: Colors.transparent,
+                                child: Center(
+                                  child: Image.asset(
+                                    'assets/images/swipe_left_no_bg.gif',
+                                    width: 200,
+                                    height: 200,
+                                    fit: BoxFit.contain,
                                   ),
                                 ),
                               ),
