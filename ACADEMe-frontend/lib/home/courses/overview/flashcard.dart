@@ -596,51 +596,135 @@ class FlashCardState extends State<FlashCard> {
   }
 
   Widget _formattedText(String text) {
-    List<Widget> lines = [];
-    final lineStrings = text.split('\n');
+    final lines = text.split('\n');
+    final widgets = <Widget>[];
 
-    for (int i = 0; i < lineStrings.length; i++) {
-      final line = lineStrings[i];
+    for (int i = 0; i < lines.length; i++) {
+      final line = lines[i];
       if (line.isEmpty) {
-        lines.add(const SizedBox(height: 16));
+        widgets.add(const SizedBox(height: 16));
         continue;
       }
 
-      // Check for headings first
-      if (line.startsWith('#')) {
-        lines.add(_processHeading(line));
-      }
-      // Check for lists
-      else if (line.trim().startsWith('- ') || line.trim().startsWith('* ')) {
-        lines.add(_buildBulletPoint(line));
-      } else if (RegExp(r'^\d+\.\s').hasMatch(line.trim())) {
-        lines.add(_buildNumberedListItem(line));
-      }
-      // Process regular text with inline formatting
-      else {
-        lines.add(_parseInlineFormatting(line));
-      }
-
-      // Add spacing between lines
-      if (i != lineStrings.length - 1) {
-        lines.add(const SizedBox(height: 8));
-      }
+      widgets.add(
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 6),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: _isSpecialLine(line) ? Colors.transparent : Colors.grey[50],
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: _parseLineContent(line),
+        ),
+      );
     }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: lines,
+      children: widgets,
     );
   }
 
+  Widget _parseLineContent(String line) {
+    if (line.startsWith('#')) {
+      return _processHeading(line);
+    }
+    if (line.trim().startsWith('- ') || line.trim().startsWith('* ')) {
+      return _buildBulletPoint(line);
+    }
+    if (RegExp(r'^\d+\.\s').hasMatch(line.trim())) {
+      return _buildNumberedListItem(line);
+    }
+    if (line.trim().startsWith('> ')) {
+      return _buildQuote(line);
+    }
+    return _parseInlineFormatting(line);
+  }
+
+// Add this helper method
+  bool _isSpecialLine(String line) {
+    return line.startsWith('#') ||
+        line.trim().startsWith('- ') ||
+        line.trim().startsWith('* ') ||
+        RegExp(r'^\d+\.\s').hasMatch(line.trim()) ||
+        line.trim().startsWith('> ');
+  }
+
+  // Add these new methods
+  Widget _buildBulletPoint(String text) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          alignment: Alignment.topCenter,
+          padding: const EdgeInsets.only(top: 10), // Adjust vertical position
+          child: Icon(
+            Icons.circle,
+            size: 10, // Slightly larger for better visibility
+            color: Colors.blue[700], // Match numbered list color
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _parseInlineFormatting(
+            text.replaceFirst(RegExp(r'^[-*]\s+'), ''),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNumberedListItem(String text) {
+    final numberMatch = RegExp(r'^(\d+)\.').firstMatch(text);
+    final number = numberMatch?.group(1) ?? '•';
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          alignment: Alignment.topCenter,
+          padding: const EdgeInsets.only(top: 5), // Adjust this value as needed
+          child: Text(
+            '$number.',
+            style: TextStyle(
+              color: Colors.blue[700],
+              fontWeight: FontWeight.bold,
+              fontSize: 16, // Match base text size
+              height: 1.4, // Match line height
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _parseInlineFormatting(
+            text.replaceFirst(RegExp(r'^\d+\.\s+'), ''),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildQuote(String text) {
+    return Container(
+      padding: const EdgeInsets.only(left: 16, top: 12, bottom: 12),
+      decoration: BoxDecoration(
+        border: Border(left: BorderSide(color: Colors.blue[300]!, width: 4)),
+        color: Colors.blue[50],
+      ),
+      child: _parseInlineFormatting(
+        text.replaceFirst('> ', ''),
+      ),
+    );
+  }
+
+  // Update the _parseInlineFormatting method
   Widget _parseInlineFormatting(String text,
       {bool isHeading = false, int level = 1}) {
     final spans = <InlineSpan>[];
     int lastIndex = 0;
 
-    // Improved regex pattern for markdown parsing
     final pattern = RegExp(
-      r'(\*\*|\*|`|\[.*?\]\(.*?\))',
+      r'(\*\*(.*?)\*\*|__(.*?)__|\*(.*?)\*|_(.*?)_|`(.*?)`|\[(.*?)\]\((.*?)\))',
       dotAll: true,
     );
 
@@ -648,111 +732,106 @@ class FlashCardState extends State<FlashCard> {
       final match = pattern.firstMatch(text.substring(lastIndex));
       if (match == null) break;
 
-      // Add text before the match
       if (match.start > 0) {
         spans.add(TextSpan(
           text: text.substring(lastIndex, lastIndex + match.start),
-          style: _getTextStyle(isHeading, level),
+          style: _getBaseTextStyle(isHeading, level),
         ));
       }
 
-      final matchedText =
-          text.substring(lastIndex + match.start, lastIndex + match.end);
-      lastIndex += match.end;
-
-      // Handle different markdown symbols
-      switch (matchedText[0]) {
-        case '*':
-          if (matchedText.length > 1 && matchedText[1] == '*') {
-            // Bold text
-            final endMatch = text.indexOf('**', lastIndex);
-            if (endMatch != -1) {
-              spans.add(TextSpan(
-                text: text.substring(lastIndex, endMatch),
-                style: _getTextStyle(isHeading, level).copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ));
-              lastIndex = endMatch + 2;
-            }
-          } else {
-            // Italic text
-            final endMatch = text.indexOf('*', lastIndex);
-            if (endMatch != -1) {
-              spans.add(TextSpan(
-                text: text.substring(lastIndex, endMatch),
-                style: _getTextStyle(isHeading, level).copyWith(
-                  fontStyle: FontStyle.italic,
-                ),
-              ));
-              lastIndex = endMatch + 1;
-            }
-          }
-          break;
-
-        case '`':
-          // Code block
-          final endMatch = text.indexOf('`', lastIndex);
-          if (endMatch != -1) {
-            spans.add(TextSpan(
-              text: text.substring(lastIndex, endMatch),
-              style: _getTextStyle(isHeading, level).copyWith(
-                fontFamily: 'monospace',
-                backgroundColor: Colors.grey[200],
-              ),
-            ));
-            lastIndex = endMatch + 1;
-          }
-          break;
-
-        case '[':
-          // Link handling
-          final linkRegex = RegExp(r'\[(.*?)\]\((.*?)\)');
-          final linkMatch = linkRegex.firstMatch(text.substring(lastIndex - 1));
-          if (linkMatch != null) {
-            spans.add(TextSpan(
-              text: linkMatch.group(1),
-              style: _getTextStyle(isHeading, level).copyWith(
-                color: Colors.blue,
-                decoration: TextDecoration.underline,
-              ),
-              recognizer: TapGestureRecognizer()
-                ..onTap = () => launchUrl(Uri.parse(linkMatch.group(2)!)),
-            ));
-            lastIndex += linkMatch.end - 1;
-          }
-          break;
+      if (match.group(1) != null) {
+        spans.add(_createStyledSpan(match, isHeading, level));
       }
+
+      lastIndex += match.end;
     }
 
-    // Add remaining text
     if (lastIndex < text.length) {
       spans.add(TextSpan(
         text: text.substring(lastIndex),
-        style: _getTextStyle(isHeading, level),
+        style: _getBaseTextStyle(isHeading, level),
       ));
     }
 
     return RichText(
       text: TextSpan(
-        style: DefaultTextStyle.of(context).style,
+        style: _getBaseTextStyle(isHeading, level),
         children: spans,
       ),
     );
   }
 
-// Helper methods for styling
-  TextStyle _getTextStyle(bool isHeading, int level) {
-    if (isHeading) {
-      return TextStyle(
-        fontSize: _getHeadingSize(level),
-        fontWeight: FontWeight.bold,
-        color: Colors.black87,
+// Add this new helper method
+  TextSpan _createStyledSpan(RegExpMatch match, bool isHeading, int level) {
+    final baseStyle = _getBaseTextStyle(isHeading, level);
+
+    if (match.group(2) != null) { // **Bold**
+      return TextSpan(
+        text: match.group(2),
+        style: baseStyle.copyWith(
+          fontWeight: FontWeight.bold,
+          color: Colors.deepPurple[800],
+        ),
+      );
+    } else if (match.group(3) != null) { // __Bold__
+      return TextSpan(
+        text: match.group(3),
+        style: baseStyle.copyWith(
+          fontWeight: FontWeight.bold,
+          backgroundColor: Colors.amber[50],
+        ),
+      );
+    } else if (match.group(4) != null) { // *Italic*
+      return TextSpan(
+        text: match.group(4),
+        style: baseStyle.copyWith(
+          fontStyle: FontStyle.italic,
+          color: Colors.teal[800],
+        ),
+      );
+    } else if (match.group(5) != null) { // _Italic_
+      return TextSpan(
+        text: match.group(5),
+        style: baseStyle.copyWith(
+          fontStyle: FontStyle.italic,
+          decoration: TextDecoration.underline,
+          decorationColor: Colors.teal[300],
+        ),
+      );
+    } else if (match.group(6) != null) { // `Code`
+      return TextSpan(
+        text: match.group(6),
+        style: baseStyle.copyWith(
+          fontFamily: 'FiraCode',
+          backgroundColor: Colors.grey[100],
+        ),
+      );
+    } else if (match.group(7) != null) { // [Link](url)
+      return TextSpan(
+        text: match.group(7),
+        style: baseStyle.copyWith(
+          color: Colors.blue[700],
+          decoration: TextDecoration.underline,
+          decorationColor: Colors.blue[300],
+        ),
+        recognizer: TapGestureRecognizer()
+          ..onTap = () => launchUrl(Uri.parse(match.group(8)!)),
       );
     }
-    return const TextStyle(
-      fontSize: 16,
-      color: Colors.black87,
+
+    return TextSpan(text: match.group(0), style: baseStyle);
+  }
+
+// Add explicit base text style
+  TextStyle _getBaseTextStyle(bool isHeading, int level) {
+    return TextStyle(
+      fontSize: isHeading ? _getHeadingSize(level) : 17,
+      fontWeight: isHeading ? FontWeight.w800 : FontWeight.w400,
+      color: Colors.grey[850],
+      height: 1.6,
+      letterSpacing: isHeading ? -0.5 : 0.3,
+      fontFamily: 'Roboto',
+      decoration: TextDecoration.none,
     );
   }
 
@@ -767,44 +846,6 @@ class FlashCardState extends State<FlashCard> {
       default:
         return 16;
     }
-  }
-
-// Helper methods for building list items
-  Widget _buildBulletPoint(String text) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Icon(Icons.circle, size: 8, color: Colors.black54),
-          const SizedBox(width: 8),
-          Expanded(
-            child: _parseInlineFormatting(
-                text.replaceFirst(RegExp(r'^[-*]\s+'), '')),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNumberedListItem(String text) {
-    final numberMatch = RegExp(r'^(\d+)\.').firstMatch(text);
-    final number = numberMatch?.group(1) ?? '•';
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('$number.', style: const TextStyle(fontSize: 16)),
-          const SizedBox(width: 8),
-          Expanded(
-            child: _parseInlineFormatting(
-                text.replaceFirst(RegExp(r'^\d+\.\s+'), '')),
-          ),
-        ],
-      ),
-    );
   }
 
 // Helper method for processing headings
