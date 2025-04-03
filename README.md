@@ -1,6 +1,6 @@
-# 🎓 ACADEMe - AI-Powered Personalized Education Platform  
+# ACADEMe - AI-Powered Personalized Education Platform  
 
-![ACADEMe Logo](https://github.com/VSI0N/ACADEMe/blob/main/ACADEMe.jpeg?raw=true)  
+![ACADEMe Thumbnail](https://github.com/user-attachments/assets/e0f73106-f414-433e-a80f-d940c725a6b5) 
 
 ## 🌟 Introduction  
 **ACADEMe** is an AI-powered educational platform revolutionizing the way students learn. It leverages cutting-edge technology to provide:  
