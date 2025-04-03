@@ -247,5 +247,12 @@
   "Correct Option": "Richtige Option",
   "No quiz questions added yet.": "Noch keine Quizfragen hinzugefügt.",
   "Add Question": "Frage hinzufügen",
-  "No questions added yet.": "Noch keine Fragen hinzugefügt."
+  "No questions added yet.": "Noch keine Fragen hinzugefügt.",
+  "Text": "Text",
+  "Material": "Material",
+  "text": "Text",
+  "document": "Dokument",
+  "audio": "Audio",
+  "image": "Bild",
+  "material": "Material"
 }

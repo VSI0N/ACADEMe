@@ -247,5 +247,12 @@
   "Correct Option": "正确选项",
   "No quiz questions added yet.": "尚未添加测验问题。",
   "Add Question": "添加问题",
-  "No questions added yet.": "尚未添加问题。"
+  "No questions added yet.": "尚未添加问题。",
+  "Text": "文本",
+  "Material": "材料",
+  "text": "文本",
+  "document": "文档",
+  "audio": "音频",
+  "image": "图像",
+  "material": "材料"
 }

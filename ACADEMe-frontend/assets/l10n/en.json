@@ -250,6 +250,10 @@
     "No questions added yet.": "No questions added yet.",
     "text": "text",
     "document": "document",
-    "audio": "audio"
+    "audio": "audio",
+    "Text": "Text",
+    "Material": "Material",
+    "image": "image",
+    "material": "material"
 }
   
