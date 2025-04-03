@@ -18,6 +18,7 @@ import 'quiz.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FlashCard extends StatefulWidget {
   final List<Map<String, String>> materials;
@@ -54,12 +55,14 @@ class FlashCardState extends State<FlashCard> {
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
   final String backendUrl = dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
   String topicTitle = "Loading...";
+  bool _showSwipeHint = true;
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
     _currentPage = widget.initialIndex;
+    _loadSwipeHintState(); // Add this
     fetchTopicDetails();
 
     if (widget.materials.isEmpty && widget.quizzes.isEmpty) {
@@ -70,6 +73,23 @@ class FlashCardState extends State<FlashCard> {
       });
     } else {
       _setupVideoController();
+    }
+  }
+
+  Future<void> _loadSwipeHintState() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _showSwipeHint = prefs.getBool('show_swipe_hint') ?? true;
+    });
+  }
+
+  void _handleSwipe() async {
+    if (_showSwipeHint) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('show_swipe_hint', false);
+      setState(() {
+        _showSwipeHint = false;
+      });
     }
   }
 
@@ -312,6 +332,7 @@ class FlashCardState extends State<FlashCard> {
 
   @override
   void dispose() {
+    _showSwipeHint = false;
     _videoController?.removeListener(_videoListener);
     _videoController?.dispose();
     _chewieController?.dispose();
@@ -364,6 +385,7 @@ class FlashCardState extends State<FlashCard> {
                     axisDirection: AxisDirection.right,
                     index: _currentPage,
                     onIndexChanged: (index) {
+                      _handleSwipe();
                       if (_currentPage != index) {
                         setState(() {
                           _currentPage = index;
@@ -385,14 +407,12 @@ class FlashCardState extends State<FlashCard> {
                               bottomLeft: Radius.circular(0),
                               bottomRight: Radius.circular(0),
                             ),
-                            child:
-                                _buildMaterial(index < widget.materials.length
-                                    ? widget.materials[index]
-                                    : {
-                                        "type": "quiz",
-                                        "quiz": widget.quizzes[
-                                            index - widget.materials.length],
-                                      }),
+                            child: _buildMaterial(index < widget.materials.length
+                                ? widget.materials[index]
+                                : {
+                              "type": "quiz",
+                              "quiz": widget.quizzes[index - widget.materials.length],
+                            }),
                           ),
                           AnimatedOpacity(
                             opacity: _currentPage == index ? 0.0 : 0.2,
@@ -412,6 +432,20 @@ class FlashCardState extends State<FlashCard> {
                               ),
                             ),
                           ),
+                          // Add this new Positioned widget for the GIF overlay
+                          if (_showSwipeHint && index == 0)
+                            Positioned.fill(
+                              child: IgnorePointer(
+                                child: Center(
+                                  child: Image.asset(
+                                    'assets/images/swipe_left_no_bg.gif',
+                                    width: 200,
+                                    height: 200,
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ),
+                            ),
                         ],
                       );
                     },
