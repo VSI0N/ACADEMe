@@ -40,10 +40,10 @@
 | Component       | Technology Used |
 |----------------|----------------|
 | **Frontend**   | Flutter        |
-| **Backend**    | FastAPI, Firebase  |
-| **Database**   | Firestore      |
+| **Backend**    | FastAPI        |
+| **Database**   | Firebase       |
 | **AI/ML**      | Google Gemini, LibreTranslate, Whisper  |
-| **DevOps**     | Railway, Docker |
+| **DevOps**     | Docker, Railway |
 
 ## 🔧 Backend Features  
 - 🔐 **Secure authentication** with JWT & Firebase login  

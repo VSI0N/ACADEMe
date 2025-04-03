@@ -43,7 +43,7 @@
 | **Backend**    | FastAPI         |
 | **Database**   | Firebase        |
 | **AI/ML**      | Google Gemini   |
-| **DevOps**     | Railway, Docker         |
+| **DevOps**     | Docker, Railway |
 
 ## 💻 Installation Guide  
 ### Prerequisites  
