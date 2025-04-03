@@ -367,7 +367,7 @@ class LanguageSelectionBottomSheetState
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(23),
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),

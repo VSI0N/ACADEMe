@@ -21,6 +21,21 @@ class ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
   final _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
   @override
+  void initState() {
+    super.initState();
+    _loadStoredClass();
+  }
+
+  Future<void> _loadStoredClass() async {
+    final storedClass = await _secureStorage.read(key: 'student_class');
+    if (mounted) {
+      setState(() {
+        selectedClass = storedClass; // Set stored class if available
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ScaffoldMessenger(
       key: _scaffoldMessengerKey,
@@ -50,7 +65,7 @@ class ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
                 ),
               ),
               hint: const Text("Select class"),
-              value: selectedClass,
+              value: selectedClass?.isNotEmpty == true ? selectedClass : null,
               items: classes
                   .map((className) => DropdownMenuItem(
                         value: className,
@@ -166,9 +181,7 @@ class ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        body: jsonEncode({
-          'new_class': selectedClass,
-        }),
+        body: jsonEncode({'new_class': selectedClass}),
       );
 
       if (response.statusCode == 200) {
@@ -190,34 +203,29 @@ class ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
     final String? password = await _secureStorage.read(key: 'password');
 
     if (email == null || password == null) {
-      _showSnackBar('No email or password found');
+      _showSnackBar('Session expired. Please login again.');
       return false;
     }
 
     try {
       final response = await http.post(
         Uri.parse("$backendUrl/api/users/login"),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'email': email,
-          'password': password,
-        }),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'email': email, 'password': password}),
       );
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = jsonDecode(response.body);
-        final String newToken = responseData['access_token'];
-        await _secureStorage.write(key: 'access_token', value: newToken);
+        final responseData = jsonDecode(response.body);
+        await _secureStorage.write(
+            key: 'access_token', value: responseData['access_token']);
         await _secureStorage.write(key: 'student_class', value: selectedClass);
         return true;
       }
 
-      _showSnackBar('Failed to relogin: ${response.body}');
+      _showSnackBar('Login failed: ${response.statusCode}');
       return false;
     } catch (e) {
-      _showSnackBar('An error occurred. Please try again.');
+      _showSnackBar('Network error during login');
       return false;
     }
   }

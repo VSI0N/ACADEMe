@@ -30,7 +30,6 @@ class _TopicViewScreenState extends State<TopicViewScreen>
   final FlutterSecureStorage storage = const FlutterSecureStorage();
   final AutoSizeGroup _tabTextGroup = AutoSizeGroup();
 
-
   @override
   void initState() {
     super.initState();
@@ -56,7 +55,7 @@ class _TopicViewScreenState extends State<TopicViewScreen>
       if (!mounted) return;
 
       final languageProvider =
-      Provider.of<LanguageProvider>(context, listen: false);
+          Provider.of<LanguageProvider>(context, listen: false);
       final targetLanguage = languageProvider.locale.languageCode;
 
       final response = await http.get(
@@ -157,16 +156,14 @@ class _TopicViewScreenState extends State<TopicViewScreen>
   }
 
   Widget _buildSynchronizedTab(BuildContext context, String labelKey) {
-    return Expanded(
-      child: Tab(
-        child: AutoSizeText(
-          L10n.getTranslatedText(context, labelKey),
-          maxLines: 1,
-          group: _tabTextGroup, // Ensures all tabs scale together
-          style: TextStyle(fontSize: 16),
-          minFontSize: 12, // Prevents text from becoming unreadable
-          textAlign: TextAlign.center,
-        ),
+    return Tab(
+      child: AutoSizeText(
+        L10n.getTranslatedText(context, labelKey),
+        maxLines: 1,
+        group: _tabTextGroup, // Ensures all tabs scale together
+        style: TextStyle(fontSize: 16),
+        minFontSize: 12, // Prevents text from becoming unreadable
+        textAlign: TextAlign.center,
       ),
     );
   }

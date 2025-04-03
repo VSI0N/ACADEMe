@@ -18,7 +18,6 @@ import 'quiz.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class FlashCard extends StatefulWidget {
   final List<Map<String, String>> materials;
@@ -51,17 +50,16 @@ class FlashCardState extends State<FlashCard> {
   ChewieController? _chewieController;
   int _currentPage = 0;
   final AudioPlayer _audioPlayer = AudioPlayer();
+  bool _hasNavigated = false;
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
   final String backendUrl = dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
   String topicTitle = "Loading...";
-  bool _showSwipeHint = false;
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
     _currentPage = widget.initialIndex;
-    _loadSwipeHintState();
     fetchTopicDetails();
 
     if (widget.materials.isEmpty && widget.quizzes.isEmpty) {
@@ -73,24 +71,6 @@ class FlashCardState extends State<FlashCard> {
     } else {
       _setupVideoController();
     }
-  }
-
-  Future<void> _loadSwipeHintState() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool hasSwiped = prefs.getBool('hasSwipedLeft') ?? false;
-    if (!hasSwiped && widget.initialIndex == 0) {
-      setState(() {
-        _showSwipeHint = true;
-      });
-    }
-  }
-
-  Future<void> _saveSwipeHintState() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('hasSwipedLeft', true);
-    setState(() {
-      _showSwipeHint = false;
-    });
   }
 
   Future<void> fetchTopicDetails() async {
@@ -385,9 +365,6 @@ class FlashCardState extends State<FlashCard> {
                     index: _currentPage,
                     onIndexChanged: (index) {
                       if (_currentPage != index) {
-                        if (_currentPage == 0 && index == 1 && _showSwipeHint) {
-                          _saveSwipeHintState();
-                        }
                         setState(() {
                           _currentPage = index;
                         });
@@ -435,22 +412,6 @@ class FlashCardState extends State<FlashCard> {
                               ),
                             ),
                           ),
-                          if (index == 0 && _showSwipeHint)
-                            IgnorePointer(
-                              child: Positioned.fill(
-                                child: Container(
-                                  color: Colors.transparent,
-                                  child: Center(
-                                    child: Image.asset(
-                                      'assets/images/swipe_left_no_bg.gif',
-                                      width: 200,
-                                      height: 200,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
                         ],
                       );
                     },
@@ -765,7 +726,8 @@ class FlashCardState extends State<FlashCard> {
   TextSpan _createStyledSpan(RegExpMatch match, bool isHeading, int level) {
     final baseStyle = _getBaseTextStyle(isHeading, level);
 
-    if (match.group(2) != null) { // **Bold**
+    if (match.group(2) != null) {
+      // **Bold**
       return TextSpan(
         text: match.group(2),
         style: baseStyle.copyWith(
@@ -773,7 +735,8 @@ class FlashCardState extends State<FlashCard> {
           color: Colors.deepPurple[800],
         ),
       );
-    } else if (match.group(3) != null) { // __Bold__
+    } else if (match.group(3) != null) {
+      // __Bold__
       return TextSpan(
         text: match.group(3),
         style: baseStyle.copyWith(
@@ -781,7 +744,8 @@ class FlashCardState extends State<FlashCard> {
           backgroundColor: Colors.amber[50],
         ),
       );
-    } else if (match.group(4) != null) { // *Italic*
+    } else if (match.group(4) != null) {
+      // *Italic*
       return TextSpan(
         text: match.group(4),
         style: baseStyle.copyWith(
@@ -789,7 +753,8 @@ class FlashCardState extends State<FlashCard> {
           color: Colors.teal[800],
         ),
       );
-    } else if (match.group(5) != null) { // _Italic_
+    } else if (match.group(5) != null) {
+      // _Italic_
       return TextSpan(
         text: match.group(5),
         style: baseStyle.copyWith(
@@ -798,7 +763,8 @@ class FlashCardState extends State<FlashCard> {
           decorationColor: Colors.teal[300],
         ),
       );
-    } else if (match.group(6) != null) { // `Code`
+    } else if (match.group(6) != null) {
+      // `Code`
       return TextSpan(
         text: match.group(6),
         style: baseStyle.copyWith(
@@ -806,7 +772,8 @@ class FlashCardState extends State<FlashCard> {
           backgroundColor: Colors.grey[100],
         ),
       );
-    } else if (match.group(7) != null) { // [Link](url)
+    } else if (match.group(7) != null) {
+      // [Link](url)
       return TextSpan(
         text: match.group(7),
         style: baseStyle.copyWith(

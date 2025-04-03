@@ -85,10 +85,10 @@ class CourseListScreenState extends State<CourseListScreen>
           setState(() {
             courses = data
                 .map((course) => {
-              "id": course["id"],
-              "title": course["title"],
-              "progress": 0.0,
-            })
+                      "id": course["id"],
+                      "title": course["title"],
+                      "progress": 0.0,
+                    })
                 .toList();
           });
         } else {
@@ -135,7 +135,6 @@ class CourseListScreenState extends State<CourseListScreen>
 
   @override
   Widget build(BuildContext context) {
-
     return ASKMeButton(
       onFABPressed: () {
         Navigator.push(
@@ -193,22 +192,18 @@ class CourseListScreenState extends State<CourseListScreen>
     );
   }
 
-
   Widget _buildSynchronizedTab(BuildContext context, String labelKey) {
-    return Expanded(
-      child: Tab(
-        child: AutoSizeText(
-          L10n.getTranslatedText(context, labelKey),
-          maxLines: 1,
-          group: _tabTextGroup, // Ensures all tabs scale together
-          style: TextStyle(fontSize: 16),
-          minFontSize: 12, // Prevents text from becoming unreadable
-          textAlign: TextAlign.center,
-        ),
+    return Tab(
+      child: AutoSizeText(
+        L10n.getTranslatedText(context, labelKey),
+        maxLines: 1,
+        group: _tabTextGroup, // Ensures all tabs scale together
+        style: TextStyle(fontSize: 16),
+        minFontSize: 12, // Prevents text from becoming unreadable
+        textAlign: TextAlign.center,
       ),
     );
   }
-
 
   Widget _buildCourseList() {
     if (isLoading) {
