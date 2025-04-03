@@ -756,23 +756,33 @@ class AskMeState extends State<AskMe> {
                 ),
               ),
               SizedBox(width: 12),
-              SizedBox(
-                width: 42,
-                height: 42,
-                child: IconButton(
-                  icon:
-                      Icon(Icons.send, color: AcademeTheme.appColor, size: 25),
-                  onPressed: () {
-                    String message = _textController.text.trim();
-                    _sendMessage(message);
-                    setState(() {
-                      _textController
-                          .clear(); // Clear input field after sending message
-                    });
-                  },
-                  padding: EdgeInsets.zero,
-                  constraints: BoxConstraints(),
-                ),
+              ValueListenableBuilder<TextEditingValue>(
+                valueListenable: _textController,
+                builder: (context, value, child) {
+                  final bool isEmpty = value.text.trim().isEmpty;
+                  return SizedBox(
+                    width: 42,
+                    height: 42,
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.send,
+                        color: isEmpty ? Colors.grey : AcademeTheme.appColor,
+                        size: 25,
+                      ),
+                      onPressed: isEmpty
+                          ? null
+                          : () {
+                              String message = _textController.text.trim();
+                              _sendMessage(message);
+                              setState(() {
+                                _textController.clear();
+                              });
+                            },
+                      padding: EdgeInsets.zero,
+                      constraints: BoxConstraints(),
+                    ),
+                  );
+                },
               ),
             ],
           ),

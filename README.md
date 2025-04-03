@@ -43,7 +43,7 @@
 | **Backend**    | FastAPI, Firebase  |
 | **Database**   | Firestore      |
 | **AI/ML**      | Google Gemini, LibreTranslate, Whisper  |
-| **DevOps**     | Firebase, Docker |
+| **DevOps**     | Railway, Docker |
 
 ## 🔧 Backend Features  
 - 🔐 **Secure authentication** with JWT & Firebase login  

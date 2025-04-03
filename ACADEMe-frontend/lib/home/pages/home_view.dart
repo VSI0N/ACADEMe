@@ -170,137 +170,148 @@ class HomePage extends StatelessWidget {
 
     loadCourses(); // Load courses on UI open
 
-    return GestureDetector(
-      onTap: () {
+    // Only change: Wrapped the existing GestureDetector with WillPopScope
+    return WillPopScope(
+      onWillPop: () async {
         _showSearchUI.value = false;
         SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.light,
         ));
+        return false;
       },
-      behavior: HitTestBehavior.opaque,
-      child: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(
-                top: MediaQuery.of(context).padding.top + 20,
-                left: 16,
-                right: 16,
-                bottom: 16,
-              ),
-              child: TextField(
-                controller: searchController,
-                autofocus: true,
-                onChanged: searchCourses,
-                decoration: InputDecoration(
-                  hintText: "${L10n.getTranslatedText(context, 'Search')}...",
-                  prefixIcon: Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(26.0),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey[200],
+      child: GestureDetector(
+        onTap: () {
+          _showSearchUI.value = false;
+          SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.light,
+          ));
+        },
+        behavior: HitTestBehavior.opaque,
+        child: SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).padding.top + 20,
+                  left: 16,
+                  right: 16,
+                  bottom: 16,
                 ),
-              ),
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        L10n.getTranslatedText(context, 'Popular Searches'),
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 10),
-                      Wrap(
-                        spacing: 8.0,
-                        children: [
-                          ActionChip(
-                            label: Text(L10n.getTranslatedText(
-                                context, 'Machine Learning')),
-                            onPressed: () {
-                              debugPrint("Machine Learning clicked");
-                            },
-                          ),
-                          ActionChip(
-                            label: Text(L10n.getTranslatedText(
-                                context, 'Data Science')),
-                            onPressed: () {
-                              debugPrint("Data Science clicked");
-                            },
-                          ),
-                          ActionChip(
-                            label: Text(
-                                L10n.getTranslatedText(context, 'Flutter')),
-                            onPressed: () {
-                              debugPrint("Flutter clicked");
-                            },
-                          ),
-                          ActionChip(
-                            label: Text(L10n.getTranslatedText(
-                                context, 'Linear Algebra')),
-                            onPressed: () {
-                              debugPrint("Linear Algebra clicked");
-                            },
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 20),
-                      Text(
-                        L10n.getTranslatedText(context, 'Search Results'),
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 10),
-                      ValueListenableBuilder<List<String>>(
-                        valueListenable: searchResults,
-                        builder: (context, results, _) {
-                          return Column(
-                            children: results
-                                .map(
-                                  (title) => ListTile(
-                                    leading: Icon(Icons.book),
-                                    title: Text(title),
-                                    onTap: () {
-                                      debugPrint("Selected: $title");
-                                    },
-                                  ),
-                                )
-                                .toList(),
-                          );
-                        },
-                      ),
-                      SizedBox(height: 20),
-                      Text(
-                        L10n.getTranslatedText(context, 'Recent Searches'),
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 10),
-                      ListTile(
-                        leading: Icon(Icons.history),
-                        title: Text(
-                            L10n.getTranslatedText(context, 'Advanced Python')),
-                        onTap: () {},
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.history),
-                        title: Text(
-                            L10n.getTranslatedText(context, 'Cyber Security')),
-                        onTap: () {},
-                      ),
-                    ],
+                child: TextField(
+                  controller: searchController,
+                  autofocus: true,
+                  onChanged: searchCourses,
+                  decoration: InputDecoration(
+                    hintText: "${L10n.getTranslatedText(context, 'Search')}...",
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(26.0),
+                      borderSide: BorderSide.none,
+                    ),
+                    filled: true,
+                    fillColor: Colors.grey[200],
                   ),
                 ),
               ),
-            ),
-          ],
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          L10n.getTranslatedText(context, 'Popular Searches'),
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 10),
+                        Wrap(
+                          spacing: 8.0,
+                          children: [
+                            ActionChip(
+                              label: Text(L10n.getTranslatedText(
+                                  context, 'Machine Learning')),
+                              onPressed: () {
+                                debugPrint("Machine Learning clicked");
+                              },
+                            ),
+                            ActionChip(
+                              label: Text(L10n.getTranslatedText(
+                                  context, 'Data Science')),
+                              onPressed: () {
+                                debugPrint("Data Science clicked");
+                              },
+                            ),
+                            ActionChip(
+                              label: Text(
+                                  L10n.getTranslatedText(context, 'Flutter')),
+                              onPressed: () {
+                                debugPrint("Flutter clicked");
+                              },
+                            ),
+                            ActionChip(
+                              label: Text(L10n.getTranslatedText(
+                                  context, 'Linear Algebra')),
+                              onPressed: () {
+                                debugPrint("Linear Algebra clicked");
+                              },
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          L10n.getTranslatedText(context, 'Search Results'),
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 10),
+                        ValueListenableBuilder<List<String>>(
+                          valueListenable: searchResults,
+                          builder: (context, results, _) {
+                            return Column(
+                              children: results
+                                  .map(
+                                    (title) => ListTile(
+                                      leading: Icon(Icons.book),
+                                      title: Text(title),
+                                      onTap: () {
+                                        debugPrint("Selected: $title");
+                                      },
+                                    ),
+                                  )
+                                  .toList(),
+                            );
+                          },
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          L10n.getTranslatedText(context, 'Recent Searches'),
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 10),
+                        ListTile(
+                          leading: Icon(Icons.history),
+                          title: Text(L10n.getTranslatedText(
+                              context, 'Advanced Python')),
+                          onTap: () {},
+                        ),
+                        ListTile(
+                          leading: Icon(Icons.history),
+                          title: Text(L10n.getTranslatedText(
+                              context, 'Cyber Security')),
+                          onTap: () {},
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
