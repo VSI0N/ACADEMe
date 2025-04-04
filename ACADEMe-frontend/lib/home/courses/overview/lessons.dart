@@ -33,6 +33,7 @@ class LessonsSectionState extends State<LessonsSection> {
   Map<String, String> subtopicIds = {};
   Map<String, List<Map<String, dynamic>>> subtopicMaterials = {};
   Map<String, List<Map<String, dynamic>>> subtopicQuizzes = {};
+  Map<String, bool> subtopicLoading = {};
   bool isLoading = true;
   bool isNavigating = false;
 
@@ -119,6 +120,10 @@ class LessonsSectionState extends State<LessonsSection> {
   }
 
   Future<void> fetchMaterialsAndQuizzes(String subtopicId) async {
+    setState(() {
+      subtopicLoading[subtopicId] = true;
+    });
+
     String? token = await storage.read(key: 'access_token');
     if (token == null) return;
     if (!mounted) {
@@ -235,9 +240,14 @@ class LessonsSectionState extends State<LessonsSection> {
       setState(() {
         subtopicMaterials[subtopicId] = materialsList;
         subtopicQuizzes[subtopicId] = quizzesList;
+        subtopicLoading[subtopicId] = false;
       });
     } catch (e) {
       debugPrint("❌ Error fetching materials/quizzes: $e");
+    } finally {
+      setState(() {
+        subtopicLoading[subtopicId] = false;
+      });
     }
   }
 
@@ -362,6 +372,16 @@ class LessonsSectionState extends State<LessonsSection> {
   }
 
   Widget _buildLessonsAndQuizzes(String subtopicId) {
+    if (subtopicLoading[subtopicId] == true) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 20),
+        child: Center(
+          child: CircularProgressIndicator(
+              color: AcademeTheme.appColor),
+        ),
+      );
+    }
+
     List<Map<String, dynamic>> materials = subtopicMaterials[subtopicId] ?? [];
     List<Map<String, dynamic>> quizzes = subtopicQuizzes[subtopicId] ?? [];
 
