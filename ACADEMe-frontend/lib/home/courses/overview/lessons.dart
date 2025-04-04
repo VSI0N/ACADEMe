@@ -407,10 +407,21 @@ class LessonsSectionState extends State<LessonsSection> {
         .firstWhere((entry) => entry.value == subtopicId)
         .key;
 
+    // Localize the type while keeping the original for icon determination
+    String localizedType = type.toLowerCase() == 'video'
+        ? L10n.getTranslatedText(context, 'Video')
+        : type.toLowerCase() == 'text'
+            ? L10n.getTranslatedText(context, 'Text')
+            : type.toLowerCase() == 'quiz'
+                ? L10n.getTranslatedText(context, 'Quiz')
+                : type.toLowerCase() == 'document'
+                    ? L10n.getTranslatedText(context, 'Document')
+                    : L10n.getTranslatedText(context, 'Material');
+
     return _buildTile(
-      type,
+      localizedType, // Use localized type for display
       category,
-      _getIconForContentType(type),
+      _getIconForContentType(type), // Keep original type for icon
       () {
         List<Map<String, String>> materials =
             (subtopicMaterials[subtopicId] ?? []).map<Map<String, String>>((m) {
@@ -441,7 +452,7 @@ class LessonsSectionState extends State<LessonsSection> {
               courseId: widget.courseId,
               topicId: widget.topicId,
               subtopicId: subtopicId,
-              subtopicTitle: subtopicTitle, // Pass the title
+              subtopicTitle: subtopicTitle,
             ),
           ),
         );

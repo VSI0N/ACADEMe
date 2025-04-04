@@ -20,6 +20,9 @@ class ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
   final _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
+  String? _storedClass;
+  bool _isClassChanged = false;
+
   @override
   void initState() {
     super.initState();
@@ -30,7 +33,9 @@ class ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
     final storedClass = await _secureStorage.read(key: 'student_class');
     if (mounted) {
       setState(() {
-        selectedClass = storedClass; // Set stored class if available
+        _storedClass = storedClass;
+        selectedClass = storedClass;
+        _isClassChanged = false;
       });
     }
   }
@@ -75,6 +80,7 @@ class ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
               onChanged: (value) {
                 setState(() {
                   selectedClass = value;
+                  _isClassChanged = value != _storedClass;
                 });
               },
             ),
@@ -92,7 +98,7 @@ class ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  onPressed: _handleConfirmPressed,
+                  onPressed: _isClassChanged ? _handleConfirmPressed : null,
                   child: const Text(
                     "Confirm",
                     style: TextStyle(fontSize: 16, color: Colors.black),
