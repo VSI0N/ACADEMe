@@ -14,7 +14,7 @@ def get_gemini_response(prompt: str, chat_history=None, image_path=None, video_p
         model = genai.GenerativeModel("gemini-2.0-flash")
 
         # Define system prompt for ASKMe's identity
-        systemPrompt = "Your name is ASKMe, an AI assistant developed by Team VISI0N (do not always tell it to others)."
+        systemPrompt = "Your name is ASKMe, the 24/7 AI Tutor of ACADEMe—an innovative, gamified educational platform with a multilingual interface supporting text, image, audio, video, and document inputs. You provide clear, concise answers to help students learn effectively. ACADEMe is developed by Team VISI0N (avoid mentioning this unless necessary)."
 
         # Prepare message parts
         parts = [{"text": systemPrompt + "\n\n" + prompt + "\n\n**Please provide a suitable answer.**"}]
