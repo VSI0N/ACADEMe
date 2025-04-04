@@ -340,822 +340,848 @@ class HomePage extends StatelessWidget {
           MaterialPageRoute(builder: (context) => AskMe()),
         );
       },
-
-      child: Scaffold(
-        key: scaffoldKey, // Assign the scaffold key
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(105), // Increased height
-          child: AppBar(
-            backgroundColor: AcademeTheme.appColor,
-            automaticallyImplyLeading: false,
-            elevation: 0,
-            leading: Container(), // Remove default hamburger
-            flexibleSpace: Padding(
-              padding:
-                  const EdgeInsets.only(top: 15.0), // Adjust top padding here
-              child: FutureBuilder<Map<String, String?>>(
-                future: _getUserDetails(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text("Error loading user details"));
-                  } else {
-                    final String name = snapshot.data?['name'] ?? 'User';
-                    final String photoUrl = snapshot.data?['photo_url'] ??
-                        'assets/design_course/userImage.png';
-                    return getAppBarUI(
-                      onProfileTap,
-                      () {
-                        scaffoldKey.currentState
-                            ?.openDrawer(); // Open drawer when custom button is clicked
-                      },
-                      onCourseTap,
-                      context,
-                      name,
-                      photoUrl,
-                      _pageController,
-                      selectedIndex,
-                    );
-                  }
-                },
+      child: WillPopScope(
+        onWillPop: () async {
+          // Exit app when back button is pressed
+          SystemNavigator.pop();
+          return false;
+        },
+        child: Scaffold(
+          key: scaffoldKey, // Assign the scaffold key
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(105), // Increased height
+            child: AppBar(
+              backgroundColor: AcademeTheme.appColor,
+              automaticallyImplyLeading: false,
+              elevation: 0,
+              leading: Container(), // Remove default hamburger
+              flexibleSpace: Padding(
+                padding:
+                    const EdgeInsets.only(top: 15.0), // Adjust top padding here
+                child: FutureBuilder<Map<String, String?>>(
+                  future: _getUserDetails(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text("Error loading user details"));
+                    } else {
+                      final String name = snapshot.data?['name'] ?? 'User';
+                      final String photoUrl = snapshot.data?['photo_url'] ??
+                          'assets/design_course/userImage.png';
+                      return getAppBarUI(
+                        onProfileTap,
+                        () {
+                          scaffoldKey.currentState
+                              ?.openDrawer(); // Open drawer when custom button is clicked
+                        },
+                        onCourseTap,
+                        context,
+                        name,
+                        photoUrl,
+                        _pageController,
+                        selectedIndex,
+                      );
+                    }
+                  },
+                ),
               ),
             ),
           ),
-        ),
-        // Use drawer for left-side drawer
-        backgroundColor: AcademeTheme.appColor, // Set background same as AppBar
+          // Use drawer for left-side drawer
+          backgroundColor:
+              AcademeTheme.appColor, // Set background same as AppBar
 
-        body: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(24), // Rounded upper edges
-              topRight: Radius.circular(24),
+          body: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(24), // Rounded upper edges
+                topRight: Radius.circular(24),
+              ),
             ),
-          ),
-          child: Column(
-            // Use Column instead of SingleChildScrollView
-            children: [
-              Expanded(
-                child: ListView(
-                  // Replace SingleChildScrollView with ListView
-                  padding: const EdgeInsets.all(16.0),
-                  children: [
-                    // Search Bar
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(top: 10.0), // Upper padding
-                      child: TextField(
-                        onTap: () {
-                          _showSearchUI.value = true; // Update state properly
-                        },
-                        decoration: InputDecoration(
-                          hintText: L10n.getTranslatedText(context, 'search'),
-                          prefixIcon: Padding(
-                            padding: const EdgeInsets.only(
-                                left: 12.0, right: 8.0), // Spacing
-                            child: Transform.rotate(
-                              angle:
-                                  -1.57, // Rotate 90 degrees counterclockwise
-                              child: const Icon(
-                                  Icons.tune), // Rotated Tune Icon (Vertical)
+            child: Column(
+              // Use Column instead of SingleChildScrollView
+              children: [
+                Expanded(
+                  child: ListView(
+                    // Replace SingleChildScrollView with ListView
+                    padding: const EdgeInsets.all(16.0),
+                    children: [
+                      // Search Bar
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(top: 10.0), // Upper padding
+                        child: TextField(
+                          onTap: () {
+                            _showSearchUI.value = true; // Update state properly
+                          },
+                          decoration: InputDecoration(
+                            hintText: L10n.getTranslatedText(context, 'search'),
+                            prefixIcon: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 12.0, right: 8.0), // Spacing
+                              child: Transform.rotate(
+                                angle:
+                                    -1.57, // Rotate 90 degrees counterclockwise
+                                child: const Icon(
+                                    Icons.tune), // Rotated Tune Icon (Vertical)
+                              ),
                             ),
+                            suffixIcon: const Padding(
+                              padding: EdgeInsets.only(right: 12.0),
+                              child: Icon(
+                                  Icons.search), // Search icon on the right
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(26.0),
+                              borderSide: BorderSide.none,
+                            ),
+                            filled: true,
+                            fillColor: const Color.fromARGB(205, 232, 238, 239),
                           ),
-                          suffixIcon: const Padding(
-                            padding: EdgeInsets.only(right: 12.0),
-                            child:
-                                Icon(Icons.search), // Search icon on the right
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(26.0),
-                            borderSide: BorderSide.none,
-                          ),
-                          filled: true,
-                          fillColor: const Color.fromARGB(205, 232, 238, 239),
                         ),
                       ),
-                    ),
 
-                    const SizedBox(height: 20),
+                      const SizedBox(height: 20),
 
-                    Container(
-                      padding: const EdgeInsets.all(16.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12.0),
-                        border: Border.all(
-                          color: Colors.grey.shade300, // Border color
-                          width: 1.5, // Border width
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withAlpha(30), // Subtle shadow
-                            blurRadius: 8,
-                            spreadRadius: 2,
-                            offset: Offset(0, 4),
+                      Container(
+                        padding: const EdgeInsets.all(16.0),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12.0),
+                          border: Border.all(
+                            color: Colors.grey.shade300, // Border color
+                            width: 1.5, // Border width
                           ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              // Circular Image Container
-                              Container(
-                                width: 60,
-                                height: 60,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.black,
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.all(
-                                      7), // Adjust padding to reduce image size
-                                  child: ClipOval(
-                                    child: Image.asset(
-                                      "assets/icons/ASKMe.png",
-                                      fit: BoxFit
-                                          .contain, // Ensures the image fits within the padding
+                          boxShadow: [
+                            BoxShadow(
+                              color:
+                                  Colors.black.withAlpha(30), // Subtle shadow
+                              blurRadius: 8,
+                              spreadRadius: 2,
+                              offset: Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                // Circular Image Container
+                                Container(
+                                  width: 60,
+                                  height: 60,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.black,
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(
+                                        7), // Adjust padding to reduce image size
+                                    child: ClipOval(
+                                      child: Image.asset(
+                                        "assets/icons/ASKMe.png",
+                                        fit: BoxFit
+                                            .contain, // Ensures the image fits within the padding
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
 
-                              const SizedBox(width: 12),
+                                const SizedBox(width: 12),
 
-                              // Flexible Texts
-                              Expanded(
-                                child: Column(
+                                // Flexible Texts
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        L10n.getTranslatedText(
+                                            context, 'Your Personal Tutor'),
+                                        style: TextStyle(
+                                          color:
+                                              Color.fromARGB(255, 10, 10, 10),
+                                          fontSize: width * 0.06,
+                                          fontWeight:
+                                              FontWeight.w800, // Extra bold
+                                          fontFamily: "Roboto",
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        "ASKMe",
+                                        style: TextStyle(
+                                          color: Color.fromARGB(255, 9, 9, 9),
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+
+                            // Input Field with Send Icon
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: SizedBox(
+                                    height: 40, // Adjust this value as needed
+                                    child: TextField(
+                                      controller: messageController,
+                                      decoration: InputDecoration(
+                                        contentPadding: EdgeInsets.symmetric(
+                                            vertical: 10,
+                                            horizontal: 12), // Adjust padding
+                                        hintText: L10n.getTranslatedText(
+                                            context, 'ASKMe Anything...'),
+                                        hintStyle:
+                                            TextStyle(color: Colors.grey[600]),
+                                        filled: true,
+                                        fillColor: Colors.white,
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          borderSide: BorderSide(
+                                            color: Colors.grey.shade400,
+                                            width: 1.5,
+                                          ),
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          borderSide: BorderSide(
+                                            color: Colors.grey.shade300,
+                                            width: 1.5,
+                                          ),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          borderSide: BorderSide(
+                                            color: Colors.blue,
+                                            width: 2,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+
+                                const SizedBox(width: 8),
+
+                                // Send Icon Outside
+                                Transform.rotate(
+                                  angle: -pi / 4, // Rotates 45° to the left
+                                  child: IconButton(
+                                    icon: const Icon(Icons.send,
+                                        color: Colors.blue, size: 24),
+                                    onPressed: () {
+                                      String message = messageController.text
+                                          .trim(); // ✅ Get typed message
+                                      if (message.isNotEmpty) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                AskMe(initialMessage: message),
+                                          ),
+                                        );
+                                        messageController
+                                            .clear(); // Optional: Clear after sending
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      // My Progress Section
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProgressScreen()),
+                          );
+                        },
+                        child: Card(
+                          color: Colors
+                              .indigoAccent, // Background color similar to the image
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(12.0), // Rounded edges
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 15.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                // Left Section: Title & Subtitle
+                                Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
                                       L10n.getTranslatedText(
-                                          context, 'Your Personal Tutor'),
+                                          context, 'My Progress'),
                                       style: TextStyle(
-                                        color: Color.fromARGB(255, 10, 10, 10),
-                                        fontSize: width * 0.06,
-                                        fontWeight:
-                                            FontWeight.w800, // Extra bold
-                                        fontFamily: "Roboto",
+                                        fontSize: 26,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
                                       ),
                                     ),
-                                    const SizedBox(height: 4),
+                                    SizedBox(height: 4),
                                     Text(
-                                      "ASKMe",
+                                      L10n.getTranslatedText(
+                                          context, 'Track your progress'),
                                       style: TextStyle(
-                                        color: Color.fromARGB(255, 9, 9, 9),
-                                        fontSize: 16,
+                                        fontSize: 14,
+                                        color: Colors.white70,
                                       ),
                                     ),
                                   ],
                                 ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
 
-                          // Input Field with Send Icon
-                          Row(
-                            children: [
-                              Expanded(
-                                child: SizedBox(
-                                  height: 40, // Adjust this value as needed
-                                  child: TextField(
-                                    controller: messageController,
-                                    decoration: InputDecoration(
-                                      contentPadding: EdgeInsets.symmetric(
-                                          vertical: 10,
-                                          horizontal: 12), // Adjust padding
-                                      hintText: L10n.getTranslatedText(
-                                          context, 'ASKMe Anything...'),
-                                      hintStyle:
-                                          TextStyle(color: Colors.grey[600]),
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                        borderSide: BorderSide(
-                                          color: Colors.grey.shade400,
-                                          width: 1.5,
-                                        ),
+                                // Right Section: Fire Icon with Badge
+                                Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Container(
+                                      width: 50,
+                                      height: 50,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: const Color.fromARGB(255, 247,
+                                            177, 55), // Fire icon background
                                       ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: BorderSide(
-                                          color: Colors.grey.shade300,
-                                          width: 1.5,
+                                      child: const Icon(
+                                          Icons.local_fire_department,
+                                          color: Colors.white,
+                                          size: 24),
+                                    ),
+                                    Positioned(
+                                      bottom: -2,
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 2),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(20),
                                         ),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: BorderSide(
-                                          color: Colors.blue,
-                                          width: 2,
+                                        child: const Text(
+                                          "420",
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold),
                                         ),
                                       ),
                                     ),
-                                  ),
+                                  ],
                                 ),
-                              ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
 
-                              const SizedBox(width: 8),
+                      const SizedBox(height: 20),
 
-                              // Send Icon Outside
-                              Transform.rotate(
-                                angle: -pi / 4, // Rotates 45° to the left
-                                child: IconButton(
-                                  icon: const Icon(Icons.send,
-                                      color: Colors.blue, size: 24),
-                                  onPressed: () {
-                                    String message = messageController.text
-                                        .trim(); // ✅ Get typed message
-                                    if (message.isNotEmpty) {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              AskMe(initialMessage: message),
-                                        ),
-                                      );
-                                      messageController
-                                          .clear(); // Optional: Clear after sending
-                                    }
-                                  },
-                                ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            L10n.getTranslatedText(
+                                context, 'Continue Learning'),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              onCourseTap();
+                            },
+                            style: TextButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                              minimumSize: Size.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            child: Text(
+                              L10n.getTranslatedText(context, 'See All'),
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontSize: 17,
                               ),
-                            ],
+                            ),
                           ),
                         ],
                       ),
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    // My Progress Section
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ProgressScreen()),
-                        );
-                      },
-                      child: Card(
-                        color: Colors
-                            .indigoAccent, // Background color similar to the image
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(12.0), // Rounded edges
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 15.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              // Left Section: Title & Subtitle
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    L10n.getTranslatedText(
-                                        context, 'My Progress'),
-                                    style: TextStyle(
-                                      fontSize: 26,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  SizedBox(height: 4),
-                                  Text(
-                                    L10n.getTranslatedText(
-                                        context, 'Track your progress'),
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.white70,
-                                    ),
-                                  ),
-                                ],
+                      const SizedBox(height: 16),
+                      FutureBuilder<List<dynamic>>(
+                        future: _fetchCourses(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            return Center(
+                              child: Text(
+                                "❌ Error: ${snapshot.error}",
+                                style: TextStyle(color: Colors.red),
                               ),
+                            );
+                          } else if (!snapshot.hasData ||
+                              snapshot.data!.isEmpty) {
+                            return const Center(
+                                child: Text("No courses available"));
+                          } else {
+                            final courses = snapshot.data!;
+                            debugPrint(
+                                "Courses loaded: ${courses.length} items"); // Debug
 
-                              // Right Section: Fire Icon with Badge
-                              Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  Container(
-                                    width: 50,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: const Color.fromARGB(255, 247, 177,
-                                          55), // Fire icon background
-                                    ),
-                                    child: const Icon(
-                                        Icons.local_fire_department,
-                                        color: Colors.white,
-                                        size: 24),
-                                  ),
-                                  Positioned(
-                                    bottom: -2,
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8, vertical: 2),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: const Text(
-                                        "420",
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                            return Column(
+                              children: List.generate(
+                                courses.length > 3 ? 3 : courses.length,
+                                (index) {
+                                  final course = courses[index];
+                                  debugPrint(
+                                      "Course $index ID: ${course["id"]}"); // Verify ID
 
-                    const SizedBox(height: 20),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          L10n.getTranslatedText(context, 'Continue Learning'),
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            onCourseTap();
-                          },
-                          style: TextButton.styleFrom(
-                            padding: EdgeInsets.zero,
-                            minimumSize: Size.zero,
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                          child: Text(
-                            L10n.getTranslatedText(context, 'See All'),
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontSize: 17,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    FutureBuilder<List<dynamic>>(
-                      future: _fetchCourses(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        } else if (snapshot.hasError) {
-                          return Center(
-                            child: Text(
-                              "❌ Error: ${snapshot.error}",
-                              style: TextStyle(color: Colors.red),
-                            ),
-                          );
-                        } else if (!snapshot.hasData ||
-                            snapshot.data!.isEmpty) {
-                          return const Center(
-                              child: Text("No courses available"));
-                        } else {
-                          final courses = snapshot.data!;
-                          debugPrint(
-                              "Courses loaded: ${courses.length} items"); // Debug
-
-                          return Column(
-                            children: List.generate(
-                              courses.length > 3 ? 3 : courses.length,
-                              (index) {
-                                final course = courses[index];
-                                debugPrint(
-                                    "Course $index ID: ${course["id"]}"); // Verify ID
-
-                                return Column(
-                                  children: [
-                                    learningCard(
-                                      course["title"],
-                                      4, // Placeholder values (modules)
-                                      9, // Placeholder values (completed)
-                                      34, // Placeholder values (total)
-                                      predefinedColors.length > index
-                                          ? predefinedColors[index]!
-                                          : Colors.primaries[index %
-                                              Colors.primaries.length][100]!,
-                                      () {
-                                        // Navigation with verified ID
-                                        debugPrint(
-                                            "Tapped Course ID: ${course["id"]}");
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                TopicViewScreen(
-                                              courseId: course["id"]
-                                                  .toString(), // Ensure String
+                                  return Column(
+                                    children: [
+                                      learningCard(
+                                        course["title"],
+                                        4, // Placeholder values (modules)
+                                        9, // Placeholder values (completed)
+                                        34, // Placeholder values (total)
+                                        predefinedColors.length > index
+                                            ? predefinedColors[index]!
+                                            : Colors.primaries[index %
+                                                Colors.primaries.length][100]!,
+                                        () {
+                                          // Navigation with verified ID
+                                          debugPrint(
+                                              "Tapped Course ID: ${course["id"]}");
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  TopicViewScreen(
+                                                courseId: course["id"]
+                                                    .toString(), // Ensure String
+                                              ),
                                             ),
-                                          ),
-                                        );
-                                      },
+                                          );
+                                        },
+                                      ),
+                                      const SizedBox(height: 12),
+                                    ],
+                                  );
+                                },
+                              ),
+                            );
+                          }
+                        },
+                      ),
+
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // **Swipeable Banner**
+                            buildSwipeableBanner(_pageController, context),
+
+                            SizedBox(height: 16),
+
+                            // **All Courses Section with "See All" Button**
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    L10n.getTranslatedText(
+                                        context, 'All Courses'),
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      onCourseTap();
+                                    },
+                                    child: Text(
+                                      L10n.getTranslatedText(
+                                          context, 'See All'),
+                                      style: TextStyle(
+                                          fontSize: 17, color: Colors.blue),
                                     ),
-                                    const SizedBox(height: 12),
-                                  ],
-                                );
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            SizedBox(height: 0),
+
+                            // **Course Boxes - Two Per Row**
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 1),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 6,
+                                              horizontal: 10), // Reduced height
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(22),
+                                            border: Border.all(
+                                                color: Colors.red, width: 1.5),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                padding: EdgeInsets.all(
+                                                    4), // Smaller circle
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color:
+                                                      Colors.red.withAlpha(50),
+                                                ),
+                                                child: Icon(Icons.book,
+                                                    size: 16,
+                                                    color: Colors.red),
+                                              ),
+                                              SizedBox(width: 10),
+                                              Text(
+                                                  L10n.getTranslatedText(
+                                                      context, 'English'),
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w500)),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 8),
+                                      Expanded(
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 6, horizontal: 10),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            border: Border.all(
+                                                color: Colors.orange,
+                                                width: 1.5),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                padding: EdgeInsets.all(4),
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Colors.orange
+                                                      .withAlpha(50),
+                                                ),
+                                                child: Icon(Icons.calculate,
+                                                    size: 16,
+                                                    color: Colors.orange),
+                                              ),
+                                              SizedBox(width: 10),
+                                              Text(
+                                                  L10n.getTranslatedText(
+                                                      context, 'Maths'),
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w500)),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 8),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 6, horizontal: 10),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            border: Border.all(
+                                                color: Colors.blue, width: 1.5),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                padding: EdgeInsets.all(4),
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color:
+                                                      Colors.blue.withAlpha(50),
+                                                ),
+                                                child: Icon(Icons.language,
+                                                    size: 16,
+                                                    color: Colors.blue),
+                                              ),
+                                              SizedBox(width: 10),
+                                              Text(
+                                                  L10n.getTranslatedText(
+                                                      context, 'Language'),
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w500)),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 8),
+                                      Expanded(
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 6, horizontal: 10),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            border: Border.all(
+                                                color: Colors.green,
+                                                width: 1.5),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                padding: EdgeInsets.all(4),
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Colors.green
+                                                      .withAlpha(50),
+                                                ),
+                                                child: Icon(Icons.science,
+                                                    size: 16,
+                                                    color: Colors.green),
+                                              ),
+                                              SizedBox(width: 10),
+                                              Text(
+                                                  L10n.getTranslatedText(
+                                                      context, 'Biology'),
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w500)),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            SizedBox(height: 16),
+
+                            // **My Courses Section**
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 5),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    L10n.getTranslatedText(
+                                        context, 'My Courses'),
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      onCourseTap();
+                                    },
+                                    child: Text(
+                                      L10n.getTranslatedText(
+                                          context, 'See All'),
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.blue,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 0),
+                            FutureBuilder<List<dynamic>>(
+                              future: _fetchCourses(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const Center(
+                                      child: CircularProgressIndicator());
+                                } else if (snapshot.hasError) {
+                                  return Center(
+                                    child: Text(
+                                      "❌ Error: ${snapshot.error}",
+                                      style: TextStyle(color: Colors.red),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  );
+                                } else if (!snapshot.hasData ||
+                                    snapshot.data!.isEmpty) {
+                                  return const Center(
+                                      child: Text("No courses available"));
+                                } else {
+                                  final courses = snapshot.data!;
+
+                                  return GridView.builder(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2, // 2 cards per row
+                                      crossAxisSpacing: 8,
+                                      mainAxisSpacing: 8,
+                                      childAspectRatio:
+                                          1.2, // Adjust aspect ratio for better layout
+                                    ),
+                                    itemCount: courses.length,
+                                    itemBuilder: (context, index) {
+                                      return CourseCard(
+                                        courses[index]["title"],
+                                        "${(index + 10) * 2} ${L10n.getTranslatedText(context, 'Lessons')}",
+                                        repeatingColors[
+                                            index % repeatingColors.length]!,
+                                        onTap: () {
+                                          // Debug log to confirm the courseId
+                                          debugPrint(
+                                              "Course ID: ${courses[index]["id"]}");
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  TopicViewScreen(
+                                                courseId: courses[index]
+                                                    ["id"], // Pass the courseId
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                  );
+                                }
                               },
                             ),
-                          );
-                        }
-                      },
-                    ),
 
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // **Swipeable Banner**
-                          buildSwipeableBanner(_pageController, context),
+                            SizedBox(height: 16),
 
-                          SizedBox(height: 16),
-
-                          // **All Courses Section with "See All" Button**
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  L10n.getTranslatedText(
-                                      context, 'All Courses'),
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    onCourseTap();
-                                  },
-                                  child: Text(
-                                    L10n.getTranslatedText(context, 'See All'),
-                                    style: TextStyle(
-                                        fontSize: 17, color: Colors.blue),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          SizedBox(height: 0),
-
-                          // **Course Boxes - Two Per Row**
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 1),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: 6,
-                                            horizontal: 10), // Reduced height
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(22),
-                                          border: Border.all(
-                                              color: Colors.red, width: 1.5),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              padding: EdgeInsets.all(
-                                                  4), // Smaller circle
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: Colors.red.withAlpha(50),
-                                              ),
-                                              child: Icon(Icons.book,
-                                                  size: 16, color: Colors.red),
-                                            ),
-                                            SizedBox(width: 10),
-                                            Text(
-                                                L10n.getTranslatedText(
-                                                    context, 'English'),
-                                                style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w500)),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 8),
-                                    Expanded(
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: 6, horizontal: 10),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          border: Border.all(
-                                              color: Colors.orange, width: 1.5),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              padding: EdgeInsets.all(4),
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color:
-                                                    Colors.orange.withAlpha(50),
-                                              ),
-                                              child: Icon(Icons.calculate,
-                                                  size: 16,
-                                                  color: Colors.orange),
-                                            ),
-                                            SizedBox(width: 10),
-                                            Text(
-                                                L10n.getTranslatedText(
-                                                    context, 'Maths'),
-                                                style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w500)),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 8),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: 6, horizontal: 10),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          border: Border.all(
-                                              color: Colors.blue, width: 1.5),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              padding: EdgeInsets.all(4),
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color:
-                                                    Colors.blue.withAlpha(50),
-                                              ),
-                                              child: Icon(Icons.language,
-                                                  size: 16, color: Colors.blue),
-                                            ),
-                                            SizedBox(width: 10),
-                                            Text(
-                                                L10n.getTranslatedText(
-                                                    context, 'Language'),
-                                                style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w500)),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 8),
-                                    Expanded(
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: 6, horizontal: 10),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          border: Border.all(
-                                              color: Colors.green, width: 1.5),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              padding: EdgeInsets.all(4),
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color:
-                                                    Colors.green.withAlpha(50),
-                                              ),
-                                              child: Icon(Icons.science,
-                                                  size: 16,
-                                                  color: Colors.green),
-                                            ),
-                                            SizedBox(width: 10),
-                                            Text(
-                                                L10n.getTranslatedText(
-                                                    context, 'Biology'),
-                                                style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w500)),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          SizedBox(height: 16),
-
-                          // **My Courses Section**
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 5),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  L10n.getTranslatedText(context, 'My Courses'),
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    onCourseTap();
-                                  },
-                                  child: Text(
-                                    L10n.getTranslatedText(context, 'See All'),
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.blue,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 0),
-                          FutureBuilder<List<dynamic>>(
-                            future: _fetchCourses(),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const Center(
-                                    child: CircularProgressIndicator());
-                              } else if (snapshot.hasError) {
-                                return Center(
-                                  child: Text(
-                                    "❌ Error: ${snapshot.error}",
-                                    style: TextStyle(color: Colors.red),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                );
-                              } else if (!snapshot.hasData ||
-                                  snapshot.data!.isEmpty) {
-                                return const Center(
-                                    child: Text("No courses available"));
-                              } else {
-                                final courses = snapshot.data!;
-
-                                return GridView.builder(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2, // 2 cards per row
-                                    crossAxisSpacing: 8,
-                                    mainAxisSpacing: 8,
-                                    childAspectRatio:
-                                        1.2, // Adjust aspect ratio for better layout
-                                  ),
-                                  itemCount: courses.length,
-                                  itemBuilder: (context, index) {
-                                    return CourseCard(
-                                      courses[index]["title"],
-                                      "${(index + 10) * 2} ${L10n.getTranslatedText(context, 'Lessons')}",
-                                      repeatingColors[
-                                          index % repeatingColors.length]!,
-                                      onTap: () {
-                                        // Debug log to confirm the courseId
-                                        debugPrint(
-                                            "Course ID: ${courses[index]["id"]}");
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                TopicViewScreen(
-                                              courseId: courses[index]
-                                                  ["id"], // Pass the courseId
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  },
-                                );
-                              }
-                            },
-                          ),
-
-                          SizedBox(height: 16),
-
-                          // **Recommended Section**
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 4),
-                            child: Text(
-                              L10n.getTranslatedText(context, 'Recommended'),
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Padding(
+                            // **Recommended Section**
+                            Padding(
                               padding: EdgeInsets.symmetric(horizontal: 4),
-                              child: SizedBox(
-                                height: 160,
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: CourseCard(
-                                        L10n.getTranslatedText(
-                                            context, 'Marketing'),
-                                        "9 ${L10n.getTranslatedText(context, 'Lessons')}",
-                                        Colors.pink[100]!,
-                                        onTap: () {
-                                          // Navigate to TopicViewScreen with a placeholder courseId
-                                          // Navigator.push(
-                                          //   context,
-                                          //   MaterialPageRoute(
-                                          //     builder: (context) => TopicViewScreen(courseId: 1), // Replace with actual courseId
-                                          //   ),
-                                          // );
-                                        },
+                              child: Text(
+                                L10n.getTranslatedText(context, 'Recommended'),
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 4),
+                                child: SizedBox(
+                                  height: 160,
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: CourseCard(
+                                          L10n.getTranslatedText(
+                                              context, 'Marketing'),
+                                          "9 ${L10n.getTranslatedText(context, 'Lessons')}",
+                                          Colors.pink[100]!,
+                                          onTap: () {
+                                            // Navigate to TopicViewScreen with a placeholder courseId
+                                            // Navigator.push(
+                                            //   context,
+                                            //   MaterialPageRoute(
+                                            //     builder: (context) => TopicViewScreen(courseId: 1), // Replace with actual courseId
+                                            //   ),
+                                            // );
+                                          },
+                                        ),
                                       ),
-                                    ),
-                                    SizedBox(width: 8),
-                                    Expanded(
-                                      child: CourseCard(
-                                        L10n.getTranslatedText(
-                                            context, 'Trading'),
-                                        "14 ${L10n.getTranslatedText(context, 'Lessons')}",
-                                        Colors.green[100]!,
-                                        onTap: () {
-                                          // Navigate to TopicViewScreen with a placeholder courseId
-                                          // Navigator.push(
-                                          //   context,
-                                          //   MaterialPageRoute(
-                                          //     builder: (context) => TopicViewScreen(courseId: 2), // Replace with actual courseId
-                                          //   ),
-                                          // );
-                                        },
+                                      SizedBox(width: 8),
+                                      Expanded(
+                                        child: CourseCard(
+                                          L10n.getTranslatedText(
+                                              context, 'Trading'),
+                                          "14 ${L10n.getTranslatedText(context, 'Lessons')}",
+                                          Colors.green[100]!,
+                                          onTap: () {
+                                            // Navigate to TopicViewScreen with a placeholder courseId
+                                            // Navigator.push(
+                                            //   context,
+                                            //   MaterialPageRoute(
+                                            //     builder: (context) => TopicViewScreen(courseId: 2), // Replace with actual courseId
+                                            //   ),
+                                            // );
+                                          },
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              )),
-                        ],
+                                    ],
+                                  ),
+                                )),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        // Use drawer for left-side drawer
-        // Use drawer for left-side drawer
-        drawer: HomepageDrawer(
-          onClose: () {
-            Navigator.of(context).pop(); // Close the drawer when tapped
-          },
-          onProfileTap: onProfileTap, onCourseTap: onCourseTap,
-          // Pass the onProfileTap callback here
-        ),
+          // Use drawer for left-side drawer
+          // Use drawer for left-side drawer
+          drawer: HomepageDrawer(
+            onClose: () {
+              Navigator.of(context).pop(); // Close the drawer when tapped
+            },
+            onProfileTap: onProfileTap, onCourseTap: onCourseTap,
+            // Pass the onProfileTap callback here
+          ),
 // Modify drawerEdgeDragWidth to make it open from the right
-        drawerEdgeDragWidth: double
-            .infinity, // Make drawer full-width and allow dragging from anywhere
-        endDrawerEnableOpenDragGesture:
-            true, // Allow drag to open the drawer from the right
+          drawerEdgeDragWidth: double
+              .infinity, // Make drawer full-width and allow dragging from anywhere
+          endDrawerEnableOpenDragGesture:
+              true, // Allow drag to open the drawer from the right
+        ),
       ),
     );
   }
