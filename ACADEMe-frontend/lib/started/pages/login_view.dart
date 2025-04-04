@@ -108,7 +108,7 @@ class _LogInViewState extends State<LogInView> {
 
     try {
       _showSnackBar(L10n.getTranslatedText(context,
-          'Google Sign-In is not available yet. Please log in manually.'));
+          'Google Sign-In is turned off for now. Please log in manually.'));
     } finally {
       if (mounted) {
         setState(() => _isGoogleLoading = false);

@@ -91,7 +91,7 @@ class _SignUpViewState extends State<SignUpView> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(L10n.getTranslatedText(context,
-            'Google Sign-Up is not available yet. Please sign up manually.')),
+            'Google Sign-Up is turned off for now. Please sign up manually.')),
       ),
     );
 
