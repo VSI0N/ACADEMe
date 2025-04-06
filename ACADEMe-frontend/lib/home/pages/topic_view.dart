@@ -243,8 +243,7 @@ class _TopicViewScreenState extends State<TopicViewScreen>
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          L10n.getTranslatedText(context, '0/12 Modules'),
-                        ),
+                          "0/12 ${L10n.getTranslatedText(context, 'Modules')}"),
                       ),
                       Align(
                         alignment: Alignment.centerRight,

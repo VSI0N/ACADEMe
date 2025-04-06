@@ -312,5 +312,7 @@
     "Unsupported content type": "असमर्थित सामग्री प्रकार",
     "Send": "भेजें",
     "Confirm": "पुष्टि करें",
-    "Recording": "रिकॉर्डिंग"
+    "Recording": "रिकॉर्डिंग",
+    "Incorrect Answers": "गलत उत्तर",
+    "Skipped Questions": "छोड़े गए प्रश्न"
 }

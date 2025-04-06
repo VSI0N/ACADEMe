@@ -312,6 +312,9 @@
     "Unsupported content type": "Tipo de contenido no soportado",
     "Send": "Enviar",
     "Confirm": "Confirmar",
-    "Recording": "Grabando"
+    "Recording": "Grabando",
+    "Incorrect Answers": "Respuestas incorrectas",
+    "Skipped Questions": "Preguntas omitidas"
+
 }
   

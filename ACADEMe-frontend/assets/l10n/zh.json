@@ -312,5 +312,7 @@
   "Unsupported content type": "不支持的内容类型",
   "Send": "发送",
   "Confirm": "确认",
-  "Recording": "录音中"
+  "Recording": "录音中",
+  "Incorrect Answers": "错误答案",
+  "Skipped Questions": "跳过的问题"
 }

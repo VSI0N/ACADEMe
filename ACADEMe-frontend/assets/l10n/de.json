@@ -312,5 +312,8 @@
   "Unsupported content type": "Nicht unterstützter Inhaltstyp",
   "Send": "Senden",
   "Confirm": "Bestätigen",
-  "Recording": "Aufnahme"
+  "Recording": "Aufnahme",
+  "Incorrect Answers": "Falsche Antworten",
+  "Skipped Questions": "Übersprungene Fragen"
+
 }
