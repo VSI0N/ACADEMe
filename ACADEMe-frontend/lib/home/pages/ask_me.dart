@@ -55,6 +55,35 @@ class AskMeState extends State<AskMe> {
     {'name': 'Japanese', 'code': 'ja'},
     {'name': 'Bengali', 'code': 'bn'},
   ];
+  final Map<String, Map<String, String>> errorMessages = {
+    'server_error': {
+      'en': 'Oops! Something went wrong. Please try again.',
+      'es': '¡Vaya! Algo salió mal. Por favor, inténtalo de nuevo.',
+      'fr': 'Oups ! Quelque chose s\'est mal passé. Veuillez réessayer.',
+      'de': 'Ups! Etwas ist schief gelaufen. Bitte versuche es erneut.',
+      'hi': 'उफ़! कुछ गलत हो गया। कृपया पुनः प्रयास करें।',
+      'zh': '哎呀！出了点问题。请再试一次。',
+      'ja': 'おっと！問題が発生しました。もう一度お試しください。',
+      'bn': 'ওহ! কিছু ভুল হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।',
+    },
+    'connection_error': {
+      'en':
+          'Error connecting to the server. Please check your internet connection.',
+      'es':
+          'Error al conectar con el servidor. Por favor, revise su conexión a internet.',
+      'fr':
+          'Erreur de connexion au serveur. Veuillez vérifier votre connexion Internet.',
+      'de':
+          'Fehler beim Verbinden mit dem Server. Bitte überprüfen Sie Ihre Internetverbindung.',
+      'hi':
+          'सर्वर से कनेक्ट करने में त्रुटि। कृपया अपना इंटरनेट कनेक्शन जांचें।',
+      'zh': '连接服务器出错。请检查您的互联网连接。',
+      'ja': 'サーバーへの接続エラー。インターネット接続を確認してください。',
+      'bn':
+          'সার্ভারের সাথে সংযোগে ত্রুটি হয়েছে। অনুগ্রহ করে আপনার ইন্টারনেট সংযোগ পরীক্ষা করুন।',
+    },
+  };
+
   void _scrollToBottom() {
     if (_scrollController.hasClients) {
       _scrollController.animateTo(
@@ -101,6 +130,12 @@ class AskMeState extends State<AskMe> {
     if (!hasPermission) {
       debugPrint("Recording permission not granted.");
     }
+  }
+
+  String getTranslatedError(String key, String langCode) {
+    return errorMessages[key]?[langCode] ??
+        errorMessages[key]?['en'] ??
+        'An error occurred';
   }
 
   void _showPromptDialog(File file, String fileType) {
@@ -396,21 +431,21 @@ class AskMeState extends State<AskMe> {
         debugPrint("❌ Upload failed with status: ${response.statusCode}");
         debugPrint("Server response: $responseBody");
 
-        setState(() {
-          chatMessages.add({
-            "role": "assistant",
-            "text": "❌ Audio upload failed. Server response: $responseBody",
-          });
-        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('❌ Something went wrong. Hugging Face may be down.'),
+            backgroundColor: Colors.redAccent,
+          ),
+        );
       }
     } catch (e) {
       debugPrint("❌ Error uploading audio: $e");
-      setState(() {
-        chatMessages.add({
-          "role": "assistant",
-          "text": "❌ Error uploading audio: $e",
-        });
-      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('❌ Error uploading audio. Hugging Face may be down.'),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
     } finally {
       setState(() {
         isConverting = false;
@@ -482,7 +517,7 @@ class AskMeState extends State<AskMe> {
         setState(() {
           chatMessages[chatMessages.length - 1] = {
             "role": "ai",
-            "text": "Oops! Something went wrong. Please try again.",
+            "text": getTranslatedError('server_error', selectedLanguage),
             "isTyping": false
           };
         });
@@ -491,8 +526,7 @@ class AskMeState extends State<AskMe> {
       setState(() {
         chatMessages[chatMessages.length - 1] = {
           "role": "ai",
-          "text":
-              "Error connecting to the server. Please check your internet connection.",
+          "text": getTranslatedError('connection_error', selectedLanguage),
           "isTyping": false
         };
       });
