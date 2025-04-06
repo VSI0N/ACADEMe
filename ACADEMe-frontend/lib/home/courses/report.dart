@@ -1,4 +1,5 @@
 import 'package:ACADEMe/academe_theme.dart';
+import 'package:ACADEMe/localization/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -96,7 +97,7 @@ class TestReportScreenState extends State<TestReportScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Test Report",
+        title: Text(L10n.getTranslatedText(context, 'Test Report'),
             style: GoogleFonts.poppins(fontSize: 22, color: Colors.white)),
         backgroundColor: AcademeTheme.appColor,
       ),
@@ -131,7 +132,7 @@ class TestReportScreenState extends State<TestReportScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Overall Score",
+            Text(L10n.getTranslatedText(context, 'Overall Score'),
                 style: GoogleFonts.poppins(
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
@@ -180,7 +181,7 @@ class TestReportScreenState extends State<TestReportScreen> {
           titlesData: FlTitlesData(
             bottomTitles: AxisTitles(
                 sideTitles: _bottomTitles(
-                    ["Loops", "OOP", "Arrays", "DBMS", "Flutter"])),
+                    ["Plant", "Animal", "Matter", "Mul", "Div"])),
             leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
             topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
             rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -220,16 +221,16 @@ class TestReportScreenState extends State<TestReportScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Detailed Performance",
+            Text(L10n.getTranslatedText(context, 'Detailed Performance'),
                 style: GoogleFonts.poppins(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Colors.black)),
             SizedBox(height: 10),
-            _buildPerformanceRow("Correct Answers", "40/50", Colors.green),
+            _buildPerformanceRow(L10n.getTranslatedText(context, 'Correct Answers'), "40/50", Colors.green),
             _buildPerformanceRow(
-                "Incorrect Answers", "10/50", Colors.redAccent),
-            _buildPerformanceRow("Skipped Questions", "5", Colors.orangeAccent),
+                L10n.getTranslatedText(context, 'Incorrect Answers'), "10/50", Colors.redAccent),
+            _buildPerformanceRow(L10n.getTranslatedText(context, 'Skipped Questions'), "5", Colors.orangeAccent),
           ],
         ),
       ),
@@ -261,8 +262,8 @@ class TestReportScreenState extends State<TestReportScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         _buildActionButton(
-            Icons.picture_as_pdf, "Download Report", Colors.white),
-        _buildActionButton(Icons.share, "Share Score", Colors.white),
+            Icons.picture_as_pdf, L10n.getTranslatedText(context, 'Download Report'), Colors.white),
+        _buildActionButton(Icons.share, L10n.getTranslatedText(context, 'Share Score'), Colors.white),
       ],
     );
   }

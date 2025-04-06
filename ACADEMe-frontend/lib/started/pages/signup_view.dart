@@ -66,7 +66,7 @@ class _SignUpViewState extends State<SignUpView> {
       bool isAdmin = UserRoleManager().isAdmin;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Account created successfully!')),
+        SnackBar(content: Text(L10n.getTranslatedText(context, 'Account created successfully!'))),
       );
       Navigator.pushReplacement(
         context,

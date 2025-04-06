@@ -1,4 +1,5 @@
 import 'package:ACADEMe/academe_theme.dart';
+import 'package:ACADEMe/localization/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
@@ -49,7 +50,7 @@ class QuizPageState extends State<QuizPage> {
     }
     if (token == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Access token not found")),
+        SnackBar(content: Text(L10n.getTranslatedText(context, 'Access token not found'))),
       );
       return;
     }
@@ -81,7 +82,7 @@ class QuizPageState extends State<QuizPage> {
           return; // Ensure widget is still active before using context
         }
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("No progress records found")),
+          SnackBar(content: Text(L10n.getTranslatedText(context, 'No progress records found'))),
         );
       }
     } else {
@@ -89,7 +90,7 @@ class QuizPageState extends State<QuizPage> {
         return; // Ensure widget is still active before using context
       }
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Failed to fetch progress")),
+        SnackBar(content: Text(L10n.getTranslatedText(context, 'Failed to fetch progress'))),
       );
     }
   }
@@ -101,7 +102,7 @@ class QuizPageState extends State<QuizPage> {
     } // Retrieve the access token
     if (token == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Access token not found")),
+        SnackBar(content: Text(L10n.getTranslatedText(context, 'Access token not found'))),
       );
       return;
     }
@@ -141,11 +142,11 @@ class QuizPageState extends State<QuizPage> {
       }
       if (response.statusCode == 201) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Progress saved successfully")),
+          SnackBar(content: Text(L10n.getTranslatedText(context, 'Progress saved successfully'))),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Failed to save progress")),
+          SnackBar(content: Text(L10n.getTranslatedText(context, 'Failed to save progress'))),
         );
       }
     } else {
@@ -172,11 +173,11 @@ class QuizPageState extends State<QuizPage> {
 
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Progress updated successfully")),
+          SnackBar(content: Text(L10n.getTranslatedText(context, 'Progress updated successfully'))),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Failed to update progress")),
+          SnackBar(content: Text(L10n.getTranslatedText(context, 'Failed to update progress'))),
         );
       }
     }
@@ -200,7 +201,7 @@ class QuizPageState extends State<QuizPage> {
               ),
               const SizedBox(height: 16), // Spacing between icon and text
               Text(
-                isCorrect ? "Correct Answer!" : "Wrong Answer!",
+                isCorrect ? L10n.getTranslatedText(context, 'Correct Answer!') : L10n.getTranslatedText(context, 'Wrong Answer!'),
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 18,
@@ -268,9 +269,9 @@ class QuizPageState extends State<QuizPage> {
         //   // ),
         //   centerTitle: true,
         // ),
-        body: const Center(
+        body: Center(
           child: Text(
-            "No quizzes available",
+            L10n.getTranslatedText(context, 'No quizzes available'),
             style: TextStyle(fontSize: 18),
           ),
         ),
@@ -414,8 +415,8 @@ class QuizPageState extends State<QuizPage> {
                           _showResultPopup(isCorrect, quizId);
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text("Please select an answer!")),
+                            SnackBar(
+                                content: Text(L10n.getTranslatedText(context, 'Please select an answer!'))),
                           );
                         }
                       },
@@ -431,8 +432,8 @@ class QuizPageState extends State<QuizPage> {
                       Colors.yellow, // Keep the same as enabled state
                   disabledForegroundColor: Colors.black, // Keep text color same
                 ),
-                child: const Text(
-                  "Submit", // Keep the text fixed
+                child: Text(
+                  L10n.getTranslatedText(context, 'Submit'), // Keep the text fixed
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,

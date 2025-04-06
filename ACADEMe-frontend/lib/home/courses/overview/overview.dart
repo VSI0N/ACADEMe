@@ -204,7 +204,7 @@ class OverviewScreenState extends State<OverviewScreen>
                             children: [
                               SizedBox(height: height * 0.02),
                               Text(
-                                isLoading ? "Loading..." : topicTitle,
+                                isLoading ? "${L10n.getTranslatedText(context, 'Loading')}..." : topicTitle,
                                 style: TextStyle(
                                   fontSize: width * 0.08,
                                   color: Colors.black,
@@ -214,7 +214,7 @@ class OverviewScreenState extends State<OverviewScreen>
                               SizedBox(height: height * 0.01),
                               Text(
                                 isLoading
-                                    ? "Fetching topic details..."
+                                    ? "${L10n.getTranslatedText(context, 'Fetching topic details')}..."
                                     : topicDescription,
                                 style: TextStyle(
                                   fontSize: width * 0.04,

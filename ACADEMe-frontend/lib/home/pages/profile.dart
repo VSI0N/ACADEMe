@@ -66,7 +66,7 @@ class ProfilePageState extends State<ProfilePage> {
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to load user details: $e'),
+            content: Text('${L10n.getTranslatedText(context, 'Failed to load user details:')} $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -376,7 +376,8 @@ class LanguageSelectionBottomSheetState
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            "Select Language",
+            L10n.getTranslatedText(
+                context, 'Select Language'),
             style:
                 TextStyle(fontSize: width * 0.045, fontWeight: FontWeight.bold),
           ),
@@ -425,12 +426,14 @@ class LanguageSelectionBottomSheetState
                     Navigator.pop(context); // Close sheet
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Please select a language')),
+                      SnackBar(content: Text(L10n.getTranslatedText(
+                          context, 'Please select a language'))),
                     );
                   }
                 },
                 child: Text(
-                  "Confirm",
+                  L10n.getTranslatedText(
+                      context, 'Confirm'),
                   style: TextStyle(fontSize: width * 0.04, color: Colors.black),
                 ),
               ),

@@ -1,4 +1,5 @@
 import 'package:ACADEMe/academe_theme.dart';
+import 'package:ACADEMe/localization/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:ACADEMe/started/pages/signup_view.dart';
 
@@ -183,7 +184,7 @@ class OnboardingFlowState extends State<OnboardingFlow> {
                                   ),
                                 ),
                                 child: Text(
-                                  "Get Started",
+                                  L10n.getTranslatedText(context, 'Get Started'),
                                   style: TextStyle(
                                     fontSize: width * 0.039,
                                     fontWeight: FontWeight.w500,
@@ -199,7 +200,7 @@ class OnboardingFlowState extends State<OnboardingFlow> {
                                   TextButton(
                                     onPressed: _skipToLastPage,
                                     child: Text(
-                                      "Skip",
+                                      L10n.getTranslatedText(context, 'Skip'),
                                       style: TextStyle(
                                         fontSize: width * 0.04,
                                         fontWeight: FontWeight.normal,
@@ -220,7 +221,7 @@ class OnboardingFlowState extends State<OnboardingFlow> {
                                       ),
                                     ),
                                     child: Text(
-                                      "Next",
+                                      L10n.getTranslatedText(context, 'Next'),
                                       style: TextStyle(
                                         fontSize: width * 0.04,
                                         fontWeight: FontWeight.normal,

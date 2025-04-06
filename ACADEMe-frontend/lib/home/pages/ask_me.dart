@@ -145,7 +145,7 @@ class AskMeState extends State<AskMe> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("Add Optional Prompt"),
+        title: Text(L10n.getTranslatedText(context, 'Add Optional Prompt')),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -158,7 +158,7 @@ class AskMeState extends State<AskMe> {
             TextField(
               controller: promptController,
               decoration: InputDecoration(
-                hintText: "Enter your prompt (optional)",
+                hintText: L10n.getTranslatedText(context, 'Enter your prompt (optional)'),
                 border: OutlineInputBorder(),
               ),
               maxLines: 3,
@@ -168,14 +168,14 @@ class AskMeState extends State<AskMe> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text("Cancel"),
+            child: Text(L10n.getTranslatedText(context, 'Cancel')),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
               _uploadFile(file, fileType, promptController.text);
             },
-            child: Text("Upload"),
+            child: Text(L10n.getTranslatedText(context, 'Upload')),
           ),
         ],
       ),
@@ -433,7 +433,7 @@ class AskMeState extends State<AskMe> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('❌ Something went wrong. Hugging Face may be down.'),
+            content: Text(L10n.getTranslatedText(context, '❌ Something went wrong. Hugging Face may be down.')),
             backgroundColor: Colors.redAccent,
           ),
         );
@@ -442,7 +442,7 @@ class AskMeState extends State<AskMe> {
       debugPrint("❌ Error uploading audio: $e");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('❌ Error uploading audio. Hugging Face may be down.'),
+          content: Text(L10n.getTranslatedText(context, '❌ Error uploading audio. Hugging Face may be down.')),
           backgroundColor: Colors.redAccent,
         ),
       );
@@ -752,8 +752,8 @@ class AskMeState extends State<AskMe> {
                         hintText: isConverting
                             ? L10n.getTranslatedText(context, 'Converting ... ')
                             : (_isRecording
-                                ? L10n.getTranslatedText(
-                                    context, 'Recording ... ${_seconds}s')
+                                ? '${L10n.getTranslatedText(
+                                    context, 'Recording')}... ${_seconds}s'
                                 : L10n.getTranslatedText(
                                     context, 'Type a message ...')),
                         contentPadding: EdgeInsets.only(
@@ -1073,7 +1073,7 @@ class AskMeState extends State<AskMe> {
                       SizedBox(width: 10),
                       Expanded(
                         child: Text(
-                          "Open Document",
+                          L10n.getTranslatedText(context, 'Open Document'),
                           style: TextStyle(color: Colors.blue),
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -1149,7 +1149,7 @@ class AskMeState extends State<AskMe> {
                         Clipboard.setData(ClipboardData(text: message["text"]));
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text('Copied to clipboard'),
+                            content: Text(L10n.getTranslatedText(context, 'Copied to clipboard')),
                             duration: Duration(seconds: 2),
                           ),
                         );
@@ -1176,18 +1176,18 @@ class AskMeState extends State<AskMe> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title: Text("Report Message"),
+              title: Text(L10n.getTranslatedText(context, 'Report Message')),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text("Please describe the issue:"),
+                  Text(L10n.getTranslatedText(context, 'Please describe the issue:')),
                   SizedBox(height: 10),
                   TextField(
                     controller: reportController,
                     maxLines: 3,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      hintText: "Enter your reason for reporting...",
+                      hintText: "${L10n.getTranslatedText(context, 'Enter your reason for reporting')}...",
                     ),
                     onChanged: (text) {
                       setState(() {
@@ -1200,7 +1200,7 @@ class AskMeState extends State<AskMe> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text("Cancel"),
+                  child: Text(L10n.getTranslatedText(context, 'Cancel')),
                 ),
                 TextButton(
                   onPressed: isButtonEnabled
@@ -1209,7 +1209,7 @@ class AskMeState extends State<AskMe> {
                           Navigator.pop(context);
                         }
                       : null, // Disable button when empty
-                  child: Text("Send"),
+                  child: Text(L10n.getTranslatedText(context, 'Send')),
                 ),
               ],
             );
@@ -1223,7 +1223,7 @@ class AskMeState extends State<AskMe> {
     print("Reported message: ${message["text"]} | Reason: $reportReason");
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text("Report submitted."),
+        content: Text(L10n.getTranslatedText(context, 'Report submitted.')),
         duration: Duration(seconds: 2),
       ),
     );

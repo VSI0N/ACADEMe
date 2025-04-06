@@ -1,6 +1,5 @@
 import 'package:ACADEMe/started/pages/animated_splash.dart';
 import 'package:ACADEMe/home/pages/bottom_nav.dart';
-import 'package:ACADEMe/started/pages/course.dart';
 import 'package:ACADEMe/localization/l10n.dart';
 import 'package:ACADEMe/localization/language_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -111,7 +110,6 @@ class MyApp extends StatelessWidget {
           routes: {
             '/home': (context) =>
                 BottomNav(isAdmin: UserRoleManager().isAdmin), // ✅ Role managed
-            '/courses': (context) => SelectCourseScreen(),
           },
         );
       },

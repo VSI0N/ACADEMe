@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import '../localization/l10n.dart';
+
 class ClassSelectionBottomSheet extends StatefulWidget {
   final VoidCallback onClassSelected;
 
@@ -53,8 +55,8 @@ class ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              "What class are you in?",
+            Text(
+              L10n.getTranslatedText(context, 'What class are you in?'),
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
@@ -63,19 +65,19 @@ class ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
                 filled: true,
                 fillColor: Colors.grey[200],
                 contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
                 ),
               ),
-              hint: const Text("Select class"),
+              hint: Text(L10n.getTranslatedText(context, 'Select class')),
               value: selectedClass?.isNotEmpty == true ? selectedClass : null,
               items: classes
                   .map((className) => DropdownMenuItem(
-                        value: className,
-                        child: Text(className),
-                      ))
+                value: className,
+                child: Text(className),
+              ))
                   .toList(),
               onChanged: (value) {
                 setState(() {
@@ -99,8 +101,8 @@ class ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
                     ),
                   ),
                   onPressed: _isClassChanged ? _handleConfirmPressed : null,
-                  child: const Text(
-                    "Confirm",
+                  child: Text(
+                    L10n.getTranslatedText(context, 'Confirm'),
                     style: TextStyle(fontSize: 16, color: Colors.black),
                   ),
                 ),
@@ -115,7 +117,7 @@ class ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
 
   Future<void> _handleConfirmPressed() async {
     if (selectedClass == null) {
-      _showSnackBar('Please select a valid class');
+      _showSnackBar(L10n.getTranslatedText(context, 'Please select a valid class'));
       return;
     }
 
@@ -133,40 +135,40 @@ class ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
 
   Future<bool> _showConfirmationDialog() async {
     return await showDialog<bool>(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              title: const Text(
-                'Are you sure you want to change your class?',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20)),
+          title: Text(
+            L10n.getTranslatedText(context, 'Are you sure you want to change your class?'),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          ),
+          content: Text(
+            L10n.getTranslatedText(context, 'All your progress data will be erased for this class.'),
+            style: TextStyle(fontSize: 16),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text(
+                L10n.getTranslatedText(context, 'Cancel'),
+                style: TextStyle(color: Colors.grey, fontSize: 16),
               ),
-              content: const Text(
-                'All your progress data will be erased for this class.',
-                style: TextStyle(fontSize: 16),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
               ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(color: Colors.grey, fontSize: 16),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () => Navigator.of(context).pop(true),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: const Text('Yes'),
-                ),
-              ],
-            );
-          },
-        ) ??
+              child: Text(L10n.getTranslatedText(context, 'Yes')),
+            ),
+          ],
+        );
+      },
+    ) ??
         false;
   }
 
@@ -176,7 +178,7 @@ class ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
     final String? token = await _secureStorage.read(key: 'access_token');
 
     if (token == null) {
-      _showSnackBar('No access token found');
+      _showSnackBar(L10n.getTranslatedText(context, 'No access token found'));
       return false;
     }
 
@@ -194,10 +196,10 @@ class ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
         return await _reloginUser();
       }
 
-      _showSnackBar('Failed to update class: ${response.body}');
+      _showSnackBar('${L10n.getTranslatedText(context, 'Failed to update class')}: ${response.body}');
       return false;
     } catch (e) {
-      _showSnackBar('An error occurred. Please try again.');
+      _showSnackBar(L10n.getTranslatedText(context, 'An error occurred. Please try again.'));
       return false;
     }
   }
@@ -209,7 +211,7 @@ class ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
     final String? password = await _secureStorage.read(key: 'password');
 
     if (email == null || password == null) {
-      _showSnackBar('Session expired. Please login again.');
+      _showSnackBar(L10n.getTranslatedText(context, 'Session expired. Please login again.'));
       return false;
     }
 
@@ -228,10 +230,10 @@ class ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
         return true;
       }
 
-      _showSnackBar('Login failed: ${response.statusCode}');
+      _showSnackBar('${L10n.getTranslatedText(context, 'Login failed')}: ${response.statusCode}');
       return false;
     } catch (e) {
-      _showSnackBar('Network error during login');
+      _showSnackBar(L10n.getTranslatedText(context, 'Network error during login'));
       return false;
     }
   }

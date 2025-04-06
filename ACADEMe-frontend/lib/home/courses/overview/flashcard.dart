@@ -541,7 +541,7 @@ class FlashCardState extends State<FlashCard> {
       case "quiz":
         return _buildQuizContent(material["quiz"]);
       default:
-        return const Center(child: Text("Unsupported content type"));
+        return Center(child: Text(L10n.getTranslatedText(context, 'Unsupported content type')));
     }
   }
 
@@ -575,8 +575,8 @@ class FlashCardState extends State<FlashCard> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                child: const Text(
-                  "Mark as Completed",
+                child: Text(
+                  L10n.getTranslatedText(context, 'Mark as Completed'),
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -879,9 +879,9 @@ class FlashCardState extends State<FlashCard> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const CircularProgressIndicator(),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16),
                       Text(
-                        "Loading video...",
+                        "${L10n.getTranslatedText(context, 'Loading video')}...",
                         style: TextStyle(
                           color: AcademeTheme.appColor,
                           fontSize: 16,
@@ -919,8 +919,8 @@ class FlashCardState extends State<FlashCard> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                child: const Text(
-                  "Mark as Completed",
+                child: Text(
+                  L10n.getTranslatedText(context, 'Mark as Completed'),
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -975,8 +975,8 @@ class FlashCardState extends State<FlashCard> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                child: const Text(
-                  "Mark as Completed",
+                child: Text(
+                  L10n.getTranslatedText(context, 'Mark as Completed'),
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -1040,7 +1040,7 @@ class FlashCardState extends State<FlashCard> {
                   debugPrint("Document URL: $docUrl");
                   launchUrl(Uri.parse(docUrl));
                 },
-                child: const Text("Open Document"),
+                child: Text(L10n.getTranslatedText(context, 'Open Document')),
               ),
             ),
           ),
@@ -1055,7 +1055,7 @@ class FlashCardState extends State<FlashCard> {
                     context,
                     MaterialPageRoute(
                       builder: (_) => Scaffold(
-                        appBar: AppBar(title: const Text("Document")),
+                        appBar: AppBar(title: Text(L10n.getTranslatedText(context, 'Document'))),
                         body: SfPdfViewer.network(docUrl),
                       ),
                     ),
@@ -1068,8 +1068,8 @@ class FlashCardState extends State<FlashCard> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                child: const Text(
-                  "Mark as Completed",
+                child: Text(
+                  L10n.getTranslatedText(context, 'Mark as Completed'),
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,

@@ -1,3 +1,4 @@
+import 'package:ACADEMe/localization/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -34,8 +35,8 @@ class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
-            "What class are you in?",
+          Text(
+            L10n.getTranslatedText(context, 'What class are you in?'),
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 10),
@@ -50,7 +51,7 @@ class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
                 borderSide: BorderSide.none,
               ),
             ),
-            hint: const Text("Select class"),
+            hint: Text(L10n.getTranslatedText(context, 'Select class')),
             value: selectedClass,
             items: classes
                 .map((className) => DropdownMenuItem(
@@ -81,8 +82,8 @@ class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
                 onPressed: _isLoading ? null : _handleClassSelection,
                 child: _isLoading
                     ? const CircularProgressIndicator()
-                    : const Text(
-                        "Confirm",
+                    : Text(
+                  L10n.getTranslatedText(context, 'Confirm'),
                         style: TextStyle(fontSize: 16, color: Colors.black),
                       ),
               ),
@@ -97,7 +98,7 @@ class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
   Future<void> _handleClassSelection() async {
     if (selectedClass == null) {
       if (mounted) {
-        _showSnackBar('Please select a class');
+        _showSnackBar(L10n.getTranslatedText(context, 'Please select a class'));
       }
       return;
     }
@@ -108,13 +109,13 @@ class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
       final success = await _updateClassInBackend(selectedClass!);
       if (success) {
         if (mounted) {
-          _showSnackBar('Selected $selectedClass');
+          _showSnackBar('${L10n.getTranslatedText(context, 'Selected')} $selectedClass');
           widget.onClassSelected();
           Navigator.pop(context);
         }
       } else {
         if (mounted) {
-          _showSnackBar('Failed to update class');
+          _showSnackBar(L10n.getTranslatedText(context, 'Failed to update class'));
         }
       }
     } finally {
@@ -131,7 +132,7 @@ class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
 
     if (token == null) {
       if (mounted) {
-        _showSnackBar('No access token found');
+        _showSnackBar(L10n.getTranslatedText(context, 'No access token found'));
       }
       return false;
     }
@@ -152,14 +153,14 @@ class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
         return await _reloginUser();
       } else {
         if (mounted) {
-          _showSnackBar('Failed to update class: ${response.body}');
+          _showSnackBar('${L10n.getTranslatedText(context, 'Failed to update class')}: ${response.body}');
         }
         return false;
       }
     } catch (e) {
       debugPrint("Error updating class: $e");
       if (mounted) {
-        _showSnackBar('An error occurred. Please try again.');
+        _showSnackBar(L10n.getTranslatedText(context, 'An error occurred. Please try again.'));
       }
       return false;
     }
@@ -173,7 +174,7 @@ class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
 
     if (email == null || password == null) {
       if (mounted) {
-        _showSnackBar('No email or password found');
+        _showSnackBar(L10n.getTranslatedText(context, 'No email or password found'));
       }
       return false;
     }
@@ -197,14 +198,14 @@ class _ClassSelectionBottomSheetState extends State<ClassSelectionBottomSheet> {
         return true;
       } else {
         if (mounted) {
-          _showSnackBar('Failed to relogin: ${response.body}');
+          _showSnackBar('${L10n.getTranslatedText(context, 'Failed to relogin')}: ${response.body}');
         }
         return false;
       }
     } catch (e) {
       debugPrint("Error relogging in: $e");
       if (mounted) {
-        _showSnackBar('An error occurred. Please try again.');
+        _showSnackBar(L10n.getTranslatedText(context, 'An error occurred. Please try again.'));
       }
       return false;
     }
@@ -227,7 +228,7 @@ Future<void> showClassSelectionSheet(BuildContext context) async {
     ),
     builder: (context) => ClassSelectionBottomSheet(
       onClassSelected: () {
-        debugPrint("Class selected");
+        debugPrint(L10n.getTranslatedText(context, 'Class selected'));
       },
     ),
   );

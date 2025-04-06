@@ -178,7 +178,7 @@ class HomepageDrawer extends StatelessWidget {
       // Error handling without print statements
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Logout failed: ${e.toString()}')),
+          SnackBar(content: Text('${L10n.getTranslatedText(context, 'Logout failed')}: ${e.toString()}')),
         );
       }
     }
