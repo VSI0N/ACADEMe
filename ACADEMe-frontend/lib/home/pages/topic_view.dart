@@ -206,7 +206,7 @@ class _TopicViewScreenState extends State<TopicViewScreen>
         margin: const EdgeInsets.only(bottom: 15),
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Colors.white,
+              color: Colors.white,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
