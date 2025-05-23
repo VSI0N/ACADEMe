@@ -55,7 +55,9 @@
 - 🚀 **Optimized performance with async FastAPI architecture**  
 
 ## 📜 License  
-**ACADEMe** is licensed under the **MIT License**. Feel free to use, modify, and distribute it.  
+**ACADEMe** is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**. Feel free to use, modify, and distribute it.  
+
+📄 [Full License Text](https://www.gnu.org/licenses/agpl-3.0.txt)
 
 ## 👨‍💻 Author  
 Developed with passion by **Team VISI0N**  
