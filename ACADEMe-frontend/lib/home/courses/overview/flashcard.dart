@@ -541,7 +541,6 @@ class FlashCardState extends State<FlashCard>
   void _setupVideoController() {
     if (_isVideoInitializing) return;
 
-    // Don't dispose and recreate if we're on the same video
     final currentPageIsVideo = _currentPage < widget.materials.length &&
         widget.materials[_currentPage]["type"] == "video";
 
@@ -552,7 +551,6 @@ class FlashCardState extends State<FlashCard>
 
     final videoUrl = widget.materials[_currentPage]["content"]!;
 
-    // If we already have a controller for this video, don't recreate
     if (_videoController != null &&
         _videoController!.dataSource == videoUrl &&
         _videoController!.value.isInitialized) {
@@ -567,21 +565,26 @@ class FlashCardState extends State<FlashCard>
     _videoController!.initialize().then((_) {
       if (!mounted) return;
 
-      _chewieController = ChewieController(
-        videoPlayerController: _videoController!,
-        autoPlay: true,
-        looping: false,
-        allowMuting: true,
-        allowFullScreen: true,
-        allowPlaybackSpeedChanging: true,
-      );
+      // Add a small delay for smoother transition
+      Future.delayed(const Duration(milliseconds: 150), () {
+        if (!mounted) return;
 
-      setState(() {
-        _materialReadyStates[_currentPage] = true;
-        _isVideoInitializing = false;
+        _chewieController = ChewieController(
+          videoPlayerController: _videoController!,
+          autoPlay: true,
+          looping: false,
+          allowMuting: true,
+          allowFullScreen: true,
+          allowPlaybackSpeedChanging: true,
+        );
+
+        setState(() {
+          _materialReadyStates[_currentPage] = true;
+          _isVideoInitializing = false;
+        });
+
+        _videoController!.addListener(_videoListener);
       });
-
-      _videoController!.addListener(_videoListener);
     }).catchError((error) {
       debugPrint("Error initializing video: $error");
       setState(() {
@@ -719,28 +722,34 @@ class FlashCardState extends State<FlashCard>
   }
 
   Future<void> _nextMaterialOrQuizSmooth() async {
-    // Animate progress bar update
-    _progressAnimationController.forward();
+    // Start progress animation
+    await _progressAnimationController.forward(from: 0);
 
-    await _sendProgressToBackend();
+    // Send progress with smooth transition
+    await Future.wait([
+      _sendProgressToBackend(),
+      Future.delayed(const Duration(milliseconds: 200)),
+    ]);
 
     if (_currentPage < widget.materials.length + widget.quizzes.length - 1) {
       setState(() {
         _currentPage++;
       });
 
-      // Smoothly setup next material
-      await Future.delayed(const Duration(milliseconds: 100));
+      // Smooth setup delay for next material
+      await Future.delayed(const Duration(milliseconds: 250));
       _setupVideoController();
     } else {
       if (widget.onQuizComplete != null) {
+        // Add a subtle delay before completing
+        await Future.delayed(const Duration(milliseconds: 300));
         widget.onQuizComplete!();
       }
     }
 
-    // Reset progress animation
-    await Future.delayed(const Duration(milliseconds: 200));
-    _progressAnimationController.reset();
+    // Reset progress animation smoothly
+    await Future.delayed(const Duration(milliseconds: 150));
+    await _progressAnimationController.reverse();
   }
 
   Future<void> _nextMaterialOrQuiz() async {
@@ -1197,14 +1206,20 @@ class FlashCardState extends State<FlashCard>
       }
 
       widgets.add(
-        Container(
+        AnimatedContainer(
+          duration: Duration(milliseconds: 200 + (i * 50).clamp(0, 400)),
+          curve: Curves.easeOutQuart,
           margin: const EdgeInsets.symmetric(vertical: 6),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
             color: _isSpecialLine(line) ? Colors.transparent : Colors.grey[50],
             borderRadius: BorderRadius.circular(8),
           ),
-          child: _parseLineContent(line),
+          child: AnimatedOpacity(
+            opacity: 1.0,
+            duration: Duration(milliseconds: 300 + (i * 30).clamp(0, 200)),
+            child: _parseLineContent(line),
+          ),
         ),
       );
     }
