@@ -22,8 +22,8 @@ class HomePage extends StatelessWidget {
   final VoidCallback onCourseTap;
   final int selectedIndex; // Add selectedIndex
   final PageController _pageController = PageController();
-  static String _cachedLanguage = '';
-  static List<dynamic> _cachedCourses = [];
+  static String cachedLanguage = '';
+  static List<dynamic> cachedCourses = [];
   final ValueNotifier<bool> _showSearchUI =
       ValueNotifier(false); // Use ValueNotifier
   List<dynamic> courses = [];
@@ -70,9 +70,9 @@ class HomePage extends StatelessWidget {
     final String targetLanguage = prefs.getString('language') ?? 'en';
 
     // Return cached data if language matches and cache exists
-    if (_cachedLanguage == targetLanguage && _cachedCourses.isNotEmpty) {
+    if (cachedLanguage == targetLanguage && cachedCourses.isNotEmpty) {
       debugPrint("✅ Using cached courses");
-      return _cachedCourses;
+      return cachedCourses;
     }
 
     final response = await http.get(
@@ -87,8 +87,8 @@ class HomePage extends StatelessWidget {
       final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
 
       // Update cache with new data and language
-      _cachedCourses = data;
-      _cachedLanguage = targetLanguage;
+      cachedCourses = data;
+      cachedLanguage = targetLanguage;
       debugPrint("🔄 Updated course cache");
 
       return data;
