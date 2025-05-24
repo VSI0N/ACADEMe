@@ -875,26 +875,24 @@ class FlashCardState extends State<FlashCard>
                     child: LayoutBuilder(
                       builder: (context, constraints) {
                         return Swiper(
-                          // Remove the ValueKey to prevent rebuilding
                           itemWidth: constraints.maxWidth,
                           itemHeight: constraints.maxHeight,
                           loop: false,
-                          duration: 400, // Reduced duration for smoother swipe
+                          duration: 400,
                           layout: SwiperLayout.STACK,
                           axisDirection: AxisDirection.right,
                           index: _currentPage,
+                          physics: const NeverScrollableScrollPhysics(), // Prevent overscroll
                           onIndexChanged: (index) {
                             _handleSwipe();
+                            // Remove clamping since physics prevents invalid indices
                             if (_currentPage != index) {
                               setState(() {
                                 _currentPage = index;
                               });
-
-                              // Smooth transition delay
                               Future.delayed(const Duration(milliseconds: 150), () {
                                 _setupVideoController();
                               });
-
                               if (index < widget.materials.length) {
                                 _sendProgressToBackend();
                               }
@@ -925,34 +923,31 @@ class FlashCardState extends State<FlashCard>
   }
 
   Widget _buildMaterialCardSmooth(Map<String, dynamic> material, int index) {
+    final isLastPage = index == widget.materials.length + widget.quizzes.length - 1;
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeOutQuart,
       child: Stack(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(20),
               topRight: Radius.circular(20),
-              bottomLeft: Radius.circular(0),
-              bottomRight: Radius.circular(0),
             ),
             child: _buildMaterial(material),
           ),
           AnimatedOpacity(
-            opacity: _currentPage == index ? 0.0 : 0.15,
+            opacity: _currentPage == index || (isLastPage && index == _currentPage) ? 0.0 : 0.15,
             duration: const Duration(milliseconds: 400),
             curve: Curves.easeInOut,
             child: IgnorePointer(
-              ignoring: true,
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.black.withAlpha(30),
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(20),
-                    bottomLeft: Radius.circular(0),
-                    bottomRight: Radius.circular(0),
                   ),
                 ),
               ),
@@ -970,6 +965,24 @@ class FlashCardState extends State<FlashCard>
                       width: 200,
                       height: 200,
                       fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          if (isLastPage)
+            Positioned.fill(
+              child: IgnorePointer(
+                child: AnimatedOpacity(
+                  opacity: _currentPage == index ? 0.0 : 0.4,
+                  duration: const Duration(milliseconds: 300),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black.withAlpha(150),
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20),
+                      ),
                     ),
                   ),
                 ),
@@ -1940,5 +1953,4 @@ class FlashCardState extends State<FlashCard>
       ),
     );
   }
-
 }
