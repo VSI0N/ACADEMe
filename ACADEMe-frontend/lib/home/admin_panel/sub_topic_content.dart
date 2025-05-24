@@ -448,8 +448,7 @@ class SubTopicContentState extends State<SubTopicContent>
         bottom: TabBar(
           controller: _tabController,
           labelColor: Colors.white, // Set tab text color to white
-          unselectedLabelColor:
-              Colors.white.withValues(), // Set unselected tab text color
+          unselectedLabelColor: Colors.white70,
           tabs: [
             Tab(text: L10n.getTranslatedText(context, 'Subtopic Materials')),
             Tab(text: L10n.getTranslatedText(context, 'Subtopic Quizzes')),
