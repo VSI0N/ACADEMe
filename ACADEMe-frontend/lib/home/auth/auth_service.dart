@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AppUser {
   final String id;
@@ -204,9 +206,23 @@ class AuthService {
 
   /// ✅ Logout user and clear stored access token
   Future<void> signOut() async {
-    await _auth.signOut();
-    await _googleSignIn.signOut();
-    await _secureStorage.delete(key: "access_token"); // ✅ Clear token
+    try {
+      // 1. Sign out from Firebase & Google
+      await _auth.signOut();
+      await _googleSignIn.signOut();
+
+      // 2. Clear all Secure Storage keys
+      await _secureStorage.deleteAll(); // Instead of just access_token
+
+      // 3. Clear SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.clear();
+
+      debugPrint("✅ Full logout completed successfully");
+    } catch (e) {
+      debugPrint("❌ Logout error: $e");
+      throw Exception("Logout failed: $e");
+    }
   }
 
   /// ✅ Get stored access token

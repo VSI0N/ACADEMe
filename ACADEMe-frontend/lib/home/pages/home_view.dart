@@ -24,7 +24,6 @@ class HomePage extends StatelessWidget {
   final PageController _pageController = PageController();
   static String _cachedLanguage = '';
   static List<dynamic> _cachedCourses = [];
-  static bool _userDetailsFetched = false;
   final ValueNotifier<bool> _showSearchUI =
       ValueNotifier(false); // Use ValueNotifier
   List<dynamic> courses = [];
@@ -99,8 +98,6 @@ class HomePage extends StatelessWidget {
   }
 
   Future<void> _fetchAndStoreUserDetails() async {
-    if (_userDetailsFetched) return;
-
     try {
       final String backendUrl =
           dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
@@ -120,7 +117,7 @@ class HomePage extends StatelessWidget {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(
-            utf8.decode(response.bodyBytes));
+            utf8.decode(response.bodyBytes)); // Ensure UTF-8 encoding
 
         // Store user details in secure storage
         await _secureStorage.write(key: 'name', value: data['name']);
@@ -129,7 +126,6 @@ class HomePage extends StatelessWidget {
             key: 'student_class', value: data['student_class']);
         await _secureStorage.write(key: 'photo_url', value: data['photo_url']);
 
-        _userDetailsFetched = true; // Mark as fetched
         debugPrint("✅ User details stored successfully");
       } else {
         throw Exception(
