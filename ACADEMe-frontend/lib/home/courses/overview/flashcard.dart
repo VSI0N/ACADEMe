@@ -20,124 +20,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// Global cache manager for topic details
-class TopicCacheManager {
-  static final TopicCacheManager _instance = TopicCacheManager._internal();
-  factory TopicCacheManager() => _instance;
-  TopicCacheManager._internal();
-
-  final Map<String, Map<String, dynamic>> _cache = {};
-  final Map<String, DateTime> _cacheTimestamps = {};
-  final Map<String, bool> _fetchInProgress = {};
-
-  // Increased cache duration to 24 hours for better performance
-  static const Duration _cacheDuration = Duration(hours: 24);
-
-  String _getCacheKey(String courseId, String topicId, String language) {
-    return '${courseId}_${topicId}_$language';
-  }
-
-  Map<String, dynamic>? getCachedData(String courseId, String topicId, String language) {
-    final key = _getCacheKey(courseId, topicId, language);
-    final timestamp = _cacheTimestamps[key];
-
-    if (timestamp == null || DateTime.now().difference(timestamp) > _cacheDuration) {
-      // Cache expired or doesn't exist
-      _cache.remove(key);
-      _cacheTimestamps.remove(key);
-      return null;
-    }
-
-    return _cache[key];
-  }
-
-  void setCachedData(String courseId, String topicId, String language, Map<String, dynamic> data) {
-    final key = _getCacheKey(courseId, topicId, language);
-    _cache[key] = data;
-    _cacheTimestamps[key] = DateTime.now();
-    _fetchInProgress[key] = false;
-  }
-
-  bool isFetchInProgress(String courseId, String topicId, String language) {
-    final key = _getCacheKey(courseId, topicId, language);
-    return _fetchInProgress[key] ?? false;
-  }
-
-  void setFetchInProgress(String courseId, String topicId, String language, bool inProgress) {
-    final key = _getCacheKey(courseId, topicId, language);
-    _fetchInProgress[key] = inProgress;
-  }
-
-  void clearCache() {
-    _cache.clear();
-    _cacheTimestamps.clear();
-    _fetchInProgress.clear();
-  }
-
-  void clearCacheForTopic(String courseId, String topicId) {
-    final keysToRemove = _cache.keys
-        .where((key) => key.startsWith('${courseId}_$topicId'))
-        .toList();
-
-    for (final key in keysToRemove) {
-      _cache.remove(key);
-      _cacheTimestamps.remove(key);
-      _fetchInProgress.remove(key);
-    }
-  }
-}
-
-// App lifecycle manager to track app state
-class AppLifecycleManager {
-  static final AppLifecycleManager _instance = AppLifecycleManager._internal();
-  factory AppLifecycleManager() => _instance;
-  AppLifecycleManager._internal();
-
-  DateTime? _lastAppOpenTime;
-  DateTime? _sessionStartTime;
-  bool _isFirstOpenAfterAppStart = true;
-  final Set<String> _fetchedTopicsInSession = {};
-
-  bool get shouldRefreshCache {
-    if (_isFirstOpenAfterAppStart) {
-      _isFirstOpenAfterAppStart = false;
-      _sessionStartTime = DateTime.now();
-      _lastAppOpenTime = DateTime.now();
-      return true;
-    }
-
-    // Refresh if app was closed for more than 1 hour
-    if (_lastAppOpenTime == null ||
-        DateTime.now().difference(_lastAppOpenTime!) > const Duration(hours: 1)) {
-      _sessionStartTime = DateTime.now();
-      _lastAppOpenTime = DateTime.now();
-      _fetchedTopicsInSession.clear();
-      return true;
-    }
-
-    return false;
-  }
-
-  bool shouldFetchTopicInSession(String courseId, String topicId) {
-    final topicKey = '${courseId}_$topicId';
-    return !_fetchedTopicsInSession.contains(topicKey);
-  }
-
-  void markTopicFetchedInSession(String courseId, String topicId) {
-    final topicKey = '${courseId}_$topicId';
-    _fetchedTopicsInSession.add(topicKey);
-  }
-
-  void markAppAsOpened() {
-    _lastAppOpenTime = DateTime.now();
-  }
-
-  void startNewSession() {
-    _sessionStartTime = DateTime.now();
-    _fetchedTopicsInSession.clear();
-  }
-}
-
 class FlashCard extends StatefulWidget {
   final List<Map<String, String>> materials;
   final List<Map<String, dynamic>> quizzes;
@@ -164,8 +46,7 @@ class FlashCard extends StatefulWidget {
   FlashCardState createState() => FlashCardState();
 }
 
-class FlashCardState extends State<FlashCard>
-    with WidgetsBindingObserver, TickerProviderStateMixin {
+class FlashCardState extends State<FlashCard> {
   VideoPlayerController? _videoController;
   ChewieController? _chewieController;
   int _currentPage = 0;
@@ -177,34 +58,12 @@ class FlashCardState extends State<FlashCard>
   bool _showSwipeHint = true;
   bool isLoading = true;
 
-  // Animation controllers for smooth transitions
-  late AnimationController _loadingAnimationController;
-  late AnimationController _contentAnimationController;
-  late AnimationController _progressAnimationController;
-  late Animation<double> _loadingAnimation;
-  late Animation<double> _contentAnimation;
-  late Animation<double> _progressAnimation;
-
-  // State management for smoother transitions
-  bool _isVideoInitializing = false;
-  bool _contentReady = false;
-  Map<int, bool> _materialReadyStates = {};
-
-  // Cache managers
-  final TopicCacheManager _cacheManager = TopicCacheManager();
-  final AppLifecycleManager _lifecycleManager = AppLifecycleManager();
-
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     _currentPage = widget.initialIndex;
-
-    // Initialize animation controllers
-    _initializeAnimations();
-
-    _loadSwipeHintState();
-    _initializeTopicData();
+    _loadSwipeHintState(); // Add this
+    fetchTopicDetails();
 
     if (widget.materials.isEmpty && widget.quizzes.isEmpty) {
       Future.delayed(Duration.zero, () {
@@ -213,57 +72,7 @@ class FlashCardState extends State<FlashCard>
         }
       });
     } else {
-      _setupVideoControllerSmooth();
-    }
-  }
-
-  void _initializeAnimations() {
-    _loadingAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-
-    _contentAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 600),
-      vsync: this,
-    );
-
-    _progressAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 400),
-      vsync: this,
-    );
-
-    _loadingAnimation = CurvedAnimation(
-      parent: _loadingAnimationController,
-      curve: Curves.easeInOutCubic,
-    );
-
-    _contentAnimation = CurvedAnimation(
-      parent: _contentAnimationController,
-      curve: Curves.easeOutQuart,
-    );
-
-    _progressAnimation = CurvedAnimation(
-      parent: _progressAnimationController,
-      curve: Curves.easeInOut,
-    );
-
-    // Start loading animation
-    _loadingAnimationController.repeat();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.resumed) {
-      _lifecycleManager.markAppAsOpened();
-
-      if (_lifecycleManager.shouldRefreshCache) {
-        debugPrint("🔄 App resumed after long time, refreshing cache");
-        _initializeTopicDataSmooth();
-      }
-    } else if (state == AppLifecycleState.paused) {
-      debugPrint("📱 App paused");
+      _setupVideoController();
     }
   }
 
@@ -284,159 +93,20 @@ class FlashCardState extends State<FlashCard>
     }
   }
 
-  Future<void> _initializeTopicDataSmooth() async {
-    if (!mounted) return;
-
-    final targetLanguage = Provider.of<LanguageProvider>(context, listen: false)
-        .locale
-        .languageCode;
-
-    if (_cacheManager.isFetchInProgress(widget.courseId, widget.topicId, targetLanguage)) {
-      debugPrint("🔄 Fetch already in progress, waiting...");
-      return;
-    }
-
-    final cachedData = _cacheManager.getCachedData(
-        widget.courseId,
-        widget.topicId,
-        targetLanguage
-    );
-
-    final shouldRefresh = _lifecycleManager.shouldRefreshCache;
-    final shouldFetch = _lifecycleManager.shouldFetchTopicInSession(widget.courseId, widget.topicId);
-
-    if (cachedData != null && !shouldRefresh && !shouldFetch) {
-      debugPrint("✅ Using cached topic details (no fetch needed)");
-      await _updateTopicDetailsSmooth(cachedData);
-    } else if (cachedData != null && !shouldRefresh) {
-      debugPrint("⚡ Using cached data, fetching fresh data in background");
-      await _updateTopicDetailsSmooth(cachedData);
-      _fetchTopicDetailsInBackground();
-    } else {
-      debugPrint("🔄 Fetching topic details from backend");
-      await fetchTopicDetails();
-    }
-  }
-
-  Future<void> _initializeTopicData() async {
-    await _initializeTopicDataSmooth();
-  }
-
-  Future<void> _updateTopicDetailsSmooth(Map<String, dynamic> data) async {
-    if (mounted) {
-      // Animate content in smoothly
-      await _contentAnimationController.forward();
-
-      setState(() {
-        topicTitle = data["title"]?.toString() ?? "Untitled Topic";
-        _contentReady = true;
-      });
-
-      // Stop loading animation and fade out loading state
-      _loadingAnimationController.stop();
-
-      // Animate loading out and content in
-      await Future.wait([
-        _loadingAnimationController.reverse(),
-        Future.delayed(const Duration(milliseconds: 200)),
-      ]);
-
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  Future<void> _fetchTopicDetailsInBackground() async {
-    final targetLanguage = Provider.of<LanguageProvider>(context, listen: false)
-        .locale
-        .languageCode;
-
-    if (_cacheManager.isFetchInProgress(widget.courseId, widget.topicId, targetLanguage)) {
-      return;
-    }
-
-    _cacheManager.setFetchInProgress(widget.courseId, widget.topicId, targetLanguage, true);
-
-    try {
-      String? token = await _storage.read(key: 'access_token');
-      if (token == null) {
-        debugPrint("❌ Missing access token for background fetch");
-        return;
-      }
-
-      final response = await http.get(
-        Uri.parse(
-            '$backendUrl/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/?target_language=$targetLanguage'),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-      ).timeout(const Duration(seconds: 15));
-
-      if (response.statusCode == 200) {
-        final String responseBody = utf8.decode(response.bodyBytes);
-        final dynamic jsonData = jsonDecode(responseBody);
-
-        Map<String, dynamic>? data;
-        if (jsonData is List) {
-          if (jsonData.isNotEmpty && jsonData[0] is Map<String, dynamic>) {
-            data = jsonData[0];
-          }
-        } else if (jsonData is Map<String, dynamic>) {
-          data = jsonData;
-        }
-
-        if (data != null) {
-          _cacheManager.setCachedData(
-              widget.courseId,
-              widget.topicId,
-              targetLanguage,
-              data
-          );
-
-          _lifecycleManager.markTopicFetchedInSession(widget.courseId, widget.topicId);
-
-          if (mounted) {
-            // Smooth update without loading indicator
-            setState(() {
-              topicTitle = data?["title"]?.toString() ?? "Untitled Topic";
-            });
-          }
-
-          debugPrint("🔄 Background fetch completed successfully");
-        }
-      }
-    } catch (e) {
-      debugPrint("❌ Background fetch error: $e");
-    } finally {
-      _cacheManager.setFetchInProgress(widget.courseId, widget.topicId, targetLanguage, false);
-    }
-  }
-
   Future<void> fetchTopicDetails() async {
-    final targetLanguage = Provider.of<LanguageProvider>(context, listen: false)
-        .locale
-        .languageCode;
-
-    if (_cacheManager.isFetchInProgress(widget.courseId, widget.topicId, targetLanguage)) {
-      debugPrint("🔄 Fetch already in progress");
-      return;
-    }
-
-    _cacheManager.setFetchInProgress(widget.courseId, widget.topicId, targetLanguage, true);
-
     String? token = await _storage.read(key: 'access_token');
     if (token == null) {
       debugPrint("❌ Missing access token");
-      await _handleLoadingComplete();
       return;
+    }
+    if (!mounted) {
+      return; // Ensure widget is still active before using context
     }
 
-    if (!mounted) {
-      _cacheManager.setFetchInProgress(widget.courseId, widget.topicId, targetLanguage, false);
-      return;
-    }
+    // Get the target language from the app's language provider
+    final targetLanguage = Provider.of<LanguageProvider>(context, listen: false)
+        .locale
+        .languageCode;
 
     try {
       final response = await http.get(
@@ -446,80 +116,34 @@ class FlashCardState extends State<FlashCard>
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json; charset=UTF-8',
         },
-      ).timeout(
-        const Duration(seconds: 15),
-        onTimeout: () {
-          throw TimeoutException('Request timeout', const Duration(seconds: 15));
-        },
       );
 
-      debugPrint("🔹 API Response: ${response.body}");
+      debugPrint("🔹 API Response: ${response.body}"); // ✅ Log the response
 
       if (response.statusCode == 200) {
+        // Decode the response body using UTF-8
         final String responseBody = utf8.decode(response.bodyBytes);
         final dynamic jsonData = jsonDecode(responseBody);
 
-        Map<String, dynamic>? data;
         if (jsonData is List) {
           if (jsonData.isNotEmpty && jsonData[0] is Map<String, dynamic>) {
-            data = jsonData[0];
+            final Map<String, dynamic> data = jsonData[0];
+            updateTopicDetails(data);
+          } else {
+            debugPrint(
+                "❌ Unexpected JSON format (List but empty or incorrect structure)");
           }
         } else if (jsonData is Map<String, dynamic>) {
-          data = jsonData;
-        }
-
-        if (data != null) {
-          _cacheManager.setCachedData(
-              widget.courseId,
-              widget.topicId,
-              targetLanguage,
-              data
-          );
-
-          _lifecycleManager.markTopicFetchedInSession(widget.courseId, widget.topicId);
-
-          await _updateTopicDetailsSmooth(data);
+          updateTopicDetails(jsonData);
         } else {
-          debugPrint("❌ Unexpected JSON structure");
-          await _handleLoadingComplete();
+          debugPrint("❌ Unexpected JSON structure: ${jsonData.runtimeType}");
         }
       } else {
         debugPrint("❌ Failed to fetch topic details: ${response.statusCode}");
-        final fallbackData = _cacheManager.getCachedData(
-            widget.courseId,
-            widget.topicId,
-            targetLanguage
-        );
-        if (fallbackData != null) {
-          debugPrint("📱 Using cached data as fallback");
-          await _updateTopicDetailsSmooth(fallbackData);
-        } else {
-          await _handleLoadingComplete();
-        }
       }
     } catch (e) {
       debugPrint("❌ Error fetching topic details: $e");
-
-      final fallbackData = _cacheManager.getCachedData(
-          widget.courseId,
-          widget.topicId,
-          targetLanguage
-      );
-      if (fallbackData != null) {
-        debugPrint("📱 Using cached data due to network error");
-        await _updateTopicDetailsSmooth(fallbackData);
-      } else {
-        await _handleLoadingComplete();
-      }
     } finally {
-      _cacheManager.setFetchInProgress(widget.courseId, widget.topicId, targetLanguage, false);
-    }
-  }
-
-  Future<void> _handleLoadingComplete() async {
-    if (mounted) {
-      _loadingAnimationController.stop();
-      await _loadingAnimationController.reverse();
       setState(() {
         isLoading = false;
       });
@@ -527,46 +151,27 @@ class FlashCardState extends State<FlashCard>
   }
 
   void updateTopicDetails(Map<String, dynamic> data) {
-    if (mounted) {
-      setState(() {
-        topicTitle = data["title"]?.toString() ?? "Untitled Topic";
-      });
-    }
-  }
-
-  void _setupVideoControllerSmooth() {
-    _setupVideoController();
+    setState(() {
+      topicTitle = data["title"]?.toString() ?? "Untitled Topic";
+    });
   }
 
   void _setupVideoController() {
-    if (_isVideoInitializing) return;
+    // Dispose previous controllers and remove listener
+    _videoController?.removeListener(_videoListener); // Add this line
+    _videoController?.dispose();
+    _chewieController?.dispose();
 
-    final currentPageIsVideo = _currentPage < widget.materials.length &&
-        widget.materials[_currentPage]["type"] == "video";
+    _videoController = null;
+    _chewieController = null;
 
-    if (!currentPageIsVideo) {
-      _disposeVideoControllers();
-      return;
-    }
+    if (_currentPage < widget.materials.length &&
+        widget.materials[_currentPage]["type"] == "video") {
+      _videoController = VideoPlayerController.network(
+        widget.materials[_currentPage]["content"]!,
+      );
 
-    final videoUrl = widget.materials[_currentPage]["content"]!;
-
-    if (_videoController != null &&
-        _videoController!.dataSource == videoUrl &&
-        _videoController!.value.isInitialized) {
-      return;
-    }
-
-    _isVideoInitializing = true;
-    _disposeVideoControllers();
-
-    _videoController = VideoPlayerController.network(videoUrl);
-
-    _videoController!.initialize().then((_) {
-      if (!mounted) return;
-
-      // Add a small delay for smoother transition
-      Future.delayed(const Duration(milliseconds: 150), () {
+      _videoController!.initialize().then((_) {
         if (!mounted) return;
 
         _chewieController = ChewieController(
@@ -578,27 +183,14 @@ class FlashCardState extends State<FlashCard>
           allowPlaybackSpeedChanging: true,
         );
 
-        setState(() {
-          _materialReadyStates[_currentPage] = true;
-          _isVideoInitializing = false;
-        });
+        setState(() {});
 
+        // Add listener for video completion
         _videoController!.addListener(_videoListener);
+      }).catchError((error) {
+        debugPrint("Error initializing video: $error");
       });
-    }).catchError((error) {
-      debugPrint("Error initializing video: $error");
-      setState(() {
-        _isVideoInitializing = false;
-      });
-    });
-  }
-
-  void _disposeVideoControllers() {
-    _videoController?.removeListener(_videoListener);
-    _videoController?.dispose();
-    _chewieController?.dispose();
-    _videoController = null;
-    _chewieController = null;
+    }
   }
 
   void _videoListener() {
@@ -610,7 +202,7 @@ class FlashCardState extends State<FlashCard>
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
-          _nextMaterialOrQuizSmooth();
+          _nextMaterialOrQuiz();
         }
       });
     }
@@ -675,7 +267,7 @@ class FlashCardState extends State<FlashCard>
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(progressData),
-      ).timeout(const Duration(seconds: 10));
+      );
 
       if (response.statusCode == 200) {
         debugPrint("✅ Progress updated successfully");
@@ -701,7 +293,7 @@ class FlashCardState extends State<FlashCard>
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json; charset=UTF-8',
         },
-      ).timeout(const Duration(seconds: 10));
+      );
 
       if (response.statusCode == 200) {
         final responseBody = jsonDecode(response.body);
@@ -721,52 +313,29 @@ class FlashCardState extends State<FlashCard>
     return [];
   }
 
-  Future<void> _nextMaterialOrQuizSmooth() async {
-    // Start progress animation
-    await _progressAnimationController.forward(from: 0);
-
-    // Send progress with smooth transition
-    await Future.wait([
-      _sendProgressToBackend(),
-      Future.delayed(const Duration(milliseconds: 200)),
-    ]);
+  Future<void> _nextMaterialOrQuiz() async {
+    await _sendProgressToBackend();
 
     if (_currentPage < widget.materials.length + widget.quizzes.length - 1) {
       setState(() {
         _currentPage++;
       });
 
-      // Smooth setup delay for next material
-      await Future.delayed(const Duration(milliseconds: 250));
+      // Force the Swiper to update by using a key and rebuilding it
       _setupVideoController();
     } else {
       if (widget.onQuizComplete != null) {
-        // Add a subtle delay before completing
-        await Future.delayed(const Duration(milliseconds: 300));
         widget.onQuizComplete!();
       }
     }
-
-    // Reset progress animation smoothly
-    await Future.delayed(const Duration(milliseconds: 150));
-    await _progressAnimationController.reverse();
-  }
-
-  Future<void> _nextMaterialOrQuiz() async {
-    await _nextMaterialOrQuizSmooth();
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     _showSwipeHint = false;
-
-    // Dispose animation controllers
-    _loadingAnimationController.dispose();
-    _contentAnimationController.dispose();
-    _progressAnimationController.dispose();
-
-    _disposeVideoControllers();
+    _videoController?.removeListener(_videoListener);
+    _videoController?.dispose();
+    _chewieController?.dispose();
     _audioPlayer.dispose();
     super.dispose();
   }
@@ -789,213 +358,110 @@ class FlashCardState extends State<FlashCard>
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 300),
-          child: Text(
-            L10n.getTranslatedText(context, 'Subtopic Materials'),
-            key: ValueKey(L10n.getTranslatedText(context, 'Subtopic Materials')),
-            style: TextStyle(
-                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
-          ),
+        title: Text(
+          L10n.getTranslatedText(context, 'Subtopic Materials'),
+          style: TextStyle(
+              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
         ),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: AnimatedRotation(
-              turns: isLoading ? 1 : 0,
-              duration: const Duration(milliseconds: 800),
-              child: const Icon(Icons.refresh, color: Colors.black),
-            ),
-            onPressed: isLoading ? null : () async {
-              setState(() {
-                isLoading = true;
-              });
-              _loadingAnimationController.repeat();
-              _cacheManager.clearCacheForTopic(widget.courseId, widget.topicId);
-              await fetchTopicDetails();
-            },
-          ),
-        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildProgressIndicatorSmooth(),
-          _buildSubtopicTitleSmooth(widget.subtopicTitle),
-          if (isLoading)
-            Expanded(
-              child: FadeTransition(
-                opacity: _loadingAnimation,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ScaleTransition(
-                        scale: Tween<double>(begin: 0.8, end: 1.2).animate(
-                          CurvedAnimation(
-                            parent: _loadingAnimationController,
-                            curve: Curves.easeInOut,
+          _buildProgressIndicator(),
+          _buildSubtopicTitle(topicTitle),
+          Expanded(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return Swiper(
+                    key: ValueKey<int>(_currentPage),
+                    itemWidth: constraints.maxWidth,
+                    itemHeight: constraints.maxHeight,
+                    loop: false,
+                    duration: 600,
+                    layout: SwiperLayout.STACK,
+                    axisDirection: AxisDirection.right,
+                    index: _currentPage,
+                    onIndexChanged: (index) {
+                      _handleSwipe();
+                      if (_currentPage != index) {
+                        setState(() {
+                          _currentPage = index;
+                        });
+                        _setupVideoController();
+
+                        if (index < widget.materials.length) {
+                          _sendProgressToBackend();
+                        }
+                      }
+                    },
+                    itemBuilder: (context, index) {
+                      return Stack(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(20),
+                              topRight: Radius.circular(20),
+                              bottomLeft: Radius.circular(0),
+                              bottomRight: Radius.circular(0),
+                            ),
+                            child: _buildMaterial(index < widget.materials.length
+                                ? widget.materials[index]
+                                : {
+                              "type": "quiz",
+                              "quiz": widget.quizzes[index - widget.materials.length],
+                            }),
                           ),
-                        ),
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            AcademeTheme.appColor,
+                          AnimatedOpacity(
+                            opacity: _currentPage == index ? 0.0 : 0.2,
+                            duration: const Duration(milliseconds: 500),
+                            child: IgnorePointer(
+                              ignoring: true,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withAlpha(40),
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20),
+                                    bottomLeft: Radius.circular(0),
+                                    bottomRight: Radius.circular(0),
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
-                          strokeWidth: 3,
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                      FadeTransition(
-                        opacity: _loadingAnimation,
-                        child: Text(
-                          L10n.getTranslatedText(context, 'Loading...'),
-                          style: TextStyle(
-                            color: AcademeTheme.appColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            )
-          else
-            Expanded(
-              child: FadeTransition(
-                opacity: _contentAnimation,
-                child: SlideTransition(
-                  position: Tween<Offset>(
-                    begin: const Offset(0, 0.1),
-                    end: Offset.zero,
-                  ).animate(_contentAnimation),
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        return Swiper(
-                          itemWidth: constraints.maxWidth,
-                          itemHeight: constraints.maxHeight,
-                          loop: false,
-                          duration: 400,
-                          layout: SwiperLayout.STACK,
-                          axisDirection: AxisDirection.right,
-                          index: _currentPage,
-                          physics: const NeverScrollableScrollPhysics(), // Prevent overscroll
-                          onIndexChanged: (index) {
-                            _handleSwipe();
-                            // Remove clamping since physics prevents invalid indices
-                            if (_currentPage != index) {
-                              setState(() {
-                                _currentPage = index;
-                              });
-                              Future.delayed(const Duration(milliseconds: 150), () {
-                                _setupVideoController();
-                              });
-                              if (index < widget.materials.length) {
-                                _sendProgressToBackend();
-                              }
-                            }
-                          },
-                          itemBuilder: (context, index) {
-                            return _buildMaterialCardSmooth(
-                              index < widget.materials.length
-                                  ? widget.materials[index]
-                                  : {
-                                "type": "quiz",
-                                "quiz": widget.quizzes[index - widget.materials.length],
-                              },
-                              index,
-                            );
-                          },
-                          itemCount: widget.materials.length + widget.quizzes.length,
-                        );
-                      },
-                    ),
-                  ),
-                ),
+                          // Add this new Positioned widget for the GIF overlay
+                          if (_showSwipeHint && index == 0)
+                            Positioned.fill(
+                              child: IgnorePointer(
+                                child: Center(
+                                  child: Image.asset(
+                                    'assets/images/swipe_left_no_bg.gif',
+                                    width: 200,
+                                    height: 200,
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
+                      );
+                    },
+                    itemCount: widget.materials.length + widget.quizzes.length,
+                  );
+                },
               ),
             ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildMaterialCardSmooth(Map<String, dynamic> material, int index) {
-    final isLastPage = index == widget.materials.length + widget.quizzes.length - 1;
-
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeOutQuart,
-      child: Stack(
-        children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
-            child: _buildMaterial(material),
-          ),
-          AnimatedOpacity(
-            opacity: _currentPage == index || (isLastPage && index == _currentPage) ? 0.0 : 0.15,
-            duration: const Duration(milliseconds: 400),
-            curve: Curves.easeInOut,
-            child: IgnorePointer(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.black.withAlpha(30),
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          if (_showSwipeHint && index == 0)
-            Positioned.fill(
-              child: IgnorePointer(
-                child: AnimatedOpacity(
-                  opacity: _showSwipeHint ? 0.8 : 0.0,
-                  duration: const Duration(milliseconds: 500),
-                  child: Center(
-                    child: Image.asset(
-                      'assets/images/swipe_left_no_bg.gif',
-                      width: 200,
-                      height: 200,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          if (isLastPage)
-            Positioned.fill(
-              child: IgnorePointer(
-                child: AnimatedOpacity(
-                  opacity: _currentPage == index ? 0.0 : 0.4,
-                  duration: const Duration(milliseconds: 300),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.black.withAlpha(150),
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildProgressIndicatorSmooth() {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
+  Widget _buildProgressIndicator() {
+    return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 0),
       child: Container(
         width: double.infinity,
@@ -1005,25 +471,14 @@ class FlashCardState extends State<FlashCard>
           children: List.generate(
               widget.materials.length + widget.quizzes.length, (index) {
             return Expanded(
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 400),
-                curve: Curves.easeInOutCubic,
+              child: Container(
                 height: 6,
                 margin: const EdgeInsets.symmetric(horizontal: 2),
                 decoration: BoxDecoration(
-                  color: _currentPage >= index
+                  color: _currentPage == index
                       ? Colors.yellow[700]
-                      : Colors.grey[300],
+                      : Colors.grey[400],
                   borderRadius: BorderRadius.circular(3),
-                  boxShadow: _currentPage == index
-                      ? [
-                    BoxShadow(
-                      color: Colors.yellow.withOpacity(0.3),
-                      blurRadius: 8,
-                      spreadRadius: 1,
-                    )
-                  ]
-                      : null,
                 ),
               ),
             );
@@ -1033,10 +488,8 @@ class FlashCardState extends State<FlashCard>
     );
   }
 
-  Widget _buildSubtopicTitleSmooth(String title) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeOutQuart,
+  Widget _buildSubtopicTitle(String title) {
+    return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Container(
         width: double.infinity,
@@ -1045,26 +498,18 @@ class FlashCardState extends State<FlashCard>
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.08),
-              blurRadius: 8,
-              spreadRadius: 1,
-              offset: const Offset(0, 2),
-            )
+            BoxShadow(color: Colors.black26, blurRadius: 4, spreadRadius: 1)
           ],
         ),
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 400),
-          child: Text(
-            title,
-            key: ValueKey(title),
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-            textAlign: TextAlign.center,
+        child: Text(
+          widget
+              .subtopicTitle, // Use the passed title instead of state variable
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
           ),
+          textAlign: TextAlign.center,
         ),
       ),
     );
@@ -1081,35 +526,7 @@ class FlashCardState extends State<FlashCard>
     );
   }
 
-
   Widget _getMaterialWidget(Map<String, dynamic> material) {
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 400),
-      switchInCurve: Curves.easeOutQuart,
-      switchOutCurve: Curves.easeInQuart,
-      transitionBuilder: (Widget child, Animation<double> animation) {
-        return FadeTransition(
-          opacity: animation,
-          child: SlideTransition(
-            position: Tween<Offset>(
-              begin: const Offset(0, 0.05),
-              end: Offset.zero,
-            ).animate(CurvedAnimation(
-              parent: animation,
-              curve: Curves.easeOutCubic,
-            )),
-            child: child,
-          ),
-        );
-      },
-      child: Container(
-        key: ValueKey('${material["type"]}_${material.hashCode}'),
-        child: _buildMaterialContent(material),
-      ),
-    );
-  }
-
-  Widget _buildMaterialContent(Map<String, dynamic> material) {
     switch (material["type"]) {
       case "text":
         return _buildTextContent(material["content"]!);
@@ -1124,85 +541,51 @@ class FlashCardState extends State<FlashCard>
       case "quiz":
         return _buildQuizContent(material["quiz"]);
       default:
-        return Center(
-          child: AnimatedOpacity(
-            opacity: 1.0,
-            duration: const Duration(milliseconds: 300),
-            child: Text(
-              L10n.getTranslatedText(context, 'Unsupported content type'),
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-              ),
-            ),
-          ),
-        );
+        return Center(child: Text(L10n.getTranslatedText(context, 'Unsupported content type')));
     }
   }
 
   Widget _buildTextContent(String content) {
-    String processedContent = content.replaceAll(r'\n', '\n').replaceAll('<br>', '\n');
+    // Convert escaped newlines and handle markdown symbols
+    String processedContent =
+    content.replaceAll(r'\n', '\n').replaceAll('<br>', '\n');
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeOutQuart,
-      child: buildStyledContainer(
-        Column(
-          children: [
-            Expanded(
-              child: AnimatedOpacity(
-                opacity: 1.0,
-                duration: const Duration(milliseconds: 500),
-                curve: Curves.easeOutQuart,
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 400),
-                    curve: Curves.easeOutCubic,
-                    child: _formattedText(processedContent),
+    return buildStyledContainer(
+      Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: _formattedText(processedContent),
+            ),
+          ),
+          if (widget.quizzes.isEmpty &&
+              _currentPage == widget.materials.length - 1)
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  if (widget.onQuizComplete != null) {
+                    widget.onQuizComplete!();
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.yellow,
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: Text(
+                  L10n.getTranslatedText(context, 'Mark as Completed'),
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
                   ),
                 ),
               ),
             ),
-            if (widget.quizzes.isEmpty && _currentPage == widget.materials.length - 1)
-              AnimatedSlide(
-                offset: const Offset(0, 0),
-                duration: const Duration(milliseconds: 600),
-                curve: Curves.easeOutBack,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeOutQuart,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (widget.onQuizComplete != null) {
-                          widget.onQuizComplete!();
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.yellow,
-                        minimumSize: const Size(double.infinity, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        elevation: 3,
-                        shadowColor: Colors.yellow.withOpacity(0.3),
-                      ),
-                      child: Text(
-                        L10n.getTranslatedText(context, 'Mark as Completed'),
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        ),
+        ],
       ),
     );
   }
@@ -1219,20 +602,14 @@ class FlashCardState extends State<FlashCard>
       }
 
       widgets.add(
-        AnimatedContainer(
-          duration: Duration(milliseconds: 200 + (i * 50).clamp(0, 400)),
-          curve: Curves.easeOutQuart,
+        Container(
           margin: const EdgeInsets.symmetric(vertical: 6),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
             color: _isSpecialLine(line) ? Colors.transparent : Colors.grey[50],
             borderRadius: BorderRadius.circular(8),
           ),
-          child: AnimatedOpacity(
-            opacity: 1.0,
-            duration: Duration(milliseconds: 300 + (i * 30).clamp(0, 200)),
-            child: _parseLineContent(line),
-          ),
+          child: _parseLineContent(line),
         ),
       );
     }
@@ -1259,6 +636,7 @@ class FlashCardState extends State<FlashCard>
     return _parseInlineFormatting(line);
   }
 
+// Add this helper method
   bool _isSpecialLine(String line) {
     return line.startsWith('#') ||
         line.trim().startsWith('- ') ||
@@ -1267,17 +645,18 @@ class FlashCardState extends State<FlashCard>
         line.trim().startsWith('> ');
   }
 
+  // Add these new methods
   Widget _buildBulletPoint(String text) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
           alignment: Alignment.topCenter,
-          padding: const EdgeInsets.only(top: 10),
+          padding: const EdgeInsets.only(top: 10), // Adjust vertical position
           child: Icon(
             Icons.circle,
-            size: 10,
-            color: Colors.blue[700],
+            size: 10, // Slightly larger for better visibility
+            color: Colors.blue[700], // Match numbered list color
           ),
         ),
         const SizedBox(width: 12),
@@ -1299,14 +678,14 @@ class FlashCardState extends State<FlashCard>
       children: [
         Container(
           alignment: Alignment.topCenter,
-          padding: const EdgeInsets.only(top: 5),
+          padding: const EdgeInsets.only(top: 5), // Adjust this value as needed
           child: Text(
             '$number.',
             style: TextStyle(
               color: Colors.blue[700],
               fontWeight: FontWeight.bold,
-              fontSize: 16,
-              height: 1.4,
+              fontSize: 16, // Match base text size
+              height: 1.4, // Match line height
             ),
           ),
         ),
@@ -1489,266 +868,124 @@ class FlashCardState extends State<FlashCard>
   }
 
   Widget _buildVideoContent(String videoUrl) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 400),
-      curve: Curves.easeOutQuart,
-      child: buildStyledContainer(
-        Column(
-          children: [
-            Expanded(
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 600),
-                switchInCurve: Curves.easeOutQuart,
-                switchOutCurve: Curves.easeInQuart,
-                transitionBuilder: (Widget child, Animation<double> animation) {
-                  return FadeTransition(
-                    opacity: animation,
-                    child: ScaleTransition(
-                      scale: Tween<double>(begin: 0.95, end: 1.0).animate(
-                        CurvedAnimation(
-                          parent: animation,
-                          curve: Curves.easeOutBack,
-                        ),
-                      ),
-                      child: child,
-                    ),
-                  );
-                },
-                child: _chewieController == null ||
-                    _videoController == null ||
-                    !_videoController!.value.isInitialized
-                    ? Container(
-                  key: const ValueKey('video_loading'),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      TweenAnimationBuilder<double>(
-                        tween: Tween<double>(begin: 0.0, end: 1.0),
-                        duration: const Duration(milliseconds: 1200),
-                        curve: Curves.easeInOutCubic,
-                        builder: (context, value, child) {
-                          return Transform.scale(
-                            scale: 0.8 + (0.2 * value),
-                            child: Opacity(
-                              opacity: value,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 3,
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  AcademeTheme.appColor,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      AnimatedOpacity(
-                        opacity: 1.0,
-                        duration: const Duration(milliseconds: 800),
-                        child: Text(
-                          "${L10n.getTranslatedText(context, 'Loading video')}...",
-                          style: TextStyle(
-                            color: AcademeTheme.appColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ],
+    return buildStyledContainer(
+      Column(
+        children: [
+          Expanded(
+            child: _chewieController == null ||
+                _videoController == null ||
+                !_videoController!.value.isInitialized
+                ? Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const CircularProgressIndicator(),
+                SizedBox(height: 16),
+                Text(
+                  "${L10n.getTranslatedText(context, 'Loading video')}...",
+                  style: TextStyle(
+                    color: AcademeTheme.appColor,
+                    fontSize: 16,
                   ),
-                )
-                    : Container(
-                  key: ValueKey('video_${videoUrl.hashCode}'),
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {});
-                    },
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 400),
-                      curve: Curves.easeOutQuart,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: AspectRatio(
-                          aspectRatio: _videoController!.value.aspectRatio,
-                          child: AnimatedOpacity(
-                            opacity: 1.0,
-                            duration: const Duration(milliseconds: 500),
-                            child: Chewie(controller: _chewieController!),
-                          ),
-                        ),
-                      ),
-                    ),
+                ),
+              ],
+            )
+                : GestureDetector(
+              onTap: () {
+                setState(() {});
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: AspectRatio(
+                  aspectRatio: _videoController!.value.aspectRatio,
+                  child: Chewie(controller: _chewieController!),
+                ),
+              ),
+            ),
+          ),
+          if (widget.quizzes.isEmpty &&
+              _currentPage == widget.materials.length - 1)
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  if (widget.onQuizComplete != null) {
+                    widget.onQuizComplete!();
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.yellow,
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: Text(
+                  L10n.getTranslatedText(context, 'Mark as Completed'),
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
                   ),
                 ),
               ),
             ),
-            if (widget.quizzes.isEmpty && _currentPage == widget.materials.length - 1)
-              AnimatedSlide(
-                offset: const Offset(0, 0),
-                duration: const Duration(milliseconds: 600),
-                curve: Curves.easeOutBack,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeOutQuart,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (widget.onQuizComplete != null) {
-                          widget.onQuizComplete!();
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.yellow,
-                        minimumSize: const Size(double.infinity, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        elevation: 3,
-                        shadowColor: Colors.yellow.withOpacity(0.3),
-                      ),
-                      child: Text(
-                        L10n.getTranslatedText(context, 'Mark as Completed'),
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        ),
+        ],
       ),
     );
   }
 
   Widget _buildImageContent(String imageUrl) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 400),
-      curve: Curves.easeOutQuart,
-      child: buildStyledContainer(
-        Column(
-          children: [
-            Expanded(
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 500),
-                curve: Curves.easeOutQuart,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: FutureBuilder<BoxFit>(
-                    future: _getImageFit(imageUrl),
-                    builder: (context, snapshot) {
-                      BoxFit fit = snapshot.data ?? BoxFit.cover;
-                      return AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 600),
-                        switchInCurve: Curves.easeOutQuart,
-                        switchOutCurve: Curves.easeInQuart,
-                        transitionBuilder: (Widget child, Animation<double> animation) {
-                          return FadeTransition(
-                            opacity: animation,
-                            child: ScaleTransition(
-                              scale: Tween<double>(begin: 0.95, end: 1.0).animate(
-                                CurvedAnimation(
-                                  parent: animation,
-                                  curve: Curves.easeOutBack,
-                                ),
-                              ),
-                              child: child,
-                            ),
-                          );
-                        },
-                        child: CachedNetworkImage(
-                          imageUrl: imageUrl,
-                          key: ValueKey(imageUrl),
-                          placeholder: (context, url) => Container(
-                            key: const ValueKey('image_loading'),
-                            child: Center(
-                              child: TweenAnimationBuilder<double>(
-                                tween: Tween<double>(begin: 0.0, end: 1.0),
-                                duration: const Duration(milliseconds: 1200),
-                                curve: Curves.easeInOutCubic,
-                                builder: (context, value, child) {
-                                  return Transform.scale(
-                                    scale: 0.8 + (0.2 * value),
-                                    child: Opacity(
-                                      opacity: value,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 3,
-                                        valueColor: AlwaysStoppedAnimation<Color>(
-                                          AcademeTheme.appColor,
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                          errorWidget: (context, url, error) => Container(
-                            key: const ValueKey('image_error'),
-                            child: AnimatedOpacity(
-                              opacity: 1.0,
-                              duration: const Duration(milliseconds: 400),
-                              child: const Icon(
-                                Icons.error,
-                                size: 48,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ),
-                          fit: fit,
-                          alignment: Alignment.center,
-                          fadeInDuration: const Duration(milliseconds: 400),
-                          fadeInCurve: Curves.easeOutQuart,
-                        ),
-                      );
-                    },
+    return buildStyledContainer(
+      Column(
+        children: [
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: FutureBuilder<BoxFit>(
+                future: _getImageFit(imageUrl),
+                builder: (context, snapshot) {
+                  BoxFit fit = snapshot.data ?? BoxFit.cover;
+                  return CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    placeholder: (context, url) =>
+                    const Center(child: CircularProgressIndicator()),
+                    errorWidget: (context, url, error) =>
+                    const Icon(Icons.error),
+                    fit: fit,
+                    alignment: Alignment.center,
+                  );
+                },
+              ),
+            ),
+          ),
+          if (widget.quizzes.isEmpty &&
+              _currentPage == widget.materials.length - 1)
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  if (widget.onQuizComplete != null) {
+                    widget.onQuizComplete!();
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.yellow,
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: Text(
+                  L10n.getTranslatedText(context, 'Mark as Completed'),
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
                   ),
                 ),
               ),
             ),
-            if (widget.quizzes.isEmpty && _currentPage == widget.materials.length - 1)
-              AnimatedSlide(
-                offset: const Offset(0, 0),
-                duration: const Duration(milliseconds: 600),
-                curve: Curves.easeOutBack,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeOutQuart,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (widget.onQuizComplete != null) {
-                          widget.onQuizComplete!();
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.yellow,
-                        minimumSize: const Size(double.infinity, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        elevation: 3,
-                        shadowColor: Colors.yellow.withOpacity(0.3),
-                      ),
-                      child: Text(
-                        L10n.getTranslatedText(context, 'Mark as Completed'),
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        ),
+        ],
       ),
     );
   }
@@ -1756,7 +993,7 @@ class FlashCardState extends State<FlashCard>
   Future<BoxFit> _getImageFit(String imageUrl) async {
     final Completer<ImageInfo> completer = Completer();
     final ImageStream stream =
-        NetworkImage(imageUrl).resolve(const ImageConfiguration());
+    NetworkImage(imageUrl).resolve(const ImageConfiguration());
 
     final listener = ImageStreamListener((ImageInfo info, bool _) {
       completer.complete(info);
@@ -1784,172 +1021,102 @@ class FlashCardState extends State<FlashCard>
   }
 
   Widget _buildAudioContent(String audioUrl) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 400),
-      curve: Curves.easeOutQuart,
-      child: buildStyledContainer(
-        AnimatedPadding(
-          padding: const EdgeInsets.all(8.0),
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOutQuart,
-          child: AnimatedOpacity(
-            opacity: 1.0,
-            duration: const Duration(milliseconds: 500),
-            child: WhatsAppAudioPlayer(audioUrl: audioUrl),
-          ),
-        ),
+    return buildStyledContainer(
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: WhatsAppAudioPlayer(audioUrl: audioUrl),
       ),
     );
   }
 
   Widget _buildDocumentContent(String docUrl) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 400),
-      curve: Curves.easeOutQuart,
-      child: buildStyledContainer(
-        Column(
-          children: [
-            Expanded(
-              child: AnimatedOpacity(
-                opacity: 1.0,
-                duration: const Duration(milliseconds: 500),
-                child: Center(
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeOutBack,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        debugPrint("Document URL: $docUrl");
-                        launchUrl(Uri.parse(docUrl));
-                      },
-                      style: ElevatedButton.styleFrom(
-                        elevation: 3,
-                        shadowColor: Colors.blue.withOpacity(0.3),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: Text(
-                        L10n.getTranslatedText(context, 'Open Document'),
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                        ),
+    return buildStyledContainer(
+      Column(
+        children: [
+          Expanded(
+            child: Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  debugPrint("Document URL: $docUrl");
+                  launchUrl(Uri.parse(docUrl));
+                },
+                child: Text(L10n.getTranslatedText(context, 'Open Document')),
+              ),
+            ),
+          ),
+          if (widget.quizzes.isEmpty &&
+              _currentPage == widget.materials.length - 1)
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  debugPrint("Navigating to PDF Viewer with URL: $docUrl");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => Scaffold(
+                        appBar: AppBar(title: Text(L10n.getTranslatedText(context, 'Document'))),
+                        body: SfPdfViewer.network(docUrl),
                       ),
                     ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.yellow,
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: Text(
+                  L10n.getTranslatedText(context, 'Mark as Completed'),
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
                   ),
                 ),
               ),
             ),
-            if (widget.quizzes.isEmpty && _currentPage == widget.materials.length - 1)
-              AnimatedSlide(
-                offset: const Offset(0, 0),
-                duration: const Duration(milliseconds: 600),
-                curve: Curves.easeOutBack,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeOutQuart,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        debugPrint("Navigating to PDF Viewer with URL: $docUrl");
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => Scaffold(
-                              appBar: AppBar(
-                                title: Text(L10n.getTranslatedText(context, 'Document')),
-                              ),
-                              body: SfPdfViewer.network(docUrl),
-                            ),
-                          ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.yellow,
-                        minimumSize: const Size(double.infinity, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        elevation: 3,
-                        shadowColor: Colors.yellow.withOpacity(0.3),
-                      ),
-                      child: Text(
-                        L10n.getTranslatedText(context, 'Mark as Completed'),
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        ),
+        ],
       ),
     );
   }
 
   Widget _buildQuizContent(Map<String, dynamic> quiz) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 400),
-      curve: Curves.easeOutQuart,
-      child: buildStyledContainer(
-        AnimatedOpacity(
-          opacity: 1.0,
-          duration: const Duration(milliseconds: 500),
-          child: QuizPage(
-            quizzes: [quiz],
-            onQuizComplete: () {
-              _nextMaterialOrQuiz();
-            },
-            courseId: widget.courseId,
-            topicId: widget.topicId,
-            subtopicId: widget.subtopicId,
-          ),
-        ),
+    return buildStyledContainer(
+      QuizPage(
+        quizzes: [quiz],
+        onQuizComplete: () {
+          _nextMaterialOrQuiz();
+        },
+        courseId: widget.courseId,
+        topicId: widget.topicId,
+        subtopicId: widget.subtopicId,
       ),
     );
   }
 
   Widget buildStyledContainer(Widget child) {
     final height = MediaQuery.of(context).size.height;
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 400),
-      curve: Curves.easeOutQuart,
-      child: Center(
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOutCubic,
-          width: double.infinity,
-          constraints: BoxConstraints(minHeight: height * 1.5),
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-              bottomLeft: Radius.circular(0),
-              bottomRight: Radius.circular(0),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.08),
-                blurRadius: 8,
-                spreadRadius: 1,
-                offset: const Offset(0, 2),
-              ),
-            ],
+    return Center(
+      child: Container(
+        width: double.infinity,
+        constraints: BoxConstraints(minHeight: height * 1.5),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+            bottomLeft: Radius.circular(0),
+            bottomRight: Radius.circular(0),
           ),
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            switchInCurve: Curves.easeOutQuart,
-            switchOutCurve: Curves.easeInQuart,
-            child: child,
-          ),
+          boxShadow: [
+            BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2),
+          ],
         ),
+        child: child,
       ),
     );
   }

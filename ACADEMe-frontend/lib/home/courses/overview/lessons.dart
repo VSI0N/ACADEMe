@@ -11,101 +11,6 @@ import 'package:ACADEMe/localization/language_provider.dart';
 
 import '../report.dart';
 
-// Singleton class for caching lesson data
-class LessonCache {
-  static final LessonCache _instance = LessonCache._internal();
-  factory LessonCache() => _instance;
-  LessonCache._internal();
-
-  // Cache maps using courseId_topicId as key
-  final Map<String, Map<String, bool>> _isExpandedCache = {};
-  final Map<String, Map<String, String>> _subtopicIdsCache = {};
-  final Map<String, Map<String, List<Map<String, dynamic>>>> _subtopicMaterialsCache = {};
-  final Map<String, Map<String, List<Map<String, dynamic>>>> _subtopicQuizzesCache = {};
-  final Set<String> _fetchedTopics = {};
-
-  String _getCacheKey(String courseId, String topicId) => '${courseId}_$topicId';
-
-  bool isTopicCached(String courseId, String topicId) {
-    return _fetchedTopics.contains(_getCacheKey(courseId, topicId));
-  }
-
-  void cacheTopicData(
-      String courseId,
-      String topicId,
-      Map<String, bool> isExpanded,
-      Map<String, String> subtopicIds,
-      ) {
-    final key = _getCacheKey(courseId, topicId);
-    _isExpandedCache[key] = Map.from(isExpanded);
-    _subtopicIdsCache[key] = Map.from(subtopicIds);
-    _fetchedTopics.add(key);
-  }
-
-  void cacheSubtopicData(
-      String courseId,
-      String topicId,
-      String subtopicId,
-      List<Map<String, dynamic>> materials,
-      List<Map<String, dynamic>> quizzes,
-      ) {
-    final key = _getCacheKey(courseId, topicId);
-    _subtopicMaterialsCache[key] ??= {};
-    _subtopicQuizzesCache[key] ??= {};
-    _subtopicMaterialsCache[key]![subtopicId] = List.from(materials);
-    _subtopicQuizzesCache[key]![subtopicId] = List.from(quizzes);
-  }
-
-  Map<String, bool>? getIsExpanded(String courseId, String topicId) {
-    final key = _getCacheKey(courseId, topicId);
-    return _isExpandedCache[key] != null ? Map.from(_isExpandedCache[key]!) : null;
-  }
-
-  Map<String, String>? getSubtopicIds(String courseId, String topicId) {
-    final key = _getCacheKey(courseId, topicId);
-    return _subtopicIdsCache[key] != null ? Map.from(_subtopicIdsCache[key]!) : null;
-  }
-
-  List<Map<String, dynamic>>? getSubtopicMaterials(String courseId, String topicId, String subtopicId) {
-    final key = _getCacheKey(courseId, topicId);
-    return _subtopicMaterialsCache[key]?[subtopicId] != null
-        ? List.from(_subtopicMaterialsCache[key]![subtopicId]!)
-        : null;
-  }
-
-  List<Map<String, dynamic>>? getSubtopicQuizzes(String courseId, String topicId, String subtopicId) {
-    final key = _getCacheKey(courseId, topicId);
-    return _subtopicQuizzesCache[key]?[subtopicId] != null
-        ? List.from(_subtopicQuizzesCache[key]![subtopicId]!)
-        : null;
-  }
-
-  bool isSubtopicDataCached(String courseId, String topicId, String subtopicId) {
-    final key = _getCacheKey(courseId, topicId);
-    return _subtopicMaterialsCache[key]?.containsKey(subtopicId) == true &&
-        _subtopicQuizzesCache[key]?.containsKey(subtopicId) == true;
-  }
-
-  // Method to clear cache if needed (optional)
-  void clearCache() {
-    _isExpandedCache.clear();
-    _subtopicIdsCache.clear();
-    _subtopicMaterialsCache.clear();
-    _subtopicQuizzesCache.clear();
-    _fetchedTopics.clear();
-  }
-
-  // Method to clear specific topic cache (optional)
-  void clearTopicCache(String courseId, String topicId) {
-    final key = _getCacheKey(courseId, topicId);
-    _isExpandedCache.remove(key);
-    _subtopicIdsCache.remove(key);
-    _subtopicMaterialsCache.remove(key);
-    _subtopicQuizzesCache.remove(key);
-    _fetchedTopics.remove(key);
-  }
-}
-
 class LessonsSection extends StatefulWidget {
   final String courseId;
   final String topicId;
@@ -123,7 +28,6 @@ class LessonsSection extends StatefulWidget {
 class LessonsSectionState extends State<LessonsSection> {
   final FlutterSecureStorage storage = const FlutterSecureStorage();
   final String backendUrl = dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
-  final LessonCache _cache = LessonCache();
 
   Map<String, bool> isExpanded = {};
   Map<String, String> subtopicIds = {};
@@ -136,37 +40,7 @@ class LessonsSectionState extends State<LessonsSection> {
   @override
   void initState() {
     super.initState();
-    initializeData();
-  }
-
-  Future<void> initializeData() async {
-    // Check if data is already cached
-    if (_cache.isTopicCached(widget.courseId, widget.topicId)) {
-      _loadFromCache();
-    } else {
-      await fetchSubtopics();
-    }
-  }
-
-  void _loadFromCache() {
-    setState(() {
-      isLoading = true;
-    });
-
-    final cachedIsExpanded = _cache.getIsExpanded(widget.courseId, widget.topicId);
-    final cachedSubtopicIds = _cache.getSubtopicIds(widget.courseId, widget.topicId);
-
-    if (cachedIsExpanded != null && cachedSubtopicIds != null) {
-      setState(() {
-        isExpanded = cachedIsExpanded;
-        subtopicIds = cachedSubtopicIds;
-        isLoading = false;
-      });
-      debugPrint("✅ Loaded topic data from cache");
-    } else {
-      // Fallback to fetching if cache is corrupted
-      fetchSubtopics();
-    }
+    fetchSubtopics();
   }
 
   IconData _getIconForContentType(String type) {
@@ -180,7 +54,7 @@ class LessonsSectionState extends State<LessonsSection> {
       case 'document':
         return Icons.description;
       default:
-        return Icons.article;
+        return Icons.article; // Default icon for unknown types
     }
   }
 
@@ -198,9 +72,10 @@ class LessonsSectionState extends State<LessonsSection> {
       return;
     }
     if (!mounted) {
-      return;
+      return; // Ensure widget is still active before using context
     }
 
+    // Get the target language from the app's language provider
     final targetLanguage = Provider.of<LanguageProvider>(context, listen: false)
         .locale
         .languageCode;
@@ -216,28 +91,22 @@ class LessonsSectionState extends State<LessonsSection> {
       );
 
       if (response.statusCode == 200) {
+        // Decode the response body using UTF-8
         final String responseBody = utf8.decode(response.bodyBytes);
         List<dynamic> data = jsonDecode(responseBody);
 
-        final newIsExpanded = {
-          for (int i = 0; i < data.length; i++)
-            "${(i + 1).toString().padLeft(2, '0')} - ${data[i]["title"]}": false
-        };
-
-        final newSubtopicIds = {
-          for (var sub in data)
-            "${(data.indexOf(sub) + 1).toString().padLeft(2, '0')} - ${sub["title"]}":
-            sub["id"].toString()
-        };
-
         setState(() {
-          isExpanded = newIsExpanded;
-          subtopicIds = newSubtopicIds;
+          isExpanded = {
+            for (int i = 0; i < data.length; i++)
+              "${(i + 1).toString().padLeft(2, '0')} - ${data[i]["title"]}":
+              false
+          };
+          subtopicIds = {
+            for (var sub in data)
+              "${(data.indexOf(sub) + 1).toString().padLeft(2, '0')} - ${sub["title"]}":
+              sub["id"].toString()
+          };
         });
-
-        // Cache the fetched data
-        _cache.cacheTopicData(widget.courseId, widget.topicId, newIsExpanded, newSubtopicIds);
-        debugPrint("✅ Fetched and cached topic data");
       } else {
         debugPrint("❌ Failed to fetch subtopics: ${response.statusCode}");
       }
@@ -251,21 +120,6 @@ class LessonsSectionState extends State<LessonsSection> {
   }
 
   Future<void> fetchMaterialsAndQuizzes(String subtopicId) async {
-    // Check if subtopic data is already cached
-    if (_cache.isSubtopicDataCached(widget.courseId, widget.topicId, subtopicId)) {
-      final cachedMaterials = _cache.getSubtopicMaterials(widget.courseId, widget.topicId, subtopicId);
-      final cachedQuizzes = _cache.getSubtopicQuizzes(widget.courseId, widget.topicId, subtopicId);
-
-      if (cachedMaterials != null && cachedQuizzes != null) {
-        setState(() {
-          subtopicMaterials[subtopicId] = cachedMaterials;
-          subtopicQuizzes[subtopicId] = cachedQuizzes;
-        });
-        debugPrint("✅ Loaded subtopic data from cache for subtopic: $subtopicId");
-        return;
-      }
-    }
-
     setState(() {
       subtopicLoading[subtopicId] = true;
     });
@@ -273,9 +127,10 @@ class LessonsSectionState extends State<LessonsSection> {
     String? token = await storage.read(key: 'access_token');
     if (token == null) return;
     if (!mounted) {
-      return;
+      return; // Ensure widget is still active before using context
     }
 
+    // Get the target language from the app's language provider
     final targetLanguage = Provider.of<LanguageProvider>(context, listen: false)
         .locale
         .languageCode;
@@ -293,6 +148,7 @@ class LessonsSectionState extends State<LessonsSection> {
 
       List<Map<String, dynamic>> materialsList = [];
       if (materialsResponse.statusCode == 200) {
+        // Decode the response body using UTF-8
         final String materialsBody = utf8.decode(materialsResponse.bodyBytes);
         List<dynamic> materialsData = jsonDecode(materialsBody);
         materialsList = materialsData.map<Map<String, dynamic>>((m) {
@@ -306,7 +162,8 @@ class LessonsSectionState extends State<LessonsSection> {
           };
         }).toList();
       } else {
-        debugPrint("❌ Failed to fetch materials: ${materialsResponse.statusCode}");
+        debugPrint(
+            "❌ Failed to fetch materials: ${materialsResponse.statusCode}");
       }
 
       // Fetch Quizzes
@@ -321,9 +178,11 @@ class LessonsSectionState extends State<LessonsSection> {
 
       List<Map<String, dynamic>> quizzesList = [];
       if (quizzesResponse.statusCode == 200) {
+        // Decode the response body using UTF-8
         final String quizzesBody = utf8.decode(quizzesResponse.bodyBytes);
         List<dynamic> quizzesData = jsonDecode(quizzesBody);
 
+        // Fetch questions for each quiz
         for (var quiz in quizzesData) {
           final quizId = quiz["id"]?.toString() ?? "N/A";
           final questionsResponse = await http.get(
@@ -336,7 +195,9 @@ class LessonsSectionState extends State<LessonsSection> {
           );
 
           if (questionsResponse.statusCode == 200) {
-            final String questionsBody = utf8.decode(questionsResponse.bodyBytes);
+            // Decode the response body using UTF-8
+            final String questionsBody =
+            utf8.decode(questionsResponse.bodyBytes);
             List<dynamic> questionsData = jsonDecode(questionsBody);
             for (var question in questionsData) {
               quizzesList.add({
@@ -344,17 +205,22 @@ class LessonsSectionState extends State<LessonsSection> {
                 "title": quiz["title"] ?? "Untitled Quiz",
                 "difficulty": quiz["difficulty"] ?? "Unknown",
                 "question_count": questionsData.length.toString(),
-                "question_text": question["question_text"] ?? "No question text available",
-                "options": (question["options"] as List<dynamic>?)?.cast<String>() ?? ["No options available"],
+                "question_text":
+                question["question_text"] ?? "No question text available",
+                "options":
+                (question["options"] as List<dynamic>?)?.cast<String>() ??
+                    ["No options available"],
                 "correct_option": question["correct_option"] ?? 0,
                 "created_at": quiz["created_at"] ?? "",
               });
             }
           } else {
-            debugPrint("❌ Failed to fetch questions for quiz $quizId: ${questionsResponse.statusCode}");
+            debugPrint(
+                "❌ Failed to fetch questions for quiz $quizId: ${questionsResponse.statusCode}");
           }
         }
 
+        // Print quizzes data for debugging
         debugPrint("✅ Quizzes fetched successfully:");
         for (var quiz in quizzesList) {
           debugPrint("Quiz ID: ${quiz["id"]}");
@@ -376,11 +242,6 @@ class LessonsSectionState extends State<LessonsSection> {
         subtopicQuizzes[subtopicId] = quizzesList;
         subtopicLoading[subtopicId] = false;
       });
-
-      // Cache the fetched subtopic data
-      _cache.cacheSubtopicData(widget.courseId, widget.topicId, subtopicId, materialsList, quizzesList);
-      debugPrint("✅ Fetched and cached subtopic data for subtopic: $subtopicId");
-
     } catch (e) {
       debugPrint("❌ Error fetching materials/quizzes: $e");
     } finally {
@@ -401,9 +262,10 @@ class LessonsSectionState extends State<LessonsSection> {
                 left: 16,
                 right: 16,
                 top: 16,
-                bottom: 100),
+                bottom: 100), // Added bottom padding
             child: Column(
               children: [
+                // Existing content
                 ...isExpanded.keys.map((section) {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -537,7 +399,7 @@ class LessonsSectionState extends State<LessonsSection> {
                     m["category"],
                     m["content"],
                     subtopicId,
-                    materials.indexOf(m))),
+                    materials.indexOf(m))), // Pass the index
               ],
             ),
           if (quizzes.isNotEmpty)
@@ -550,7 +412,7 @@ class LessonsSectionState extends State<LessonsSection> {
                     q["difficulty"],
                     q["question_count"],
                     subtopicId,
-                    quizzes.indexOf(q))),
+                    quizzes.indexOf(q))), // Pass the index
               ],
             ),
         ],
@@ -560,10 +422,12 @@ class LessonsSectionState extends State<LessonsSection> {
 
   Widget _buildMaterialTile(String id, String type, String category,
       String content, String subtopicId, int index) {
+    // Get the title from subtopicIds map
     String subtopicTitle = subtopicIds.entries
         .firstWhere((entry) => entry.value == subtopicId)
         .key;
 
+    // Localize the type while keeping the original for icon determination
     String localizedType = type.toLowerCase() == 'video'
         ? L10n.getTranslatedText(context, 'Video')
         : type.toLowerCase() == 'text'
@@ -575,9 +439,9 @@ class LessonsSectionState extends State<LessonsSection> {
         : L10n.getTranslatedText(context, 'Material');
 
     return _buildTile(
-      localizedType,
+      localizedType, // Use localized type for display
       category,
-      _getIconForContentType(type),
+      _getIconForContentType(type), // Keep original type for icon
           () {
         List<Map<String, String>> materials =
         (subtopicMaterials[subtopicId] ?? []).map<Map<String, String>>((m) {
@@ -618,6 +482,7 @@ class LessonsSectionState extends State<LessonsSection> {
 
   Widget _buildQuizTile(String id, String title, String difficulty,
       String questionCount, String subtopicId, int index) {
+    // Get the title from subtopicIds map
     String subtopicTitle = subtopicIds.entries
         .firstWhere((entry) => entry.value == subtopicId)
         .key;
@@ -631,16 +496,17 @@ class LessonsSectionState extends State<LessonsSection> {
           context,
           MaterialPageRoute(
             builder: (context) => FlashCard(
-              materials: [],
+              materials: [], // No materials for quizzes
               quizzes: subtopicQuizzes[subtopicId] ?? [],
               onQuizComplete: () {
+                // Move to next subtopic after quizzes are completed
                 _navigateToNextSubtopic(subtopicId);
               },
-              initialIndex: index,
+              initialIndex: index, // Start from the clicked quiz
               courseId: widget.courseId,
               topicId: widget.topicId,
               subtopicId: subtopicId,
-              subtopicTitle: subtopicTitle,
+              subtopicTitle: subtopicTitle, // Pass the title
             ),
           ),
         );
@@ -650,6 +516,7 @@ class LessonsSectionState extends State<LessonsSection> {
 
   void _navigateToNextSubtopic(String currentSubtopicId) {
     int currentIndex = subtopicIds.values.toList().indexOf(currentSubtopicId);
+    // In _navigateToNextSubtopic method:
     if (currentIndex < subtopicIds.length - 1) {
       String nextSubtopicId = subtopicIds.values.toList()[currentIndex + 1];
       String nextSubtopicTitle = subtopicIds.keys.toList()[currentIndex + 1];
@@ -678,7 +545,7 @@ class LessonsSectionState extends State<LessonsSection> {
               courseId: widget.courseId,
               topicId: widget.topicId,
               subtopicId: nextSubtopicId,
-              subtopicTitle: nextSubtopicTitle,
+              subtopicTitle: nextSubtopicTitle, // Pass the new title
             ),
           ),
         );
@@ -693,6 +560,7 @@ class LessonsSectionState extends State<LessonsSection> {
 
   Widget _buildTile(
       String title, String subtitle, IconData icon, VoidCallback onTap) {
+    // Capitalize the first letter of the title
     String capitalizedTitle = title.substring(title.indexOf(" ") + 1);
     if (capitalizedTitle.isNotEmpty) {
       capitalizedTitle =

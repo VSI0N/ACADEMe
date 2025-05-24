@@ -226,16 +226,8 @@ class AuthService {
       final prefs = await SharedPreferences.getInstance();
       await prefs.clear();
 
-      HomePage.cachedCourses = [];
-      HomePage.cachedLanguage = '';
-
       CourseDataCache().clearCache();
-      TopicCacheManager().clearCache();
       topic.TopicCacheManager().clearCache();
-      overview.TopicCacheManager().clearCache();
-      LessonCache().clearCache();
-      SubtopicCacheManager().clearCache();
-      AppLifecycleManager().startNewSession();
 
       debugPrint("✅ Full logout completed successfully");
     } catch (e) {

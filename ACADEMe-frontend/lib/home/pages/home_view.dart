@@ -22,10 +22,8 @@ class HomePage extends StatelessWidget {
   final VoidCallback onCourseTap;
   final int selectedIndex; // Add selectedIndex
   final PageController _pageController = PageController();
-  static String cachedLanguage = '';
-  static List<dynamic> cachedCourses = [];
   final ValueNotifier<bool> _showSearchUI =
-      ValueNotifier(false); // Use ValueNotifier
+  ValueNotifier(false); // Use ValueNotifier
   List<dynamic> courses = [];
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
@@ -65,15 +63,9 @@ class HomePage extends StatelessWidget {
       throw Exception("❌ No access token found");
     }
 
-    // Get language from prefs
+    // Get the current app language from SharedPreferences
     final prefs = await SharedPreferences.getInstance();
     final String targetLanguage = prefs.getString('language') ?? 'en';
-
-    // Return cached data if language matches and cache exists
-    if (cachedLanguage == targetLanguage && cachedCourses.isNotEmpty) {
-      debugPrint("✅ Using cached courses");
-      return cachedCourses;
-    }
 
     final response = await http.get(
       Uri.parse("$backendUrl/api/courses/?target_language=$targetLanguage"),
@@ -84,14 +76,9 @@ class HomePage extends StatelessWidget {
     );
 
     if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
-
-      // Update cache with new data and language
-      cachedCourses = data;
-      cachedLanguage = targetLanguage;
-      debugPrint("🔄 Updated course cache");
-
-      return data;
+      final List<dynamic> data =
+      jsonDecode(utf8.decode(response.bodyBytes)); // Ensure UTF-8 encoding
+      return data; // Return all courses
     } else {
       throw Exception("❌ Failed to fetch courses: ${response.statusCode}");
     }
@@ -138,7 +125,7 @@ class HomePage extends StatelessWidget {
 
   Future<void> _checkAndShowClassSelection(BuildContext context) async {
     final String? studentClass =
-        await _secureStorage.read(key: 'student_class');
+    await _secureStorage.read(key: 'student_class');
 
     if (studentClass == null ||
         int.tryParse(studentClass) == null ||
@@ -288,13 +275,13 @@ class HomePage extends StatelessWidget {
                               children: results
                                   .map(
                                     (title) => ListTile(
-                                      leading: Icon(Icons.book),
-                                      title: Text(title),
-                                      onTap: () {
-                                        debugPrint("Selected: $title");
-                                      },
-                                    ),
-                                  )
+                                  leading: Icon(Icons.book),
+                                  title: Text(title),
+                                  onTap: () {
+                                    debugPrint("Selected: $title");
+                                  },
+                                ),
+                              )
                                   .toList(),
                             );
                           },
@@ -370,7 +357,7 @@ class HomePage extends StatelessWidget {
               leading: Container(), // Remove default hamburger
               flexibleSpace: Padding(
                 padding:
-                    const EdgeInsets.only(top: 15.0), // Adjust top padding here
+                const EdgeInsets.only(top: 15.0), // Adjust top padding here
                 child: FutureBuilder<Map<String, String?>>(
                   future: _getUserDetails(),
                   builder: (context, snapshot) {
@@ -384,7 +371,7 @@ class HomePage extends StatelessWidget {
                           'assets/design_course/userImage.png';
                       return getAppBarUI(
                         onProfileTap,
-                        () {
+                            () {
                           scaffoldKey.currentState
                               ?.openDrawer(); // Open drawer when custom button is clicked
                         },
@@ -403,7 +390,7 @@ class HomePage extends StatelessWidget {
           ),
           // Use drawer for left-side drawer
           backgroundColor:
-              AcademeTheme.appColor, // Set background same as AppBar
+          AcademeTheme.appColor, // Set background same as AppBar
 
           body: Container(
             decoration: BoxDecoration(
@@ -424,7 +411,7 @@ class HomePage extends StatelessWidget {
                       // Search Bar
                       Padding(
                         padding:
-                            const EdgeInsets.only(top: 10.0), // Upper padding
+                        const EdgeInsets.only(top: 10.0), // Upper padding
                         child: TextField(
                           onTap: () {
                             _showSearchUI.value = true; // Update state properly
@@ -436,7 +423,7 @@ class HomePage extends StatelessWidget {
                                   left: 12.0, right: 8.0), // Spacing
                               child: Transform.rotate(
                                 angle:
-                                    -1.57, // Rotate 90 degrees counterclockwise
+                                -1.57, // Rotate 90 degrees counterclockwise
                                 child: const Icon(
                                     Icons.tune), // Rotated Tune Icon (Vertical)
                               ),
@@ -470,7 +457,7 @@ class HomePage extends StatelessWidget {
                           boxShadow: [
                             BoxShadow(
                               color:
-                                  Colors.black.withAlpha(30), // Subtle shadow
+                              Colors.black.withAlpha(30), // Subtle shadow
                               blurRadius: 8,
                               spreadRadius: 2,
                               offset: Offset(0, 4),
@@ -509,17 +496,17 @@ class HomePage extends StatelessWidget {
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         L10n.getTranslatedText(
                                             context, 'Your Personal Tutor'),
                                         style: TextStyle(
                                           color:
-                                              Color.fromARGB(255, 10, 10, 10),
+                                          Color.fromARGB(255, 10, 10, 10),
                                           fontSize: width * 0.06,
                                           fontWeight:
-                                              FontWeight.w800, // Extra bold
+                                          FontWeight.w800, // Extra bold
                                           fontFamily: "Roboto",
                                         ),
                                       ),
@@ -553,12 +540,12 @@ class HomePage extends StatelessWidget {
                                         hintText: L10n.getTranslatedText(
                                             context, 'ASKMe Anything...'),
                                         hintStyle:
-                                            TextStyle(color: Colors.grey[600]),
+                                        TextStyle(color: Colors.grey[600]),
                                         filled: true,
                                         fillColor: Colors.white,
                                         border: OutlineInputBorder(
                                           borderRadius:
-                                              BorderRadius.circular(8),
+                                          BorderRadius.circular(8),
                                           borderSide: BorderSide(
                                             color: Colors.grey.shade400,
                                             width: 1.5,
@@ -566,7 +553,7 @@ class HomePage extends StatelessWidget {
                                         ),
                                         enabledBorder: OutlineInputBorder(
                                           borderRadius:
-                                              BorderRadius.circular(12),
+                                          BorderRadius.circular(12),
                                           borderSide: BorderSide(
                                             color: Colors.grey.shade300,
                                             width: 1.5,
@@ -574,7 +561,7 @@ class HomePage extends StatelessWidget {
                                         ),
                                         focusedBorder: OutlineInputBorder(
                                           borderRadius:
-                                              BorderRadius.circular(12),
+                                          BorderRadius.circular(12),
                                           borderSide: BorderSide(
                                             color: Colors.blue,
                                             width: 2,
@@ -632,7 +619,7 @@ class HomePage extends StatelessWidget {
                               .indigoAccent, // Background color similar to the image
                           shape: RoundedRectangleBorder(
                             borderRadius:
-                                BorderRadius.circular(12.0), // Rounded edges
+                            BorderRadius.circular(12.0), // Rounded edges
                           ),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
@@ -691,7 +678,7 @@ class HomePage extends StatelessWidget {
                                         decoration: BoxDecoration(
                                           color: Colors.white,
                                           borderRadius:
-                                              BorderRadius.circular(20),
+                                          BorderRadius.circular(20),
                                         ),
                                         child: const Text(
                                           "420",
@@ -768,7 +755,7 @@ class HomePage extends StatelessWidget {
                             return Column(
                               children: List.generate(
                                 courses.length > 3 ? 3 : courses.length,
-                                (index) {
+                                    (index) {
                                   final course = courses[index];
                                   debugPrint(
                                       "Course $index ID: ${course["id"]}"); // Verify ID
@@ -783,8 +770,8 @@ class HomePage extends StatelessWidget {
                                         predefinedColors.length > index
                                             ? predefinedColors[index]!
                                             : Colors.primaries[index %
-                                                Colors.primaries.length][100]!,
-                                        () {
+                                            Colors.primaries.length][100]!,
+                                            () {
                                           // Navigation with verified ID
                                           debugPrint(
                                               "Tapped Course ID: ${course["id"]}");
@@ -793,9 +780,9 @@ class HomePage extends StatelessWidget {
                                             MaterialPageRoute(
                                               builder: (context) =>
                                                   TopicViewScreen(
-                                                courseId: course["id"]
-                                                    .toString(), // Ensure String
-                                              ),
+                                                    courseId: course["id"]
+                                                        .toString(), // Ensure String
+                                                  ),
                                             ),
                                           );
                                         },
@@ -828,7 +815,7 @@ class HomePage extends StatelessWidget {
                               padding: EdgeInsets.symmetric(horizontal: 0),
                               child: Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     L10n.getTranslatedText(
@@ -868,7 +855,7 @@ class HomePage extends StatelessWidget {
                                               horizontal: 10), // Reduced height
                                           decoration: BoxDecoration(
                                             borderRadius:
-                                                BorderRadius.circular(22),
+                                            BorderRadius.circular(22),
                                             border: Border.all(
                                                 color: Colors.red, width: 1.5),
                                           ),
@@ -880,7 +867,7 @@ class HomePage extends StatelessWidget {
                                                 decoration: BoxDecoration(
                                                   shape: BoxShape.circle,
                                                   color:
-                                                      Colors.red.withAlpha(50),
+                                                  Colors.red.withAlpha(50),
                                                 ),
                                                 child: Icon(Icons.book,
                                                     size: 16,
@@ -893,7 +880,7 @@ class HomePage extends StatelessWidget {
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
-                                                          FontWeight.w500)),
+                                                      FontWeight.w500)),
                                             ],
                                           ),
                                         ),
@@ -905,7 +892,7 @@ class HomePage extends StatelessWidget {
                                               vertical: 6, horizontal: 10),
                                           decoration: BoxDecoration(
                                             borderRadius:
-                                                BorderRadius.circular(20),
+                                            BorderRadius.circular(20),
                                             border: Border.all(
                                                 color: Colors.orange,
                                                 width: 1.5),
@@ -930,7 +917,7 @@ class HomePage extends StatelessWidget {
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
-                                                          FontWeight.w500)),
+                                                      FontWeight.w500)),
                                             ],
                                           ),
                                         ),
@@ -946,7 +933,7 @@ class HomePage extends StatelessWidget {
                                               vertical: 6, horizontal: 10),
                                           decoration: BoxDecoration(
                                             borderRadius:
-                                                BorderRadius.circular(20),
+                                            BorderRadius.circular(20),
                                             border: Border.all(
                                                 color: Colors.blue, width: 1.5),
                                           ),
@@ -957,7 +944,7 @@ class HomePage extends StatelessWidget {
                                                 decoration: BoxDecoration(
                                                   shape: BoxShape.circle,
                                                   color:
-                                                      Colors.blue.withAlpha(50),
+                                                  Colors.blue.withAlpha(50),
                                                 ),
                                                 child: Icon(Icons.language,
                                                     size: 16,
@@ -970,7 +957,7 @@ class HomePage extends StatelessWidget {
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
-                                                          FontWeight.w500)),
+                                                      FontWeight.w500)),
                                             ],
                                           ),
                                         ),
@@ -982,7 +969,7 @@ class HomePage extends StatelessWidget {
                                               vertical: 6, horizontal: 10),
                                           decoration: BoxDecoration(
                                             borderRadius:
-                                                BorderRadius.circular(20),
+                                            BorderRadius.circular(20),
                                             border: Border.all(
                                                 color: Colors.green,
                                                 width: 1.5),
@@ -1007,7 +994,7 @@ class HomePage extends StatelessWidget {
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
-                                                          FontWeight.w500)),
+                                                      FontWeight.w500)),
                                             ],
                                           ),
                                         ),
@@ -1025,7 +1012,7 @@ class HomePage extends StatelessWidget {
                               padding: EdgeInsets.symmetric(horizontal: 5),
                               child: Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     L10n.getTranslatedText(
@@ -1077,14 +1064,14 @@ class HomePage extends StatelessWidget {
                                   return GridView.builder(
                                     shrinkWrap: true,
                                     physics:
-                                        const NeverScrollableScrollPhysics(),
+                                    const NeverScrollableScrollPhysics(),
                                     gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                    SliverGridDelegateWithFixedCrossAxisCount(
                                       crossAxisCount: 2, // 2 cards per row
                                       crossAxisSpacing: 8,
                                       mainAxisSpacing: 8,
                                       childAspectRatio:
-                                          1.2, // Adjust aspect ratio for better layout
+                                      1.2, // Adjust aspect ratio for better layout
                                     ),
                                     itemCount: courses.length,
                                     itemBuilder: (context, index) {
@@ -1092,7 +1079,7 @@ class HomePage extends StatelessWidget {
                                         courses[index]["title"],
                                         "${(index + 10) * 2} ${L10n.getTranslatedText(context, 'Lessons')}",
                                         repeatingColors[
-                                            index % repeatingColors.length]!,
+                                        index % repeatingColors.length]!,
                                         onTap: () {
                                           // Debug log to confirm the courseId
                                           debugPrint(
@@ -1102,9 +1089,9 @@ class HomePage extends StatelessWidget {
                                             MaterialPageRoute(
                                               builder: (context) =>
                                                   TopicViewScreen(
-                                                courseId: courses[index]
+                                                    courseId: courses[index]
                                                     ["id"], // Pass the courseId
-                                              ),
+                                                  ),
                                             ),
                                           );
                                         },
@@ -1193,7 +1180,7 @@ class HomePage extends StatelessWidget {
           drawerEdgeDragWidth: double
               .infinity, // Make drawer full-width and allow dragging from anywhere
           endDrawerEnableOpenDragGesture:
-              true, // Allow drag to open the drawer from the right
+          true, // Allow drag to open the drawer from the right
         ),
       ),
     );
@@ -1275,15 +1262,15 @@ Widget learningCard(String title, int completed, int total, int percentage,
 
 // AppBar UI with the Hamburger icon inside a circular button
 Widget getAppBarUI(
-  VoidCallback onProfileTap,
-  VoidCallback onHamburgerTap,
-  VoidCallback onCourseTap,
-  BuildContext context,
-  String name,
-  String photoUrl,
-  PageController pageController,
-  int selectedIndex,
-) {
+    VoidCallback onProfileTap,
+    VoidCallback onHamburgerTap,
+    VoidCallback onCourseTap,
+    BuildContext context,
+    String name,
+    String photoUrl,
+    PageController pageController,
+    int selectedIndex,
+    ) {
   return Container(
     height: 100, // Increased height for the AppBar
     padding: const EdgeInsets.only(top: 38.0, left: 18, right: 18, bottom: 5),
@@ -1363,8 +1350,8 @@ Widget getAppBarUI(
                             },
                             onProfileTap: onProfileTap,
                             onCourseTap: onCourseTap
-                            // Pass the onProfileTap callback here
-                            ),
+                          // Pass the onProfileTap callback here
+                        ),
                       ),
                     ),
                   );
@@ -1577,12 +1564,12 @@ class CourseCard extends StatelessWidget {
   final VoidCallback onTap; // Add this line
 
   const CourseCard(
-    this.title,
-    this.subtitle,
-    this.color, {
-    super.key,
-    required this.onTap, // Add this line
-  });
+      this.title,
+      this.subtitle,
+      this.color, {
+        super.key,
+        required this.onTap, // Add this line
+      });
 
   /// **Function to Get Subject-Specific Icons**
   IconData _getSubjectIcon(String title) {
