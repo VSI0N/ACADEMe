@@ -13,6 +13,49 @@ import 'package:provider/provider.dart';
 import 'package:ACADEMe/localization/language_provider.dart';
 import 'topic_view.dart';
 
+class CourseDataCache {
+  static final CourseDataCache _instance = CourseDataCache._internal();
+  factory CourseDataCache() => _instance;
+  CourseDataCache._internal();
+
+  List<Map<String, dynamic>>? _cachedCourses;
+  String? _cachedLanguage;
+  DateTime? _lastFetchTime;
+
+  // Cache validity duration (30 minutes)
+  static const Duration _cacheValidDuration = Duration(minutes: 30);
+
+  bool get isCacheValid {
+    if (_lastFetchTime == null || _cachedCourses == null) return false;
+    return DateTime.now().difference(_lastFetchTime!) < _cacheValidDuration;
+  }
+
+  List<Map<String, dynamic>>? getCachedCourses(String language) {
+    if (_cachedLanguage == language && isCacheValid) {
+      return _cachedCourses;
+    }
+    return null;
+  }
+
+  void setCachedCourses(List<Map<String, dynamic>> courses, String language) {
+    _cachedCourses = courses;
+    _cachedLanguage = language;
+    _lastFetchTime = DateTime.now();
+  }
+
+  void clearCache() {
+    _cachedCourses = null;
+    _cachedLanguage = null;
+    _lastFetchTime = null;
+  }
+
+  void invalidateIfLanguageChanged(String newLanguage) {
+    if (_cachedLanguage != null && _cachedLanguage != newLanguage) {
+      clearCache();
+    }
+  }
+}
+
 class CourseListScreen extends StatefulWidget {
   const CourseListScreen({super.key});
 
@@ -21,20 +64,28 @@ class CourseListScreen extends StatefulWidget {
 }
 
 class CourseListScreenState extends State<CourseListScreen>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+
   late TabController _tabController;
-  bool isLoading = true;
+  bool isLoading = false;
+  bool hasInitialized = false;
   List<Map<String, dynamic>> courses = [];
   String backendUrl = dotenv.env['BACKEND_URL'] ?? '';
   final storage = FlutterSecureStorage();
-
   final AutoSizeGroup _tabTextGroup = AutoSizeGroup();
+  final CourseDataCache _cache = CourseDataCache();
+
+  // Track if this is the first time opening the screen in this app session
+  static bool _hasEverFetched = false;
+
+  @override
+  bool get wantKeepAlive => true; // Keep the state alive when switching tabs
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    fetchCourses();
+    _initializeCourses();
   }
 
   @override
@@ -43,98 +94,183 @@ class CourseListScreenState extends State<CourseListScreen>
     super.dispose();
   }
 
-  Future<void> fetchCourses() async {
-    if (!mounted) return; // ✅ Ensure widget is still active
+  Future<void> _initializeCourses() async {
+    if (!mounted) return;
+
+    String currentLanguage = Provider.of<LanguageProvider>(context, listen: false)
+        .locale
+        .languageCode;
+
+    // Check if language changed and invalidate cache if needed
+    _cache.invalidateIfLanguageChanged(currentLanguage);
+
+    // Try to get cached data first
+    List<Map<String, dynamic>>? cachedCourses = _cache.getCachedCourses(currentLanguage);
+
+    if (cachedCourses != null) {
+      // Use cached data
+      setState(() {
+        courses = cachedCourses;
+        hasInitialized = true;
+      });
+
+      // Update progress for cached courses in background
+      _updateCourseProgressInBackground();
+      return;
+    }
+
+    // Only fetch from backend if:
+    // 1. No cache available, OR
+    // 2. This is the first time opening in this app session
+    if (!_hasEverFetched || !_cache.isCacheValid) {
+      await fetchCourses();
+      _hasEverFetched = true;
+    }
+  }
+
+  Future<void> fetchCourses({bool forceRefresh = false}) async {
+    if (!mounted) return;
+
+    String currentLanguage = Provider.of<LanguageProvider>(context, listen: false)
+        .locale
+        .languageCode;
+
+    // If not forcing refresh and we have valid cached data, use it
+    if (!forceRefresh) {
+      List<Map<String, dynamic>>? cachedCourses = _cache.getCachedCourses(currentLanguage);
+      if (cachedCourses != null) {
+        setState(() {
+          courses = cachedCourses;
+          hasInitialized = true;
+        });
+        return;
+      }
+    }
 
     setState(() {
-      isLoading = true; // Show loading indicator
+      isLoading = true;
     });
 
     String? token = await storage.read(key: 'access_token');
     if (token == null) {
       debugPrint("No access token found");
-
       if (mounted) {
         setState(() {
-          isLoading = false; // Hide loading indicator
+          isLoading = false;
+          hasInitialized = true;
         });
       }
       return;
     }
 
     try {
-      if (!mounted) return; // ✅ Ensure widget is still active
-
-      String targetLanguage =
-          Provider.of<LanguageProvider>(context, listen: false)
-              .locale
-              .languageCode;
+      if (!mounted) return;
 
       final response = await http.get(
-        Uri.parse('$backendUrl/api/courses/?target_language=$targetLanguage'),
+        Uri.parse('$backendUrl/api/courses/?target_language=$currentLanguage'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
       );
 
-      if (mounted) {
-        if (response.statusCode == 200) {
-          List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
+      if (mounted && response.statusCode == 200) {
+        List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
 
-          setState(() {
-            courses = data
-                .map((course) => {
-                      "id": course["id"],
-                      "title": course["title"],
-                      "progress": 0.0,
-                    })
-                .toList();
-          });
-        } else {
-          debugPrint("Failed to fetch courses: ${response.statusCode}");
-        }
+        List<Map<String, dynamic>> newCourses = data
+            .map((course) => {
+          "id": course["id"],
+          "title": course["title"],
+          "progress": 0.0, // Will be updated by background task
+        })
+            .toList();
+
+        // Cache the new data
+        _cache.setCachedCourses(newCourses, currentLanguage);
+
+        setState(() {
+          courses = newCourses;
+        });
+
+        // Update progress in background
+        _updateCourseProgressInBackground();
+      } else {
+        debugPrint("Failed to fetch courses: ${response.statusCode}");
       }
     } catch (e) {
       debugPrint("Error fetching courses: $e");
     } finally {
-      // ✅ Only call setState() if mounted
       if (mounted) {
         setState(() {
-          isLoading = false; // Hide loading indicator
+          isLoading = false;
+          hasInitialized = true;
         });
       }
     }
   }
 
+  // Background task to update course progress without blocking UI
+  Future<void> _updateCourseProgressInBackground() async {
+    for (int i = 0; i < courses.length; i++) {
+      try {
+        double progress = await getCourseProgress(courses[i]["id"]);
+        if (mounted) {
+          setState(() {
+            courses[i]["progress"] = progress;
+          });
+
+          // Update cache with new progress
+          String currentLanguage = Provider.of<LanguageProvider>(context, listen: false)
+              .locale
+              .languageCode;
+          _cache.setCachedCourses(courses, currentLanguage);
+        }
+      } catch (e) {
+        debugPrint("Error updating progress for course ${courses[i]["id"]}: $e");
+      }
+    }
+  }
+
   Future<double> getCourseProgress(String courseId) async {
-    String userId = "user_id"; // Replace with actual user ID
-    QuerySnapshot progressSnapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .collection('progress')
-        .where('course_id', isEqualTo: courseId)
-        .get();
+    try {
+      String userId = "user_id"; // Replace with actual user ID
+      QuerySnapshot progressSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('progress')
+          .where('course_id', isEqualTo: courseId)
+          .get();
 
-    int completedActivities = progressSnapshot.docs
-        .where((doc) => doc['status'] == 'completed')
-        .length;
+      int completedActivities = progressSnapshot.docs
+          .where((doc) => doc['status'] == 'completed')
+          .length;
 
-    DocumentSnapshot courseDoc = await FirebaseFirestore.instance
-        .collection('courses')
-        .doc(courseId)
-        .get();
+      DocumentSnapshot courseDoc = await FirebaseFirestore.instance
+          .collection('courses')
+          .doc(courseId)
+          .get();
 
-    int totalQuizzes = courseDoc['total_quizzes'] ?? 0;
-    int totalMaterials = courseDoc['total_materials'] ?? 0;
-    int totalActivities = totalQuizzes + totalMaterials;
+      int totalQuizzes = courseDoc['total_quizzes'] ?? 0;
+      int totalMaterials = courseDoc['total_materials'] ?? 0;
+      int totalActivities = totalQuizzes + totalMaterials;
 
-    if (totalActivities == 0) return 0.0;
-    return (completedActivities / totalActivities);
+      if (totalActivities == 0) return 0.0;
+      return (completedActivities / totalActivities).clamp(0.0, 1.0);
+    } catch (e) {
+      debugPrint("Error calculating progress for course $courseId: $e");
+      return 0.0;
+    }
+  }
+
+  // Method to manually refresh data (can be called from pull-to-refresh)
+  Future<void> refreshCourses() async {
+    await fetchCourses(forceRefresh: true);
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context); // Required for AutomaticKeepAliveClientMixin
+
     return ASKMeButton(
       onFABPressed: () {
         Navigator.push(
@@ -156,6 +292,13 @@ class CourseListScreenState extends State<CourseListScreen>
               color: Colors.white,
             ),
           ),
+          actions: [
+            // Add refresh button
+            IconButton(
+              icon: Icon(Icons.refresh, color: Colors.white),
+              onPressed: isLoading ? null : refreshCourses,
+            ),
+          ],
         ),
         body: Column(
           children: [
@@ -197,16 +340,16 @@ class CourseListScreenState extends State<CourseListScreen>
       child: AutoSizeText(
         L10n.getTranslatedText(context, labelKey),
         maxLines: 1,
-        group: _tabTextGroup, // Ensures all tabs scale together
+        group: _tabTextGroup,
         style: TextStyle(fontSize: 16),
-        minFontSize: 12, // Prevents text from becoming unreadable
+        minFontSize: 12,
         textAlign: TextAlign.center,
       ),
     );
   }
 
   Widget _buildCourseList() {
-    if (isLoading) {
+    if (isLoading && !hasInitialized) {
       return Center(
         child: CircularProgressIndicator(
           color: AcademeTheme.appColor,
@@ -214,17 +357,41 @@ class CourseListScreenState extends State<CourseListScreen>
       );
     }
 
-    return ListView.builder(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      itemCount: courses.length,
-      itemBuilder: (context, index) {
-        return _buildCourseCard(courses[index]);
-      },
+    if (courses.isEmpty && hasInitialized) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.school_outlined, size: 64, color: Colors.grey),
+            SizedBox(height: 16),
+            Text(
+              L10n.getTranslatedText(context, 'No courses available'),
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: refreshCourses,
+              child: Text(L10n.getTranslatedText(context, 'Refresh')),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return RefreshIndicator(
+      onRefresh: refreshCourses,
+      child: ListView.builder(
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        itemCount: courses.length,
+        itemBuilder: (context, index) {
+          return _buildCourseCard(courses[index]);
+        },
+      ),
     );
   }
 
   Widget _buildFilteredCourses({required bool ongoing}) {
-    if (isLoading) {
+    if (isLoading && !hasInitialized) {
       return Center(
         child: CircularProgressIndicator(
           color: AcademeTheme.appColor,
@@ -236,12 +403,31 @@ class CourseListScreenState extends State<CourseListScreen>
       return ongoing ? course["progress"] < 1.0 : course["progress"] >= 1.0;
     }).toList();
 
-    return ListView.builder(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      itemCount: filteredCourses.length,
-      itemBuilder: (context, index) {
-        return _buildCourseCard(filteredCourses[index]);
-      },
+    if (filteredCourses.isEmpty && hasInitialized) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.school_outlined, size: 64, color: Colors.grey),
+            SizedBox(height: 16),
+            Text(
+              L10n.getTranslatedText(context, ongoing ? 'No ongoing courses' : 'No completed courses'),
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return RefreshIndicator(
+      onRefresh: refreshCourses,
+      child: ListView.builder(
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        itemCount: filteredCourses.length,
+        itemBuilder: (context, index) {
+          return _buildCourseCard(filteredCourses[index]);
+        },
+      ),
     );
   }
 
@@ -254,9 +440,8 @@ class CourseListScreenState extends State<CourseListScreen>
         try {
           await storage.write(key: 'course_id', value: selectedCourseId);
 
-          if (!mounted) {
-            return; // ✅ Ensure widget is still mounted before using context
-          }
+          if (!mounted) return;
+
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -294,6 +479,8 @@ class CourseListScreenState extends State<CourseListScreen>
                   Text(
                     course["title"],
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(height: 10),
                   Stack(
@@ -309,7 +496,7 @@ class CourseListScreenState extends State<CourseListScreen>
                       Container(
                         height: 5,
                         width: MediaQuery.of(context).size.width *
-                            (course["progress"] * 0.6),
+                            (course["progress"].clamp(0.0, 1.0) * 0.6),
                         decoration: BoxDecoration(
                           color: Colors.blue,
                           borderRadius: BorderRadius.circular(5),
@@ -322,13 +509,16 @@ class CourseListScreenState extends State<CourseListScreen>
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                              "0/12 ${L10n.getTranslatedText(context, 'Modules')}")),
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "0/12 ${L10n.getTranslatedText(context, 'Modules')}",
+                          style: TextStyle(fontSize: 12, color: Colors.black54),
+                        ),
+                      ),
                       Align(
                         alignment: Alignment.centerRight,
                         child: Text(
-                          "${(course["progress"].clamp(0.0, 1.0) * 100).toInt()}% ",
+                          "${(course["progress"].clamp(0.0, 1.0) * 100).toInt()}%",
                           style: TextStyle(fontSize: 12, color: Colors.black54),
                         ),
                       )

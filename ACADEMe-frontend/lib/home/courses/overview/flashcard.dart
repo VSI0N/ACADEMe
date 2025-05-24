@@ -20,6 +20,124 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// Global cache manager for topic details
+class TopicCacheManager {
+  static final TopicCacheManager _instance = TopicCacheManager._internal();
+  factory TopicCacheManager() => _instance;
+  TopicCacheManager._internal();
+
+  final Map<String, Map<String, dynamic>> _cache = {};
+  final Map<String, DateTime> _cacheTimestamps = {};
+  final Map<String, bool> _fetchInProgress = {};
+
+  // Increased cache duration to 24 hours for better performance
+  static const Duration _cacheDuration = Duration(hours: 24);
+
+  String _getCacheKey(String courseId, String topicId, String language) {
+    return '${courseId}_${topicId}_$language';
+  }
+
+  Map<String, dynamic>? getCachedData(String courseId, String topicId, String language) {
+    final key = _getCacheKey(courseId, topicId, language);
+    final timestamp = _cacheTimestamps[key];
+
+    if (timestamp == null || DateTime.now().difference(timestamp) > _cacheDuration) {
+      // Cache expired or doesn't exist
+      _cache.remove(key);
+      _cacheTimestamps.remove(key);
+      return null;
+    }
+
+    return _cache[key];
+  }
+
+  void setCachedData(String courseId, String topicId, String language, Map<String, dynamic> data) {
+    final key = _getCacheKey(courseId, topicId, language);
+    _cache[key] = data;
+    _cacheTimestamps[key] = DateTime.now();
+    _fetchInProgress[key] = false;
+  }
+
+  bool isFetchInProgress(String courseId, String topicId, String language) {
+    final key = _getCacheKey(courseId, topicId, language);
+    return _fetchInProgress[key] ?? false;
+  }
+
+  void setFetchInProgress(String courseId, String topicId, String language, bool inProgress) {
+    final key = _getCacheKey(courseId, topicId, language);
+    _fetchInProgress[key] = inProgress;
+  }
+
+  void clearCache() {
+    _cache.clear();
+    _cacheTimestamps.clear();
+    _fetchInProgress.clear();
+  }
+
+  void clearCacheForTopic(String courseId, String topicId) {
+    final keysToRemove = _cache.keys
+        .where((key) => key.startsWith('${courseId}_$topicId'))
+        .toList();
+
+    for (final key in keysToRemove) {
+      _cache.remove(key);
+      _cacheTimestamps.remove(key);
+      _fetchInProgress.remove(key);
+    }
+  }
+}
+
+// App lifecycle manager to track app state
+class AppLifecycleManager {
+  static final AppLifecycleManager _instance = AppLifecycleManager._internal();
+  factory AppLifecycleManager() => _instance;
+  AppLifecycleManager._internal();
+
+  DateTime? _lastAppOpenTime;
+  DateTime? _sessionStartTime;
+  bool _isFirstOpenAfterAppStart = true;
+  final Set<String> _fetchedTopicsInSession = {};
+
+  bool get shouldRefreshCache {
+    if (_isFirstOpenAfterAppStart) {
+      _isFirstOpenAfterAppStart = false;
+      _sessionStartTime = DateTime.now();
+      _lastAppOpenTime = DateTime.now();
+      return true;
+    }
+
+    // Refresh if app was closed for more than 1 hour
+    if (_lastAppOpenTime == null ||
+        DateTime.now().difference(_lastAppOpenTime!) > const Duration(hours: 1)) {
+      _sessionStartTime = DateTime.now();
+      _lastAppOpenTime = DateTime.now();
+      _fetchedTopicsInSession.clear();
+      return true;
+    }
+
+    return false;
+  }
+
+  bool shouldFetchTopicInSession(String courseId, String topicId) {
+    final topicKey = '${courseId}_$topicId';
+    return !_fetchedTopicsInSession.contains(topicKey);
+  }
+
+  void markTopicFetchedInSession(String courseId, String topicId) {
+    final topicKey = '${courseId}_$topicId';
+    _fetchedTopicsInSession.add(topicKey);
+  }
+
+  void markAppAsOpened() {
+    _lastAppOpenTime = DateTime.now();
+  }
+
+  void startNewSession() {
+    _sessionStartTime = DateTime.now();
+    _fetchedTopicsInSession.clear();
+  }
+}
+
 class FlashCard extends StatefulWidget {
   final List<Map<String, String>> materials;
   final List<Map<String, dynamic>> quizzes;
@@ -46,7 +164,7 @@ class FlashCard extends StatefulWidget {
   FlashCardState createState() => FlashCardState();
 }
 
-class FlashCardState extends State<FlashCard> {
+class FlashCardState extends State<FlashCard> with WidgetsBindingObserver {
   VideoPlayerController? _videoController;
   ChewieController? _chewieController;
   int _currentPage = 0;
@@ -58,12 +176,17 @@ class FlashCardState extends State<FlashCard> {
   bool _showSwipeHint = true;
   bool isLoading = true;
 
+  // Cache managers
+  final TopicCacheManager _cacheManager = TopicCacheManager();
+  final AppLifecycleManager _lifecycleManager = AppLifecycleManager();
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _currentPage = widget.initialIndex;
-    _loadSwipeHintState(); // Add this
-    fetchTopicDetails();
+    _loadSwipeHintState();
+    _initializeTopicData();
 
     if (widget.materials.isEmpty && widget.quizzes.isEmpty) {
       Future.delayed(Duration.zero, () {
@@ -73,6 +196,23 @@ class FlashCardState extends State<FlashCard> {
       });
     } else {
       _setupVideoController();
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      _lifecycleManager.markAppAsOpened();
+
+      // Optional: Refresh data if app was in background for too long
+      if (_lifecycleManager.shouldRefreshCache) {
+        debugPrint("🔄 App resumed after long time, refreshing cache");
+        _initializeTopicData();
+      }
+    } else if (state == AppLifecycleState.paused) {
+      // App is going to background
+      debugPrint("📱 App paused");
     }
   }
 
@@ -93,20 +233,146 @@ class FlashCardState extends State<FlashCard> {
     }
   }
 
-  Future<void> fetchTopicDetails() async {
-    String? token = await _storage.read(key: 'access_token');
-    if (token == null) {
-      debugPrint("❌ Missing access token");
-      return;
-    }
-    if (!mounted) {
-      return; // Ensure widget is still active before using context
-    }
+  Future<void> _initializeTopicData() async {
+    if (!mounted) return;
 
-    // Get the target language from the app's language provider
     final targetLanguage = Provider.of<LanguageProvider>(context, listen: false)
         .locale
         .languageCode;
+
+    // Check if fetch is already in progress
+    if (_cacheManager.isFetchInProgress(widget.courseId, widget.topicId, targetLanguage)) {
+      debugPrint("🔄 Fetch already in progress, waiting...");
+      return;
+    }
+
+    // Check cache first
+    final cachedData = _cacheManager.getCachedData(
+        widget.courseId,
+        widget.topicId,
+        targetLanguage
+    );
+
+    final shouldRefresh = _lifecycleManager.shouldRefreshCache;
+    final shouldFetch = _lifecycleManager.shouldFetchTopicInSession(widget.courseId, widget.topicId);
+
+    if (cachedData != null && !shouldRefresh && !shouldFetch) {
+      // Use cached data - no network request needed
+      debugPrint("✅ Using cached topic details (no fetch needed)");
+      updateTopicDetails(cachedData);
+      setState(() {
+        isLoading = false;
+      });
+    } else if (cachedData != null && !shouldRefresh) {
+      // Show cached data immediately, but still fetch fresh data in background
+      debugPrint("⚡ Using cached data, fetching fresh data in background");
+      updateTopicDetails(cachedData);
+      setState(() {
+        isLoading = false;
+      });
+
+      // Fetch fresh data in background without showing loading
+      _fetchTopicDetailsInBackground();
+    } else {
+      // Fetch from backend with loading indicator
+      debugPrint("🔄 Fetching topic details from backend");
+      await fetchTopicDetails();
+    }
+  }
+
+  Future<void> _fetchTopicDetailsInBackground() async {
+    final targetLanguage = Provider.of<LanguageProvider>(context, listen: false)
+        .locale
+        .languageCode;
+
+    if (_cacheManager.isFetchInProgress(widget.courseId, widget.topicId, targetLanguage)) {
+      return;
+    }
+
+    _cacheManager.setFetchInProgress(widget.courseId, widget.topicId, targetLanguage, true);
+
+    try {
+      String? token = await _storage.read(key: 'access_token');
+      if (token == null) {
+        debugPrint("❌ Missing access token for background fetch");
+        return;
+      }
+
+      final response = await http.get(
+        Uri.parse(
+            '$backendUrl/api/courses/${widget.courseId}/topics/${widget.topicId}/subtopics/?target_language=$targetLanguage'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      ).timeout(const Duration(seconds: 15));
+
+      if (response.statusCode == 200) {
+        final String responseBody = utf8.decode(response.bodyBytes);
+        final dynamic jsonData = jsonDecode(responseBody);
+
+        Map<String, dynamic>? data;
+        if (jsonData is List) {
+          if (jsonData.isNotEmpty && jsonData[0] is Map<String, dynamic>) {
+            data = jsonData[0];
+          }
+        } else if (jsonData is Map<String, dynamic>) {
+          data = jsonData;
+        }
+
+        if (data != null) {
+          // Cache the fresh data
+          _cacheManager.setCachedData(
+              widget.courseId,
+              widget.topicId,
+              targetLanguage,
+              data
+          );
+
+          // Mark as fetched in current session
+          _lifecycleManager.markTopicFetchedInSession(widget.courseId, widget.topicId);
+
+          // Update UI with fresh data if still mounted
+          if (mounted) {
+            updateTopicDetails(data);
+          }
+
+          debugPrint("🔄 Background fetch completed successfully");
+        }
+      }
+    } catch (e) {
+      debugPrint("❌ Background fetch error: $e");
+    } finally {
+      _cacheManager.setFetchInProgress(widget.courseId, widget.topicId, targetLanguage, false);
+    }
+  }
+
+  Future<void> fetchTopicDetails() async {
+    final targetLanguage = Provider.of<LanguageProvider>(context, listen: false)
+        .locale
+        .languageCode;
+
+    // Prevent concurrent fetches
+    if (_cacheManager.isFetchInProgress(widget.courseId, widget.topicId, targetLanguage)) {
+      debugPrint("🔄 Fetch already in progress");
+      return;
+    }
+
+    _cacheManager.setFetchInProgress(widget.courseId, widget.topicId, targetLanguage, true);
+
+    String? token = await _storage.read(key: 'access_token');
+    if (token == null) {
+      debugPrint("❌ Missing access token");
+      setState(() {
+        isLoading = false;
+      });
+      return;
+    }
+
+    if (!mounted) {
+      _cacheManager.setFetchInProgress(widget.courseId, widget.topicId, targetLanguage, false);
+      return;
+    }
 
     try {
       final response = await http.get(
@@ -116,49 +382,91 @@ class FlashCardState extends State<FlashCard> {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json; charset=UTF-8',
         },
+      ).timeout(
+        const Duration(seconds: 15), // Increased timeout
+        onTimeout: () {
+          throw TimeoutException('Request timeout', const Duration(seconds: 15));
+        },
       );
 
-      debugPrint("🔹 API Response: ${response.body}"); // ✅ Log the response
+      debugPrint("🔹 API Response: ${response.body}");
 
       if (response.statusCode == 200) {
-        // Decode the response body using UTF-8
         final String responseBody = utf8.decode(response.bodyBytes);
         final dynamic jsonData = jsonDecode(responseBody);
 
+        Map<String, dynamic>? data;
         if (jsonData is List) {
           if (jsonData.isNotEmpty && jsonData[0] is Map<String, dynamic>) {
-            final Map<String, dynamic> data = jsonData[0];
-            updateTopicDetails(data);
-          } else {
-            debugPrint(
-                "❌ Unexpected JSON format (List but empty or incorrect structure)");
+            data = jsonData[0];
           }
         } else if (jsonData is Map<String, dynamic>) {
-          updateTopicDetails(jsonData);
+          data = jsonData;
+        }
+
+        if (data != null) {
+          // Cache the data
+          _cacheManager.setCachedData(
+              widget.courseId,
+              widget.topicId,
+              targetLanguage,
+              data
+          );
+
+          // Mark as fetched in current session
+          _lifecycleManager.markTopicFetchedInSession(widget.courseId, widget.topicId);
+
+          updateTopicDetails(data);
         } else {
-          debugPrint("❌ Unexpected JSON structure: ${jsonData.runtimeType}");
+          debugPrint("❌ Unexpected JSON structure");
         }
       } else {
         debugPrint("❌ Failed to fetch topic details: ${response.statusCode}");
+        // Try to use any available cached data as fallback
+        final fallbackData = _cacheManager.getCachedData(
+            widget.courseId,
+            widget.topicId,
+            targetLanguage
+        );
+        if (fallbackData != null) {
+          debugPrint("📱 Using cached data as fallback");
+          updateTopicDetails(fallbackData);
+        }
       }
     } catch (e) {
       debugPrint("❌ Error fetching topic details: $e");
+
+      // Try to use cached data as fallback
+      final fallbackData = _cacheManager.getCachedData(
+          widget.courseId,
+          widget.topicId,
+          targetLanguage
+      );
+      if (fallbackData != null) {
+        debugPrint("📱 Using cached data due to network error");
+        updateTopicDetails(fallbackData);
+      }
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      _cacheManager.setFetchInProgress(widget.courseId, widget.topicId, targetLanguage, false);
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
   void updateTopicDetails(Map<String, dynamic> data) {
-    setState(() {
-      topicTitle = data["title"]?.toString() ?? "Untitled Topic";
-    });
+    if (mounted) {
+      setState(() {
+        topicTitle = data["title"]?.toString() ?? "Untitled Topic";
+      });
+    }
   }
 
   void _setupVideoController() {
     // Dispose previous controllers and remove listener
-    _videoController?.removeListener(_videoListener); // Add this line
+    _videoController?.removeListener(_videoListener);
     _videoController?.dispose();
     _chewieController?.dispose();
 
@@ -238,7 +546,7 @@ class FlashCardState extends State<FlashCard> {
 
     final progressList = await _fetchProgressList();
     final progressExists = progressList.any((progress) =>
-        progress["material_id"] == materialId &&
+    progress["material_id"] == materialId &&
         progress["activity_type"] == "reading");
 
     if (progressExists) {
@@ -267,7 +575,7 @@ class FlashCardState extends State<FlashCard> {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(progressData),
-      );
+      ).timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         debugPrint("✅ Progress updated successfully");
@@ -293,7 +601,7 @@ class FlashCardState extends State<FlashCard> {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json; charset=UTF-8',
         },
-      );
+      ).timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         final responseBody = jsonDecode(response.body);
@@ -332,6 +640,7 @@ class FlashCardState extends State<FlashCard> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _showSwipeHint = false;
     _videoController?.removeListener(_videoListener);
     _videoController?.dispose();
@@ -364,97 +673,130 @@ class FlashCardState extends State<FlashCard> {
               color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
         ),
         centerTitle: true,
+        actions: [
+          // Add refresh button for manual cache refresh
+          IconButton(
+            icon: const Icon(Icons.refresh, color: Colors.black),
+            onPressed: () async {
+              setState(() {
+                isLoading = true;
+              });
+              // Clear cache for this topic and refetch
+              _cacheManager.clearCacheForTopic(widget.courseId, widget.topicId);
+              await fetchTopicDetails();
+            },
+          ),
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildProgressIndicator(),
-          _buildSubtopicTitle(topicTitle),
-          Expanded(
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  return Swiper(
-                    key: ValueKey<int>(_currentPage),
-                    itemWidth: constraints.maxWidth,
-                    itemHeight: constraints.maxHeight,
-                    loop: false,
-                    duration: 600,
-                    layout: SwiperLayout.STACK,
-                    axisDirection: AxisDirection.right,
-                    index: _currentPage,
-                    onIndexChanged: (index) {
-                      _handleSwipe();
-                      if (_currentPage != index) {
-                        setState(() {
-                          _currentPage = index;
-                        });
-                        _setupVideoController();
+          _buildSubtopicTitle(widget.subtopicTitle),
+          if (isLoading)
+            Expanded(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const CircularProgressIndicator(),
+                    const SizedBox(height: 16),
+                    Text(
+                      L10n.getTranslatedText(context, 'Loading...'),
+                      style: TextStyle(
+                        color: AcademeTheme.appColor,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          else
+            Expanded(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    return Swiper(
+                      key: ValueKey<int>(_currentPage),
+                      itemWidth: constraints.maxWidth,
+                      itemHeight: constraints.maxHeight,
+                      loop: false,
+                      duration: 600,
+                      layout: SwiperLayout.STACK,
+                      axisDirection: AxisDirection.right,
+                      index: _currentPage,
+                      onIndexChanged: (index) {
+                        _handleSwipe();
+                        if (_currentPage != index) {
+                          setState(() {
+                            _currentPage = index;
+                          });
+                          _setupVideoController();
 
-                        if (index < widget.materials.length) {
-                          _sendProgressToBackend();
+                          if (index < widget.materials.length) {
+                            _sendProgressToBackend();
+                          }
                         }
-                      }
-                    },
-                    itemBuilder: (context, index) {
-                      return Stack(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(20),
-                              topRight: Radius.circular(20),
-                              bottomLeft: Radius.circular(0),
-                              bottomRight: Radius.circular(0),
-                            ),
-                            child: _buildMaterial(index < widget.materials.length
-                                ? widget.materials[index]
-                                : {
-                              "type": "quiz",
-                              "quiz": widget.quizzes[index - widget.materials.length],
-                            }),
-                          ),
-                          AnimatedOpacity(
-                            opacity: _currentPage == index ? 0.0 : 0.2,
-                            duration: const Duration(milliseconds: 500),
-                            child: IgnorePointer(
-                              ignoring: true,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withAlpha(40),
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(20),
-                                    topRight: Radius.circular(20),
-                                    bottomLeft: Radius.circular(0),
-                                    bottomRight: Radius.circular(0),
-                                  ),
-                                ),
+                      },
+                      itemBuilder: (context, index) {
+                        return Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                                topRight: Radius.circular(20),
+                                bottomLeft: Radius.circular(0),
+                                bottomRight: Radius.circular(0),
                               ),
+                              child: _buildMaterial(index < widget.materials.length
+                                  ? widget.materials[index]
+                                  : {
+                                "type": "quiz",
+                                "quiz": widget.quizzes[index - widget.materials.length],
+                              }),
                             ),
-                          ),
-                          // Add this new Positioned widget for the GIF overlay
-                          if (_showSwipeHint && index == 0)
-                            Positioned.fill(
+                            AnimatedOpacity(
+                              opacity: _currentPage == index ? 0.0 : 0.2,
+                              duration: const Duration(milliseconds: 500),
                               child: IgnorePointer(
-                                child: Center(
-                                  child: Image.asset(
-                                    'assets/images/swipe_left_no_bg.gif',
-                                    width: 200,
-                                    height: 200,
-                                    fit: BoxFit.contain,
+                                ignoring: true,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withAlpha(40),
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(20),
+                                      topRight: Radius.circular(20),
+                                      bottomLeft: Radius.circular(0),
+                                      bottomRight: Radius.circular(0),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                        ],
-                      );
-                    },
-                    itemCount: widget.materials.length + widget.quizzes.length,
-                  );
-                },
+                            if (_showSwipeHint && index == 0)
+                              Positioned.fill(
+                                child: IgnorePointer(
+                                  child: Center(
+                                    child: Image.asset(
+                                      'assets/images/swipe_left_no_bg.gif',
+                                      width: 200,
+                                      height: 200,
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        );
+                      },
+                      itemCount: widget.materials.length + widget.quizzes.length,
+                    );
+                  },
+                ),
               ),
             ),
-          ),
         ],
       ),
     );
@@ -502,8 +844,7 @@ class FlashCardState extends State<FlashCard> {
           ],
         ),
         child: Text(
-          widget
-              .subtopicTitle, // Use the passed title instead of state variable
+          title,
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -548,7 +889,7 @@ class FlashCardState extends State<FlashCard> {
   Widget _buildTextContent(String content) {
     // Convert escaped newlines and handle markdown symbols
     String processedContent =
-        content.replaceAll(r'\n', '\n').replaceAll('<br>', '\n');
+    content.replaceAll(r'\n', '\n').replaceAll('<br>', '\n');
 
     return buildStyledContainer(
       Column(
@@ -636,7 +977,6 @@ class FlashCardState extends State<FlashCard> {
     return _parseInlineFormatting(line);
   }
 
-// Add this helper method
   bool _isSpecialLine(String line) {
     return line.startsWith('#') ||
         line.trim().startsWith('- ') ||
@@ -645,18 +985,17 @@ class FlashCardState extends State<FlashCard> {
         line.trim().startsWith('> ');
   }
 
-  // Add these new methods
   Widget _buildBulletPoint(String text) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
           alignment: Alignment.topCenter,
-          padding: const EdgeInsets.only(top: 10), // Adjust vertical position
+          padding: const EdgeInsets.only(top: 10),
           child: Icon(
             Icons.circle,
-            size: 10, // Slightly larger for better visibility
-            color: Colors.blue[700], // Match numbered list color
+            size: 10,
+            color: Colors.blue[700],
           ),
         ),
         const SizedBox(width: 12),
@@ -678,14 +1017,14 @@ class FlashCardState extends State<FlashCard> {
       children: [
         Container(
           alignment: Alignment.topCenter,
-          padding: const EdgeInsets.only(top: 5), // Adjust this value as needed
+          padding: const EdgeInsets.only(top: 5),
           child: Text(
             '$number.',
             style: TextStyle(
               color: Colors.blue[700],
               fontWeight: FontWeight.bold,
-              fontSize: 16, // Match base text size
-              height: 1.4, // Match line height
+              fontSize: 16,
+              height: 1.4,
             ),
           ),
         ),

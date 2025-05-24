@@ -22,6 +22,9 @@ class HomePage extends StatelessWidget {
   final VoidCallback onCourseTap;
   final int selectedIndex; // Add selectedIndex
   final PageController _pageController = PageController();
+  static String _cachedLanguage = '';
+  static List<dynamic> _cachedCourses = [];
+  static bool _userDetailsFetched = false;
   final ValueNotifier<bool> _showSearchUI =
       ValueNotifier(false); // Use ValueNotifier
   List<dynamic> courses = [];
@@ -63,9 +66,15 @@ class HomePage extends StatelessWidget {
       throw Exception("❌ No access token found");
     }
 
-    // Get the current app language from SharedPreferences
+    // Get language from prefs
     final prefs = await SharedPreferences.getInstance();
     final String targetLanguage = prefs.getString('language') ?? 'en';
+
+    // Return cached data if language matches and cache exists
+    if (_cachedLanguage == targetLanguage && _cachedCourses.isNotEmpty) {
+      debugPrint("✅ Using cached courses");
+      return _cachedCourses;
+    }
 
     final response = await http.get(
       Uri.parse("$backendUrl/api/courses/?target_language=$targetLanguage"),
@@ -76,15 +85,22 @@ class HomePage extends StatelessWidget {
     );
 
     if (response.statusCode == 200) {
-      final List<dynamic> data =
-          jsonDecode(utf8.decode(response.bodyBytes)); // Ensure UTF-8 encoding
-      return data; // Return all courses
+      final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
+
+      // Update cache with new data and language
+      _cachedCourses = data;
+      _cachedLanguage = targetLanguage;
+      debugPrint("🔄 Updated course cache");
+
+      return data;
     } else {
       throw Exception("❌ Failed to fetch courses: ${response.statusCode}");
     }
   }
 
   Future<void> _fetchAndStoreUserDetails() async {
+    if (_userDetailsFetched) return;
+
     try {
       final String backendUrl =
           dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
@@ -104,7 +120,7 @@ class HomePage extends StatelessWidget {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(
-            utf8.decode(response.bodyBytes)); // Ensure UTF-8 encoding
+            utf8.decode(response.bodyBytes));
 
         // Store user details in secure storage
         await _secureStorage.write(key: 'name', value: data['name']);
@@ -113,6 +129,7 @@ class HomePage extends StatelessWidget {
             key: 'student_class', value: data['student_class']);
         await _secureStorage.write(key: 'photo_url', value: data['photo_url']);
 
+        _userDetailsFetched = true; // Mark as fetched
         debugPrint("✅ User details stored successfully");
       } else {
         throw Exception(
