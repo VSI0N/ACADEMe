@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:async' show unawaited;
 import 'package:flutter/gestures.dart';
 import 'package:ACADEMe/academe_theme.dart';
 import 'package:ACADEMe/localization/l10n.dart';
@@ -46,7 +47,7 @@ class FlashCard extends StatefulWidget {
   FlashCardState createState() => FlashCardState();
 }
 
-class FlashCardState extends State<FlashCard> {
+class FlashCardState extends State<FlashCard> with TickerProviderStateMixin {
   VideoPlayerController? _videoController;
   ChewieController? _chewieController;
   int _currentPage = 0;
@@ -57,12 +58,15 @@ class FlashCardState extends State<FlashCard> {
   String topicTitle = "Loading...";
   bool _showSwipeHint = true;
   bool isLoading = true;
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
+  bool _isTransitioning = false;
 
   @override
   void initState() {
     super.initState();
     _currentPage = widget.initialIndex;
-    _loadSwipeHintState(); // Add this
+    _loadSwipeHintState();
     fetchTopicDetails();
 
     if (widget.materials.isEmpty && widget.quizzes.isEmpty) {
@@ -74,6 +78,14 @@ class FlashCardState extends State<FlashCard> {
     } else {
       _setupVideoController();
     }
+
+    _fadeController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+    _fadeAnimation = Tween<double>(begin: 1.0, end: 1.0).animate(
+      CurvedAnimation(parent: _fadeController, curve: Curves.easeInOut),
+    );
   }
 
   Future<void> _loadSwipeHintState() async {
@@ -157,16 +169,14 @@ class FlashCardState extends State<FlashCard> {
   }
 
   void _setupVideoController() {
-    // Dispose previous controllers and remove listener
-    _videoController?.removeListener(_videoListener); // Add this line
-    _videoController?.dispose();
-    _chewieController?.dispose();
-
-    _videoController = null;
-    _chewieController = null;
+    // Store old controllers to dispose later
+    final oldVideoController = _videoController;
+    final oldChewieController = _chewieController;
 
     if (_currentPage < widget.materials.length &&
         widget.materials[_currentPage]["type"] == "video") {
+
+      // Create new controller
       _videoController = VideoPlayerController.network(
         widget.materials[_currentPage]["content"]!,
       );
@@ -183,12 +193,38 @@ class FlashCardState extends State<FlashCard> {
           allowPlaybackSpeedChanging: true,
         );
 
-        setState(() {});
+        // Only setState when really needed
+        if (mounted) {
+          setState(() {});
+        }
 
         // Add listener for video completion
         _videoController!.addListener(_videoListener);
+
+        // Dispose old controllers after slight delay
+        Future.delayed(const Duration(milliseconds: 150), () {
+          oldVideoController?.removeListener(_videoListener);
+          oldVideoController?.dispose();
+          oldChewieController?.dispose();
+        });
       }).catchError((error) {
         debugPrint("Error initializing video: $error");
+        // Still dispose old controllers on error
+        Future.delayed(const Duration(milliseconds: 150), () {
+          oldVideoController?.removeListener(_videoListener);
+          oldVideoController?.dispose();
+          oldChewieController?.dispose();
+        });
+      });
+    } else {
+      // No video needed, clean up
+      _videoController = null;
+      _chewieController = null;
+
+      Future.delayed(const Duration(milliseconds: 150), () {
+        oldVideoController?.removeListener(_videoListener);
+        oldVideoController?.dispose();
+        oldChewieController?.dispose();
       });
     }
   }
@@ -314,14 +350,16 @@ class FlashCardState extends State<FlashCard> {
   }
 
   Future<void> _nextMaterialOrQuiz() async {
-    await _sendProgressToBackend();
+    // Send progress in background to avoid blocking
+    unawaited(_sendProgressToBackend());
 
     if (_currentPage < widget.materials.length + widget.quizzes.length - 1) {
-      setState(() {
-        _currentPage++;
-      });
+      _currentPage++;
 
-      // Force the Swiper to update by using a key and rebuilding it
+      if (mounted) {
+        setState(() {});
+      }
+
       _setupVideoController();
     } else {
       if (widget.onQuizComplete != null) {
@@ -337,6 +375,7 @@ class FlashCardState extends State<FlashCard> {
     _videoController?.dispose();
     _chewieController?.dispose();
     _audioPlayer.dispose();
+    _fadeController.dispose();
     super.dispose();
   }
 
@@ -376,20 +415,27 @@ class FlashCardState extends State<FlashCard> {
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   return Swiper(
-                    key: ValueKey<int>(_currentPage),
                     itemWidth: constraints.maxWidth,
                     itemHeight: constraints.maxHeight,
                     loop: false,
-                    duration: 600,
+                    duration: 300,
                     layout: SwiperLayout.STACK,
                     axisDirection: AxisDirection.right,
                     index: _currentPage,
+                    curve: Curves.easeOutCubic,
+                    viewportFraction: 1.0,
+                    scale: 0.9,
                     onIndexChanged: (index) {
                       _handleSwipe();
                       if (_currentPage != index) {
-                        setState(() {
-                          _currentPage = index;
-                        });
+                        final oldPage = _currentPage;
+                        _currentPage = index; // Update without setState first
+
+                        // Only call setState if UI needs updating (for progress bar)
+                        if (mounted) {
+                          setState(() {});
+                        }
+
                         _setupVideoController();
 
                         if (index < widget.materials.length) {
@@ -401,7 +447,7 @@ class FlashCardState extends State<FlashCard> {
                       return Stack(
                         children: [
                           ClipRRect(
-                            borderRadius: BorderRadius.only(
+                            borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(20),
                               topRight: Radius.circular(20),
                               bottomLeft: Radius.circular(0),
@@ -414,15 +460,13 @@ class FlashCardState extends State<FlashCard> {
                               "quiz": widget.quizzes[index - widget.materials.length],
                             }),
                           ),
-                          AnimatedOpacity(
-                            opacity: _currentPage == index ? 0.0 : 0.2,
-                            duration: const Duration(milliseconds: 500),
-                            child: IgnorePointer(
-                              ignoring: true,
-                              child: Container(
+                          if (_currentPage != index)
+                            IgnorePointer(
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 200),
                                 decoration: BoxDecoration(
-                                  color: Colors.black.withAlpha(40),
-                                  borderRadius: BorderRadius.only(
+                                  color: Colors.black.withOpacity(0.2),
+                                  borderRadius: const BorderRadius.only(
                                     topLeft: Radius.circular(20),
                                     topRight: Radius.circular(20),
                                     bottomLeft: Radius.circular(0),
@@ -431,8 +475,6 @@ class FlashCardState extends State<FlashCard> {
                                 ),
                               ),
                             ),
-                          ),
-                          // Add this new Positioned widget for the GIF overlay
                           if (_showSwipeHint && index == 0)
                             Positioned.fill(
                               child: IgnorePointer(
