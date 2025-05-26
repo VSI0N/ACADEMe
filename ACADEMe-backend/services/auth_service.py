@@ -27,12 +27,13 @@ if not EMAIL_PASSWORD:
 
 # In-memory OTP storage (use Redis in production)
 otp_storage = {}
+reset_otp_storage = {}  # Separate storage for password reset OTPs
 
 def generate_otp():
     """Generate a 6-digit OTP."""
     return str(random.randint(100000, 999999))
 
-def send_otp_email(email: str, otp: str):
+def send_otp_email(email: str, otp: str, purpose: str = "registration"):
     """Send OTP via email."""
     try:
         # Validate email credentials
@@ -43,15 +44,27 @@ def send_otp_email(email: str, otp: str):
         msg = MIMEMultipart()
         msg['From'] = EMAIL_ADDRESS
         msg['To'] = email
-        msg['Subject'] = "Your OTP for Registration"
         
-        body = f"""
-        Your OTP for account registration is: {otp}
-        
-        This OTP will expire in 10 minutes.
-        
-        Please enter this OTP to complete your registration.
-        """
+        if purpose == "registration":
+            msg['Subject'] = "Your OTP for Registration"
+            body = f"""
+            Your OTP for account registration is: {otp}
+            
+            This OTP will expire in 10 minutes.
+            
+            Please enter this OTP to complete your registration.
+            """
+        else:  # password reset
+            msg['Subject'] = "Your OTP for Password Reset"
+            body = f"""
+            Your OTP for password reset is: {otp}
+            
+            This OTP will expire in 10 minutes.
+            
+            Please enter this OTP to reset your password.
+            
+            If you didn't request this password reset, please ignore this email.
+            """
         
         msg.attach(MIMEText(body, 'plain'))
         
@@ -62,7 +75,7 @@ def send_otp_email(email: str, otp: str):
         server.sendmail(EMAIL_ADDRESS, email, text)
         server.quit()
         
-        print(f"OTP sent successfully to {email}")
+        print(f"OTP sent successfully to {email} for {purpose}")
         return True
     except smtplib.SMTPAuthenticationError as e:
         print(f"SMTP Authentication failed: {e}")
@@ -75,7 +88,7 @@ def send_otp_email(email: str, otp: str):
         return False
 
 async def send_otp(email: str):
-    """Generate and send OTP to email."""
+    """Generate and send OTP to email for registration."""
     try:
         # Validate email credentials first
         if not EMAIL_ADDRESS or not EMAIL_PASSWORD:
@@ -101,7 +114,7 @@ async def send_otp(email: str):
         }
         
         # Send OTP via email
-        if send_otp_email(email, otp):
+        if send_otp_email(email, otp, "registration"):
             return {"message": "OTP sent successfully", "email": email}
         else:
             # Clean up OTP if email sending failed
@@ -116,6 +129,100 @@ async def send_otp(email: str):
         raise
     except Exception as e:
         print(f"Error in send_otp: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+async def send_reset_otp(email: str):
+    """Generate and send OTP to email for password reset."""
+    try:
+        # Validate email credentials first
+        if not EMAIL_ADDRESS or not EMAIL_PASSWORD:
+            raise HTTPException(
+                status_code=500, 
+                detail="Email service not configured. Please contact administrator."
+            )
+        
+        # Check if email exists in our Firestore database
+        user_docs = list(db.collection("users").where("email", "==", email).limit(1).stream())
+        if not user_docs:
+            raise HTTPException(status_code=404, detail="Email not found in our records")
+        
+        # Generate OTP
+        otp = generate_otp()
+        
+        # Store OTP with expiry (10 minutes) in separate storage for password reset
+        reset_otp_storage[email] = {
+            "otp": otp,
+            "expires_at": datetime.datetime.utcnow() + datetime.timedelta(minutes=10)
+        }
+        
+        # Send OTP via email
+        if send_otp_email(email, otp, "reset"):
+            return {"message": "Password reset OTP sent successfully", "email": email}
+        else:
+            # Clean up OTP if email sending failed
+            if email in reset_otp_storage:
+                del reset_otp_storage[email]
+            raise HTTPException(
+                status_code=500, 
+                detail="Failed to send password reset OTP. Please try again."
+            )
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Error in send_reset_otp: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+async def reset_password(email: str, otp: str, new_password: str):
+    """Reset user password after OTP verification."""
+    try:
+        # Verify OTP
+        if email not in reset_otp_storage:
+            raise HTTPException(status_code=400, detail="OTP not found. Please request a new password reset OTP.")
+        
+        stored_otp_data = reset_otp_storage[email]
+        
+        # Check if OTP has expired
+        if datetime.datetime.utcnow() > stored_otp_data["expires_at"]:
+            del reset_otp_storage[email]  # Clean up expired OTP
+            raise HTTPException(status_code=400, detail="OTP has expired. Please request a new password reset OTP.")
+        
+        # Verify OTP
+        if otp != stored_otp_data["otp"]:
+            raise HTTPException(status_code=400, detail="Invalid OTP")
+        
+        # OTP verified, proceed with password reset
+        # Get user from Firestore
+        user_docs = list(db.collection("users").where("email", "==", email).limit(1).stream())
+        if not user_docs:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        user_doc = user_docs[0]
+        user_data = user_doc.to_dict()
+        user_id = user_data["id"]
+        
+        # Hash the new password
+        hashed_new_password = hash_password(new_password)
+        
+        # Update password in Firestore
+        db.collection("users").document(user_id).update({"password": hashed_new_password})
+        
+        # Update password in Firebase Auth
+        try:
+            auth.update_user(user_id, password=new_password)
+        except Exception as e:
+            print(f"Warning: Failed to update Firebase Auth password: {e}")
+            # Continue anyway since Firestore is updated
+        
+        # Clean up OTP after successful password reset
+        del reset_otp_storage[email]
+        
+        return {"message": "Password reset successfully"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Error in reset_password: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 async def register_user(user: UserCreate, otp: str):

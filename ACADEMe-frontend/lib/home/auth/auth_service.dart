@@ -69,6 +69,52 @@ class AuthService {
     }
   }
 
+  /// ✅ Send OTP to email for password reset
+  Future<(bool, String?)> sendForgotPasswordOTP(String email) async {
+    try {
+      final response = await http.post(
+        Uri.parse("$_baseUrl/api/users/forgot-password"),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({"email": email}),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        return (true, responseData["message"]?.toString() ?? "Reset OTP sent successfully");
+      } else {
+        final errorData = jsonDecode(response.body);
+        return (false, errorData["detail"]?.toString() ?? "Failed to send reset OTP");
+      }
+    } catch (e) {
+      return (false, "An unexpected error occurred: $e");
+    }
+  }
+
+  /// ✅ Reset password with OTP verification
+  Future<(bool, String?)> resetPasswordWithOTP(String email, String otp, String newPassword) async {
+    try {
+      final response = await http.post(
+        Uri.parse("$_baseUrl/api/users/reset-password"),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          "email": email,
+          "otp": otp,
+          "new_password": newPassword,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        return (true, responseData["message"]?.toString() ?? "Password reset successfully");
+      } else {
+        final errorData = jsonDecode(response.body);
+        return (false, errorData["detail"]?.toString() ?? "Failed to reset password");
+      }
+    } catch (e) {
+      return (false, "An unexpected error occurred: $e");
+    }
+  }
+
   /// ✅ Sign up user via backend with OTP verification & store access token securely
   Future<(AppUser?, String?)> signUp(String email, String password, String name,
       String studentClass, String photoUrl, String otp) async {
@@ -345,7 +391,7 @@ class AuthService {
     return token != null && token.isNotEmpty;
   }
 
-  /// ✅ Send password reset email
+  /// ✅ Send password reset email (Firebase method - kept for compatibility)
   Future<void> sendPasswordResetEmail(String email) async {
     try {
       await _auth.sendPasswordResetEmail(email: email);

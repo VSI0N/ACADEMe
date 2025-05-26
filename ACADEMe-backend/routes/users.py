@@ -3,7 +3,7 @@ from typing import List
 import firebase_admin
 from firebase_admin import firestore
 from utils.auth import get_current_user
-from services.auth_service import fetch_admin_ids, send_otp
+from services.auth_service import fetch_admin_ids, send_otp, send_reset_otp, reset_password
 from fastapi import APIRouter, Depends, HTTPException
 from services.progress_service import delete_user_progress
 from services.auth_service import register_user, login_user
@@ -22,11 +22,43 @@ class OTPRequest(BaseModel):
 class UserCreateWithOTP(UserCreate):
     otp: str
 
+# Model for forgot password OTP request
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+# Model for password reset with OTP
+class ResetPasswordRequest(BaseModel):
+    email: EmailStr
+    otp: str
+    new_password: str
+
 @router.post("/send-otp")
 async def send_otp_endpoint(request: OTPRequest):
     """Send OTP to email for registration verification."""
     try:
         result = await send_otp(request.email)
+        return result
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/forgot-password")
+async def forgot_password_endpoint(request: ForgotPasswordRequest):
+    """Send OTP to email for password reset."""
+    try:
+        result = await send_reset_otp(request.email)
+        return result
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/reset-password")
+async def reset_password_endpoint(request: ResetPasswordRequest):
+    """Reset password after OTP verification."""
+    try:
+        result = await reset_password(request.email, request.otp, request.new_password)
         return result
     except HTTPException:
         raise
