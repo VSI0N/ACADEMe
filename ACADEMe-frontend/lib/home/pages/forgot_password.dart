@@ -36,17 +36,13 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
       return;
     }
 
-    setState(() {
-      _isLoading = true;
-    });
+    setState(() => _isLoading = true);
 
     try {
       final (success, message) = await _authService.sendForgotPasswordOTP(email);
 
       if (success) {
-        setState(() {
-          _isOtpSent = true;
-        });
+        setState(() => _isOtpSent = true);
         _showSnackBar(message ?? L10n.getTranslatedText(context, 'OTP sent successfully'));
       } else {
         _showSnackBar(message ?? L10n.getTranslatedText(context, 'Failed to send OTP'));
@@ -54,9 +50,7 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
     } catch (e) {
       _showSnackBar(L10n.getTranslatedText(context, 'An error occurred. Please try again.'));
     } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      setState(() => _isLoading = false);
     }
   }
 
@@ -66,7 +60,6 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
     final String newPassword = _newPasswordController.text.trim();
     final String confirmPassword = _confirmPasswordController.text.trim();
 
-    // Validation
     if (otp.isEmpty) {
       _showSnackBar(L10n.getTranslatedText(context, 'Please enter the OTP'));
       return;
@@ -92,16 +85,13 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
       return;
     }
 
-    setState(() {
-      _isLoading = true;
-    });
+    setState(() => _isLoading = true);
 
     try {
       final (success, message) = await _authService.resetPasswordWithOTP(email, otp, newPassword);
 
       if (success) {
         _showSnackBar(message ?? L10n.getTranslatedText(context, 'Password reset successfully'));
-        // Navigate back to login after successful reset
         Navigator.pop(context);
       } else {
         _showSnackBar(message ?? L10n.getTranslatedText(context, 'Failed to reset password'));
@@ -109,17 +99,13 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
     } catch (e) {
       _showSnackBar(L10n.getTranslatedText(context, 'An error occurred. Please try again.'));
     } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      setState(() => _isLoading = false);
     }
   }
 
   void _showSnackBar(String message) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 
   void _resendOtp() {
@@ -132,381 +118,310 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-    final isSmallScreen = screenSize.width < 600;
-    final isVerySmallScreen = screenSize.width < 400;
-
-    // Responsive dimensions
-    final horizontalPadding = isVerySmallScreen ? 16.0 : (isSmallScreen ? 20.0 : 30.0);
-    final cardPadding = isVerySmallScreen ? 16.0 : (isSmallScreen ? 20.0 : 30.0);
-    final logoHeight = isVerySmallScreen ? 120.0 : (isSmallScreen ? 180.0 : 250.0);
-    final headerFontSize = isVerySmallScreen ? 24.0 : (isSmallScreen ? 28.0 : 30.0);
-    final descriptionFontSize = isVerySmallScreen ? 14.0 : 16.0;
-    final buttonHeight = isVerySmallScreen ? 45.0 : 50.0;
-    final topPadding = MediaQuery.of(context).padding.top + (isVerySmallScreen ? 20.0 : 40.0);
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              physics: const ClampingScrollPhysics(),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: constraints.maxHeight,
-                ),
-                child: IntrinsicHeight(
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      left: horizontalPadding,
-                      right: horizontalPadding,
-                      top: isVerySmallScreen ? 10.0 : 20.0,
-                      bottom: keyboardHeight > 0 ? 20.0 : 30.0,
-                    ),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return Container(
+                  padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                  constraints: const BoxConstraints(maxWidth: 500),
+                  child: SingleChildScrollView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        // Logo Section - Flexible to allow shrinking
-                        if (!isVerySmallScreen || keyboardHeight == 0) ...[
-                          SizedBox(height: isVerySmallScreen ? 10.0 : 20.0),
-                          Container(
-                            constraints: BoxConstraints(
-                              maxWidth: isSmallScreen ? 200 : 300,
-                              maxHeight: logoHeight,
-                            ),
-                            child: Image.asset(
-                              'assets/academe/academe_logo.png',
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                          SizedBox(height: isVerySmallScreen ? 20.0 : 30.0),
-                        ] else ...[
-                          const SizedBox(height: 10.0),
-                        ],
-
-                        // Main Card
-                        Flexible(
-                          child: Container(
-                            width: double.infinity,
-                            constraints: const BoxConstraints(maxWidth: 500),
-                            decoration: BoxDecoration(
-                              color: AcademeTheme.white,
-                              boxShadow: isVerySmallScreen
-                                  ? [
-                                const BoxShadow(
-                                  offset: Offset(0, 2),
-                                  color: Colors.grey,
-                                  blurRadius: 6,
-                                )
-                              ]
-                                  : [
-                                const BoxShadow(
-                                  offset: Offset(1, 1),
-                                  color: Colors.grey,
-                                  blurRadius: 10,
-                                )
-                              ],
-                              borderRadius: BorderRadius.circular(isVerySmallScreen ? 8 : 10),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.all(cardPadding),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // Header
-                                  Text(
-                                    L10n.getTranslatedText(context, 'Forgot Password?'),
-                                    style: TextStyle(
-                                      fontSize: headerFontSize,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    _isOtpSent
-                                        ? L10n.getTranslatedText(context, 'Enter the OTP sent to your email and create a new password.')
-                                        : L10n.getTranslatedText(context, 'No worries! Enter your email below and we\'ll send you an OTP.'),
-                                    style: TextStyle(
-                                      fontSize: descriptionFontSize,
-                                      color: Colors.black54,
-                                    ),
-                                  ),
-                                  SizedBox(height: isVerySmallScreen ? 20.0 : 30.0),
-
-                                  // Email Field
-                                  _buildLabelText(L10n.getTranslatedText(context, 'Email'), isVerySmallScreen),
-                                  TextFormField(
-                                    controller: _emailController,
-                                    enabled: !_isOtpSent,
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: _isOtpSent ? Colors.grey[100] : AcademeTheme.notWhite,
-                                      labelText: L10n.getTranslatedText(context, 'Email'),
-                                      hintText: L10n.getTranslatedText(context, 'Enter your email'),
-                                      prefixIcon: Icon(Icons.email, size: isVerySmallScreen ? 20 : 24),
-                                      contentPadding: EdgeInsets.symmetric(
-                                        horizontal: isVerySmallScreen ? 12 : 16,
-                                        vertical: isVerySmallScreen ? 14 : 16,
-                                      ),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(isVerySmallScreen ? 8 : 10),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(height: isVerySmallScreen ? 16.0 : 20.0),
-
-                                  // Send OTP Button (shown only when OTP not sent)
-                                  if (!_isOtpSent) ...[
-                                    SizedBox(
-                                      width: double.infinity,
-                                      height: buttonHeight,
-                                      child: ElevatedButton(
-                                        onPressed: _isLoading ? null : _sendOtp,
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.yellow[600],
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(isVerySmallScreen ? 25 : 30),
-                                          ),
-                                          elevation: 0,
-                                        ),
-                                        child: _isLoading
-                                            ? SizedBox(
-                                          height: isVerySmallScreen ? 20 : 24,
-                                          width: isVerySmallScreen ? 20 : 24,
-                                          child: const CircularProgressIndicator(
-                                            color: Colors.black,
-                                            strokeWidth: 2,
-                                          ),
-                                        )
-                                            : Text(
-                                          L10n.getTranslatedText(context, 'Send OTP'),
-                                          style: TextStyle(
-                                            fontSize: isVerySmallScreen ? 16.0 : 18.0,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-
-                                  // OTP and Password Fields (shown after OTP is sent)
-                                  if (_isOtpSent) ...[
-                                    // OTP Field
-                                    _buildLabelText(L10n.getTranslatedText(context, 'OTP'), isVerySmallScreen),
-                                    TextFormField(
-                                      controller: _otpController,
-                                      keyboardType: TextInputType.number,
-                                      maxLength: 6,
-                                      decoration: InputDecoration(
-                                        filled: true,
-                                        fillColor: AcademeTheme.notWhite,
-                                        labelText: L10n.getTranslatedText(context, 'Enter OTP'),
-                                        hintText: L10n.getTranslatedText(context, '6-digit OTP'),
-                                        prefixIcon: Icon(Icons.security, size: isVerySmallScreen ? 20 : 24),
-                                        counterText: '',
-                                        contentPadding: EdgeInsets.symmetric(
-                                          horizontal: isVerySmallScreen ? 12 : 16,
-                                          vertical: isVerySmallScreen ? 14 : 16,
-                                        ),
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(isVerySmallScreen ? 8 : 10),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10),
-
-                                    // Resend OTP
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: TextButton(
-                                        onPressed: _isLoading ? null : _resendOtp,
-                                        style: TextButton.styleFrom(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: isVerySmallScreen ? 8 : 12,
-                                            vertical: isVerySmallScreen ? 4 : 8,
-                                          ),
-                                        ),
-                                        child: Text(
-                                          L10n.getTranslatedText(context, 'Resend OTP'),
-                                          style: TextStyle(
-                                            color: AcademeTheme.appColor,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: isVerySmallScreen ? 14.0 : 16.0,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10),
-
-                                    // New Password Field
-                                    _buildLabelText(L10n.getTranslatedText(context, 'New Password'), isVerySmallScreen),
-                                    TextFormField(
-                                      controller: _newPasswordController,
-                                      obscureText: _obscureNewPassword,
-                                      decoration: InputDecoration(
-                                        filled: true,
-                                        fillColor: AcademeTheme.notWhite,
-                                        labelText: L10n.getTranslatedText(context, 'New Password'),
-                                        hintText: L10n.getTranslatedText(context, 'Enter new password'),
-                                        prefixIcon: Icon(Icons.lock, size: isVerySmallScreen ? 20 : 24),
-                                        suffixIcon: IconButton(
-                                          icon: Icon(
-                                            _obscureNewPassword ? Icons.visibility : Icons.visibility_off,
-                                            size: isVerySmallScreen ? 20 : 24,
-                                          ),
-                                          onPressed: () {
-                                            setState(() {
-                                              _obscureNewPassword = !_obscureNewPassword;
-                                            });
-                                          },
-                                        ),
-                                        contentPadding: EdgeInsets.symmetric(
-                                          horizontal: isVerySmallScreen ? 12 : 16,
-                                          vertical: isVerySmallScreen ? 14 : 16,
-                                        ),
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(isVerySmallScreen ? 8 : 10),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(height: isVerySmallScreen ? 16.0 : 20.0),
-
-                                    // Confirm Password Field
-                                    _buildLabelText(L10n.getTranslatedText(context, 'Confirm Password'), isVerySmallScreen),
-                                    TextFormField(
-                                      controller: _confirmPasswordController,
-                                      obscureText: _obscureConfirmPassword,
-                                      decoration: InputDecoration(
-                                        filled: true,
-                                        fillColor: AcademeTheme.notWhite,
-                                        labelText: L10n.getTranslatedText(context, 'Confirm Password'),
-                                        hintText: L10n.getTranslatedText(context, 'Confirm new password'),
-                                        prefixIcon: Icon(Icons.lock_outline, size: isVerySmallScreen ? 20 : 24),
-                                        suffixIcon: IconButton(
-                                          icon: Icon(
-                                            _obscureConfirmPassword ? Icons.visibility : Icons.visibility_off,
-                                            size: isVerySmallScreen ? 20 : 24,
-                                          ),
-                                          onPressed: () {
-                                            setState(() {
-                                              _obscureConfirmPassword = !_obscureConfirmPassword;
-                                            });
-                                          },
-                                        ),
-                                        contentPadding: EdgeInsets.symmetric(
-                                          horizontal: isVerySmallScreen ? 12 : 16,
-                                          vertical: isVerySmallScreen ? 14 : 16,
-                                        ),
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(isVerySmallScreen ? 8 : 10),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(height: isVerySmallScreen ? 20.0 : 30.0),
-
-                                    // Reset Password Button
-                                    SizedBox(
-                                      width: double.infinity,
-                                      height: buttonHeight,
-                                      child: ElevatedButton(
-                                        onPressed: _isLoading ? null : _resetPassword,
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.yellow[600],
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(isVerySmallScreen ? 25 : 30),
-                                          ),
-                                          elevation: 0,
-                                        ),
-                                        child: _isLoading
-                                            ? SizedBox(
-                                          height: isVerySmallScreen ? 20 : 24,
-                                          width: isVerySmallScreen ? 20 : 24,
-                                          child: const CircularProgressIndicator(
-                                            color: Colors.black,
-                                            strokeWidth: 2,
-                                          ),
-                                        )
-                                            : Text(
-                                          L10n.getTranslatedText(context, 'Reset Password'),
-                                          style: TextStyle(
-                                            fontSize: isVerySmallScreen ? 16.0 : 18.0,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-
-                                  SizedBox(height: isVerySmallScreen ? 16.0 : 20.0),
-
-                                  // Back to Login
-                                  Wrap(
-                                    alignment: WrapAlignment.center,
-                                    crossAxisAlignment: WrapCrossAlignment.center,
-                                    children: [
-                                      Text(
-                                        L10n.getTranslatedText(context, 'Remembered your password?'),
-                                        style: TextStyle(
-                                          fontSize: isVerySmallScreen ? 14.0 : 16.0,
-                                          color: Colors.black54,
-                                        ),
-                                      ),
-                                      TextButton(
-                                        onPressed: () => Navigator.pop(context),
-                                        style: TextButton.styleFrom(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: isVerySmallScreen ? 4 : 8,
-                                            vertical: isVerySmallScreen ? 0 : 4,
-                                          ),
-                                        ),
-                                        child: Text(
-                                          L10n.getTranslatedText(context, 'login'),
-                                          style: TextStyle(
-                                            fontSize: isVerySmallScreen ? 14.0 : 16.0,
-                                            fontWeight: FontWeight.w500,
-                                            color: AcademeTheme.appColor,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                        SizedBox(height: height * 0.0),
+                        Image.asset(
+                          'assets/academe/academe_logo.png',
+                          height: constraints.maxHeight * 0.23,
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(width * 0.05),
+                          decoration: BoxDecoration(
+                            color: AcademeTheme.white,
+                            boxShadow: [
+                              BoxShadow(
+                                offset: const Offset(1, 1),
+                                color: Colors.grey,
+                                blurRadius: 10,
                               ),
-                            ),
+                            ],
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                L10n.getTranslatedText(context, 'Forgot Password?'),
+                                style: TextStyle(
+                                  fontSize: width * 0.08,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: height * 0.01),
+                              Text(
+                                _isOtpSent
+                                    ? L10n.getTranslatedText(context, 'Enter the OTP sent to your email')
+                                    : L10n.getTranslatedText(context, 'Enter your email to reset password'),
+                                style: TextStyle(
+                                  fontSize: width * 0.047,
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: height * 0.03),
+
+                              if (!_isOtpSent) ...[
+                                _buildEmailSection(width, height),
+                                SizedBox(height: height * 0.02),
+                                _buildSendOtpButton(width),
+                              ] else ...[
+                                _buildOtpSection(width, height),
+                                SizedBox(height: height * 0.02),
+                                _buildPasswordSection(width, height),
+                                SizedBox(height: height * 0.02),
+                                _buildResetButton(width),
+                              ],
+
+                              SizedBox(height: height * 0.03),
+                              _buildLoginLink(width),
+                            ],
                           ),
                         ),
-
-                        // Bottom padding
-                        SizedBox(height: keyboardHeight > 0 ? 10.0 : 20.0),
                       ],
                     ),
                   ),
-                ),
-              ),
-            );
-          },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmailSection(double width, double height) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          L10n.getTranslatedText(context, 'Email'),
+          style: TextStyle(
+            fontSize: width * 0.043,
+            color: Colors.black54,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        TextFormField(
+          controller: _emailController,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: AcademeTheme.notWhite,
+            hintText: L10n.getTranslatedText(context, 'Enter your email'),
+            prefixIcon: const Icon(Icons.email),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(7),
+              borderSide: BorderSide.none,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSendOtpButton(double width) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: _isLoading ? null : _sendOtp,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.yellow[600],
+          minimumSize: Size(double.infinity, width * 0.11),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          elevation: 0,
+        ),
+        child: _isLoading
+            ? const CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Color.fromARGB(255, 193, 191, 191)),
+        )
+            : Text(
+          L10n.getTranslatedText(context, 'Send OTP'),
+          style: TextStyle(
+            fontSize: width * 0.045,
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildLabelText(String text, bool isVerySmallScreen) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: isVerySmallScreen ? 14.0 : 16.0,
-          color: Colors.black87,
-          fontWeight: FontWeight.w600,
+  Widget _buildOtpSection(double width, double height) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          L10n.getTranslatedText(context, 'OTP'),
+          style: TextStyle(
+            fontSize: width * 0.043,
+            color: Colors.black54,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        TextFormField(
+          controller: _otpController,
+          keyboardType: TextInputType.number,
+          maxLength: 6,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: AcademeTheme.notWhite,
+            hintText: L10n.getTranslatedText(context, 'Enter 6-digit OTP'),
+            prefixIcon: const Icon(Icons.security),
+            counterText: '',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(7),
+              borderSide: BorderSide.none,
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton(
+            onPressed: _resendOtp,
+            child: Text(
+              L10n.getTranslatedText(context, 'Resend OTP?'),
+              style: TextStyle(
+                color: AcademeTheme.appColor,
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPasswordSection(double width, double height) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          L10n.getTranslatedText(context, 'New Password'),
+          style: TextStyle(
+            fontSize: width * 0.043,
+            color: Colors.black54,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        TextFormField(
+          controller: _newPasswordController,
+          obscureText: _obscureNewPassword,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: AcademeTheme.notWhite,
+            hintText: L10n.getTranslatedText(context, 'Enter new password'),
+            prefixIcon: const Icon(Icons.lock),
+            suffixIcon: IconButton(
+              icon: Icon(_obscureNewPassword ? Icons.visibility : Icons.visibility_off),
+              onPressed: () => setState(() => _obscureNewPassword = !_obscureNewPassword),
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(7),
+              borderSide: BorderSide.none,
+            ),
+          ),
+        ),
+        SizedBox(height: height * 0.02),
+        Text(
+          L10n.getTranslatedText(context, 'Confirm Password'),
+          style: TextStyle(
+            fontSize: width * 0.043,
+            color: Colors.black54,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        TextFormField(
+          controller: _confirmPasswordController,
+          obscureText: _obscureConfirmPassword,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: AcademeTheme.notWhite,
+            hintText: L10n.getTranslatedText(context, 'Confirm new password'),
+            prefixIcon: const Icon(Icons.lock_outline),
+            suffixIcon: IconButton(
+              icon: Icon(_obscureConfirmPassword ? Icons.visibility : Icons.visibility_off),
+              onPressed: () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(7),
+              borderSide: BorderSide.none,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildResetButton(double width) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: _isLoading ? null : _resetPassword,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.yellow[600],
+          minimumSize: Size(double.infinity, width * 0.11),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          elevation: 0,
+        ),
+        child: _isLoading
+            ? const CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Color.fromARGB(255, 193, 191, 191)),
+        )
+            : Text(
+          L10n.getTranslatedText(context, 'Reset Password'),
+          style: TextStyle(
+            fontSize: width * 0.045,
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
         ),
       ),
+    );
+  }
+
+  Widget _buildLoginLink(double width) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          L10n.getTranslatedText(context, 'Remembered your password?'),
+          style: TextStyle(
+            fontSize: width * 0.038,
+            color: Colors.black54,
+          ),
+        ),
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(
+            L10n.getTranslatedText(context, 'login'),
+            style: TextStyle(
+              fontSize: width * 0.038,
+              fontWeight: FontWeight.w500,
+              color: AcademeTheme.appColor,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
