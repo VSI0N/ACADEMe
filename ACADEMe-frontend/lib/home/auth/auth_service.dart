@@ -32,26 +32,46 @@ class AppUser {
 
   factory AppUser.fromJson(Map<String, dynamic> json) {
     return AppUser(
-      id: json["id"],
-      email: json["email"],
-      name: json["name"],
-      studentClass: json["student_class"],
-      photoUrl: json["photo_url"],
+      id: json["id"] ?? "",
+      email: json["email"] ?? "",
+      name: json["name"] ?? "",
+      studentClass: json["student_class"] ?? "SELECT",
+      photoUrl: json["photo_url"] ?? "https://www.w3schools.com/w3images/avatar2.png",
     );
   }
 }
 
 class AuthService {
   final firebase_auth.FirebaseAuth _auth = firebase_auth.FirebaseAuth.instance;
-  // final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
-  static final String _baseUrl = dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000'; // Backend URL
+  static final String _baseUrl = dotenv.env['BACKEND_URL'] ?? 'http://10.0.2.2:8000';
 
-  /// ✅ Sign up user via backend & store access token securely
+  /// ✅ Send OTP to email for registration
+  Future<(bool, String?)> sendOTP(String email) async {
+    try {
+      final response = await http.post(
+        Uri.parse("$_baseUrl/api/users/send-otp"),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({"email": email}),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        return (true, responseData["message"]?.toString() ?? "OTP sent successfully");
+      } else {
+        final errorData = jsonDecode(response.body);
+        return (false, errorData["detail"]?.toString() ?? "Failed to send OTP");
+      }
+    } catch (e) {
+      return (false, "An unexpected error occurred: $e");
+    }
+  }
+
+  /// ✅ Sign up user via backend with OTP verification & store access token securely
   Future<(AppUser?, String?)> signUp(String email, String password, String name,
-      String studentClass, String photoUrl) async {
+      String studentClass, String photoUrl, String otp) async {
     try {
       final response = await http.post(
         Uri.parse("$_baseUrl/api/users/signup"),
@@ -62,6 +82,7 @@ class AuthService {
           "name": name,
           "student_class": studentClass,
           "photo_url": photoUrl,
+          "otp": otp,
         }),
       );
 
@@ -69,13 +90,99 @@ class AuthService {
         final responseData = jsonDecode(response.body);
 
         // ✅ Extract and store token securely
-        final String accessToken = responseData["access_token"];
-        await _secureStorage.write(key: "access_token", value: accessToken);
+        final String accessToken = responseData["access_token"] ?? "";
+        if (accessToken.isNotEmpty) {
+          await _secureStorage.write(key: "access_token", value: accessToken);
+        }
+
+        // ✅ Store user details securely
+        final String userId = responseData["id"] ?? "";
+        final String userName = responseData["name"] ?? "";
+        final String userEmail = responseData["email"] ?? "";
+        final String userClass = responseData["student_class"] ?? "SELECT";
+        final String userPhotoUrl = responseData["photo_url"] ?? "https://www.w3schools.com/w3images/avatar2.png";
+
+        await _secureStorage.write(key: "user_id", value: userId);
+        await _secureStorage.write(key: "user_name", value: userName);
+        await _secureStorage.write(key: "user_email", value: userEmail);
+        await _secureStorage.write(key: "student_class", value: userClass);
+        await _secureStorage.write(key: "photo_url", value: userPhotoUrl);
 
         // ✅ Create AppUser object
         AppUser user = AppUser.fromJson(responseData);
-        return (user, null); // ✅ Return AppUser object and no error
+        return (user, null);
       } else {
+        final errorData = jsonDecode(response.body);
+        return (null, errorData["detail"]?.toString() ?? "Signup failed");
+      }
+    } catch (e) {
+      return (null, "An unexpected error occurred: $e");
+    }
+  }
+
+  /// ✅ Sign up user via backend WITHOUT OTP (for Google Sign-In)
+  Future<(AppUser?, String?)> signUpWithoutOTP(String email, String password, String name,
+      String studentClass, String photoUrl) async {
+    try {
+      // Create user in Firebase Auth first for Google Sign-In
+      final firebase_auth.UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      final firebase_auth.User? firebaseUser = userCredential.user;
+      if (firebaseUser == null) {
+        return (null, "Firebase user creation failed");
+      }
+
+      // Now register with backend using Firebase UID
+      final response = await http.post(
+        Uri.parse("$_baseUrl/api/users/signup"),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          "email": email,
+          "password": password,
+          "name": name,
+          "student_class": studentClass,
+          "photo_url": photoUrl,
+          "otp": "GOOGLE_AUTH", // Special OTP for Google users
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+
+        // ✅ Extract and store token securely
+        final String accessToken = responseData["access_token"] ?? "";
+        if (accessToken.isNotEmpty) {
+          await _secureStorage.write(key: "access_token", value: accessToken);
+        }
+
+        // ✅ Store user details securely
+        final String userId = responseData["id"] ?? firebaseUser.uid;
+        final String userName = responseData["name"] ?? name;
+        final String userEmail = responseData["email"] ?? email;
+        final String userClass = responseData["student_class"] ?? studentClass;
+        final String userPhotoUrl = responseData["photo_url"] ?? photoUrl;
+
+        await _secureStorage.write(key: "user_id", value: userId);
+        await _secureStorage.write(key: "user_name", value: userName);
+        await _secureStorage.write(key: "user_email", value: userEmail);
+        await _secureStorage.write(key: "student_class", value: userClass);
+        await _secureStorage.write(key: "photo_url", value: userPhotoUrl);
+
+        // ✅ Create AppUser object
+        AppUser user = AppUser(
+          id: userId,
+          email: userEmail,
+          name: userName,
+          studentClass: userClass,
+          photoUrl: userPhotoUrl,
+        );
+        return (user, null);
+      } else {
+        // Delete Firebase user if backend registration fails
+        await firebaseUser.delete();
         final errorData = jsonDecode(response.body);
         return (null, errorData["detail"]?.toString() ?? "Signup failed");
       }
@@ -96,7 +203,7 @@ class AuthService {
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
 
-        final String userId = responseData["id"] ?? ""; // ✅ Handle null
+        final String userId = responseData["id"] ?? "";
         final String accessToken = responseData["access_token"] ?? "";
         final String name = responseData["name"] ?? "Unknown";
         final String userEmail = responseData["email"] ?? "";
@@ -105,58 +212,57 @@ class AuthService {
             "https://www.w3schools.com/w3images/avatar2.png";
 
         // ✅ Store token securely
-        await _secureStorage.write(key: "access_token", value: accessToken);
+        if (accessToken.isNotEmpty) {
+          await _secureStorage.write(key: "access_token", value: accessToken);
+        }
 
-        // ✅ Store user details securely (optional)
+        // ✅ Store user details securely
         await _secureStorage.write(key: "user_id", value: userId);
         await _secureStorage.write(key: "user_name", value: name);
         await _secureStorage.write(key: "user_email", value: userEmail);
         await _secureStorage.write(key: "student_class", value: studentClass);
         await _secureStorage.write(key: "photo_url", value: photoUrl);
 
-        // ✅ Return the AppUser object with `id`
+        // ✅ Return the AppUser object
         return (
-          AppUser(
-            id: userId.isNotEmpty ? userId : "N/A", // ✅ Ensure non-null `id`
-            name: name,
-            email: userEmail,
-            studentClass: studentClass,
-            photoUrl: photoUrl,
-          ),
-          null
+        AppUser(
+          id: userId.isNotEmpty ? userId : "N/A",
+          name: name,
+          email: userEmail,
+          studentClass: studentClass,
+          photoUrl: photoUrl,
+        ),
+        null
         );
       } else {
-        return (null, "Login failed: ${response.body}");
+        final errorData = jsonDecode(response.body);
+        return (null, errorData["detail"]?.toString() ?? "Login failed");
       }
     } catch (e) {
       return (null, "An unexpected error occurred: $e");
     }
   }
 
-  /// ✅ Google Sign-In (Using Backend)
+  /// ✅ Google Sign-In (Using Backend WITHOUT OTP)
   Future<(AppUser?, String?)> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) return (null, '❌ Google Sign-In canceled');
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-      final firebase_auth.AuthCredential credential =
-          firebase_auth.GoogleAuthProvider.credential(
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final firebase_auth.AuthCredential credential = firebase_auth.GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      final firebase_auth.UserCredential userCredential =
-          await _auth.signInWithCredential(credential);
+      final firebase_auth.UserCredential userCredential = await _auth.signInWithCredential(credential);
       final firebase_auth.User? firebaseUser = userCredential.user;
 
       if (firebaseUser == null) return (null, '❌ Google authentication failed');
 
       final String email = firebaseUser.email ?? "";
       final String name = firebaseUser.displayName ?? "Google User";
-      final String photoUrl = firebaseUser.photoURL ??
-          "https://www.w3schools.com/w3images/avatar2.png"; // ✅ Default avatar URL
+      final String photoUrl = firebaseUser.photoURL ?? "https://www.w3schools.com/w3images/avatar2.png";
 
       if (email.isEmpty) {
         return (null, '❌ Google authentication failed: Email not found');
@@ -169,25 +275,16 @@ class AuthService {
       final bool userExists = await checkIfUserExists(email);
 
       if (!userExists) {
-        // ✅ Register user using ACADEMe-backend
-        final (_, String? signupError) =
-            await signUp(email, defaultPassword, name, defaultClass, photoUrl);
+        // ✅ Register user using backend WITHOUT OTP
+        final (_, String? signupError) = await signUpWithoutOTP(email, defaultPassword, name, defaultClass, photoUrl);
         if (signupError != null) return (null, "❌ Signup failed: $signupError");
       }
 
       // ✅ Log in the user using backend
-      final (_, String? loginError) = await signIn(email, defaultPassword);
+      final (AppUser? user, String? loginError) = await signIn(email, defaultPassword);
       if (loginError != null) return (null, "❌ Login failed: $loginError");
 
-      return (
-        AppUser(
-            id: firebaseUser.uid,
-            email: email,
-            name: name,
-            studentClass: defaultClass,
-            photoUrl: photoUrl),
-        null
-      );
+      return (user, null);
     } catch (e) {
       return (null, "❌ An unexpected error occurred: $e");
     }
@@ -220,12 +317,13 @@ class AuthService {
       await _googleSignIn.signOut();
 
       // 2. Clear all Secure Storage keys
-      await _secureStorage.deleteAll(); // Instead of just access_token
+      await _secureStorage.deleteAll();
 
       // 3. Clear SharedPreferences
       final prefs = await SharedPreferences.getInstance();
       await prefs.clear();
 
+      // 4. Clear cache
       CourseDataCache().clearCache();
       topic.TopicCacheManager().clearCache();
 
@@ -244,7 +342,7 @@ class AuthService {
   /// ✅ Check if user is logged in
   Future<bool> isUserLoggedIn() async {
     String? token = await getAccessToken();
-    return token != null;
+    return token != null && token.isNotEmpty;
   }
 
   /// ✅ Send password reset email
@@ -259,7 +357,7 @@ class AuthService {
   /// ✅ Fetch user details from backend
   Future<Map<String, dynamic>?> getUserDetails() async {
     String? token = await getAccessToken();
-    if (token == null) return null;
+    if (token == null || token.isEmpty) return null;
 
     try {
       final response = await http.get(
@@ -275,6 +373,30 @@ class AuthService {
       } else {
         return null;
       }
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// ✅ Get stored user data from secure storage
+  Future<AppUser?> getStoredUser() async {
+    try {
+      final String? userId = await _secureStorage.read(key: "user_id");
+      final String? email = await _secureStorage.read(key: "user_email");
+      final String? name = await _secureStorage.read(key: "user_name");
+      final String? studentClass = await _secureStorage.read(key: "student_class");
+      final String? photoUrl = await _secureStorage.read(key: "photo_url");
+
+      if (userId != null && email != null) {
+        return AppUser(
+          id: userId,
+          email: email,
+          name: name ?? "Unknown",
+          studentClass: studentClass ?? "SELECT",
+          photoUrl: photoUrl ?? "https://www.w3schools.com/w3images/avatar2.png",
+        );
+      }
+      return null;
     } catch (e) {
       return null;
     }

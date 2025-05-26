@@ -1,6 +1,7 @@
 import os
 import base64
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Firebase credentials setup - Runs BEFORE any other imports
 FIREBASE_CREDENTIALS_PATH = Path("firebase/firebase_service_account.json")
@@ -17,6 +18,8 @@ if os.getenv("RAILWAY_ENVIRONMENT"):
     with open(FIREBASE_CREDENTIALS_PATH, "wb") as creds_file:
         creds_file.write(decoded_creds)
     print("✅ Firebase credentials file created successfully")
+else:
+    load_dotenv()
 
 # Now import FastAPI and routes
 from fastapi import FastAPI, File, UploadFile, Form

@@ -3,23 +3,61 @@ from typing import List
 import firebase_admin
 from firebase_admin import firestore
 from utils.auth import get_current_user
-from services.auth_service import fetch_admin_ids
+from services.auth_service import fetch_admin_ids, send_otp
 from fastapi import APIRouter, Depends, HTTPException
 from services.progress_service import delete_user_progress
 from services.auth_service import register_user, login_user
 from models.user_model import UserCreate, UserLogin, TokenResponse, UserUpdateClass
+from pydantic import BaseModel, EmailStr
 
 router = APIRouter(prefix="/users", tags=["Users & Authentication"])
 
 db = firestore.client()
 
+# Model for OTP request
+class OTPRequest(BaseModel):
+    email: EmailStr
+
+# Model for user registration with OTP
+class UserCreateWithOTP(UserCreate):
+    otp: str
+
+@router.post("/send-otp")
+async def send_otp_endpoint(request: OTPRequest):
+    """Send OTP to email for registration verification."""
+    try:
+        result = await send_otp(request.email)
+        return result
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @router.post("/signup", response_model=TokenResponse)
-async def signup(user: UserCreate):
-    """Registers a new user and returns an authentication token."""
-    created_user = await register_user(user)  # Await the async function
-    if not created_user:
-        raise HTTPException(status_code=400, detail="User registration failed")
-    return created_user
+async def signup(user: UserCreateWithOTP):
+    """Registers a new user with OTP verification and returns an authentication token."""
+    try:
+        # Extract OTP from the request
+        otp = user.otp
+        
+        # Create UserCreate object without OTP
+        user_data = UserCreate(
+            name=user.name,
+            email=user.email,
+            password=user.password,
+            student_class=user.student_class,
+            photo_url=user.photo_url
+        )
+        
+        # Register user with OTP verification
+        created_user = await register_user(user_data, otp)
+        if not created_user:
+            raise HTTPException(status_code=400, detail="User registration failed")
+        return created_user
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/login", response_model=TokenResponse)
 async def login(user: UserLogin):
@@ -71,4 +109,3 @@ async def get_admin_ids():
         return admin_ids
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
