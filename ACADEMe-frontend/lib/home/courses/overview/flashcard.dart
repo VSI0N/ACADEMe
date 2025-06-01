@@ -13,6 +13,8 @@ import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'dart:io';
 import '../../../localization/language_provider.dart';
 import '../../../widget/whatsapp_audio.dart';
 import 'quiz.dart';
@@ -61,6 +63,15 @@ class FlashCardState extends State<FlashCard> with TickerProviderStateMixin {
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
   bool _isTransitioning = false;
+  final Map<int, File> _cachedVideos = {};
+  final Map<int, File> _cachedImages = {};
+  final Map<int, File> _cachedAudios = {};
+  final Map<int, File> _cachedDocuments = {};
+  final DefaultCacheManager _cacheManager = DefaultCacheManager();
+  Timer? _preloadTimer;
+  List<int> _preloadQueue = [];
+  final Map<int, VideoPlayerController> _preloadedControllers = {};
+  final Map<int, ChewieController> _preloadedChewieControllers = {};
 
   @override
   void initState() {
@@ -77,6 +88,7 @@ class FlashCardState extends State<FlashCard> with TickerProviderStateMixin {
       });
     } else {
       _setupVideoController();
+      _preloadAdjacentMaterials();
     }
 
     _fadeController = AnimationController(
@@ -86,6 +98,111 @@ class FlashCardState extends State<FlashCard> with TickerProviderStateMixin {
     _fadeAnimation = Tween<double>(begin: 1.0, end: 1.0).animate(
       CurvedAnimation(parent: _fadeController, curve: Curves.easeInOut),
     );
+  }
+
+  void _preloadAdjacentMaterials() {
+    // Cancel any pending preloads
+    _preloadTimer?.cancel();
+    _preloadQueue.clear();
+
+    // Create preload queue: previous 1, current, next 2
+    final totalPages = widget.materials.length + widget.quizzes.length;
+    _preloadQueue = [
+      _currentPage - 1,
+      _currentPage,
+      _currentPage + 1,
+      _currentPage + 2,
+    ].where((index) => index >= 0 && index < totalPages).toList();
+
+    // Start preloading with delay to avoid UI jank
+    _preloadTimer = Timer(const Duration(milliseconds: 300), () {
+      _processPreloadQueue();
+    });
+  }
+
+  void _processPreloadQueue() async {
+    while (_preloadQueue.isNotEmpty) {
+      final index = _preloadQueue.removeAt(0);
+      if (index < widget.materials.length) {
+        final material = widget.materials[index];
+        switch (material["type"]) {
+          case "video":
+            if (!_cachedVideos.containsKey(index) ||
+                !_preloadedControllers.containsKey(index)) {
+              await _preloadAndInitializeVideo(index, material["content"]!);
+            }
+            break;
+          case "image":
+            if (!_cachedImages.containsKey(index)) {
+              final file = await _preloadImage(material["content"]!);
+              if (file != null) _cachedImages[index] = file;
+            }
+            break;
+          case "audio":
+            if (!_cachedAudios.containsKey(index)) {
+              final file = await _preloadFile(material["content"]!);
+              if (file != null) _cachedAudios[index] = file;
+            }
+            break;
+          case "document":
+            if (!_cachedDocuments.containsKey(index)) {
+              final file = await _preloadFile(material["content"]!);
+              if (file != null) _cachedDocuments[index] = file;
+            }
+            break;
+        }
+      }
+      // Add small delay between preloads
+      await Future.delayed(const Duration(milliseconds: 100));
+    }
+  }
+
+  Future<void> _preloadAndInitializeVideo(int index, String url) async {
+    try {
+      // Preload video file
+      final file = await _cacheManager.getSingleFile(url);
+      _cachedVideos[index] = file;
+
+      // Pre-initialize video controller
+      final controller = VideoPlayerController.file(file);
+      await controller.initialize();
+
+      // Pre-initialize Chewie controller
+      final chewieController = ChewieController(
+        videoPlayerController: controller,
+        autoPlay: false,
+        looping: false,
+        allowMuting: true,
+        allowFullScreen: true,
+        allowPlaybackSpeedChanging: true,
+      );
+
+      // Store for later use
+      _preloadedControllers[index] = controller;
+      _preloadedChewieControllers[index] = chewieController;
+
+      debugPrint("✅ Video preloaded and initialized for index $index");
+    } catch (e) {
+      debugPrint("Error preloading video: $e");
+    }
+  }
+
+  Future<File?> _preloadImage(String url) async {
+    try {
+      return await _cacheManager.getSingleFile(url);
+    } catch (e) {
+      debugPrint("Error preloading image: $e");
+      return null;
+    }
+  }
+
+  Future<File?> _preloadFile(String url) async {
+    try {
+      return await _cacheManager.getSingleFile(url);
+    } catch (e) {
+      debugPrint("Error preloading file: $e");
+      return null;
+    }
   }
 
   Future<void> _loadSwipeHintState() async {
@@ -168,21 +285,37 @@ class FlashCardState extends State<FlashCard> with TickerProviderStateMixin {
     });
   }
 
-  void _setupVideoController() {
-    // Store old controllers to dispose later
-    final oldVideoController = _videoController;
-    final oldChewieController = _chewieController;
+  void _setupVideoController() async {
+    // Dispose old controllers
+    _videoController?.removeListener(_videoListener);
+    _videoController?.dispose();
+    _chewieController?.dispose();
 
     if (_currentPage < widget.materials.length &&
         widget.materials[_currentPage]["type"] == "video") {
 
-      // Create new controller
-      _videoController = VideoPlayerController.network(
-        widget.materials[_currentPage]["content"]!,
-      );
+      // Check if we have a pre-initialized controller
+      if (_preloadedControllers.containsKey(_currentPage)) {
+        debugPrint("✅ Using pre-initialized video controller");
+        _videoController = _preloadedControllers[_currentPage];
+        _chewieController = _preloadedChewieControllers[_currentPage];
 
-      _videoController!.initialize().then((_) {
-        if (!mounted) return;
+        // Remove from preloaded map since we're using it now
+        _preloadedControllers.remove(_currentPage);
+        _preloadedChewieControllers.remove(_currentPage);
+
+        // Start playing immediately
+        _videoController!.play();
+
+        // Add listener for video completion
+        _videoController!.addListener(_videoListener);
+      }
+      // Use cached video file if available
+      else if (_cachedVideos.containsKey(_currentPage)) {
+        debugPrint("✅ Using cached video file");
+        final videoFile = _cachedVideos[_currentPage]!;
+        _videoController = VideoPlayerController.file(videoFile);
+        await _videoController!.initialize();
 
         _chewieController = ChewieController(
           videoPlayerController: _videoController!,
@@ -193,40 +326,35 @@ class FlashCardState extends State<FlashCard> with TickerProviderStateMixin {
           allowPlaybackSpeedChanging: true,
         );
 
-        // Only setState when really needed
-        if (mounted) {
-          setState(() {});
-        }
+        // Add listener for video completion
+        _videoController!.addListener(_videoListener);
+      }
+      // Fallback to network
+      else {
+        debugPrint("⚠️ Using network video");
+        final videoUrl = widget.materials[_currentPage]["content"]!;
+        _videoController = VideoPlayerController.network(videoUrl);
+        await _videoController!.initialize();
+
+        _chewieController = ChewieController(
+          videoPlayerController: _videoController!,
+          autoPlay: true,
+          looping: false,
+          allowMuting: true,
+          allowFullScreen: true,
+          allowPlaybackSpeedChanging: true,
+        );
 
         // Add listener for video completion
         _videoController!.addListener(_videoListener);
-
-        // Dispose old controllers after slight delay
-        Future.delayed(const Duration(milliseconds: 150), () {
-          oldVideoController?.removeListener(_videoListener);
-          oldVideoController?.dispose();
-          oldChewieController?.dispose();
-        });
-      }).catchError((error) {
-        debugPrint("Error initializing video: $error");
-        // Still dispose old controllers on error
-        Future.delayed(const Duration(milliseconds: 150), () {
-          oldVideoController?.removeListener(_videoListener);
-          oldVideoController?.dispose();
-          oldChewieController?.dispose();
-        });
-      });
+      }
     } else {
-      // No video needed, clean up
+      // No video needed
       _videoController = null;
       _chewieController = null;
-
-      Future.delayed(const Duration(milliseconds: 150), () {
-        oldVideoController?.removeListener(_videoListener);
-        oldVideoController?.dispose();
-        oldChewieController?.dispose();
-      });
     }
+
+    if (mounted) setState(() {});
   }
 
   void _videoListener() {
@@ -361,6 +489,7 @@ class FlashCardState extends State<FlashCard> with TickerProviderStateMixin {
       }
 
       _setupVideoController();
+      _preloadAdjacentMaterials();
     } else {
       if (widget.onQuizComplete != null) {
         widget.onQuizComplete!();
@@ -376,6 +505,16 @@ class FlashCardState extends State<FlashCard> with TickerProviderStateMixin {
     _chewieController?.dispose();
     _audioPlayer.dispose();
     _fadeController.dispose();
+    _preloadTimer?.cancel();
+
+    // Dispose all preloaded controllers
+    for (final controller in _preloadedControllers.values) {
+      controller.dispose();
+    }
+    for (final controller in _preloadedChewieControllers.values) {
+      controller.dispose();
+    }
+
     super.dispose();
   }
 
@@ -437,6 +576,7 @@ class FlashCardState extends State<FlashCard> with TickerProviderStateMixin {
                         }
 
                         _setupVideoController();
+                        _preloadAdjacentMaterials();
 
                         if (index < widget.materials.length) {
                           _sendProgressToBackend();
@@ -892,9 +1032,9 @@ class FlashCardState extends State<FlashCard> with TickerProviderStateMixin {
   }
 
 // Helper method for processing headings
-  Widget _processHeading(String text) {
-    final level = text.split(' ')[0].length;
-    final content = text.substring(level).trim();
+  Widget _processHeading(String line) {
+    final level = line.split(' ')[0].length;
+    final content = line.substring(level).trim();
 
     return Padding(
       padding: EdgeInsets.only(
@@ -913,34 +1053,31 @@ class FlashCardState extends State<FlashCard> with TickerProviderStateMixin {
     return buildStyledContainer(
       Column(
         children: [
+          // Add negative margin to counter parent padding
           Expanded(
-            child: _chewieController == null ||
-                _videoController == null ||
-                !_videoController!.value.isInitialized
-                ? Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const CircularProgressIndicator(),
-                SizedBox(height: 16),
-                Text(
-                  "${L10n.getTranslatedText(context, 'Loading video')}...",
-                  style: TextStyle(
-                    color: AcademeTheme.appColor,
-                    fontSize: 16,
-                  ),
+            child: Container(
+              margin: const EdgeInsets.all(-16), // Counter the 16px padding
+              child: _chewieController == null ||
+                  _videoController == null ||
+                  !_videoController!.value.isInitialized
+                  ? SizedBox.expand( // Fill available space
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const CircularProgressIndicator(),
+                    const SizedBox(height: 16),
+                    Text(
+                      "${L10n.getTranslatedText(context, 'Loading video')}...",
+                      style: TextStyle(
+                        color: AcademeTheme.appColor,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            )
-                : GestureDetector(
-              onTap: () {
-                setState(() {});
-              },
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: AspectRatio(
-                  aspectRatio: _videoController!.value.aspectRatio,
-                  child: Chewie(controller: _chewieController!),
-                ),
+              )
+                  : SizedBox.expand( // Fill available space
+                child: Chewie(controller: _chewieController!),
               ),
             ),
           ),
@@ -987,15 +1124,23 @@ class FlashCardState extends State<FlashCard> with TickerProviderStateMixin {
                 future: _getImageFit(imageUrl),
                 builder: (context, snapshot) {
                   BoxFit fit = snapshot.data ?? BoxFit.cover;
-                  return CachedNetworkImage(
-                    imageUrl: imageUrl,
-                    placeholder: (context, url) =>
-                    const Center(child: CircularProgressIndicator()),
-                    errorWidget: (context, url, error) =>
-                    const Icon(Icons.error),
-                    fit: fit,
-                    alignment: Alignment.center,
-                  );
+                  if (_cachedImages.containsKey(_currentPage)) {
+                    return Image.file(
+                      _cachedImages[_currentPage]!,
+                      fit: fit,
+                      alignment: Alignment.center,
+                    );
+                  } else {
+                    return CachedNetworkImage(
+                      imageUrl: imageUrl,
+                      placeholder: (context, url) =>
+                      const Center(child: CircularProgressIndicator()),
+                      errorWidget: (context, url, error) =>
+                      const Icon(Icons.error),
+                      fit: fit,
+                      alignment: Alignment.center,
+                    );
+                  }
                 },
               ),
             ),
@@ -1074,53 +1219,54 @@ class FlashCardState extends State<FlashCard> with TickerProviderStateMixin {
   Widget _buildDocumentContent(String docUrl) {
     return buildStyledContainer(
       Column(
-        children: [
-          Expanded(
-            child: Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  debugPrint("Document URL: $docUrl");
-                  launchUrl(Uri.parse(docUrl));
-                },
-                child: Text(L10n.getTranslatedText(context, 'Open Document')),
+          children: [
+            Expanded(
+              child: Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    debugPrint("Document URL: $docUrl");
+                    launchUrl(Uri.parse(docUrl));
+                  },
+                  child: Text(L10n.getTranslatedText(context, 'Open Document')),
+                ),
               ),
             ),
-          ),
-          if (widget.quizzes.isEmpty &&
-              _currentPage == widget.materials.length - 1)
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  debugPrint("Navigating to PDF Viewer with URL: $docUrl");
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => Scaffold(
-                        appBar: AppBar(title: Text(L10n.getTranslatedText(context, 'Document'))),
-                        body: SfPdfViewer.network(docUrl),
+            if (widget.quizzes.isEmpty && _currentPage == widget.materials.length - 1)
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    debugPrint("Navigating to PDF Viewer with URL: $docUrl");
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => Scaffold(
+                          appBar: AppBar(
+                            title: Text(L10n.getTranslatedText(context, 'Document')),
+                          ),
+                          body: SfPdfViewer.network(docUrl),
+                        ),
                       ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.yellow,
+                    minimumSize: const Size(double.infinity, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.yellow,
-                  minimumSize: const Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
                   ),
-                ),
-                child: Text(
-                  L10n.getTranslatedText(context, 'Mark as Completed'),
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                  child: Text(
+                    L10n.getTranslatedText(context, 'Mark as Completed'),
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ),
-            ),
-        ],
+          ]
       ),
     );
   }
@@ -1142,23 +1288,23 @@ class FlashCardState extends State<FlashCard> with TickerProviderStateMixin {
   Widget buildStyledContainer(Widget child) {
     final height = MediaQuery.of(context).size.height;
     return Center(
-      child: Container(
-        width: double.infinity,
-        constraints: BoxConstraints(minHeight: height * 1.5),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-            bottomLeft: Radius.circular(0),
-            bottomRight: Radius.circular(0),
-          ),
-          boxShadow: [
-            BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2),
-          ],
+      child: ClipRRect( // Move clipping here
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
         ),
-        child: child,
+        child: Container(
+          width: double.infinity,
+          constraints: BoxConstraints(minHeight: height * 1.5),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2),
+            ],
+          ),
+          child: child,
+        ),
       ),
     );
   }

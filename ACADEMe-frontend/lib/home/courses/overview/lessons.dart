@@ -532,7 +532,7 @@ class LessonsSectionState extends State<LessonsSection> {
           };
         }).toList();
 
-        if (!mounted) return;
+        if (!context.mounted) return;
 
         Navigator.push(
           context,
