@@ -729,45 +729,46 @@ class FlashCardState extends State<FlashCard> with TickerProviderStateMixin {
 
   Widget _buildTextContent(String content) {
     // Convert escaped newlines and handle markdown symbols
-    String processedContent =
-    content.replaceAll(r'\n', '\n').replaceAll('<br>', '\n');
+    String processedContent = content.replaceAll(r'\n', '\n').replaceAll('<br>', '\n');
 
     return buildStyledContainer(
-      Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: _formattedText(processedContent),
+      Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: _formattedText(processedContent),
+              ),
             ),
-          ),
-          if (widget.quizzes.isEmpty &&
-              _currentPage == widget.materials.length - 1)
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  if (widget.onQuizComplete != null) {
-                    widget.onQuizComplete!();
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.yellow,
-                  minimumSize: const Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+            if (widget.quizzes.isEmpty && _currentPage == widget.materials.length - 1)
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (widget.onQuizComplete != null) {
+                      widget.onQuizComplete!();
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.yellow,
+                    minimumSize: const Size(double.infinity, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
-                ),
-                child: Text(
-                  L10n.getTranslatedText(context, 'Mark as Completed'),
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                  child: Text(
+                    L10n.getTranslatedText(context, 'Mark as Completed'),
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -1056,7 +1057,7 @@ class FlashCardState extends State<FlashCard> with TickerProviderStateMixin {
           // Add negative margin to counter parent padding
           Expanded(
             child: Container(
-              margin: const EdgeInsets.all(-16), // Counter the 16px padding
+              margin: const EdgeInsets.all(0), // Counter the 16px padding
               child: _chewieController == null ||
                   _videoController == null ||
                   !_videoController!.value.isInitialized
@@ -1296,7 +1297,7 @@ class FlashCardState extends State<FlashCard> with TickerProviderStateMixin {
         child: Container(
           width: double.infinity,
           constraints: BoxConstraints(minHeight: height * 1.5),
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(0),
           decoration: BoxDecoration(
             color: Colors.white,
             boxShadow: [
