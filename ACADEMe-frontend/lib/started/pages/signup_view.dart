@@ -178,7 +178,7 @@ class _SignUpViewState extends State<SignUpView> {
         child: Form(
           key: _formKey,
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 100, top: 80),
+            padding: const EdgeInsets.only(bottom: 0, top: 20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -525,7 +525,7 @@ class _SignUpViewState extends State<SignUpView> {
                         ),
                       ),
                     ),
-                    SizedBox(height: height * 0.03),
+                    SizedBox(height: height * 0.02),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -555,7 +555,6 @@ class _SignUpViewState extends State<SignUpView> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
                   ],
                 ),
               ],
