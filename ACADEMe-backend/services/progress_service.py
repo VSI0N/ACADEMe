@@ -223,6 +223,7 @@ def get_progress_visuals(progress_data):
             "quizzes": 0,
             "materials_read": 0,
             "avg_score": 0.0,
+            "max_quiz_score": 0.0,  # ✅ Added max_quiz_score initialization
             "quiz_count": 0,  # ✅ Temporary count of completed quizzes
             "quiz_scores": [],
             "score_timeline": [],
@@ -242,6 +243,7 @@ def get_progress_visuals(progress_data):
                     "quizzes": 0,
                     "materials_read": 0,
                     "avg_score": 0.0,
+                    "max_quiz_score": 0.0,  # ✅ Added max_quiz_score initialization
                     "quiz_count": 0,
                     "quiz_scores": [],
                     "score_timeline": [],
@@ -281,6 +283,10 @@ def get_progress_visuals(progress_data):
                     # ✅ Store discrete quiz scores for line graph
                     visual_data[topic_id]["quiz_scores"].append(score)
 
+                    # ✅ Update max_quiz_score
+                    current_max = visual_data[topic_id]["max_quiz_score"]
+                    visual_data[topic_id]["max_quiz_score"] = max(current_max, score)
+
                     # ✅ Store timestamped score for avg_score over time
                     visual_data[topic_id]["score_timeline"].append({
                         "timestamp": timestamp,
@@ -295,6 +301,12 @@ def get_progress_visuals(progress_data):
 
             # ✅ Fix: Calculate total `time_spent` from `time_spent_per_day`
             visual_data[topic_id]["time_spent"] = sum(visual_data[topic_id]["time_spent_per_day"].values())
+
+            # ✅ Calculate max_quiz_score from quiz_scores if not already set
+            if visual_data[topic_id]["quiz_scores"]:
+                visual_data[topic_id]["max_quiz_score"] = max(visual_data[topic_id]["quiz_scores"])
+            else:
+                visual_data[topic_id]["max_quiz_score"] = 0.0  # Default to 0.0 if no quiz scores
 
             # Remove temporary fields
             visual_data[topic_id].pop("quiz_count", None)

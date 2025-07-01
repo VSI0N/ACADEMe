@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ACADEMe/home/auth/auth_service.dart';
 import 'package:ACADEMe/home/pages/ask_me.dart';
-import 'package:ACADEMe/home/pages/my_progress.dart';
+import 'package:ACADEMe/home/pages/progress/screens/progress_screen.dart';
 import 'package:ACADEMe/localization/l10n.dart';
 import '../started/pages/login_view.dart';
 

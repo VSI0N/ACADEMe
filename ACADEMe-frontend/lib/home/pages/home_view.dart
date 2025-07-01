@@ -4,7 +4,7 @@ import '../../academe_theme.dart';
 import 'package:ACADEMe/widget/homepage_drawer.dart';
 import 'dart:math';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:ACADEMe/home/pages/my_progress.dart';
+import 'package:ACADEMe/home/pages/progress/screens/progress_screen.dart';
 import '../../localization/l10n.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';

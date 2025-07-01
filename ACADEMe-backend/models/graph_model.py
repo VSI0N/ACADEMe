@@ -14,6 +14,7 @@ class TopicProgress(BaseModel):
     quizzes: int
     materials_read: int
     avg_score: float
+    max_quiz_score: float  # ✅ Added max_quiz_score field
     quiz_scores: List[float]
     score_timeline: List[ScoreTimelineEntry]  # ✅ Use a proper schema for timestamps
     time_spent: int
