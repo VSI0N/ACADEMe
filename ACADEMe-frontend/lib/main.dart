@@ -2,6 +2,7 @@ import 'package:ACADEMe/started/pages/animated_splash.dart';
 import 'package:ACADEMe/home/pages/bottom_nav.dart';
 import 'package:ACADEMe/localization/l10n.dart';
 import 'package:ACADEMe/localization/language_provider.dart';
+import 'package:ACADEMe/services/study_time_tracker.dart'; // Add this import
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'firebase_options.dart';
@@ -49,6 +50,10 @@ void main() async {
   }
   await UserRoleManager().loadRole();
 
+  /// 🔹 Initialize Global Study Time Tracker
+  await StudyTimeTracker().initialize();
+  debugPrint("✅ Study Time Tracker Initialized");
+
   /// 🔹 Lock device orientation
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -60,7 +65,7 @@ void main() async {
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.dark,
     statusBarBrightness:
-        !kIsWeb && Platform.isAndroid ? Brightness.dark : Brightness.light,
+    !kIsWeb && Platform.isAndroid ? Brightness.dark : Brightness.light,
     systemNavigationBarColor: Colors.white,
     systemNavigationBarDividerColor: Colors.transparent,
     systemNavigationBarIconBrightness: Brightness.dark,

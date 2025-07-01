@@ -30,7 +30,7 @@ class ProgressScreen extends StatelessWidget {
           iconTheme: IconThemeData(color: Colors.black),
         ),
         body: Padding(
-          padding: const EdgeInsets.only(top: 16.0),
+          padding: const EdgeInsets.only(top: 0.0),
           child: Column(
             children: [
               Expanded(
@@ -48,7 +48,12 @@ class ProgressScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       Container(
-                        margin: const EdgeInsets.all(16.0),
+                        margin: const EdgeInsets.only(
+                            top: 10,
+                          bottom: 0,
+                          right: 10,
+                          left: 10
+                        ),
                         child: StudyTimeCard(),
                       ),
                       const SizedBox(height: 8),
@@ -67,8 +72,12 @@ class ProgressScreen extends StatelessWidget {
                           child: Column(
                             children: [
                               Container(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 16, horizontal: 8),
+                                padding: EdgeInsets.only(
+                                  top: 8,
+                                    bottom: 4,
+                                    left: 8,
+                                  right: 8
+                                ),
                                 child: TabBar(
                                   labelColor: Colors.white,
                                   unselectedLabelColor: Colors.blueAccent,
