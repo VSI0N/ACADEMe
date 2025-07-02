@@ -172,54 +172,51 @@ class _SignUpViewState extends State<SignUpView> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 0, top: 20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Container(
-                    constraints: BoxConstraints(
-                        maxWidth: width * 0.6, maxHeight: height * 0.5),
-                    child: Image.asset(
-                      'assets/images/signUp_logo.png',
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+      body: Column(
+        children: [
+          // Top image section - takes remaining space
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.only(top: 20),
+              child: Image.asset(
+                'assets/images/signUp_logo.png',
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+
+          // Bottom form section - fixed to bottom with minimal padding
+          Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Column(
                   children: [
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(
-                                left: width * 0.09, right: width * 0.09),
-                            child: Text(
-                              '${L10n.getTranslatedText(context, 'Create Your ')} '
-                                  '${L10n.getTranslatedText(context, 'Account')}',
-                              style: TextStyle(
-                                fontSize: width * 0.1,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                    // Create Your Account Title
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.09),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          '${L10n.getTranslatedText(context, 'Create Your ')} '
+                              '${L10n.getTranslatedText(context, 'Account')}',
+                          style: TextStyle(
+                            fontSize: width * 0.1,
+                            fontWeight: FontWeight.bold,
                           ),
-                        ],
+                        ),
                       ),
                     ),
-                    SizedBox(height: height * 0.025),
+                    SizedBox(height: height * 0.02),
+
+                    // Username Field
                     Padding(
-                      padding: EdgeInsets.only(
-                          left: width * 0.08, right: width * 0.08),
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.08),
                       child: TextFormField(
                         controller: _usernameController,
                         decoration: InputDecoration(
@@ -252,6 +249,8 @@ class _SignUpViewState extends State<SignUpView> {
                         },
                       ),
                     ),
+
+                    // Email Field with OTP Button
                     Padding(
                       padding: EdgeInsets.only(
                           left: width * 0.08,
@@ -262,7 +261,7 @@ class _SignUpViewState extends State<SignUpView> {
                           Expanded(
                             child: TextFormField(
                               controller: _emailController,
-                              enabled: !_otpSent, // Disable email field after OTP is sent
+                              enabled: !_otpSent,
                               decoration: InputDecoration(
                                 filled: true,
                                 fillColor: _otpSent ? Colors.grey[200] : AcademeTheme.notWhite,
@@ -329,7 +328,8 @@ class _SignUpViewState extends State<SignUpView> {
                         ],
                       ),
                     ),
-                    // OTP Input Field (only show if OTP is sent)
+
+                    // OTP Input Field
                     if (_otpSent)
                       Padding(
                         padding: EdgeInsets.only(
@@ -374,6 +374,8 @@ class _SignUpViewState extends State<SignUpView> {
                           },
                         ),
                       ),
+
+                    // Password Field
                     Padding(
                       padding: EdgeInsets.only(
                           left: width * 0.08,
@@ -425,10 +427,12 @@ class _SignUpViewState extends State<SignUpView> {
                         },
                       ),
                     ),
+
                     SizedBox(height: height * 0.006),
+
+                    // Terms and Conditions Checkbox
                     Padding(
-                      padding: EdgeInsets.only(
-                          left: width * 0.06, right: width * 0.06),
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.06),
                       child: Row(
                         children: [
                           Checkbox(
@@ -448,7 +452,10 @@ class _SignUpViewState extends State<SignUpView> {
                         ],
                       ),
                     ),
+
                     SizedBox(height: height * 0.005),
+
+                    // Signup Button
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: width * 0.07),
                       child: SizedBox(
@@ -483,7 +490,10 @@ class _SignUpViewState extends State<SignUpView> {
                         ),
                       ),
                     ),
+
                     SizedBox(height: height * 0.01),
+
+                    // OR Text
                     Text(
                       L10n.getTranslatedText(context, 'OR'),
                       style: TextStyle(
@@ -492,6 +502,8 @@ class _SignUpViewState extends State<SignUpView> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
+
+                    // Google Sign Up Button
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: width * 0.07),
                       child: SizedBox(
@@ -525,7 +537,10 @@ class _SignUpViewState extends State<SignUpView> {
                         ),
                       ),
                     ),
-                    SizedBox(height: height * 0.02),
+
+                    SizedBox(height: height * 0.015),
+
+                    // Already have account section
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -557,10 +572,10 @@ class _SignUpViewState extends State<SignUpView> {
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
